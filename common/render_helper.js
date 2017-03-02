@@ -87,6 +87,10 @@ exports.proxy = function (url) {
   // return '/agent?url=' + encodeURIComponent(url);
 };
 
+exports.inlineScript = function(str) {
+    return str && str.replace(/</g, '\\x3C') || '';
+};
+
 // 为了在 view 中使用
 exports._ = _;
 exports.multiline = multiline;

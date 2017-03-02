@@ -54,7 +54,10 @@
     "juice": "*",
     "evernote": "1.25.4",
     "extend": "^2.0.0",
-
+    "styliner": "^0.8.9",
+    "resanitize": "^0.3.0",
+    "xml-writer": "^1.6.0",
+    "yaqrcode": "0.0.2"
   },
   "devDependencies": {
     "errorhandler": "1.4.3",

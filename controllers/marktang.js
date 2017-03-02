@@ -13,7 +13,7 @@ var EventProxy = require('eventproxy');
 var Evernote = require('evernote').Evernote; 
 var extend = require('extend');
 var User = require('../proxy').User;
-// var Ever = require('../proxy').Evernote;
+var Ever = require('../proxy').Evernote;
 var Marktang = require('../proxy').Marktang;
 var Topic = require('../proxy').Topic;
 var enmlOfHtml = require('../common/enmlOfHtml');
@@ -68,7 +68,7 @@ function index(req, res, next){
     } else {
         ep.emitLater('topic', null);
     }
-
+    
     Marktang.getRecently(user._id, ep.done('marktang'));
 
     ep.all('topic', 'marktang', function(topic, marktang) {
@@ -373,21 +373,21 @@ function evernote_getnote(req, res, next){
         }
 
         //update mongodb
-        // Ever.save(req.session.user._id, notes, function (err) {
-        //     if (err) {
-        //         console.log(err);
-        //         res.render('error', {msg: '存储异常'});
-        //         return next(err);
-        //     }
+        Ever.save(req.session.user._id, notes, function (err) {
+            if (err) {
+                console.log(err);
+                res.render('error', {msg: '存储异常'});
+                return next(err);
+            }
 
-        //     if (req.session.lastProcess){
-        //         req.body = req.session.lastProcess;
-        //         req.session.lastProcess = null;
-        //         evernote_save(req, res, next);
-        //     }else{
-        //         res.render('error', {msg: 'evernote 笔记本已经更新'});
-        //     }
-        // });
+            if (req.session.lastProcess){
+                req.body = req.session.lastProcess;
+                req.session.lastProcess = null;
+                evernote_save(req, res, next);
+            }else{
+                res.render('error', {msg: 'evernote 笔记本已经更新'});
+            }
+        });
     });
 }
 function html_encode(str){   
