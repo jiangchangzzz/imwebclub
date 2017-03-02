@@ -2887,3 +2887,9 @@ Started 2017-03-02T16:06:18.147Z GET /marktang/index ::1
 [2017-03-03 00:06:18.153] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m1ms[39m
 [2017-03-03 00:06:18.165] [INFO] cheese - Render view marktang/index [32m(12ms)[39m
 [2017-03-03 00:06:18.166] [INFO] cheese - Completed 200 [32m(19ms)[39m
+[2017-03-03 00:10:48.210] [INFO] cheese - 
+
+Started 2017-03-02T16:10:48.210Z GET /marktang/index ::1
+[2017-03-03 00:10:48.215] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m1ms[39m
+[2017-03-03 00:10:48.225] [INFO] cheese - Render view marktang/index [32m(10ms)[39m
+[2017-03-03 00:10:48.226] [INFO] cheese - Completed 200 [32m(16ms)[39m

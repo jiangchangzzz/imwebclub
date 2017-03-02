@@ -1,4 +1,5 @@
 #忽略node_modules目录
 /node_modules
 .DS_Store
+/logs
 *.vscode
