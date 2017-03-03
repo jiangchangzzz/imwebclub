@@ -2893,3 +2893,34 @@ Started 2017-03-02T16:10:48.210Z GET /marktang/index ::1
 [2017-03-03 00:10:48.215] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m1ms[39m
 [2017-03-03 00:10:48.225] [INFO] cheese - Render view marktang/index [32m(10ms)[39m
 [2017-03-03 00:10:48.226] [INFO] cheese - Completed 200 [32m(16ms)[39m
+[2017-03-03 01:39:54.085] [INFO] cheese - 
+
+Started 2017-03-02T17:39:54.084Z GET /marktang/index ::1
+[2017-03-03 01:39:54.089] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m1ms[39m
+[2017-03-03 01:39:54.101] [INFO] cheese - Render view marktang/index [32m(12ms)[39m
+[2017-03-03 01:39:54.183] [INFO] cheese - 
+
+Started 2017-03-02T17:39:54.183Z GET /marktang/index ::1
+[2017-03-03 01:39:54.189] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m1ms[39m
+[2017-03-03 01:39:54.200] [INFO] cheese - Render view marktang/index [32m(11ms)[39m
+[2017-03-03 01:41:04.827] [INFO] cheese - NodeClub listening on port 3001
+[2017-03-03 01:41:04.828] [INFO] cheese - God bless love....
+[2017-03-03 01:41:04.829] [INFO] cheese - You can debug your app with http://localhost:3001
+[2017-03-03 01:41:04.829] [INFO] cheese - 
+[2017-03-03 01:41:06.034] [INFO] cheese - 
+
+Started 2017-03-02T17:41:06.034Z GET /marktang/index ::1
+[2017-03-03 01:41:06.043] [DEBUG] cheese - [35mMONGO[39m users.[34mfindOne[39m {"conditions":{"_id":"58af18b9a4053f65b598b7bd"},"options":{},"collectionName":"users"} [32m2ms[39m
+[2017-03-03 01:41:06.050] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m1ms[39m
+[2017-03-03 01:41:06.066] [INFO] cheese - Render view marktang/index [32m(15ms)[39m
+[2017-03-03 01:41:06.069] [INFO] cheese - Completed 200 [32m(35ms)[39m
+[2017-03-03 12:11:19.754] [INFO] cheese - 
+
+Started 2017-03-03T04:11:19.738Z GET /marktang/index ::1
+[2017-03-03 12:11:19.902] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m10ms[39m
+[2017-03-03 12:11:19.958] [INFO] cheese - Render view marktang/index [32m(47ms)[39m
+[2017-03-03 12:11:20.047] [INFO] cheese - 
+
+Started 2017-03-03T04:11:20.047Z GET /marktang/index ::1
+[2017-03-03 12:11:20.059] [DEBUG] cheese - [35mMONGO[39m marktangs.[34mfindOne[39m {"conditions":{"author_id":"58af18b9a4053f65b598b7bd"},"options":{"sort":{"update_at":-1},"fields":{}},"collectionName":"marktangs"} [32m2ms[39m
+[2017-03-03 12:11:20.082] [INFO] cheese - Render view marktang/index [32m(23ms)[39m
