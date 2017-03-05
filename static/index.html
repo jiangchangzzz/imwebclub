@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>imweb-首页</title>
+    <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+    <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+    <meta name="author" content="imwebteam@tencent">
+    <link rel="icon" href="images/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="stylesheets/main.css" type="text/css" />
+</head>
+
+<body>
+    <div id="header">
+        <div class="inner">
+            <div class="pull-left">
+                <a href="javascript:void(0);">
+                    <img src="images/logo.png">
+                </a>
+            </div>
+            <div class="pull-right">
+                <div class="middle">
+                    <form class="search" name="searchForm" action="/search" method="post">
+                        <input name="search" type="text" value="" placeholder="输入关键字搜索文章/问题" autocomplete="on">
+                        <span class="search-btn" onclick="document.searchForm.submit.click();">
+                          <img src="images/search.png">
+                      </span>
+                        <button type="submit" name="submit"></button>
+                    </form>
+                    <img src="images/add.png">
+                    <img src="images/message.png">
+                    <img src="images/person.png">
+                </div>
+            </div>
+            <div class="center">
+              <ul class="menu-list">
+                  <li><a href="javascript:void(0);">文章</a></li>
+                  <li><a href="javascript:void(0);">问答</a></li>
+                  <li><a href="javascript:void(0);">专题</a></li>
+                  <li><a href="javascript:void(0);">活动</a></li>
+                  <li><a href="javascript:void(0);">名人堂</a></li>
+                  <li class="active"><a href="javascript:void(0);">Imweb团队</a></li>
+              </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="banner">
+        <div class="inner">
+            <ul class="tag-list">
+                <li><a href="javascript:void(0);">HTML/CSS</a></li>
+                <li><a href="javascript:void(0);">javascript</a></li>
+                <li><a href="javascript:void(0);">网络</a></li>
+                <li><a href="javascript:void(0);">浏览器</a></li>
+                <li><a href="javascript:void(0);">调试</a></li>
+                <li><a href="javascript:void(0);">构建工具</a></li>
+                <li><a href="javascript:void(0);">性能</a></li>
+                <li><a href="javascript:void(0);">设计模式</a></li>
+                <li><a href="javascript:void(0);">Node</a></li>
+                <li><a href="javascript:void(0);">工具建设</a></li>
+                <li><a href="javascript:void(0);">运维</a></li>
+                <li><a href="javascript:void(0);">测试</a></li>
+                <li><a href="javascript:void(0);">框架</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="main" class="clearfix">
+        <div id="sidebar">
+            <div id="profile" class="panel">
+                <div class="avatar">
+                    <img src="images/avatarDefault.jpg">
+                </div>
+                <div class="name">jayccchen</div>
+                <ul class="contribution-list">
+                    <li>
+                        <b>10</b>
+                        <span class="title">文章</span>
+                    </li>
+                    <li>
+                        <b>10</b>
+                        <span class="title">问答</span>
+                    </li>
+                </ul>
+            </div>
+            <div id="social" class="panel border">
+                <div class="panel-head">
+                    <b>关注我们</b>
+                </div>
+                <hr class="solid-light">
+                <div class="panel-body">
+                    <ul class="ico-list">
+                        <li>
+                            <img src="images/weiboColor.png">
+                        </li>
+                        <li>
+                            <img src="images/weixinColor.png">
+                        </li>
+                        <li>
+                            <img src="images/zhihuColor.png">
+                        </li>
+                    </ul>
+                    <ul class="txt-list">
+                        <li>
+                            <a href="javascript:void(0);">关于我们</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">加入我们</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    2017 imweb
+                </div>
+            </div>
+            <div id="hotSeminars" class="panel border">
+                <div class="panel-head">
+                    <b>热门专题</b>
+                    <a href="javascript:void(0);" class="link">
+                      更多
+                    </a>
+                </div>
+                <hr class="solid-light">
+                <div class="panel-body">
+                    <ul class="column-list">
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar1.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link">+关注</a>
+                            </div>
+                            <div class="center">
+                                <b>结一老师的重构专栏</b>
+                                <span>524编文章 | 234人关注</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar2.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link">+关注</a>
+                            </div>
+                            <div class="center">
+                                <b>结一老师的重构专栏</b>
+                                <span>524编文章 | 234人关注</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar3.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link">+关注</a>
+                            </div>
+                            <div class="center">
+                                <b>结一老师的重构专栏</b>
+                                <span>524编文章 | 234人关注</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar4.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link">+关注</a>
+                            </div>
+                            <div class="center">
+                                <b>结一老师的重构专栏</b>
+                                <span>524编文章 | 234人关注</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar5.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link">+关注</a>
+                            </div>
+                            <div class="center">
+                                <b>结一老师的重构专栏</b>
+                                <span>524编文章 | 234人关注</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="hotAuthors" class="panel border">
+                <div class="panel-head">
+                    <b>作者列表</b>
+                    <a href="javascript:void(0);" class="link">
+                    更多
+                  </a>
+                </div>
+                <hr class="solid-light">
+                <div class="panel-body">
+                    <ul class="author-list">
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar6.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link middle">+关注</a>
+                            </div>
+                            <div class="center">
+                                <img src="images/T.png">
+                                <b class="middle">结一 (42)</b>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar7.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link middle">+关注</a>
+                            </div>
+                            <div class="center">
+                                <img src="images/A.png">
+                                <b class="middle">结一 (42)</b>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar8.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link middle">+关注</a>
+                            </div>
+                            <div class="center">
+                                <img src="images/A.png">
+                                <b class="middle">结一 (42)</b>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar9.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link middle">+关注</a>
+                            </div>
+                            <div class="center">
+                                <img src="images/A.png">
+                                <b class="middle">结一 (42)</b>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">
+                                <div class="avatar">
+                                    <img src="images/avatar10.jpg">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:void(0);" class="link middle">+关注</a>
+                            </div>
+                            <div class="center">
+                                <img src="images/V.png">
+                                <b class="middle">结一 (42)</b>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="content">
+            <div id="hotArticles" class="column">
+                <div class="column-head">
+                    <b>热文</b>
+                    <a class="link" href="javascript:void(0);">更多</a>
+                </div>
+                <hr class="solid-light">
+                <div class="column-body">
+                    <img class="slider" src="images/sliderCover.png">
+                    <ul class="article-list">
+                        <li class="active">
+                            <b>前端进阶之路：如何高质量完成产品需求开发</b>
+                            <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。 </p>
+                        </li>
+                        <li>
+                            <b>H5活动宣传页通用布局技术解决方案</b>
+                            <p>H5活动宣传页通用布局技术解决方案H5活动宣传页通用布局技术解决方案H5活动宣传页通用布局技术解决方案</p>
+                        </li>
+                        <li>
+                            <b>VS Code初上手</b>
+                            <p>VS Code初上手VS Code初上手VS Code初上手</p>
+                        </li>
+                        <li>
+                            <b>Vue.js简介</b>
+                            <p>Vue.js简介Vue.js简介Vue.js简介</p>
+                        </li>
+                        <li>
+                            <b>前端进阶之路：如何高质量完成产品需求开发</b>
+                            <p>前端进阶之路：如何高质量完成产品需求开发前端进阶之路：如何高质量完成产品需求开发前端进阶之路：如何高质量完成产品需求开发</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="hotQuestions" class="column">
+                <div class="column-head">
+                    <b>热问</b>
+                    <a class="link" href="javascript:void(0);">更多</a>
+                </div>
+                <hr class="solid-light">
+                <div class="column-body">
+                    <ul class="question-list">
+                        <li class="question-item">
+                            <div class="item-header">
+                                <b>前端进阶之路：如何高质量完成产品需求开发</b>
+                                <div class="pull-right">
+                                    <span class="commentCount">
+                            <img src="images/comment.png">
+                          </span>
+                                    <a class="tag">javascript</a>
+                                </div>
+                            </div>
+                            <div class="item-body">
+                                <div class="avatar">
+                                    <img src="images/avatarDefault.png">
+                                </div>
+                                <div class="content">
+                                    <b>回答用户</b><span>一天前</span>
+                                    <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
+                                    <div class="footer">
+                                        <span class="likeCount">
+                              <img src="images/thumb.png">173
+                            </span>
+                                        <a class="link" href="javascript:void(0);">详情</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="question-item">
+                            <div class="item-header">
+                                <b>前端进阶之路：如何高质量完成产品需求开发</b>
+                                <div class="pull-right">
+                                    <span class="commentCount">
+                            <img src="images/comment.png">
+                          </span>
+                                    <a class="tag">javascript</a>
+                                </div>
+                            </div>
+                            <div class="item-body">
+                                <div class="avatar">
+                                    <img src="images/avatarDefault.png">
+                                </div>
+                                <div class="content">
+                                    <b>回答用户</b><span>一天前</span>
+                                    <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
+                                    <div class="footer">
+                                        <span class="likeCount">
+                              <img src="images/thumb.png">173
+                            </span>
+                                        <a class="link" href="javascript:void(0);">详情</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="question-item">
+                            <div class="item-header">
+                                <b>前端进阶之路：如何高质量完成产品需求开发</b>
+                                <div class="pull-right">
+                                    <span class="commentCount">
+                            <img src="images/comment.png">
+                          </span>
+                                    <a class="tag">javascript</a>
+                                </div>
+                            </div>
+                            <div class="item-body">
+                                <div class="avatar">
+                                    <img src="images/avatarDefault.png">
+                                </div>
+                                <div class="content">
+                                    <b>回答用户</b><span>一天前</span>
+                                    <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
+                                    <div class="footer">
+                                        <span class="likeCount">
+                              <img src="images/thumb.png">173
+                            </span>
+                                        <a class="link" href="javascript:void(0);">详情</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="hotActivtities" class="column">
+                <div class="column-head">
+                    <b>最新活动</b>
+                    <span class="kind">
+                      <a href="javascript:void(0);">imweb</a>
+                      |
+                      <a href="javascript:void(0);">行业</a>
+                    </span>
+                    <a class="link" href="javascript:void(0);">更多</a>
+                </div>
+                <hr class="solid-light">
+                <div class="column-body">
+                    <ul class="activity-list">
+                        <li>
+                            <a href="javascript:void(0);">
+                                <img src="images/activity1.jpg">
+                                <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式2亿QQ在线背后的web敏捷开发模式</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <img src="images/activity2.jpg">
+                                <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <img src="images/activity3.jpg">
+                                <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <img src="images/activity4.jpg">
+                                <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <img src="images/activity5.jpg">
+                                <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式2亿QQ在线背后的web敏捷开发模式</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <img src="images/activity6.jpg">
+                                <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div class="inner">
+            <ul class="link-list">
+                <li class="title">友情链接</li>
+                <li><a href="http://ke.qq.com/">腾讯课堂</a></li>
+                <li><a href="http://imweb.github.io/">腾讯IMWeb</a></li>
+                <li><a href="http://www.alloyteam.com/">腾讯alloyteam</a></li>
+                <li><a href="http://isux.tencent.com/">腾讯ISUX</a></li>
+                <li><a href="http://ur.tencent.com/">腾讯高校合作</a></li>
+                <li><a href="http://tpai.qq.com/">T派校园</a></li>
+                <li><a href="http://ued.taobao.org/blog/">淘宝UED</a></li>
+                <li><a href="http://fex.baidu.com/">百度FEX</a></li>
+                <li><a href="http://www.w3ctech.com/">w3ctech</a></li>
+                <li><a href="http://www.w3cplus.com/">w3cplus</a></li>
+                <li><a href="http://www.html-js.com/">前端乱炖</a></li>
+            </ul>
+            <ul class="link-list">
+                <li class="title">我们的开源</li>
+                <li><a href="https://github.com/imweb/FKB">前端知识库</a></li>
+                <li><a href="http://iconfont.imweb.io/">iconfont</a></li>
+                <li><a href="https://github.com/imweb/Q.js">Q.js</a></li>
+                <li><a href="http://lego.imweb.io/">lego</a></li>
+                <li><a href="https://github.com/BetterJS">badjs</a></li>
+            </ul>
+            <ul class="link-list">
+                <li class="title">合作伙伴</li>
+                <li><a href="http://www.html5cn.org/">HTML5中国</a></li>
+            </ul>
+            <div class="footer-about">
+                <div class="social-list">
+                    <a href="javascript:void(0);" target="_blank">
+                        <img src="images/weibo.png" />
+                    </a>
+                    <a href="javascript:void(0);" target="_blank">
+                        <img src="images/github.png" />
+                    </a>
+                    <a href="javascript:void(0);" target="_blank">
+                        <img src="images/zhihu.png" />
+                    </a>
+                </div>
+                <div class="introduce">
+                    <a href="javascript:void(0);"><img src="images/footerLogo.png" /></a>
+                    <p>IMWEB团队</a>正式成立是时间是2011年6月7日，目前主要负责腾讯在线教育战略产品腾讯课堂，多人社交互动视频以及活动组织类项目的研发工作。</p>
+                </div>
+            </div>
+            <div class="footer-sub">
+                Copyright © 2016-2024; <a href="http://imweb.io">imweb.io</a>.
+                <br/> All Rights Reserved.&nbsp;<a href="http://imweb.github.io">imwebteam</a> 版权所有
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
