@@ -1,0 +1,63 @@
+<div id="content" class="activity">
+    <div class="panel">
+    <div class='header'>
+        <span class='col_fade'>每日推荐</span>
+    </div>
+<!--     <% if (typeof(issues_list) !== 'undefined' && issues_list.length > 0) { 
+  %>
+    <div class="inner no-padding ">
+        <%- partial('./list', {
+            issues: issues_list,
+            pages: pages,
+            current_page: current_page,
+            base: '/'
+        }) %>
+    </div>
+<% } else { %>
+    <div class="inner">
+        <div class="alert-info">暂无内容</div>
+    </div>
+<% } %> -->
+
+    <div class="inner">
+        <div class="activity-wrap" id="activity-wrap">
+            <ul class="activity-list">
+                <li class="activity-list-item" data-href="http://www.infoq.com/cn/">
+                    <a href="javascript: void(0)">
+                        <img src="/public/images/act-info-q.png" width="270" height="160" alt="">
+                    </a>
+                    <span>
+                        <dt title="info Q会议">info Q会议</dt>
+                        <dd title="促进软件开发领域知识与创新的传播">促进软件开发领域知识与创新的传播</dd>
+                    </span>
+                </li>
+                <li class="activity-list-item" data-href="http://segmentfault.com/events/coming">
+                    <a href="javascript: void(0)">
+                        <img src="/public/images/act-segmentfault.png" width="270" height="160" alt="">
+                    </a>
+                    <span>
+                        <dt title="segmentfault社区">segmentfault社区</dt>
+                        <dd title="最前沿的技术问答,最纯粹的技术切磋。让你不知不觉中开拓眼界,提高技能。在巨人的肩膀上,成为一名优秀开发者。">最前沿的技术问答,最纯粹的技术切磋。让你不知不觉中开拓眼界,提高技能。在巨人的肩膀上,成为一名优秀开发者。</dd>
+                    </span>
+                </li>
+                <li class="activity-list-item" data-href="http://news.hiapk.com/2015gmic.html">
+                    <a href="javascript: void(0)">
+                        <img src="/public/images/act-gmic.png" width="270" height="160" alt="">
+                    </a>
+                    <span>
+                        <dt title="GMIC全球移动互联网大会">GMIC全球移动互联网大会</dt>
+                        <dd title="GMIC全球移动互联网大会">GMIC全球移动互联网大会</dd>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+<script>
+    $('#activity-wrap').on('click', '.activity-list-item', function(){
+        window.open($(this).data('href'));
+    });
+</script>

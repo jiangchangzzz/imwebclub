@@ -1,0 +1,24 @@
+<tr class="list-users">
+	<td style="display:none;"><%= user._id %></td>
+	<td id="loginname"><%= user.loginname %></td>
+	<td><%= user.company %></td>
+	<td><%= user.comp_mail %></td>
+	<td><%= user.email %></td>
+	<td><%= user.active %></td>
+	<td><%= user.reply_count %></td>
+	<td><%= user.topic_count %></td>
+	<td><%= user.score %></td>
+	<td><%= user.friendly_create_at %></td>
+	<td><%= user.friendly_update_at %></td>
+	<td><%= user.is_block %></td>
+	<td>
+		<div class="btn-group">
+			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">操作 <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a class="edit-user-btn"><i class="icon-edit"></i> 编辑</a></li>
+				<li><a class="block-user-btn"><i class="icon-stop"></i> 屏蔽</a></li>
+				<li><a class="unblock-user-btn"><i class="icon-play"></i> 取消屏蔽</a></li>
+			</ul>
+		</div>
+	</td>
+</tr>

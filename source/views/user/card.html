@@ -1,0 +1,77 @@
+<%
+var $user = typeof(user) !== 'undefined' 
+    ? user 
+    : (typeof(current_user) !== 'undefined' ? current_user : null);
+var $isLogin = typeof(current_user) !== 'undefined';
+var $isMe = typeof(current_user) !== 'undefined'
+    && (typeof(user) === 'undefined'
+        || user.loginname === current_user.loginname);
+    %>
+<div class='panel user-card' 
+    <% if ($user) { %>
+    data-loginname="<%= $user.loginname %>"
+    data-id="<%= $user._id %>"
+    <% } %>
+    >
+    <% if ($user) { %>
+    <ul class="info-list">
+        <li class="user-avatar">
+            <img class="ui-avatar ui-avatar-100 js-identicon" src="<%= $user.avatar_url %>" alt=""/>
+        </li>
+        <li class="user-name">
+            <span><%= typeof($user.name) !== 'undefined' ? $user.name : $user.loginname %></span>
+        </li>
+        <% if ($user.company) { %>
+        <li class="user-company">
+            <span><%= $user.company %></span>
+        </li>
+        <% } %>
+        <% if (!$isMe) { %>
+        <li class="follow-user">
+            <div class="ui-button ui-button-wide user-card-follow-btn" >关注</div>
+        </li>
+        <li class="contact-user">
+            <div class="ui-commandmenu">联系</div>
+        </li>
+        <% } %>
+        <li class="count-list-container">
+            <ol class="count-list">
+            	<li class="user-dyna">
+                    <div class="count-wrapper">
+                        <a class="ui-link" href="">0</a>
+                    </div>
+                    <div class="count-desc">动态</div>
+                </li>
+            	<li class="user-follows">
+                    <div class="count-wrapper">
+                        <a class="ui-link follower-count" href="#"
+                            onclick="return false;"><%= $user.follower_count %></a>
+                    </div>
+                    <div class="count-desc">关注者</div>
+                </li>
+            </ol>
+        </li>
+        <% if (typeof $user.githubId !== 'undefined' && $user.githubId ) { %>
+        <li class="user-github link-info">
+            <i class="fa fa-github"></i><a 
+                class="ui-link" href="">http://github.com/<%= $user.githubId  %></a>
+        </li>
+        <% } %>
+    </ul>
+    <% } else { %>
+    <div class='no-user'>
+        <ul class="info-list">
+            <li><%= config.description %></li>
+            <li>
+                您可以 <a href='/signin'>登录</a> 或 <a 
+                    href='/signup'>注册</a> , 也可以
+            </li>
+            <li>
+                <a href="/auth/github">
+                    <span class="span-info">通过 GitHub 登录</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <% } %>
+</div>

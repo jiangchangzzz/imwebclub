@@ -1,0 +1,28 @@
+<%- partial('../sidebar') %>
+
+<div id='content'>
+    <div class="panel">
+        <div class="panel-head">
+            <span class="panel-head-title">新消息</span>
+        </div>
+        <div class='panel-body'>
+            <% if (typeof(hasnot_read_messages) !== 'undefined' && hasnot_read_messages.length > 0) { %>
+            <%- partial('../message/message', { collection: hasnot_read_messages, as: 'message' }) %>
+            <% } else { %>
+            <p>无消息</p>
+            <% } %>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-head">
+            <span class="panel-head-title">过往信息</span>
+        </div>
+        <div class='panel-body'>
+            <% if (typeof(has_read_messages) !== 'undefined' && has_read_messages.length > 0) { %>
+            <%- partial('../message/message', { collection: has_read_messages, as: 'message' }) %>
+            <% } else { %>
+            <p>无消息</p>
+            <% } %>
+        </div>
+    </div>
+</div>

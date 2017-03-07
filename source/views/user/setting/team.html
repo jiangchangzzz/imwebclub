@@ -1,0 +1,40 @@
+<form id="team-form" class='form-horizontal' method='post'>
+    <div class='control-group'>
+        <label class='control-label' for='company'>公司/组织</label>
+        <div class='controls'>
+            <!-- 
+            <input type='text' id='company' name='company' 
+                class="company-autocomplete"
+                value="<%= user.company || '' %>" />
+            -->
+            <select id="company" name="company" value="<%= user.company || '' %>">
+                <option value="">请选择</option>
+                <option value="腾讯">腾讯</option>
+                <option value="阿里">阿里</option>
+                <option value="百度">百度</option>
+            </select>
+        </div>
+    </div>
+    <div class='control-group'>
+        <label class='control-label' for='team'>Team</label>
+        <div class='controls'>
+            <input type='text' id='team' name='team' 
+                class="team-autocomplete" data-team-company-id="company"
+                value="<%= user.team || '' %>" />
+        </div>
+    </div>
+    <div class='form-actions'>
+        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+        <button type='submit' class='ui-button ui-button-wide'
+            >保存设置</button>
+    </div>
+</form>
+<script>
+    new ui.FormValidator($('#team-form'), [
+        new ui.Validator({
+            input: $('#company'),
+            required: true,
+            requiredError: '公司/组织不可为空'
+        })
+    ]);
+</script>

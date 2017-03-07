@@ -1,0 +1,5 @@
+<%- issues %>
+<% for(var i=0, len = issues.length>5?5 : issues.length; i < len; i ++){ %>
+    <li class="time-event-item <%- i%2?'even':'odd' %>" data-time="NNN"></li>
+    </li>
+<% } %>

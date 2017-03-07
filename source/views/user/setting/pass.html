@@ -1,0 +1,62 @@
+<form id='change-pass-form' class='form-horizontal' method='post'>
+    <div class='control-group'>
+        <label class='control-label' for='old_pass'>当前密码</label>
+        <div class='controls'>
+            <input type='password' id='old_pass' name='old_pass' />
+        </div>
+    </div>
+    <div class='control-group'>
+        <label class='control-label' for='pass'>新密码</label>
+
+        <div class='controls'>
+            <input type='password' id='pass' name='pass' />
+        </div>
+    </div>
+    <div class='control-group'>
+        <label class='control-label' for='re_new_pass'>确认密码</label>
+        <div class='controls'>
+            <input type='password' id='re_new_pass' name='re_new_pass' />
+        </div>
+    </div>
+    <div class='form-actions'>
+        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+        <button type='submit' class='ui-button ui-button-wide'
+            >更改密码</button>
+    </div>
+</form>
+<script>
+    var passReg = /^[\w~`!@#$%\^&*()\-+=;:'",.<>\/?\\|\[\]{}]{6,20}$/;
+    new ui.FormValidator($('#change-pass-form'), [
+        new ui.Validator({
+            input: $('#old_pass'),
+            required: true,
+            requiredError: '当前密码不可为空',
+            regexp: passReg,// config.regExps.pass,
+            regexpError: '当前密码错误'
+        }),
+        new ui.Validator({
+            input: $('#pass'),
+            required: true,
+            requiredError: '新密码不可为空',
+            regexp: passReg,//config.regExps.pass,
+            regexpError: '新密码格式错误'
+        }),
+        new ui.Validator({
+            input: $('#re_new_pass'),
+            requiredTag: true,
+            validate: function(text) {
+                var pass = $('#pass').val();
+                // if (config.regExps.pass.test(pass)) {
+                if (passReg.test(pass)) {
+                    if (!text) {
+                        return '确认密码不可为空';
+                    }
+                    if (text !== pass) {
+                        return '确认密码不一致';
+                    } 
+                }
+            }
+        })
+    ]);
+</script>
+

@@ -1,0 +1,18 @@
+<tr class="list-users">
+	<td style="display:none;"><%= reply._id %></td>
+	<td><%= reply.author_id %></td>
+	<td><%= reply.topic_id %></td>
+	<td><%= reply.text %></td>
+	<td><%= reply.content %></td>
+	<td><%= reply.ups %></td>
+	<td><%= reply.friendly_update_at %></td>
+	<td><%= reply.friendly_create_at %></td>
+	<td>
+		<div class="btn-group">
+			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">操作 <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a class="delete-reply-btn"><i class="icon-trash"></i> 删除</a></li>
+			</ul>
+		</div>
+	</td>
+</tr>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <% if (typeof(topic) !== 'undefined') { %>
+    <title><%= topic.title %> - <%= config.name %></title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+    <title><%= pageTitle %> - <%= config.name %></title>
+    <% } else { %>
+    <title><%= config.description %></title>
+    <% } %>
+    <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+    <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+    <meta name="author" content="imwebteam@tencent">
+    <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+</head>
+
+<body>
+    <%- partial('common/header.html') %>
+    <%- body %>
+    <%- partial('common/footer.html') %>
+</body>

@@ -60,17 +60,35 @@
     "yaqrcode": "0.0.2"
   },
   "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-env": "^1.2.0",
+    "css-loader": "^0.26.2",
     "errorhandler": "1.4.3",
+    "file-loader": "^0.10.1",
+    "html-loader": "^0.4.5",
+    "html-webpack-plugin": "^2.9.0",
+    "image-webpack-loader": "^3.2.0",
     "istanbul": "0.4.2",
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3",
     "loader-connect": "1.0.1",
     "mm": "1.3.5",
     "mocha": "2.4.5",
     "nock": "7.5.0",
     "pedding": "1.0.0",
     "should": "8.3.0",
-    "supertest": "1.2.0"
+    "style-loader": "^0.13.2",
+    "supertest": "1.2.0",
+    "url-loader": "^0.5.8",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "glob": "^7.1.1",
+    "jquery": "^1.12.0",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "build": "rm -rf public/* views/* && NODE_ENV=production webpack --progress --hide-modules"
   }
 }

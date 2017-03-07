@@ -1,0 +1,70 @@
+<div id='content'>
+    <div class="panel invite-panel">
+        <div class="panel-head">
+            <span class="panel-head-title">邀请好友</span>
+        </div>
+    <div id="invite" class='panel-body'>
+      <% var $error = typeof(error) !== 'undefined' ? error : '' %>
+      <div class="alert alert-error <%= $error ? '' : 'hide' %>">
+          <%= $error %>
+      </div>
+      <% if (typeof(success) !== 'undefined' && success) { %>
+      <div class="alert alert-success">
+          <%= success %>
+      </div>
+      <% } else { %>
+      <form id='send_invite_form' class='form-horizontal' action='send' method='post'>
+        <div class='control-group'>
+          <label class='control-label' for='email'>电子邮箱</label>
+          <div class='controls'>
+            <input class='email-autocomplete' id='email' name='email' type='text' 
+                value='<%= typeof(email) !== 'undefined' ? email : '' %>' maxlength="100" />
+          </div>
+        </div> 
+        <div class='control-group'>
+          <label class='control-label' for='name'>真实姓名</label>
+          <div class='controls'>
+            <input id='name' name='name' type='text' 
+                value='<%= typeof(name) !== 'undefined' ? name : '' %>' maxlength="50" />
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='company'>公司/组织</label>
+          <div class='controls'>
+              <!--
+            <input class='company-autocomplete' id='company' name='company' type='text' 
+                value='<%= typeof(company) !== 'undefined' ? company : '' %>' maxlength="50" />
+              -->
+            <select id="company" name="company" value="<%= typeof(company) !== 'undefined' ? company : '' %>">
+                <option value="">请选择</option>
+                <option value="腾讯">腾讯</option>
+                <option value="阿里">阿里</option>
+                <option value="百度">百度</option>
+            </select>
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='team'>Team</label>
+          <div class='controls'>
+            <input class='team-autocomplete' data-team-company-id="company"
+                id='team' name='team' type='text' 
+                value='<%= typeof(team) !== 'undefined' ? team : '' %>' maxlength="50" />
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='phrase'>邀请语</label>
+          <div class='controls'>
+              <textarea id="phrase" name="phrase" 
+                  ><%= typeof(phrase) !== 'undefined' ? phrase : '' %></textarea>
+          </div>
+        </div>
+        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+        <div class='form-actions'>
+            <button type="submit" class="ui-button ui-button-wide">发送邀请</button>
+        </div>
+      </form>
+      <% } %>
+    </div>
+  </div>
+</div>
+<script src='/public/javascripts/invite.js'></script>

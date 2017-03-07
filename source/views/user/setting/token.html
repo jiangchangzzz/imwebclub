@@ -1,0 +1,12 @@
+<ul class="panel-list">
+    <li>
+    <span class="item-label">字符串</span>
+    <div class="item-content"><%- user.accessToken || '' %></div>
+    </li>
+    <li>
+    <span class="item-label">二维码</span>
+    <div class="item-content">
+        <img class="access_token" src="<%- user.accessTokenBase64 %>">
+    </div>
+    </li>
+</ul>

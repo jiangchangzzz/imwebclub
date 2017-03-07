@@ -51,3 +51,8 @@ $ make test
 $ make test-cov
 ```
 
+webpack构建：
+```bash
+npm run build
+```
+

@@ -1,0 +1,17 @@
+<style>#md_content{width:80%;height:400px;}</style>
+<div>
+	<h3>复制代码：</h3>
+	<textarea id="md_content"><%= msg %></textarea>
+	<button id="copy-button" title="点击复制" data-clipboard-target="md_content">点击复制</button>
+</div>
+<script src="//cdn.bootcss.com/zeroclipboard/2.2.0/ZeroClipboard.min.js"></script>
+<script>
+	
+	var client = new ZeroClipboard( document.getElementById("copy-button") );
+
+	client.on( "ready", function( readyEvent ) { 
+ 		client.on( "aftercopy", function( event ) {  
+    		alert("复制成功");
+		} );
+	});
+</script>

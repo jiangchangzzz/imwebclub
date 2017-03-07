@@ -1,0 +1,25 @@
+<%- partial('./sidebar') %>
+
+<div id="content">
+    <div class="panel">
+    <div class='header'>
+        <span class='col_fade'>文章列表</span>
+    </div>
+    <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
+        <div class="inner no-padding ">
+            <%- partial('../topic/list', {
+                topics: topics,
+                pages: pages,
+                current_page: current_page,
+                base: '/tab/' + tab
+            }) %>
+        </div>
+    <% } else { %>
+        <div class="inner">
+            <div class="alert-info">暂无文章</div>
+        </div>
+    <% } %>
+    </div>
+</div>
+
+<script src="/public/js/tab.js"></script>

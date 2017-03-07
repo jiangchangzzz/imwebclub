@@ -1,0 +1,12 @@
+<li class="activity-list-item" data-href="<%= activity.link %>">
+    <a href="javascript: void(0)">
+        <img src="<%= activity.image %>" width="270" height="160" alt="">
+    </a>
+    <div class="activity-desc">
+        <dt title="<%= activity.title %>"><%= activity.title %></dt>
+        <% if (activity.pptlink) { %>
+        <a class="ppt-link prevent" target="_blank" href="<%= activity.pptlink %>">查看ppt</a>
+        <% } %>
+        <dd title="<%= activity.desc %>"><%= activity.desc %></dd>
+    </div>
+</li>
