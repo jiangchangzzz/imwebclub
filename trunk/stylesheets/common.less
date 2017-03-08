@@ -1,0 +1,370 @@
+/*  颜色定义 */
+
+@ui-white: #FFF;
+@ui-white-dark: #EEE;
+@ui-blue: #38B7EA;
+@ui-blue-light: #6ACDF6;
+@ui-blue-ex: #3372a2;
+@ui-blue-dark: #20AFE9;
+@ui-gray-dark: #bbb;
+@ui-gray: #DDD;
+@ui-gray-light: #E8E8E8;
+@ui-red: #e66e4b;
+@ui-red-dark: #b94a48;
+@ui-red-bright: #F80C13;
+@ui-green: #00e2ad;
+@ui-green-light: #38b7ea;
+@ui-orange: #fcad62;
+@ui-black: #333;
+@ui-black-light: #888;
+@ui-purple: #6969ef;
+@ui-btn-gray: #555;
+@ui-btn-border: #d9d9d9;
+@panel-shadow: 0 4px 6px #ddd;
+@ui-deep-dark: #4d4e4e;
+
+* {
+    word-break: break-all;
+}
+
+.one-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+a,
+abbr,
+address,
+article,
+aside,
+audio,
+b,
+blockquote,
+body,
+canvas,
+caption,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+main,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+u,
+ul,
+var,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+hr {
+    margin: 5px 0;
+    width: 100%;
+    margin-bottom: 10px;
+
+    &.solid-black {
+        border-color: #000;
+    }
+
+    &.solid-gray {
+        border-color: #aeaeae;
+    }
+
+    &.solid-light {
+        border-color: #fafafa;
+    }
+
+    &.solid-white {
+        border-color: #fff;
+    }
+}
+
+.clearfix {
+    overflow: hidden;
+    clear: both;
+}
+
+.pull-right {
+    float: right;
+}
+
+.pull-left {
+    float: left;
+}
+
+/*未注册引导start*/
+.mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 90;
+}
+.not-sign {
+    height: 375px;
+    width: 650px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -325px;
+    margin-top: -185px;
+    background: #e8edf1;
+    border: 1px solid #ddd;
+    z-index: 99;
+    .not-sign-wrap {
+        width: 90%;
+//        max-width: 960px;
+        /* todo: fix this; */
+        height: 100%;
+        padding: 0 5%;
+        position: relative;
+
+        .not-sign-close{
+            position: absolute;
+            width: 39px;
+            /* height: 30px; */
+            right: 0px;
+            line-height: 25px;
+            font-size: 16px;
+            top: 0px;
+            text-align: center;
+            color: #aaa;
+            border-left: 1px solid #B9B9B9;
+            cursor: pointer;
+
+        }
+
+        .not-sign-close:hover{
+            color : #666;
+            background: #D6DCE0;
+        }
+    }
+    .not-sign-l {
+        width: 260px;
+        height: 281px;
+        float: left;
+        margin-top: 26px;
+        overflow: hidden;
+        &.banner {
+            background: url("../images/login_bg.png");
+            background-size: cover;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+            letter-spacing: 1px;
+            line-height: 33px;
+        }
+        .not-sign-ul {
+            padding-top: 25px;
+            li {
+                float: left;
+                text-align: center;
+                margin-right: 33px;
+                margin-bottom: 100px;
+            }
+            img.ui-avatar-60 {
+                border: 5px solid #fff;
+                margin-bottom: 5px;
+                display: block;
+                -webkit-transition: .05s all ease-in-out;
+                transition: .05s all ease-in-out;
+                &:hover {
+                    border-color: @ui-blue;
+                }
+            }
+        }
+    }
+    .not-sign-r {
+        float: right;
+        padding-top: 20px;
+        .other-login {
+            font-size: 14px;
+            color: #999;
+            margin-top: 18px;
+            p {
+                float: left;
+                margin-top: 5px;
+            }
+            .other-login-li {
+                float: left;
+                margin-right: 10px;
+                a.iconwrap {
+                    -webkit-border-radius: 50%;
+                    border-radius: 50%;
+                    display: inline-block;
+                    height: 28px;
+                    transition: 0.3s;
+                    vertical-align: middle;
+                    width: 28px;
+                    zoom: 1;
+                    opacity: 0.7;
+                    text-align: center;
+                    line-height: 28px;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+                a.iconwrap-github {
+                    background: #afb6ca;
+                }
+                a.iconwrap-weibo {
+                    background: #aaf;
+                }
+                i.iconfont {
+                    font-size: 18px;
+                    color: @ui-white;
+                }
+            }
+        }
+        .not-sign-title {
+            font-size: 18px;
+            color: #000;
+            line-height: 40px;
+            margin-bottom: 16px;
+            padding-top: 10px;
+        }
+        .input-box {
+            position: relative;
+            span.error {
+                position: absolute;
+                top: 8px;
+                left: 252px;
+                display: block;
+                width: 300px;
+                color: #e66e4b;
+            }
+        }
+        .input-xlarge {
+            display: block;
+            width: 230px;
+            height: 25px;
+            margin-bottom: 20px;
+            &.not-see {
+                visibility: hidden;
+            }
+        }
+        .input-xsmall {
+            display: block;
+            width: 100px;
+            height: 25px;
+            margin-bottom: 20px;
+            &.not-see {
+                visibility: hidden;
+            }
+        }
+        .ui-button {
+            float: right;
+        }
+        .forget {
+            display: block;
+            border-top: 1px dotted #ccc;
+            padding-top: 11px;
+            margin: 34px 0 11px;
+            color: #999;
+            a {
+                color: @ui-blue;
+                padding-left: 10px;
+            }
+        }
+    }
+}
+
+.nor-link {
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    color: #333;
+    &:hover {
+        color: @ui-blue;
+    }
+}
+
+.strong-link {
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    color: @ui-blue;
+    &:hover {
+        color: @ui-blue-light;
+    }
+}
+
+.ex-link {
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    color: @ui-blue-ex;
+    &:hover {
+        color: @ui-blue;
+    }
+}
+/*未注册引导end*/
