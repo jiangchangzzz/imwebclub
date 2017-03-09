@@ -12,6 +12,7 @@ var entries = getEntry('trunk/entry/**/*.js'
     , 'trunk/entry/');
 
 var chunks = Object.keys(entries);
+console.log(entries);
 var config = {
     entry: entries,
     output: {
@@ -22,6 +23,10 @@ var config = {
     },
     module: {
         loaders: [ //加载器
+            {
+                test: /\.js?$/,
+                loaders: ['babel-loader?presets[]=es2015']
+            },
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style', 'css')
@@ -44,18 +49,18 @@ var config = {
         // new webpack.ProvidePlugin({ //加载jq
         // 	$: 'jquery'
         // }),
-        new CommonsChunkPlugin({
-            name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
-            chunks: chunks,
-            minChunks: 2 // 提取所有entry共同依赖的模块
-        }),
+        // new CommonsChunkPlugin({
+        //     name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
+        //     chunks: chunks,
+        //     minChunks: 2 // 提取所有entry共同依赖的模块
+        // }),
         new ExtractTextPlugin('stylesheets/[name].css'), //单独使用link标签加载css并设置路径，相对于output配置中的publickPath
-        debug ? function () { } : new UglifyJsPlugin({ //压缩代码
-            compress: {
-                warnings: false
-            },
-            except: ['$super', '$', 'exports', 'require'] //排除关键字
-        }),
+        // debug ? function () { } : new UglifyJsPlugin({ //压缩代码
+        //     compress: {
+        //         warnings: false
+        //     },
+        //     except: ['$super', '$', 'exports', 'require'] //排除关键字
+        // }),
     ]
 };
 
