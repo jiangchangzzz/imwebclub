@@ -20,13 +20,16 @@
     "data2xml": "1.2.4",
     "ejs-mate": "2.3.0",
     "eventproxy": "0.3.4",
+    "evernote": "1.25.4",
     "express": "4.14.0",
     "express-session": "1.12.1",
+    "extend": "^2.0.0",
     "helmet": "1.3.0",
     "ioredis": "1.15.1",
     "jpush-sdk": "3.2.1",
-    "loader-builder": "2.4.1",
+    "juice": "*",
     "loader": "2.1.1",
+    "loader-builder": "2.4.1",
     "lodash": "4.16.2",
     "log4js": "^0.6.29",
     "markdown-it": "6.0.0",
@@ -41,22 +44,20 @@
     "oneapm": "1.2.20",
     "passport": "0.3.2",
     "passport-github": "1.1.0",
+    "passport-weibo": "^0.1.2",
     "pm2": "1.1.1",
     "qn": "1.1.1",
     "ready": "0.1.1",
     "request": "2.74.0",
+    "resanitize": "^0.3.0",
     "response-time": "2.3.1",
+    "styliner": "^0.8.9",
     "superagent": "1.8.2",
     "utility": "1.6.0",
     "validator": "5.1.0",
+    "xml-writer": "^1.6.0",
     "xmlbuilder": "7.0.0",
     "xss": "0.2.10",
-    "juice": "*",
-    "evernote": "1.25.4",
-    "extend": "^2.0.0",
-    "styliner": "^0.8.9",
-    "resanitize": "^0.3.0",
-    "xml-writer": "^1.6.0",
     "yaqrcode": "0.0.2"
   },
   "devDependencies": {
@@ -90,6 +91,7 @@
   "scripts": {
     "test": "make test",
     "build": "rm -rf public/* views/* && NODE_ENV=production webpack --progress --hide-modules",
-    "watch": "webpack --progress --hide-modules --colors --watch"
+    "watch": "webpack --progress --hide-modules --colors --watch",
+    "dev": "NODE_ENV=test node app.js"
   }
 }

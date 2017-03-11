@@ -47,13 +47,6 @@
                                 <div class="ui-button-white js-to-login">已有账号，立即登录</div>
                                 <input class="ui-button js-to-step2" type="submit" value="注册">
                             </form>
-                            <div class="other-login">
-                                <p>通过以下账号登录：</p>
-                                <ul>
-                                    <li class="other-login-li"><a class="iconwrap iconwrap-github" href="/auth/github"><i class="icon iconfont">&#xe625;</i></a></li>
-                                    <li class="other-login-li"><a class="iconwrap iconwrap-weibo" href="/auth/weibo/auth"><i class="icon iconfont">&#xe624;</i></a></li>
-                                </ul>
-                            </div>
                         </div>
                         <div class="to-login">
                             <form class="form-horizontal" action="/signin" method="post">
@@ -62,9 +55,15 @@
                                 <input class="input-xlarge" name="pass" size="30" type="password" placeholder="密码" autocomplete="off">
                                 <div class="ui-button-white js-to-sign">用户注册</div>
                                 <input type="submit" class="ui-button" value="登录">
-                                <p class="forget"><a href="/search_pass">忘记密码?</a></p>
-
+                                <p class="forget"><a href="/search_pass" class="fr">忘记密码?</a></p>
                             </form>
+                        </div>
+                        <div class="other-login">
+                            <p>通过以下账号登录：</p>
+                            <ul>
+                                <li class="other-login-li"><a class="iconwrap iconwrap-github" href="/auth/github"><i class="icon iconfont">&#xe625;</i></a></li>
+                                <li class="other-login-li"><a class="iconwrap iconwrap-weibo" href="/auth/weibo"><i class="icon iconfont">&#xe624;</i></a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>

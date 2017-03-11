@@ -1,0 +1,42 @@
+<%- partial('../sign/sidebar') %>
+
+<div id='content'>
+    <div class="panel">
+        <div class="panel-head">
+            <span class="panel-head-title">找回密码</span>
+        </div>
+        <div class='panel-body'>
+            <% if (typeof(error) !== 'undefined' && error) { %>
+            <div class="alert alert-error">
+                <%= error %>
+            </div>
+            <% } %>
+            <form id='search_pass_form' class='form-horizontal' 
+                action='/search_pass' method='post'>
+                <div class='control-group'>
+                    <label class='control-label' for='email'>电子邮箱</label>
+                    <div class='controls'>
+                        <input class='email-autocomplete' id='email' name='email' 
+                        type='text' value='<%= typeof(email) !== 'undefined' ? email : '' %>'/>
+                        <p class='help-block'>请输入您注册帐户时使用的电子邮箱</p>
+                    </div>
+                </div>
+                <div class='form-actions'>
+                    <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+                    <button class="ui-button" type="submit">提交</button>
+                </div>
+            </form>
+            <script>
+                new ui.FormValidator($('#search_pass_form'), [
+                    new ui.Validator({
+                        input: $('#email'),
+                        required: true,
+                        requiredError: '邮箱不可为空',
+                        regexp: config.regExps.email,
+                        regexpError: '邮箱格式错误'
+                    })
+                ]);
+            </script>
+        </div>
+    </div>
+</div>

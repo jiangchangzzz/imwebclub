@@ -20,11 +20,13 @@
 
 <div id="main" class="clearfix">
     <div id="sidebar">
+        <% if (current_user) { console.log(current_user); %>
+
         <div id="profile" class="panel">
             <div class="avatar">
-                <img src="../images/avatarDefault.jpg">
+                <img src="<%= current_user.avatar %>">
             </div>
-            <div class="name">jayccchen</div>
+            <div class="name"><%= current_user.loginname %></div>
             <ul class="contribution-list">
                 <li>
                     <b>10</b>
@@ -36,6 +38,8 @@
                 </li>
             </ul>
         </div>
+        <% } %>
+
         <div id="social" class="panel border">
             <div class="panel-head">
                 <b>关注我们</b>
@@ -70,8 +74,8 @@
             <div class="panel-head">
                 <b>热门专题</b>
                 <a href="javascript:void(0);" class="link">
-                      更多
-                    </a>
+              更多
+            </a>
             </div>
             <hr class="solid-light">
             <div class="panel-body">
@@ -153,8 +157,8 @@
             <div class="panel-head">
                 <b>作者列表</b>
                 <a href="javascript:void(0);" class="link">
-                    更多
-                  </a>
+            更多
+          </a>
             </div>
             <hr class="solid-light">
             <div class="panel-body">
@@ -246,7 +250,7 @@
                     <li class="active">
                         <b>前端进阶之路：如何高质量完成产品需求开发</b>
                         <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。
-                            </p>
+                        </p>
                     </li>
                     <li>
                         <b>H5活动宣传页通用布局技术解决方案</b>
@@ -278,7 +282,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="../images/comment.png">
                           </span>
@@ -304,7 +308,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="../images/comment.png">
                           </span>
@@ -330,7 +334,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="../images/comment.png">
                           </span>

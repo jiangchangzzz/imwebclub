@@ -22,6 +22,8 @@ var limit = require('./middlewares/limit');
 var github = require('./controllers/github');
 var search = require('./controllers/search');
 var passport = require('passport');
+var passportWeibo = require('passport-weibo');
+var WeiboStrategy = passportWeibo.Strategy;
 var configMiddleware = require('./middlewares/conf');
 var config = require('./config');
 // 新markdown编辑器  发布
@@ -116,7 +118,7 @@ router.post('/marktang/html', auth.userRequired, marktang.md2html); // gen html 
 router.post('/marktang/save', auth.userRequired, marktang.save); // gen html content
 router.get('/marktang/evernote', auth.userRequired, marktang.evernote); // 获取auth uri for evernote
 router.get('/marktang/evernote_callback', auth.userRequired, marktang.evernote_callback); // 获取access_token for evernote
-router.post('/marktang/evernote_save', auth.userRequired, marktang.evernote_save); // save evernote 
+router.post('/marktang/evernote_save', auth.userRequired, marktang.evernote_save); // save evernote
 router.get('/marktang/evernote_getnote', auth.userRequired, marktang.evernote_getnote); //
 
 //rss
@@ -129,6 +131,26 @@ router.get('/auth/github/callback',
   github.callback);
 router.get('/auth/github/new', github.new);
 router.post('/auth/github/create', limit.peripperday('create_user_per_ip', config.create_user_per_ip, {showJson: false}), github.create);
+
+// weibo oauth
+passport.use(new WeiboStrategy({
+    clientID: config.WEIBO_OAUTH.clientID,
+    clientSecret: config.WEIBO_OAUTH.clientSecret,
+    callbackURL: config.WEIBO_OAUTH.callbackURL
+  },
+  function(accessToken, refreshToken, profile, done) {
+  	console.log(profile);
+    // User.findOrCreate({ weiboId: profile.id }, function (err, user) {
+    //   return done(err, user);
+    // });
+  }
+));
+router.get('/auth/weibo', passport.authenticate('weibo'));
+router.get('/auth/weibo/callback', passport.authenticate('weibo', { failureRedirect: '/sigin' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
 router.get('/search', search.index);
 

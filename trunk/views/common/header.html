@@ -1,22 +1,24 @@
 <div id="header">
     <div class="inner">
-        <div class="pull-left">
+        <div class="fl">
             <a href="javascript:void(0);">
                 <img src="../../images/logo.png">
             </a>
         </div>
-        <div class="pull-right">
+        <div class="fr">
             <div class="middle">
                 <form class="search" name="searchForm" action="/search" method="post">
                     <input name="search" type="text" value="" placeholder="输入关键字搜索文章/问题" autocomplete="on">
-                    <span class="search-btn" onclick="document.searchForm.submit.click();">
-                          <img src="../../images/search.png">
-                      </span>
+                    <span class="search-btn" onclick="document.searchForm.submit.click();"></span>
                     <button type="submit" name="submit"></button>
                 </form>
-                <img src="../../images/add.png">
-                <img src="../../images/message.png">
-                <img src="../../images/person.png" class="user-login-btn">
+                <% if (current_user) {%>
+                  <a href="javascript:void(0);" class="user-post-btn ico"></a>
+                  <a href="javascript:void(0);" class="user-message-btn ico"></a>
+                  <a href="javascript:void(0);" class="user-user-btn ico"></a>
+                <% } else { %>
+                  <a href="javascript:void(0);" class="user-login-btn">登陆</a>
+                <% } %>
             </div>
         </div>
         <div class="center">
@@ -26,7 +28,7 @@
                 <li><a href="javascript:void(0);">专题</a></li>
                 <li><a href="javascript:void(0);">活动</a></li>
                 <li><a href="javascript:void(0);">名人堂</a></li>
-                <li class="active"><a href="javascript:void(0);">Imweb团队</a></li>
+                <li><a href="javascript:void(0);">Imweb团队</a></li>
             </ul>
         </div>
     </div>
