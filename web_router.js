@@ -48,7 +48,7 @@ if (config.allow_sign_up) {
     return res.redirect('/auth/github')
   });
 }
-router.post('/signout', sign.signout);  // 登出
+router.get('/signout', sign.signout);  // 登出
 router.get('/signin', sign.showLogin);  // 进入登录页面
 router.post('/signin', sign.login);  // 登录校验
 router.get('/active_account', sign.activeAccount);  //帐号激活
@@ -139,7 +139,7 @@ passport.use(new WeiboStrategy({
     callbackURL: config.WEIBO_OAUTH.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
-  	console.log(profile);
+  	//console.log(profile);
     // User.findOrCreate({ weiboId: profile.id }, function (err, user) {
     //   return done(err, user);
     // });

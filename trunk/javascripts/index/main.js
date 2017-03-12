@@ -1,6 +1,12 @@
 //首页入口逻辑
 
-define([], function() {
+define(['../common/ui.js'], function() {
+    //登陆弹窗
+    if($('#nav-user-menu').length > 0){
+      ui.attachDropdownLayer($('#nav-user-menu'), {
+          layer: '#nav-user-menu-layer'
+      });
+    }
     //展示和隐藏登录框
     $(document).on('click', '.user-login-btn', function() {
         $(".login-wrapper").show();
