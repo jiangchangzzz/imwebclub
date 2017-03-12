@@ -75,6 +75,9 @@ router.get('/my/messages', auth.userRequired, message.index); // 用户个人的
 
 // topic
 
+// 保存新建的文章 markdown
+router.post('/topic/save', auth.userRequired, limit.postInterval, topic.put);
+
 // 新建文章界面
 router.get('/topic/create', auth.userRequired, topic.create);
 

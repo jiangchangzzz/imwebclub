@@ -9,55 +9,63 @@
 /**
  * Module dependencies.
  */
+var _ = require('lodash');
+var config = require('../config');
+var validator = require('validator');
+var multiline = require('multiline');
+var marked = require('./marked');
+var hljs = require('highlight.js');
+var xss = require('node-xss').clean;
 
-var MarkdownIt = require('markdown-it');
-var _          = require('lodash');
-var config     = require('../config');
-var validator  = require('validator');
-var jsxss      = require('xss');
-var multiline = require('multiline')
 
-// Set default options
-var md = new MarkdownIt();
-
-md.set({
-  html:         false,        // Enable HTML tags in source
-  xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-  breaks:       false,        // Convert '\n' in paragraphs into <br>
-  linkify:      true,        // Autoconvert URL-like text to links
-  typographer:  true,        // Enable smartypants and other sweet transforms
+marked.setOptions({
+    highlight: function (code, lang) {
+        try {
+            return hljs.highlight(lang, code).value;
+        } catch (ex) {}
+        try {
+            return hljs.highlightAuto(code).value;
+        } catch (ex) {}
+        return '<pre>' + code + '</pre>';
+    },
+    gfm: true,
+    tables: true,
+    breaks: false,
+    langPrefix:'hljs '
 });
 
-md.renderer.rules.fence = function (tokens, idx) {
-  var token    = tokens[idx];
-  var language = token.info && ('language-' + token.info) || '';
-  language     = validator.escape(language);
-
-  return '<pre class="prettyprint ' + language + '">'
-    + '<code>' + validator.escape(token.content) + '</code>'
-    + '</pre>';
+exports.markdownRender = function(text) {
+    return xss(marked(text || ''));
 };
-
-md.renderer.rules.code_block = function (tokens, idx /*, options*/) {
-  var token    = tokens[idx];
-
-  return '<pre class="prettyprint">'
-    + '<code>' + validator.escape(token.content) + '</code>'
-    + '</pre>';
-};
-
-var myxss = new jsxss.FilterXSS({
-  onIgnoreTagAttr: function (tag, name, value, isWhiteAttr) {
-    // 让 prettyprint 可以工作
-    if (tag === 'pre' && name === 'class') {
-      return name + '="' + jsxss.escapeAttrValue(value) + '"';
-    }
-  }
-});
 
 exports.markdown = function (text) {
-  return '<div class="markdown-text">' + myxss.process(md.render(text || '')) + '</div>';
+  return '<div class="markdown-text">' + exports.markdownRender(text) + '</div>';
 };
+
+
+exports.htmlToText = function (text) {
+   return html_decode(text.replace(/<[^>]+>/g,""));//去掉所有的html标记
+};
+
+function html_decode(str)
+{
+    var s = "";
+    if (str.length == 0) return "";
+    s = str.replace(/&amp;/g, "&");
+    s = s.replace(/&lt;/g, "<");
+    s = s.replace(/&gt;/g, ">");
+    s = s.replace(/&nbsp;/g, " ");
+    s = s.replace(/&#39;/g, "\'");
+    s = s.replace(/&quot;/g, "\"");
+    s = s.replace(/<br>/g, "\n");
+    return s;
+}
+exports.html_decode = html_decode;
+
+exports.textDown = function (text) {
+    return  exports.htmlToText(exports.markdownRender(text)) ;
+}
+exports.multiline = multiline;
 
 exports.escapeSignature = function (signature) {
   return signature.split('\n').map(function (p) {
@@ -66,9 +74,6 @@ exports.escapeSignature = function (signature) {
 };
 
 exports.staticFile = function (filePath) {
-  if (filePath.indexOf('http') === 0 || filePath.indexOf('//') === 0) {
-    return filePath;
-  }
   return config.site_static_host + filePath;
 };
 
@@ -81,16 +86,8 @@ exports.tabName = function (tab) {
   }
 };
 
-exports.proxy = function (url) {
-  return url;
-  // 当 google 和 github 封锁严重时，则需要通过服务器代理访问它们的静态资源
-  // return '/agent?url=' + encodeURIComponent(url);
-};
-
 exports.inlineScript = function(str) {
     return str && str.replace(/</g, '\\x3C') || '';
 };
 
-// 为了在 view 中使用
 exports._ = _;
-exports.multiline = multiline;

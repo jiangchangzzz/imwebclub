@@ -18,7 +18,10 @@ var store        = require('../common/store');
 var config       = require('../config');
 var _            = require('lodash');
 var cache        = require('../common/cache');
-var logger = require('../common/logger')
+var logger = require('../common/logger');
+var escapeHtml = require('escape-html');
+var mail = require('../common/mail');
+var dataAdapter = require('../common/dataAdapter');
 
 /**
  * Topic page
@@ -50,6 +53,7 @@ exports.index = function (req, res, next) {
       no_reply_topics: no_reply_topics,
       is_uped: isUped,
       is_collect: is_collect,
+      tabs: config.tabs
     });
   });
 
@@ -118,61 +122,172 @@ exports.create = function (req, res, next) {
 };
 
 
+// exports.put = function (req, res, next) {
+//   var title   = validator.trim(req.body.title);
+//   var tab     = validator.trim(req.body.tab);
+//   var content = validator.trim(req.body.t_content);
+
+//   // 得到所有的 tab, e.g. ['ask', 'share', ..]
+//   var allTabs = config.tabs.map(function (tPair) {
+//     return tPair[0];
+//   });
+
+//   // 验证
+//   var editError;
+//   if (title === '') {
+//     editError = '标题不能是空的。';
+//   } else if (title.length < 5 || title.length > 100) {
+//     editError = '标题字数太多或太少。';
+//   } else if (!tab || allTabs.indexOf(tab) === -1) {
+//     editError = '必须选择一个版块。';
+//   } else if (content === '') {
+//     editError = '内容不可为空';
+//   }
+//   // END 验证
+
+//   if (editError) {
+//     res.status(422);
+//     return res.render('topic/edit', {
+//       edit_error: editError,
+//       title: title,
+//       content: content,
+//       tabs: config.tabs
+//     });
+//   }
+
+//   Topic.newAndSave(title, content, tab, req.session.user._id, function (err, topic) {
+//     if (err) {
+//       return next(err);
+//     }
+
+//     var proxy = new EventProxy();
+
+//     proxy.all('score_saved', function () {
+//       res.redirect('/topic/' + topic._id);
+//     });
+//     proxy.fail(next);
+//     User.getUserById(req.session.user._id, proxy.done(function (user) {
+//       user.score += 5;
+//       user.topic_count += 1;
+//       user.save();
+//       req.session.user = user;
+//       proxy.emit('score_saved');
+//     }));
+
+//     //发送at消息
+//     at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
+//   });
+// };
+
+
 exports.put = function (req, res, next) {
-  var title   = validator.trim(req.body.title);
-  var tab     = validator.trim(req.body.tab);
-  var content = validator.trim(req.body.t_content);
-
-  // 得到所有的 tab, e.g. ['ask', 'share', ..]
-  var allTabs = config.tabs.map(function (tPair) {
-    return tPair[0];
-  });
-
-  // 验证
-  var editError;
-  if (title === '') {
-    editError = '标题不能是空的。';
-  } else if (title.length < 5 || title.length > 100) {
-    editError = '标题字数太多或太少。';
-  } else if (!tab || allTabs.indexOf(tab) === -1) {
-    editError = '必须选择一个版块。';
-  } else if (content === '') {
-    editError = '内容不可为空';
-  }
-  // END 验证
-
-  if (editError) {
-    res.status(422);
-    return res.render('topic/edit', {
-      edit_error: editError,
-      title: title,
-      content: content,
-      tabs: config.tabs
-    });
-  }
-
-  Topic.newAndSave(title, content, tab, req.session.user._id, function (err, topic) {
-    if (err) {
-      return next(err);
+    var json = req.body.json === 'true';
+    //for marktang
+    if (!json && req.body.content){
+        res.render('topic/edit', {
+            tabs: config.tabs,
+            content_from_marktang : req.body.content || ''
+        });
+        return;
     }
-
-    var proxy = new EventProxy();
-
-    proxy.all('score_saved', function () {
-      res.redirect('/topic/' + topic._id);
+    saveTopic(req, next, function(err, topic) {
+        if (!json) {
+            if (err || !topic) {
+                return res.render('topic/edit', {
+                    edit_error: err,
+                    title: topic.title,
+                    content: topic.content,
+                    tabs: config.tabs
+                });
+            } else {
+                res.redirect('/topic/' + topic._id);
+            }
+        } else {
+            if (err || !topic) {
+                res.send({
+                    ret: 400
+                });
+            } else {
+                res.send({
+                    ret: 0,
+                    data: dataAdapter.outTopic(topic)
+                });
+            }
+        }
     });
-    proxy.fail(next);
-    User.getUserById(req.session.user._id, proxy.done(function (user) {
-      user.score += 5;
-      user.topic_count += 1;
-      user.save();
-      req.session.user = user;
-      proxy.emit('score_saved');
-    }));
+};
 
-    //发送at消息
-    at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
-  });
+function saveTopic(req, next, callback) {
+    var title = escapeHtml(validator.trim(req.body.title));
+    var tab = validator.escape(validator.trim(req.body.tab));
+    var content = validator.trim(req.body.content || req.body.t_content);
+    var type = escapeHtml(req.body.type || 0);
+    var reprint = req.body.reprint;
+    if(reprint && reprint.length != 0 && reprint != "false"){
+        reprint = req.body.link;
+    }else{
+        reprint = "";
+    }
+    
+    // 得到所有的 tab, e.g. ['ask', 'share', ..]
+    var allTabs = config.tabs.map(function (tPair) {
+        return tPair[0];
+    });
+    // if (!config.regExps.topicTitle.test(title)
+    //     || !config.regExps.topicContent.test(content)
+    //     || !_.contains(allTabs, tab)
+    // ) {
+    //     return callback('param error', null);
+    // }
+
+    var user = req.session.user;
+    var ep = new EventProxy();
+    ep.fail(next);
+
+    // console.log(title+"is done !");
+
+    Topic.newAndSave(title, type, content, tab, reprint, user._id, ep.done('topic'));
+    ep.all('topic', function(topic) {
+        User.getUserById(user._id, ep.done(function (user) {
+            user.score += 5;
+            user.topic_count += 1;
+            user.save();
+            req.session.user = user;
+            ep.emit('score_saved', user);
+        }));
+        // 给team成员发送
+        //if (user.company) {
+            //User.getTeamMember(
+                //user.company, 
+                //user.team || '' , 
+                //ep.done(function(members) {
+                    //mail.sendNewTopicToTeamMembers({
+                        //members: members,
+                        //user: user,
+                        //topic: topic
+                    //});
+                //})
+            //);
+        //}
+        if(type == 0){
+            User.listOrderByTeam(0, 1000, function(err, members) {
+                if (err) {
+                    return;
+                }
+                mail.sendNewTopicToTeamMembers({
+                    members: members,
+                    user: user,
+                    topic: topic
+                });
+            }); 
+            //发送at消息
+            at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
+        }
+    });
+
+    ep.all('topic', 'score_saved', function (topic, user) {
+        callback(null, topic);
+    });
 };
 
 exports.showEdit = function (req, res, next) {

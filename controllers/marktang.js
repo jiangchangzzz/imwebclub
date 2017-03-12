@@ -69,6 +69,7 @@ function index(req, res, next){
         ep.emitLater('topic', null);
     }
     
+    // 获取草稿
     Marktang.getRecently(user._id, ep.done('marktang'));
 
     ep.all('topic', 'marktang', function(topic, marktang) {

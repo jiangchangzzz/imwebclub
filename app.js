@@ -45,6 +45,9 @@ var bytes = require('bytes')
 
 // 静态文件目录
 var staticDir = path.join(__dirname, 'public');
+// lib文件目录 非模块化插件
+var libsDir = path.join(__dirname, 'libs');
+
 // assets
 var assets = {};
 
@@ -82,6 +85,7 @@ if (config.debug) {
   app.use(LoaderConnect.less(__dirname)); // 测试环境用，编译 .less on the fly
 }
 app.use('/public', express.static(staticDir));
+app.use('/libs', express.static(libsDir));
 app.use('/agent', proxyMiddleware.proxy);
 
 // 通用的中间件

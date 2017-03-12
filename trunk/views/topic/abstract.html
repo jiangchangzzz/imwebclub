@@ -1,0 +1,108 @@
+  <div class="cell">
+  <div class="cell-l">
+    <img class="ui-avatar-48 user-slider-btn js-identicon" data-name="<%= topic.author.loginname %>" src="<%= topic.author.avatar_url %>" />
+  </div>
+  <div class="cell-r">
+    <div class="cell-wrap">
+
+      <!-- 类型筛选 start -->
+      <%if(topic.type && topic.type == 1){%>
+        <div class="cell-topic">
+          分享的项目：<a href='<%- topic.title %>' class="ex-link" target="_blank"><%= topic.proName %></a> By <a href='https://github.com/<%=topic.proAuthor%>' class="ex-link" target="_blank"><%= topic.proAuthor %></a>
+        </div>
+        <div class="cell-brief-wrap">
+          <table>
+            <tr>
+              <td>
+                <iframe src="//ghbtns.com/github-btn.html?user=<%=topic.proAuthor%>&repo=<%=topic.proName%>&type=watch&count=true&v=2" height="30" width="118" frameborder="0" scrolling="0" style="width:105px; height: 30px;" allowTransparency="true"></iframe>
+              </td>
+              <td>
+                <iframe src="//ghbtns.com/github-btn.html?user=<%=topic.proAuthor%>&repo=<%=topic.proName%>&type=watch&count=true" height="30" width="118" frameborder="0" scrolling="0" style="width:105px; height: 30px;" allowTransparency="true"></iframe>
+              </td>
+              <td>
+                <iframe src="//ghbtns.com/github-btn.html?user=<%=topic.proAuthor%>&repo=<%=topic.proName%>&type=fork&count=true" height="30" width="118" frameborder="0" scrolling="0" style="width:105px; height: 30px;" allowTransparency="true"></iframe>
+              </td>
+            </tr>
+          </table>
+          <p class="cell-brief"><%= topic.summary.replace(/<br>/g, ' ')%></p>
+          <div class="cell-other-info">
+            <span title="浏览" class="hide cell-other-span"><i class="fa fa-eye"></i><%= topic.visit_count %></span>
+            <span title="评论" class="hide cell-other-span"><i class="fa fa-weixin"></i><%= topic.reply_count %></span>
+            <span title="收藏" class="hide cell-other-span"><i class="fa fa-heart"></i><%= topic.collect_count %></span>
+            <% if (typeof(current_user) !== 'undefined' && current_user._id.equals(topic.author_id)) { %>
+              <span class="cell-other-span hide"> | </span>  
+              <a title="编辑" class="cell-other-span js-topic-edit" href="/topic/<%=topic._id%>/edit"><i class="fa fa-edit"></i></a>
+              <a title="删除" class="cell-other-span js-topic-del" href="javascript:void(0)" data-tid="<%=topic._id%>"><i class="fa fa-trash"></i></a>    
+            <% } %>
+          </div>
+        </div>
+      <%}else{%>
+        <div class="cell-topic">
+          <!--<%if(topic.reprint){%>推荐<%}else{%>发表<%}%>的文章：-->
+          <%- partial("../topic/_top_good", {object: topic, as:"topic"}) %>
+          <a href='/topic/<%= topic._id %>' class="ex-link" target="_blank"><%- topic.title %></a>
+        </div>
+        <div class="cell-other-info">
+          <span title="作者" class="cell-other-span">
+            <%= topic.author.name || topic.author.loginname %>
+            <%if(topic.author.signature){%>
+              <span>,<%= topic.author.signature %> </span>
+            <%}%>
+            于 <%= topic.friendly_create_at %>发表</span>
+
+          <span title="浏览" class="cell-other-span"><i class="fa fa-eye"></i><%= topic.visit_count %></span>
+          <span title="评论" class="cell-other-span"><i class="fa fa-weixin"></i><%= topic.reply_count %></span>
+          <% if (!topic.in_collection) { %>
+          <span title="收藏" class="cell-other-span"><i class="fa fa-heart"></i><%= topic.collect_count %></span>
+          <%}else{%>
+          <span title="收藏" class="cell-other-span"><i class="fa fa-heart"></i><%= topic.collect_count %></span>
+          <%}%>
+
+
+          <% if (typeof(current_user) !== 'undefined' && current_user._id.equals(topic.author_id)) { %>
+          <span class="cell-other-span"> | </span>
+          <a title="编辑" class="cell-other-span js-topic-edit" href="/marktang/index?topic_id=<%=topic._id%>"><i class="fa fa-edit"></i></a>
+          <a title="删除" class="cell-other-span js-topic-del" href="javascript:void(0)" data-tid="<%=topic._id%>"><i class="fa fa-trash"></i></a>
+          <% } %>
+        </div>
+        <!--<div class="cell-info">-->
+            <!--<span class="cell-name user-slider-btn nor-link" data-name="<%= topic.author.loginname %>">-->
+                <!--<%= topic.author.name || topic.author.loginname %>-->
+                <!--<%if(topic.author.signature){%>-->
+                <!--<span class="cell-signature">，<%= topic.author.signature %></span>-->
+                <!--<%}%>-->
+            <!--</span>-->
+        <!--</div>-->
+        <div class="cell-brief-wrap">
+          <%if(topic.pic && topic.pic.length != 0){%>
+            <a href="<%=topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap fancybox.image"><img class="cell-brief-img" lazy-src="<%=topic.pic[0]%>"></a>
+          <%}%>
+          <div class="cell-brief"><%= topic.summary.replace(/<br>/g, ' ')%></div>
+          <div class="clearfix"></div>
+        </div>
+        <%if(topic.reprint){%>
+          <div class="cell-from">
+            <%
+            var host = topic.reprint;
+            var regex = /.*\:\/\/([^\/]*).*/;
+            var match = topic.reprint.match(regex);
+            if(typeof match != "undefined" && null != match) host = match[1];
+            %>
+            转载自<a href="<%=topic.reprint%>" class="cell-reprint ex-link" target="_blank"><%=host%></a>
+          </div>
+        <%}%>
+
+      <%}%>
+      <!-- 类型筛选 end -->
+    </div>
+  </div>
+  <div class="cell-side">
+  <div class="cell-time">
+    <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= topic.friendly_create_at %></span>
+  </div>
+  <%if(topic.tabName){%>
+    <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == topic.tabName){link = "/tab/"+tabs[i][0];}}%>
+    <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= topic.tabName %></a>
+  <%}%>
+  </div>
+</div>

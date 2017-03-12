@@ -1,4 +1,4 @@
-var config = {
+module.exports = {
     MAIL_DOMAIN: 'qq.com;163.com;126.com;sohu.com;sina.com;gmail.com;21cn.com;hotmail.com;vip.qq.com;yeah.net'.split(';'),
     regExps: {
         email     : /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
