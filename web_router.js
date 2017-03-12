@@ -13,6 +13,7 @@ var sign = require('./controllers/sign');
 var site = require('./controllers/site');
 var user = require('./controllers/user');
 var message = require('./controllers/message');
+var draft = require('./controllers/draft');
 var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
 var rss = require('./controllers/rss');
@@ -89,6 +90,7 @@ router.post('/topic/:tid/lock', auth.adminRequired, topic.lock); // 锁定主题
 
 router.post('/topic/:tid/delete', auth.userRequired, topic.delete);
 
+
 // 保存新建的文章
 router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topic', config.create_post_per_day, {showJson: false}), topic.put);
 
@@ -103,6 +105,13 @@ router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改
 router.post('/reply/:reply_id/delete', auth.userRequired, reply.delete); // 删除某评论
 router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点赞
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
+
+// 草稿
+router.post('/draft/autosave', auth.userRequired, draft.autosave); 
+router.get('/draft/countmy', auth.userRequired, draft.countmy); 
+router.get('/draft/listmy', auth.userRequired, draft.listmy); 
+router.post('/draft/delete/:id', auth.userRequired, draft.delete); 
+router.get('/draft/get/:id', auth.userRequired, draft.get); 
 
 // static
 router.get('/about', staticController.about);

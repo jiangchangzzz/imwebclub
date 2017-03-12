@@ -20,7 +20,12 @@
             </div>
             <hr class="solid-light">
             <div class="column-body">
-                <img class="slider" src="/public/images/sliderCover-711b1dcf1a6910f0edad77e45760283e.png">
+                <% console.log(topics)%>
+                 <% if (typeof(topics) !== 'undefined' && topics.length > 0 && topics[0].pic && topics[0].pic[0]) { console.log(topics[0].pic[0])%>
+                    <img class="slider" src="<%=topics[0].pic[0] %>">
+                 <% }else {%>
+                    <img class="slider" src="/public/images/sliderCover-711b1dcf1a6910f0edad77e45760283e.png">
+                 <% } %>
                 <ul class="article-list">
                 <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
                     <% topics.forEach(function (topic, index) { %>

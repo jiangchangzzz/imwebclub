@@ -80,7 +80,7 @@ exports.getTopicsByQuery = function (query, opt, callback) {
     if (topics.length === 0) {
       return callback(null, []);
     }
-
+    console.log(topics);
     var proxy = new EventProxy();
     proxy.after('topic_ready', topics.length, function () {
       topics = _.compact(topics); // 删除不合规的 topic
@@ -223,7 +223,7 @@ exports.newAndSave = function(title, type, content, tab, reprint, authorId, call
     topic.title = title;
     topic.content = content;
     // todo topic pic
-    // topic.pic = tools.genTopicPic(content);
+    topic.pic = tools.genTopicPic(content);
     topic.summary = tools.genTopicSummary(content, config.topic_summary_len);
     topic.tab = tab;
     topic.reprint = reprint;

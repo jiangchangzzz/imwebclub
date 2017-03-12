@@ -98,14 +98,21 @@ var config = {
   // 下面两个配置都是文件上传的配置
 
   // 7牛的access信息，用于文件上传
+  // qn_access: {
+  //   accessKey: 'your access key',
+  //   secretKey: 'your secret key',
+  //   bucket: 'your bucket name',
+  //   origin: 'http://your qiniu domain',
+  //   // 如果vps在国外，请使用 http://up.qiniug.com/ ，这是七牛的国际节点
+  //   // 如果在国内，此项请留空
+  //   uploadURL: 'http://xxxxxxxx',
+  // },
+  //7牛的access信息，用于文件上传
   qn_access: {
-    accessKey: 'your access key',
-    secretKey: 'your secret key',
-    bucket: 'your bucket name',
-    origin: 'http://your qiniu domain',
-    // 如果vps在国外，请使用 http://up.qiniug.com/ ，这是七牛的国际节点
-    // 如果在国内，此项请留空
-    uploadURL: 'http://xxxxxxxx',
+      accessKey: '1VQoqeNeV4kDaOHO7ajqYZNm-2lgQ093BUBQKC1U',
+      secretKey: 'Q1xh9qaj25Y6jzLt8-4vp5lzbkC9-uAtIOPw02Xj',
+      bucket: 'imweb',
+      domain: 'http://7tszky.com1.z0.glb.clouddn.com'
   },
 
   // 文件上传配置
