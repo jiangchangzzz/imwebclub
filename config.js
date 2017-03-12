@@ -52,6 +52,9 @@ var config = {
   // 话题列表显示的话题数量
   list_topic_count: 20,
 
+  // 首页热文显示话题数量
+  list_hot_topic_count: 5,
+
   // 限制发帖时间间隔，单位：毫秒
   post_interval: 2000,
 
@@ -146,7 +149,7 @@ var config = {
     ['node', 'nodeJS全栈'],
     ['mobile', '移动开发'],
     ['tools', '工具建设'],
-    ['op', '运营'],
+    ['op', '运维'],
     ['frame', '基础库'],
     ['js', 'javascript技术']
   ],
