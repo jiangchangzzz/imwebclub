@@ -28,7 +28,7 @@
                  <% } %>
                 <ul class="article-list">
                 <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
-                    <% topics.forEach(function (topic, index) { %>
+                    <% topics.slice(0,5).forEach(function (topic, index) { %>
                         <li <% if(index === 0) { %>class="active"<% } %>>
                             <a href="/topic/<%= topic._id %>">
                                 <b><%= topic.title %></b>
@@ -51,7 +51,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="../images/comment.png">
                           </span>
@@ -77,7 +77,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="../images/comment.png">
                           </span>
@@ -103,7 +103,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="../images/comment.png">
                           </span>

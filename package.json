@@ -50,6 +50,7 @@
     "oneapm": "1.2.20",
     "passport": "0.3.2",
     "passport-github": "1.1.0",
+    "passport-weibo": "^0.1.2",
     "pm2": "1.1.1",
     "qn": "1.1.1",
     "ready": "0.1.1",
@@ -112,6 +113,8 @@
   },
   "scripts": {
     "test": "make test",
-    "build": "rm -rf views/* && NODE_ENV=production webpack --progress --hide-modules"
+    "build": "rm -rf views/* && NODE_ENV=production webpack --progress --hide-modules",
+    "watch": "webpack --progress --hide-modules --colors --watch",
+    "dev": "NODE_ENV=test node app.js"
   }
 }

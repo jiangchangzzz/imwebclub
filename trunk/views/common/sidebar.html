@@ -1,9 +1,10 @@
 <div id="sidebar">
+    <% if (current_user) { %>
     <div id="profile" class="panel">
         <div class="avatar">
-            <img src="../../images/avatarDefault.jpg">
+            <img src="<%= current_user.avatar %>">
         </div>
-        <div class="name">jayccchen</div>
+        <div class="name"><%= current_user.loginname %></div>
         <ul class="contribution-list">
             <li>
                 <b>10</b>
@@ -15,6 +16,8 @@
             </li>
         </ul>
     </div>
+    <% } %>
+
     <div id="social" class="panel border">
         <div class="panel-head">
             <b>关注我们</b>
@@ -49,8 +52,8 @@
         <div class="panel-head">
             <b>热门专题</b>
             <a href="javascript:void(0);" class="link">
-                      更多
-                    </a>
+          更多
+        </a>
         </div>
         <hr class="solid-light">
         <div class="panel-body">
@@ -132,8 +135,8 @@
         <div class="panel-head">
             <b>作者列表</b>
             <a href="javascript:void(0);" class="link">
-                    更多
-                  </a>
+        更多
+      </a>
         </div>
         <hr class="solid-light">
         <div class="panel-body">

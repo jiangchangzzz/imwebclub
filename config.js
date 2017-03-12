@@ -47,7 +47,7 @@ var config = {
   auth_cookie_name: 'node_club',
 
   // 程序运行的端口
-  port: 3001,
+  port: 3000,
 
   // 话题列表显示的话题数量
   list_topic_count: 20,
@@ -76,19 +76,23 @@ var config = {
     ignoreTLS: true,
   },
 
-  //weibo app key
-  weibo_key: 10000000,
-  weibo_id: 'your_weibo_id',
-
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
   admins: { testjay: true },
 
   // github 登陆的配置
   GITHUB_OAUTH: {
-    clientID: 'your GITHUB_CLIENT_ID',
-    clientSecret: 'your GITHUB_CLIENT_SECRET',
-    callbackURL: 'http://cnodejs.org/auth/github/callback'
+      clientID: 'a32d122e769fae39b898',
+      clientSecret: '9cd819a15a6e886077b5a937aa0e1b8aac55f859',
+      callbackURL: 'http://imweb.io/auth/github/callback'
   },
+
+  //weibo app key
+  WEIBO_OAUTH:{
+    clientID: '3489481381',
+    clientSecret: '52410f54674964564a475afc64511e5d',
+    callbackURL: "http://imweb.io/auth/weibo/callback"
+  },
+
   // 是否允许直接注册（否则只能走 github 的方式）
   allow_sign_up: true,
 
@@ -162,6 +166,18 @@ var config = {
 
 if (process.env.NODE_ENV === 'test') {
   config.db = 'mongodb://127.0.0.1/node_club_test';
+  // 本地测试github
+  config.GITHUB_OAUTH = {
+      clientID: 'cb1872e84af2cb965cc8',
+      clientSecret: '097d8c85ac8a246abf7dafa94a0c4d78f95db506',
+      callbackURL: `http://localhost:${config.port}/auth/github/callback`
+  };
+  // 本地测试weibo
+  config.WEIBO_OAUTH = {
+      clientID: '3489481381',
+      clientSecret: '52410f54674964564a475afc64511e5d',
+      callbackURL: `http://localhost:${config.port}/auth/weibo/callback`
+  };
 }
 
 module.exports = config;
