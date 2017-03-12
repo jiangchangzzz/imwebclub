@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IMweb前端社区-发表文章</title>
+  <script>
+    window.imweb = window.imweb || {};
+    imweb._csrf = '<%- csrf %>';
+    <% if (typeof(current_user) !== 'undefined') { %>
+        imweb.user = {
+            id: '<%= current_user._id %>',
+            loginname: '<%= current_user.loginname %>',
+            is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+        };
+    <% } else { %>
+        imweb.user = null;
+    <% } %>
+  </script>
+    <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+    <script src='/libs/jsface.min.js'></script>
+    <script src='/libs/EventEmitter.min.js'></script>
+    <script src='/libs/moment.min.js'></script>
+    <script src='/libs/lodash.compat.min.js'></script>
+    <script src='/libs/remarkable.js'></script>
+
+    <script src='/libs/webuploader/webuploader.withoutimage.js'></script>
+    <script src='/libs/marktang/lib/codemirror/lib/codemirror.js'></script>
+    <script src='/libs/marktang/lib/marked.js'></script>
+    <script src='/libs/marktang/lib//highlight/highlight.js'></script>
+    <script src='/libs/marktang/lib/mathjax/MathJax.js'></script>
+    <script src='/libs/marktang/lib/codemirror/addon/mode/overlay.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/xml/xml.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/markdown/markdown.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/gfm/gfm.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/javascript/javascript.js'></script>
+    <script src='/libs/utils.js'></script>
+    <script src='/libs/marktang/js/flymarkdown.js?v=1.1'></script>
+
+    <!--[if lte IE 8]>
+    <script src='/libs/marktang/lib/es5-shim.min.js'></script>
+    <![endif]-->
+
+    <!--[if IE]>  
+    <script src="/libs/marktang/js/base64.min.js"></script>
+    <![endif]--> 
+<link rel="shortcut icon" href="/public/icon.png"><link href="/public/stylesheets/vendors.css?6d3c18bc894b0af1c25f" rel="stylesheet"><link href="/public/stylesheets/marktang/index.css?6d3c18bc894b0af1c25f" rel="stylesheet"></head>
+<body>
+<script>
+    imweb.topic = <%- inlineScript(JSON.stringify(topic)) %>;
+</script>
+<div id="main">
+    <div id="slide">
+        <a href="/"><img class="md-logo" src="data:image/png;base64,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"></a>
+        <ul class="slide-ul" id="sidebar-save">
+            <li class="slide-li" _type="mark_new">新建文章</li>
+            <li class="slide-li" _type="save_draft">保存草稿</li>
+            <li class="slide-li" _type="mark_sample">markdown参考</li>
+            <li class="slide-li slide-line"></li>
+            <li class="slide-li" _type="my_article">我的文章</li>
+            <li class="slide-li" _type="my_draft">我的草稿</li>
+            <li class="slide-li slide-line"></li>
+            <!--<li class="slide-li" _type="save_evernote">存到evernote</li>-->
+            <!--<li class="slide-li" _type="save_yinxiang">存到印象笔记</li>-->
+            <li class="slide-li" _type="save_md">.md存到本地</li>
+            <li class="slide-li" _type="save_pdf">.pdf存到本地</li>
+            <!--<li class="slide-li" _type="save_html">获取HTML</li>-->
+            <button class="ui-button btn-publish js-publish" type="button" _type="publish">发布</button>
+        </ul>
+    </div>
+    <div id="top">
+        <div class="top-l">
+            <div class="top-l-item">
+                <span class="top-l-name">填写标题:</span><input id="cur-article-title" type="text" class="input-xlarge in-title"  placeholder="请输入文章标题" value="<%if(topic && topic.title){%><%-topic.title%><%}%>"/>
+            </div>
+            <div class="top-l-item">
+                <span class="top-l-name">选择分类:</span>
+                <%var curTabKey = ""%>
+                <%var curTabVal = ""%>
+                <% config.tabs.forEach(function (pair) { %>
+                    <a href="javascript:void(0);" class="topic-tab in-tab <%if(topic && topic['tab'] == pair[0]){%>current-tab<%curTabKey=pair[0];curTabVal=pair[1];%><%}%>" data-val="<%= pair[0] %>"><%= pair[1] %></a>
+                <%});%>
+            </div>
+        </div>
+        <div class="top-r">
+            <div class="header topic_header">
+                  <h1 class="topic-title out-title"><%if(topic && topic.title){%><%-topic.title%><%}else{%><span class="empty-title">请在左侧输入文章标题</span><%}%></h1>
+                  <div class="title-wrap">
+                        <%if(curTabVal){%>
+                        <a class="ui-tag ui-tag-blue out-tab" target="_blank" href="/tab/<%=curTabKey%>"><%=curTabVal%></a>
+                        <span class="empty-title js-tab-empty hide">在左侧选择一个分类</span>
+                        <%}else{%>
+                        <a class="ui-tag ui-tag-blue out-tab hide" target="_blank" href="/tab/<%=curTabKey%>"><%=curTabVal%></a>
+                        <span class="empty-title js-tab-empty">在左侧选择一个分类</span>
+                        <%}%>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div id="in">
+        <textarea id="code"></textarea>
+        <!--导入marktang 使用说明 -->
+        <%- partial('./mtorigin.html') %>
+    </div>
+    <div id="out"></div>
+    <ul class="cmd-list cmd-list-normal">
+        <li title="插入图片">
+            <a class="cmd fa fa-image" href="#"></a>
+            <div id="file-picker"></div>
+        </li>
+        <li>
+        <a class="cmd fa fa-info-circle hide" href="#"
+            title="修改文章信息" data-type="info"></a>
+        </li>
+        <li>
+        <a class="cmd fa fa-save hide" href="#"
+            title="发表" data-type="publish"></a>
+        </li>
+        <li>
+        <a class="cmd fa fa-list hide" href="#"
+            title="操作" data-type="save"></a>
+        </li>
+        <li>
+        <a class="cmd fa fa-history hide" href="#"
+            title="文章列表" data-type="mytopic"></a>
+        </li>
+        <li>
+        <a class="cmd cmd-draft fa fa-edit hide" href="#"
+            title="草稿列表" data-type="draft">
+            <i class="draft-count hide"></i>
+        </a>
+        </li>
+    </ul>
+    <ul class="cmd-list cmd-list-sample hide">
+        <li>
+        <a class="cmd fa fa-reply" href="#"
+            title="返回" data-type="leave-sample"></a>
+        </li>
+    </ul>
+</div>
+<div id="mask"></div>
+<div id="sidebar-info" class="sidebar">
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="tab-value">选择版块：</label>
+            <div class="controls">
+                <select class="topic-tab">
+                    <option value="">请选择</option>
+                    <% config.tabs.forEach(function (pair) { %>
+                        <option value="<%= pair[0] %>" ><%= pair[1] %></option>
+                    <%});%>
+                </select>
+                <span class="error-msg">请选择版本</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="tab-value">标题：</label>
+            <div class="controls">
+                <div class="topic-title"></div>
+                <div class="topic-hint">标题直接从marktang中提取</div>
+                <!--
+                <div class="img">
+                    <img src="/public/images/marktang_title.png" />
+                </div>
+                -->
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="step-continue ui-button ui-button-wide" type="button">继续</button>
+        </div>
+    </form>
+</div>
+
+<div id="sidebar-mytopic" class="sidebar">
+    <div class="sidebar-title">文章列表</div>
+    <ul class="sidebar-list" id="sidebar-mytopic-list">
+    </ul>
+</div>
+<script id="topic-list-item" type="text/html">
+    <li class="sidebar-list-item {{= item.draft ? 'edit-draft' : 'edit-topic' }}" 
+        data-id="{{= item.id }}"
+        data-draft-id="{{= item.draft ? item.draft.id : '' }}">
+        <i class="fa fa-edit icon icon-update" title="更新文章"></i>
+        <span class="title">{{= item.title }}</span>
+        <div class="cmd edit-topic">重新编辑</div>
+    </li>
+</script>
+<div id="sidebar-draft" class="sidebar">
+    <div class="sidebar-title">草稿列表</div>
+    <ul class="sidebar-list" id="sidebar-draft-list">
+    </ul>
+</div>
+<script id="draft-list-item" type="text/html">
+    <li class="sidebar-list-item edit-draft {{= item.topic_id ? 'update' : 'add' }}" 
+        data-draft-id="{{= item.id }}">
+        <i class="fa fa-edit icon icon-update" title="更新文章"></i>
+        <i class="fa fa-plus-square icon icon-add" title="新文章"></i>
+        <span class="title">{{= item.title }}</span>
+        <span class="time">({{= item.friendly_update_at }})</span>
+        <div class="cmd delete-draft">删除</div>
+    </li>
+</script>
+<div id="loading" style="width:400px; margin:0 auto; padding-top:40px;">正在进入IMWeb马克糖... </div>
+<div id="alert-error">
+    <i class="fa fa-times"></i>
+    <div class="msg"></div>
+</div>
+<div id="autosave-hint">
+    <span class="time"></span>
+    <span class="msg">文章已自动保存至草稿</span>
+</div>
+<script type="text/javascript" src="/public/javascripts/vendors.js?6d3c18bc894b0af1c25f"></script><script type="text/javascript" src="/public/javascripts/marktang/index.js?6d3c18bc894b0af1c25f"></script></body>
+</html>
+
+

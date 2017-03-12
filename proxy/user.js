@@ -116,3 +116,13 @@ exports.makeGravatar = makeGravatar;
 exports.getGravatar = function (user) {
   return user.avatar || makeGravatar(user);
 };
+
+exports.listOrderByTeam = function(start, limit, callback) {
+    start = start || 0;
+    limit = limit || 0xfffffff;
+    return User.find()
+        .sort({ company: 1, team: 1 })
+        .skip(start)
+        .limit(limit)
+        .exec(callback);
+};

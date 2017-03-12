@@ -13,7 +13,7 @@
                     <button type="submit" name="submit"></button>
                 </form>
                 <% if (current_user) {%>
-                  <a href="javascript:void(0);" class="user-post-btn ico"></a>
+                  <a href="/marktang/index?autoOpenInfo=true" class="user-post-btn ico"></a>
                   <a href="javascript:void(0);" class="user-message-btn ico"></a>
                   <a id="nav-user-menu" href="javascript:void(0);" class="user-user-btn ico" data-name="<%= current_user.loginname %>"></a>
                   <ol id="nav-user-menu-layer" class="ui-dropdown-layer ui-dropdown-layer-mini">

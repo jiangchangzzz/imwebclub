@@ -12,6 +12,7 @@ var entries = getEntry('trunk/entry/**/*.js'
     , 'trunk/entry/');
 
 var chunks = Object.keys(entries);
+console.log(entries);
 var config = {
     entry: entries,
     output: {
@@ -22,6 +23,10 @@ var config = {
     },
     module: {
         loaders: [ //加载器
+            {
+                test: /\.js?$/,
+                loaders: ['babel-loader?presets[]=es2015']
+            },
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style', 'css')

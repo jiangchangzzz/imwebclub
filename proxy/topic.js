@@ -6,6 +6,7 @@ var Reply      = require('./reply');
 var tools      = require('../common/tools');
 var at         = require('../common/at');
 var _          = require('lodash');
+var config = require('../config');
 
 
 /**
@@ -215,12 +216,28 @@ exports.reduceCount = function (id, callback) {
   });
 };
 
-exports.newAndSave = function (title, content, tab, authorId, callback) {
-  var topic       = new Topic();
-  topic.title     = title;
-  topic.content   = content;
-  topic.tab       = tab;
-  topic.author_id = authorId;
-
-  topic.save(callback);
+exports.newAndSave = function(title, type, content, tab, reprint, authorId, callback) {
+    type = type || 0;
+    var topic = new Topic();
+    topic.type = type;
+    topic.title = title;
+    topic.content = content;
+    // todo topic pic
+    // topic.pic = tools.genTopicPic(content);
+    topic.summary = tools.genTopicSummary(content, config.topic_summary_len);
+    topic.tab = tab;
+    topic.reprint = reprint;
+    topic.author_id = authorId;
+    topic.save(callback);
 };
+
+
+// exports.newAndSave = function (title, content, tab, authorId, callback) {
+//   var topic       = new Topic();
+//   topic.title     = title;
+//   topic.content   = content;
+//   topic.tab       = tab;
+//   topic.author_id = authorId;
+
+//   topic.save(callback);
+// };

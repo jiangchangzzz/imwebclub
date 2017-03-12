@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IMweb前端社区-发表文章</title>
+  <script>
+    window.imweb = window.imweb || {};
+    imweb._csrf = '<%- csrf %>';
+    <% if (typeof(current_user) !== 'undefined') { %>
+        imweb.user = {
+            id: '<%= current_user._id %>',
+            loginname: '<%= current_user.loginname %>',
+            is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+        };
+    <% } else { %>
+        imweb.user = null;
+    <% } %>
+  </script>
+    <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+    <script src='/libs/jsface.min.js'></script>
+    <script src='/libs/EventEmitter.min.js'></script>
+    <script src='/libs/moment.min.js'></script>
+    <script src='/libs/lodash.compat.min.js'></script>
+    <script src='/libs/remarkable.js'></script>
+
+    <script src='/libs/webuploader/webuploader.withoutimage.js'></script>
+    <script src='/libs/marktang/lib/codemirror/lib/codemirror.js'></script>
+    <script src='/libs/marktang/lib/marked.js'></script>
+    <script src='/libs/marktang/lib//highlight/highlight.js'></script>
+    <script src='/libs/marktang/lib/mathjax/MathJax.js'></script>
+    <script src='/libs/marktang/lib/codemirror/addon/mode/overlay.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/xml/xml.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/markdown/markdown.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/gfm/gfm.js'></script>
+    <script src='/libs/marktang/lib/codemirror/mode/javascript/javascript.js'></script>
+    <script src='/libs/utils.js'></script>
+    <script src='/libs/marktang/js/flymarkdown.js?v=1.1'></script>
+
+    <!--[if lte IE 8]>
+    <script src='/libs/marktang/lib/es5-shim.min.js'></script>
+    <![endif]-->
+
+    <!--[if IE]>  
+    <script src="/libs/marktang/js/base64.min.js"></script>
+    <![endif]--> 
+</head>
+<body>
+<script>
+    imweb.topic = <%- inlineScript(JSON.stringify(topic)) %>;
+</script>
+<div id="main">
+    <div id="slide">
+        <a href="/"><img class="md-logo" src="../../images/icon.png"></a>
+        <ul class="slide-ul" id="sidebar-save">
+            <li class="slide-li" _type="mark_new">新建文章</li>
+            <li class="slide-li" _type="save_draft">保存草稿</li>
+            <li class="slide-li" _type="mark_sample">markdown参考</li>
+            <li class="slide-li slide-line"></li>
+            <li class="slide-li" _type="my_article">我的文章</li>
+            <li class="slide-li" _type="my_draft">我的草稿</li>
+            <li class="slide-li slide-line"></li>
+            <!--<li class="slide-li" _type="save_evernote">存到evernote</li>-->
+            <!--<li class="slide-li" _type="save_yinxiang">存到印象笔记</li>-->
+            <li class="slide-li" _type="save_md">.md存到本地</li>
+            <li class="slide-li" _type="save_pdf">.pdf存到本地</li>
+            <!--<li class="slide-li" _type="save_html">获取HTML</li>-->
+            <button class="ui-button btn-publish js-publish" type="button" _type="publish">发布</button>
+        </ul>
+    </div>
+    <div id="top">
+        <div class="top-l">
+            <div class="top-l-item">
+                <span class="top-l-name">填写标题:</span><input id="cur-article-title" type="text" class="input-xlarge in-title"  placeholder="请输入文章标题" value="<%if(topic && topic.title){%><%-topic.title%><%}%>"/>
+            </div>
+            <div class="top-l-item">
+                <span class="top-l-name">选择分类:</span>
+                <%var curTabKey = ""%>
+                <%var curTabVal = ""%>
+                <% config.tabs.forEach(function (pair) { %>
+                    <a href="javascript:void(0);" class="topic-tab in-tab <%if(topic && topic['tab'] == pair[0]){%>current-tab<%curTabKey=pair[0];curTabVal=pair[1];%><%}%>" data-val="<%= pair[0] %>"><%= pair[1] %></a>
+                <%});%>
+            </div>
+        </div>
+        <div class="top-r">
+            <div class="header topic_header">
+                  <h1 class="topic-title out-title"><%if(topic && topic.title){%><%-topic.title%><%}else{%><span class="empty-title">请在左侧输入文章标题</span><%}%></h1>
+                  <div class="title-wrap">
+                        <%if(curTabVal){%>
+                        <a class="ui-tag ui-tag-blue out-tab" target="_blank" href="/tab/<%=curTabKey%>"><%=curTabVal%></a>
+                        <span class="empty-title js-tab-empty hide">在左侧选择一个分类</span>
+                        <%}else{%>
+                        <a class="ui-tag ui-tag-blue out-tab hide" target="_blank" href="/tab/<%=curTabKey%>"><%=curTabVal%></a>
+                        <span class="empty-title js-tab-empty">在左侧选择一个分类</span>
+                        <%}%>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div id="in">
+        <textarea id="code"></textarea>
+        <!--导入marktang 使用说明 -->
+        <%- partial('./mtorigin.html') %>
+    </div>
+    <div id="out"></div>
+    <ul class="cmd-list cmd-list-normal">
+        <li title="插入图片">
+            <a class="cmd fa fa-image" href="#"></a>
+            <div id="file-picker"></div>
+        </li>
+        <li>
+        <a class="cmd fa fa-info-circle hide" href="#"
+            title="修改文章信息" data-type="info"></a>
+        </li>
+        <li>
+        <a class="cmd fa fa-save hide" href="#"
+            title="发表" data-type="publish"></a>
+        </li>
+        <li>
+        <a class="cmd fa fa-list hide" href="#"
+            title="操作" data-type="save"></a>
+        </li>
+        <li>
+        <a class="cmd fa fa-history hide" href="#"
+            title="文章列表" data-type="mytopic"></a>
+        </li>
+        <li>
+        <a class="cmd cmd-draft fa fa-edit hide" href="#"
+            title="草稿列表" data-type="draft">
+            <i class="draft-count hide"></i>
+        </a>
+        </li>
+    </ul>
+    <ul class="cmd-list cmd-list-sample hide">
+        <li>
+        <a class="cmd fa fa-reply" href="#"
+            title="返回" data-type="leave-sample"></a>
+        </li>
+    </ul>
+</div>
+<div id="mask"></div>
+<div id="sidebar-info" class="sidebar">
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="tab-value">选择版块：</label>
+            <div class="controls">
+                <select class="topic-tab">
+                    <option value="">请选择</option>
+                    <% config.tabs.forEach(function (pair) { %>
+                        <option value="<%= pair[0] %>" ><%= pair[1] %></option>
+                    <%});%>
+                </select>
+                <span class="error-msg">请选择版本</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="tab-value">标题：</label>
+            <div class="controls">
+                <div class="topic-title"></div>
+                <div class="topic-hint">标题直接从marktang中提取</div>
+                <!--
+                <div class="img">
+                    <img src="/public/images/marktang_title.png" />
+                </div>
+                -->
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="step-continue ui-button ui-button-wide" type="button">继续</button>
+        </div>
+    </form>
+</div>
+
+<div id="sidebar-mytopic" class="sidebar">
+    <div class="sidebar-title">文章列表</div>
+    <ul class="sidebar-list" id="sidebar-mytopic-list">
+    </ul>
+</div>
+<script id="topic-list-item" type="text/html">
+    <li class="sidebar-list-item {{= item.draft ? 'edit-draft' : 'edit-topic' }}" 
+        data-id="{{= item.id }}"
+        data-draft-id="{{= item.draft ? item.draft.id : '' }}">
+        <i class="fa fa-edit icon icon-update" title="更新文章"></i>
+        <span class="title">{{= item.title }}</span>
+        <div class="cmd edit-topic">重新编辑</div>
+    </li>
+</script>
+<div id="sidebar-draft" class="sidebar">
+    <div class="sidebar-title">草稿列表</div>
+    <ul class="sidebar-list" id="sidebar-draft-list">
+    </ul>
+</div>
+<script id="draft-list-item" type="text/html">
+    <li class="sidebar-list-item edit-draft {{= item.topic_id ? 'update' : 'add' }}" 
+        data-draft-id="{{= item.id }}">
+        <i class="fa fa-edit icon icon-update" title="更新文章"></i>
+        <i class="fa fa-plus-square icon icon-add" title="新文章"></i>
+        <span class="title">{{= item.title }}</span>
+        <span class="time">({{= item.friendly_update_at }})</span>
+        <div class="cmd delete-draft">删除</div>
+    </li>
+</script>
+<div id="loading" style="width:400px; margin:0 auto; padding-top:40px;">正在进入IMWeb马克糖... </div>
+<div id="alert-error">
+    <i class="fa fa-times"></i>
+    <div class="msg"></div>
+</div>
+<div id="autosave-hint">
+    <span class="time"></span>
+    <span class="msg">文章已自动保存至草稿</span>
+</div>
+</body>
+</html>
+
+

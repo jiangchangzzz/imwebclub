@@ -1,0 +1,169 @@
+<script>
+    imweb.topic = {
+        id: '<%= topic._id %>',
+        reply_up_threshold: <%= topic.reply_up_threshold %>,
+        author: {
+            name: '<%= topic.author.name %>',
+            loginname: '<%= topic.author.loginname %>'
+        },
+        replies: <%- inlineScript(JSON.stringify(topic.replies)) %>
+    };
+
+    var RICH_META = {
+        name :'<%= topic.title %>',
+        author :'<%= topic.author.name %>',
+        img : '<%= topic.pic && topic.pic[0] %>'||'http://imweb.io/public/images/logo-white.png'
+    }
+
+</script>
+
+<div id='sidebar'>
+  
+  <div class='panel' style="display:none">
+    <div class='header'>
+      <span class='col_fade'>作者</span>
+    </div>
+    <div class='inner'>
+      <%- partial('../user/card', { object: topic.author, as: 'user' }) %>
+    </div>
+  </div>
+
+  <div class='panel panel-border' id="panel-author-otherArticle">
+    <div class='header'>
+      <span class='col_fade'>作者其它文章</span>
+    </div>
+    <div class='inner'>
+      <% if (typeof(author_other_topics) === 'undefined' || author_other_topics.length > 0) { %>
+      <ul class='unstyled'>
+        <%- partial('../topic/small', { collection: author_other_topics, as: 'topic' }) %>
+      </ul>
+      <% } else { %>
+      <p>无</p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class='panel panel-border' id="panel-article-recommend">
+    <div class='header'>
+      <span class='col_fade'>推荐文章</span>
+    </div>
+    <div class='inner'>
+      <% if (typeof(no_reply_topics) !== 'undefined' && no_reply_topics.length > 0) { %>
+      <ul class='unstyled'>
+        <%- partial('../topic/small', { collection: no_reply_topics, as: 'topic' }) %>
+      </ul>
+      <% } else { %>
+      <p>无</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<div id='content'>
+  <div class='panel panel-border'>
+    <div class="topic-info">
+      <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar_url  %>"  data-name="<%= topic.author.loginname %>"/>
+      <div class="user-wrap">
+        <p class="user-name user-slider-btn" data-name="<%= topic.author.loginname %>"><%= topic.author.name || topic.author.loginname%></p>
+        <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= topic.friendly_create_at %></span>
+      </div>
+      <ul class="other-info">
+        <li>
+          <p><%= topic.visit_count %> </p>
+          <span>浏览</span>
+        </li>
+        <li>
+          <p class="topic-reply-count"><%= topic.reply_count %> </p>
+          <span>评论</span>
+        </li>
+        <li>
+          <p class="topic-collect-count"><%= topic.collect_count %></p>
+          <span>收藏</span>
+        </li>
+      </ul>
+    </div>
+    <div class='header topic_header'>
+      <h1 class="topic-title"><%- topic.title %></h1>
+      <%if(topic.reprint){%>
+        <div class="cell-from">
+          <%
+          var host = topic.reprint;
+          var regex = /.*\:\/\/([^\/]*).*/;
+          var match = topic.reprint.match(regex);
+          if(typeof match != "undefined" && null != match) host = match[1];
+          %>
+          转载自<a href="<%=topic.reprint%>" class="cell-reprint ex-link" target="_blank"><%=host%></a>
+        </div>
+      <%}%>
+      <div class="title-wrap">
+        <%if(topic.tabName){var link = "#";%>
+          <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == topic.tabName){link = "/tab/"+tabs[i][0];}}%>
+          <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= topic.tabName %></a>
+        <%}%>
+        <% if (typeof(current_user) !== 'undefined') { %>
+          <div class="btn-wrap">
+            <% if (current_user._id.equals(topic.author_id)) { %>
+              <a href='/marktang/index?autoOpenInfo=true&topic_id=<%= topic._id %>' class="btn-ico">
+                <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
+              <a href='javascript:;'
+                 class='delete-topic-btn btn-ico'>
+                 <i class="fa fa-lg fa-trash" title='删除'></i></a>
+              <% } %>
+              <% if (!topic.in_collection) { %>
+              <span class='btn-ico ico-collect collect-topic-btn'
+                  title='收藏' data-cancel="false"></span>
+              <% } else { %>
+              <span class='btn-ico ico-collect collected collect-topic-btn'
+                  title='取消收藏' data-cancel="true"></span>
+              <% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    <div class='inner topic'>
+      <div id="topic_content" class='topic_content'>
+
+          <div class="markdown-text">
+              <blockquote>
+                  <p><span style="margin-left: 10px;">本文作者：imweb <%= topic.author.name || topic.author.loginname %></span>
+                      <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/topic/<%= topic._id %>">imweb社区</a></span>
+                      <b style="margin-left: 10px;">未经同意，禁止转载</b>
+                      </p>
+              </blockquote>
+              <%- markdownRender(topic.linkedContent) %>
+          </div>
+
+      </div>
+    </div>
+  </div>
+  <% if (typeof(current_user) !== 'undefined' && typeof(topic) !== 'undefined') { %>
+  <div class='topic-reply-panel'>
+      <div class='panel-body'>
+          <div class="editor-wrap">
+              <textarea class="editor"></textarea>
+          </div>
+          <div class="editor-actions">
+              <button class="ui-button reply-submit" type="button">评论一下</button>
+          </div>
+      </div>
+  </div>
+  <% } %>
+  
+  <div class="panel reply-panel panel-border <%if(topic.reply_count == 0){%>hide<% } %>">
+      <div class="panel-head">
+          <span class="panel-head-title"><span class="topic-reply-count"><span class="topic-reply-num"><%= topic.reply_count %></span></span>  条评论</span>
+      </div>
+      <div class='panel-body'>
+          <div id="topic-reply-list-container">
+              <ul id="reply-list"></ul>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="replies_history hide">
+  <div class="inner_content"></div>
+  <div class="anchor"></div>
+</div>
+
