@@ -1,0 +1,39 @@
+<%- partial('../sign/sidebar') %>
+
+<div id='content'>
+    <div class="panel">
+        <div class="panel-head">
+            <span class="panel-head-title">重置密码</span>
+        </div>
+    <div class='panel-body'>
+      <% if(typeof(error) !== 'undefined' && error){ %>
+      <div class="alert alert-error">
+        <%= error %>
+      </div>
+      <% } %>
+      <form id='signin_form' class='form-horizontal' action='/reset_pass' method='post'>
+        <div class='control-group'>
+          <label class='control-label' for='psw'>新密码</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='psw' name='psw' size='30' type='password'/>
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='repsw'>确认密码</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='repsw' name='repsw' size='30' type='password'/>
+          </div>
+        </div>
+        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+        <input type='hidden' name='name' id='name' value='<%= name%>'>
+        <input type='hidden' name='key' id='key' value='<%= key%>'>
+
+        <div class='form-actions'>
+            <button class="ui-button" type="submit">确定</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

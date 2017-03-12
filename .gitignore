@@ -3,3 +3,7 @@
 .DS_Store
 /logs
 *.vscode
+/logs/cheese.log
+/public
+/views
+/npm-debug.log

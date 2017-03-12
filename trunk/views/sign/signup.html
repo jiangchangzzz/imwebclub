@@ -1,0 +1,90 @@
+<%- partial('../sign/sidebar') %>
+
+<div id='content'>
+    <div class="panel">
+        <div class="panel-head">
+            <span class="panel-head-title">注册</span>
+        </div>
+    <div class='panel-body'>
+      <% if (typeof(error) !== 'undefined' && error) { %>
+      <div class="alert alert-error">
+        <%= error %>
+      </div>
+      <% } %>
+      <% if (typeof(success) !== 'undefined' && success) { %>
+      <div class="alert alert-success">
+          欢迎加入 <%= appName %>！
+          <br>您的登录名为： <%= loginname %>
+          <br>我们已给您的邮箱: <%= email %>发送了一封邮件，请点击里面的链接来激活帐号。
+      </div>
+      <% } else { %>
+      <form id='signup_form' class='form-horizontal' action='/signup' method='post'>
+        <div class='control-group'>
+          <label class='control-label' for='loginname'>用户名</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='loginname' name='loginname' size='30' type='text' 
+                value='<%= typeof(loginname) !== 'undefined' ? loginname : '' %>'/>
+          </div>
+        </div>
+        <!-- <div class='control-group'>
+          <label class='control-label' for='name'>真是姓名</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='name' name='name' size='30' type='text' 
+                value='<%= typeof(name) !== 'undefined' ? name : '' %>'/>
+          </div>
+        </div> -->
+        <div class='control-group'>
+          <label class='control-label' for='pass'>密码</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='pass' name='pass' size='30' type='password'/>
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='re_pass'>确认密码</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='re_pass' name='re_pass' size='30' type='password'/>
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='email'>邮箱</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='email' name='email' size='30' type='text' 
+                value='<%= typeof(email) !== 'undefined' ? email : '' %>'/>
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='comp'>公司</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='comp' name='comp' size='30' type='text' 
+                value='<%= typeof(comp) !== 'undefined' ? comp : '' %>'/>
+          </div>
+        </div>
+        <div class='control-group'>
+          <label class='control-label' for='comp_mail'>公司邮箱</label>
+
+          <div class='controls'>
+            <input class='input-xlarge' id='comp_mail' name='comp_mail' size='30' type='text' 
+                value='<%= typeof(comp_mail) !== 'undefined' ? comp_mail : '' %>'/>
+          </div>
+        </div>
+        <input type='hidden' name='_csrf' value='<%= csrf %>'/>
+
+        <div class='form-actions'>
+          <input type='submit' class='ui-button' value='注册'/>
+          <a href="/auth/github" class="hide">
+            <span class="span-info">
+              通过 GitHub 登录
+            </span>
+          </a>
+        </div>
+      </form>
+      <% } %>
+    </div>
+  </div>
+</div>

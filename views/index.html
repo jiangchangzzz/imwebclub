@@ -1,4 +1,4 @@
-<head><link rel="shortcut icon" href="/public/icon.png"><link href="/public/stylesheets/index.css?dc07997b109dfa7907de" rel="stylesheet"></head><div id="banner">
+<head><link rel="shortcut icon" href="/public/icon.png"><link href="/public/stylesheets/vendors.css?6d3c18bc894b0af1c25f" rel="stylesheet"></head><div id="banner">
     <div class="inner">
         <ul class="tag-list">
             <% tabs.forEach(function (pair) {
@@ -23,7 +23,7 @@
                 <img class="slider" src="/public/images/sliderCover-711b1dcf1a6910f0edad77e45760283e.png">
                 <ul class="article-list">
                 <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
-                    <% topics.forEach(function (topic, index) { %>
+                    <% topics.slice(0,5).forEach(function (topic, index) { %>
                         <li <% if(index === 0) { %>class="active"<% } %>>
                             <a href="/topic/<%= topic._id %>">
                                 <b><%= topic.title %></b>
@@ -46,7 +46,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAMAAAD+iNU2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4MDlCMjBEMzhBRjJFNjExOEQyOEVDMkQyQUY0MURERiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpDRDE2QTMyQkZGMkUxMUU2ODMxMUIyRkExM0JFQUQ4OCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpDRDE2QTMyQUZGMkUxMUU2ODMxMUIyRkExM0JFQUQ4OCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjVhZmI4ZWEtZGIyMC1hMTQzLWIyYjktN2VmYmVmYWMxN2UxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjgwOUIyMEQzOEFGMkU2MTE4RDI4RUMyRDJBRjQxRERGIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+BdIvhgAAAFpQTFRFhoaGmpqahYWFx8fHg4ODw8PDysrK09PTiYmJ1NTU2dnZqKioycnJh4eH/v7+ioqKi4uLmJiYurq6jIyMj4+P/f39rKys/Pz8tra2qqqqu7u7k5OTgoKC////q1qY6gAAAB50Uk5T//////////////////////////////////////8A7BgcXgAAAGpJREFUeNqEzkcOwzAQQ1HKvfcWi7z/Nd2CWAYC+G0GfzMg9AT5JX9KHwIdgPjwp+ssohfHHqOsPjqXGiOZRsqPRtExCMOAXQG+/0vcTKC0tdb25LCfNsU1e+VUffefzGeU09Uyy+3bJsAAZzMXPL7/flYAAAAASUVORK5CYII=">
                           </span>
@@ -72,7 +72,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAMAAAD+iNU2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4MDlCMjBEMzhBRjJFNjExOEQyOEVDMkQyQUY0MURERiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpDRDE2QTMyQkZGMkUxMUU2ODMxMUIyRkExM0JFQUQ4OCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpDRDE2QTMyQUZGMkUxMUU2ODMxMUIyRkExM0JFQUQ4OCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjVhZmI4ZWEtZGIyMC1hMTQzLWIyYjktN2VmYmVmYWMxN2UxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjgwOUIyMEQzOEFGMkU2MTE4RDI4RUMyRDJBRjQxRERGIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+BdIvhgAAAFpQTFRFhoaGmpqahYWFx8fHg4ODw8PDysrK09PTiYmJ1NTU2dnZqKioycnJh4eH/v7+ioqKi4uLmJiYurq6jIyMj4+P/f39rKys/Pz8tra2qqqqu7u7k5OTgoKC////q1qY6gAAAB50Uk5T//////////////////////////////////////8A7BgcXgAAAGpJREFUeNqEzkcOwzAQQ1HKvfcWi7z/Nd2CWAYC+G0GfzMg9AT5JX9KHwIdgPjwp+ssohfHHqOsPjqXGiOZRsqPRtExCMOAXQG+/0vcTKC0tdb25LCfNsU1e+VUffefzGeU09Uyy+3bJsAAZzMXPL7/flYAAAAASUVORK5CYII=">
                           </span>
@@ -98,7 +98,7 @@
                     <li class="question-item">
                         <div class="item-header">
                             <b>前端进阶之路：如何高质量完成产品需求开发</b>
-                            <div class="pull-right">
+                            <div class="fr">
                                 <span class="commentCount">
                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAMAAAD+iNU2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4MDlCMjBEMzhBRjJFNjExOEQyOEVDMkQyQUY0MURERiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpDRDE2QTMyQkZGMkUxMUU2ODMxMUIyRkExM0JFQUQ4OCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpDRDE2QTMyQUZGMkUxMUU2ODMxMUIyRkExM0JFQUQ4OCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjVhZmI4ZWEtZGIyMC1hMTQzLWIyYjktN2VmYmVmYWMxN2UxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjgwOUIyMEQzOEFGMkU2MTE4RDI4RUMyRDJBRjQxRERGIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+BdIvhgAAAFpQTFRFhoaGmpqahYWFx8fHg4ODw8PDysrK09PTiYmJ1NTU2dnZqKioycnJh4eH/v7+ioqKi4uLmJiYurq6jIyMj4+P/f39rKys/Pz8tra2qqqqu7u7k5OTgoKC////q1qY6gAAAB50Uk5T//////////////////////////////////////8A7BgcXgAAAGpJREFUeNqEzkcOwzAQQ1HKvfcWi7z/Nd2CWAYC+G0GfzMg9AT5JX9KHwIdgPjwp+ssohfHHqOsPjqXGiOZRsqPRtExCMOAXQG+/0vcTKC0tdb25LCfNsU1e+VUffefzGeU09Uyy+3bJsAAZzMXPL7/flYAAAAASUVORK5CYII=">
                           </span>
@@ -177,4 +177,5 @@
             </div>
         </div>
     </div>
-</div><script type="text/javascript" src="/public/javascripts/vendors.js?dc07997b109dfa7907de"></script><script type="text/javascript" src="/public/javascripts/index.js?dc07997b109dfa7907de"></script>
+</div>
+<script type="text/javascript" src="/public/javascripts/vendors.js?6d3c18bc894b0af1c25f"></script><script type="text/javascript" src="/public/javascripts/index.js?6d3c18bc894b0af1c25f"></script>

@@ -1,3 +1,9 @@
+@import "reset.less";
+@import "common.less";
+@import "iconfont.less";
+@import "ui.less";
+@import "base.less";
+
 @body-bg: #eee;
 @header-color: #373839;
 @header-bg: white;
@@ -45,16 +51,6 @@
     }
 }
 
-* {
-    word-break: break-all;
-}
-
-.one-line {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 body {
     margin: 0;
     line-height: 2;
@@ -62,159 +58,6 @@ body {
     background: @body-bg;
     overflow-x: hidden;
     color: #373839;
-}
-
-a,
-abbr,
-address,
-article,
-aside,
-audio,
-b,
-blockquote,
-body,
-canvas,
-caption,
-cite,
-code,
-dd,
-del,
-details,
-dfn,
-div,
-dl,
-dt,
-em,
-embed,
-fieldset,
-figcaption,
-figure,
-footer,
-form,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-header,
-hgroup,
-html,
-i,
-iframe,
-img,
-ins,
-kbd,
-label,
-legend,
-li,
-main,
-mark,
-menu,
-nav,
-object,
-ol,
-output,
-p,
-pre,
-q,
-ruby,
-s,
-samp,
-section,
-small,
-span,
-strong,
-sub,
-summary,
-sup,
-table,
-tbody,
-td,
-tfoot,
-th,
-thead,
-time,
-tr,
-u,
-ul,
-var,
-video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    vertical-align: baseline;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-hr {
-    margin: 5px 0;
-    width: 100%;
-    margin-bottom: 10px;
-
-    &.solid-black {
-        border-color: #000;
-    }
-
-    &.solid-gray {
-        border-color: #aeaeae;
-    }
-
-    &.solid-light {
-        border-color: #fafafa;
-    }
-
-    &.solid-white {
-        border-color: #fff;
-    }
-}
-
-.clearfix {
-    overflow: hidden;
-    clear: both;
-}
-
-.pull-right {
-    float: right;
-}
-
-.pull-left {
-    float: left;
-}
-
-.arrow-down {
-    position: relative;
-    display: none;
-    width: 20px;
-    height: 20px;
-
-    &:after {
-        position: absolute;
-        right: 15px;
-        bottom: 2px;
-        width: 0;
-        height: 0;
-        content: "";
-        border-width: 6px 6px 0 6px;
-        border-style: solid;
-        border-color: @header-bg transparent;
-    }
-
-    &:before {
-        position: absolute;
-        left: 13px;
-        bottom: 2px;
-        width: 0;
-        height: 0;
-        content: "";
-        border-width: 8px 8px 0 8px;
-        border-style: solid;
-        border-color: @header-active transparent;
-    }
 }
 
 .inner {
@@ -230,7 +73,7 @@ hr {
     background: @header-bg;
     line-height: 1;
 
-    .pull-left {
+    .fl {
         @media screen and (min-width: 425px) and (max-width: 1024px) {
             width: 64px;
             overflow: hidden;
@@ -306,7 +149,7 @@ hr {
     }
 
 
-    .pull-right {
+    .fr {
         float: right;
 
         .middle {
@@ -344,6 +187,11 @@ hr {
                     font-size: 20px;
                     height: 32px;
                     line-height: 28px;
+                    display: inline-block;
+                    width: 30px;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-image: url("../images/search.png");
                 }
 
                 button {
@@ -351,9 +199,26 @@ hr {
                 }
             }
 
-            img {
+            >a {
                 margin: 5px;
                 vertical-align: middle;
+                color: @header-active;
+                &.ico{
+                  display: inline-block;
+                  width: 20px;
+                  height: 20px;
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  &.user-post-btn{
+                    background-image: url("../images/add.png");
+                  }
+                  &.user-message-btn{
+                    background-image: url("../images/message.png");
+                  }
+                  &.user-user-btn{
+                    background-image: url("../images/person.png");
+                  }
+                }
             }
         }
     }
@@ -726,7 +591,7 @@ hr {
 
         li {
             width: auto;
-            padding: 5px 10px;
+            padding: 5px 5px;
             display: inline-block;
             color: @footer-light;
 
