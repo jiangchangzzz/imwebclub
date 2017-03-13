@@ -52,12 +52,19 @@ define([], function(){
  			options.mode = options.mode || 'click';
  			options.enter = options.enter || $.noop;
  			options.leave = options.leave || $.noop;
+			options.left = typeof options.left === 'undefined' ? -30 : options.left;
+			options.top = typeof options.top === 'undefined' ? 40 : options.top;
  			var showTimeout = null;
  			var hideTimeout = null;
 			$layer.css({
-	         left: Math.floor($trigger.position().left - 10) + 'px',
-	         top: Math.floor($trigger.position().top + 30) + 'px'
+	         left: Math.floor($trigger.position().left + options.left) + 'px',
+	         top: Math.floor($trigger.position().top + options.top) + 'px'
 	    });
+			if(options.width){
+				$layer.css({
+		         width: options.width + 'px'
+		    });
+			}
  			var show = function() {
  					if (hideTimeout) {
  							clearTimeout(hideTimeout);

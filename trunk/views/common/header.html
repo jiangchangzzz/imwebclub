@@ -1,7 +1,7 @@
 <div id="header">
     <div class="inner">
         <div class="fl">
-            <a href="javascript:void(0);">
+            <a href="/">
                 <img src="../../images/logo.png">
             </a>
         </div>
@@ -13,27 +13,31 @@
                     <button type="submit" name="submit"></button>
                 </form>
                 <% if (current_user) {%>
-                  <a href="/marktang/index?autoOpenInfo=true" class="user-post-btn ico"></a>
+                  <a id="nav-post-menu" href="javascript:void(0);" class="user-post-btn ico"></a>
+                  <ol id="nav-post-menu-layer" class="ui-dropdown-layer">
+                      <li>
+                          <a href="/marktang/index?autoOpenInfo=true">发布文章</a>
+                      </li>
+                      <li>
+                          <a href="javascript:void(0);">发布问题</a>
+                      </li>
+                  </ol>
                   <a href="javascript:void(0);" class="user-message-btn ico"></a>
                   <a id="nav-user-menu" href="javascript:void(0);" class="user-user-btn ico" data-name="<%= current_user.loginname %>"></a>
-                  <ol id="nav-user-menu-layer" class="ui-dropdown-layer ui-dropdown-layer-mini">
-                      <!--<li>-->
-                          <!--<a class="fa fa-user" title="个人中心" -->
-                              <!--href="/user/<%= current_user.loginname %>">个人中心</a>-->
-                      <!--</li>-->
+                  <ol id="nav-user-menu-layer" class="ui-dropdown-layer">
                       <li>
-                          <a class="fa fa-cog" title="设置" href="/setting">社区设置</a>
+                          <a href="javascript:void(0);">我的主页</a>
                       </li>
                       <% if (current_user.is_admin) { %>
                       <li>
-                          <a class="fa fa-wrench" title="后台" href="/admin/topic/all">后台管理</a>
+                          <a href="javascript:void(0);">后台管理</a>
                       </li>
                       <% } %>
-                      <li class="ui-spacer">
-                          <a href="/invite/send">邀请好友</a>
+                      <li>
+                          <a href="javascript:void(0);">设置</a>
                       </li>
-                      <li class="ui-spacer">
-                          <a title="退出" href="/signout">退出登录</a>
+                      <li>
+                          <a href="/signout">退出登录</a>
                       </li>
                   </ol>
                 <% } else { %>
@@ -48,8 +52,19 @@
                 <li><a href="javascript:void(0);">专题</a></li>
                 <li><a href="javascript:void(0);">活动</a></li>
                 <li><a href="javascript:void(0);">名人堂</a></li>
-                <li><a href="javascript:void(0);">Imweb团队</a></li>
+                <li><a id="nav-team-menu" href="javascript:void(0);">Imweb团队</a></li>
             </ul>
         </div>
     </div>
 </div>
+<ol id="nav-team-menu-layer" class="ui-dropdown-layer">
+    <li>
+        <a href="javascript:void(0);">开源组件</a>
+    </li>
+    <li>
+        <a href="javascript:void(0);">招聘</a>
+    </li>
+    <li>
+        <a href="javascript:void(0);">关于我们</a>
+    </li>
+</ol>

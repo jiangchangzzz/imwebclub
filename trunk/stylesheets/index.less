@@ -95,7 +95,7 @@ body {
 
     .center{
       height: 100%;
-      margin-left: 280px;
+      margin-left: 200px;
       margin-right: 312px;
       @media screen and (max-width: 1024px) {
           margin-left: 64px;
@@ -276,15 +276,48 @@ body {
     #content {
         margin-right: 280px;
         margin-left: 0;
+        position: relative;
         @media screen and (max-width: 1200px) {
             margin-right: 0;
         }
     }
 }
 
+#welcome{
+  position: absolute;
+  width: 100%;
+  min-height: 150px;
+  padding: 10px 0;
+  overflow: hidden;
+  background-image: url("../images/welcomeBG.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  opacity: 0.9;
+  color: white;
+  text-align: center;
+  b{
+    font-size: 24px;
+  }
+  table{
+    text-align: left;
+    margin: 10px auto;
+    td{
+      min-width: 300px;
+    }
+  }
+  .button{
+    padding: 5px 10px;
+    border-radius: 15px;
+    border: solid 1px white;
+  }
+}
+
 .panel {
+    display: block;
     box-shadow: 0 4px 6px @shadow-color;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 10px;
 
     &.border {
@@ -386,6 +419,19 @@ body {
             color: @panel-light;
         }
     }
+
+    &.radius {
+      border: solid 1px @panel-border;
+      background-color: white;
+      border-radius: 6px;
+      color: @panel-light;
+      .ico{
+        display: inline-block;
+        width: 40px;
+        vertical-align:middle;
+        margin-right: 20px;
+      }
+    }
 }
 
 #profile {
@@ -420,7 +466,7 @@ body {
 }
 
 .column {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 
     .column-head {
         padding: 0 6px;
@@ -442,10 +488,11 @@ body {
     }
 
     .column-body {
-        min-height: 300px;
+        min-height: 200px;
 
         .slider {
             float: left;
+            width: 420px;
             @media screen and (max-width: 768px) {
                 float: none;
                 width: 100%;
@@ -466,6 +513,8 @@ body {
                 p {
                     display: none;
                     font-size: 12px;
+                    max-height: 50px;
+                    overflow: hidden;
                 }
 
                 &.active {
