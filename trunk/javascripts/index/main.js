@@ -20,14 +20,21 @@ define(['../common/ui.js'], function() {
     }
     //展示和隐藏登录框
     $(document).on('click', '.user-login-btn', function() {
+        $('.to-login').show();
+        $('.to-sign').hide();
+        $(".login-wrapper").show();
+    });
+    $(document).on('click', '.user-sign-btn', function() {
+        $('.to-sign').show();
+        $('.to-login').hide();
         $(".login-wrapper").show();
     });
     $(document).on('click', '.not-sign-close', function() {
-        $(".login-wrapper").hide();
+        $('.login-wrapper').hide();
     });
     //注册与登录来回切换
     $(document).on('click', '.js-to-sign', function() {
-        $(".to-login").fadeOut('fast', function() {
+        $('.to-login').fadeOut('fast', function() {
             $('.to-sign').fadeIn()
         });
     });
@@ -36,7 +43,7 @@ define(['../common/ui.js'], function() {
             $('.to-login').fadeIn()
         });
     });
-    //菜单悬浮效果
+    /*菜单悬浮效果
     $(document).on({
         mouseenter: function() {
             $(this).addClass('active');
@@ -45,4 +52,5 @@ define(['../common/ui.js'], function() {
             $(this).removeClass('active');
         }
     }, '.menu-list li');
+    */
 });
