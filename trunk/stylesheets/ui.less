@@ -132,6 +132,11 @@
     }
 }
 
+.mailtip {
+    background-color: @ui-white;
+    border: solid 1px @ui-gray-dark;
+}
+
 .ui-button {
     .inline-block();
     .set-text();
@@ -251,9 +256,11 @@
         text-align: center;
         font-size: 13px;
         line-height: 18px;
-        &:hover,&.active{
-          color: @ui-white;
-          background-color: @ui-blue;
+
+        &.active,
+        &:hover {
+            color: @ui-white;
+            background-color: @ui-blue;
         }
     }
 }

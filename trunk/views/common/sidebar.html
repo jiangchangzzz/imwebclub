@@ -1,8 +1,12 @@
 <div id="sidebar">
-    <% if (current_user) { %>
+    <% if (current_user) { console.log(current_user.avatar); %>
     <div id="profile" class="panel">
         <div class="avatar">
-            <img src="<%= current_user.avatar %>">
+            <% if (current_user.avatar) { %>
+              <img src="<%= current_user.avatar %>">
+            <% } else { %>
+              <img src="../../images/avatarDefault.jpg">
+            <% } %>
         </div>
         <div class="name"><%= current_user.loginname %></div>
         <ul class="contribution-list">

@@ -58,6 +58,19 @@ function gen_session(user, res) {
 
 exports.gen_session = gen_session;
 
+exports.gen_auth = function (key, token, res) {
+    // var auth_token = user._id + '$$$$'; // 以后可能会存储更多信息，用 $$$$ 来分隔
+    var opts = {
+        path: config.host,
+        maxAge: 1000 * 60 * 60 * 24 * 30, //cookie 有效期30天
+        httpOnly: true,
+        domain: config.host,
+        secret: config.secretKey
+    };
+
+    res.cookie(key, token, opts);
+}
+
 // 验证用户是否登录
 exports.authUser = function (req, res, next) {
   var ep = new eventproxy();

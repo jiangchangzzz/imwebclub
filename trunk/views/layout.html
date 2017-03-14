@@ -16,6 +16,19 @@
     <meta name="author" content="imwebteam@tencent">
     <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
     <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+    window.imweb = window.imweb || {};
+    imweb._csrf = '<%- csrf %>';
+    <% if (current_user) { %>
+        imweb.user = {
+            id: '<%= current_user._id %>',
+            loginname: '<%= current_user.loginname %>',
+            is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+        };
+    <% } else { %>
+        imweb.user = null;
+    <% } %>
+    </script>
 </head>
 
 <body>
@@ -45,7 +58,7 @@
                                     <input class="input-xlarge js-pass" size="30" type="password" placeholder="密码" autocomplete="off" required minlength="6" maxlength="30" name="passw">
                                 </div>
                                 <div class="ui-button-white js-to-login">已有账号，立即登录</div>
-                                <input class="ui-button js-to-step2" type="submit" value="注册">
+                                <input class="ui-button js-to-step2" type="button" value="下一步">
                             </form>
                         </div>
                         <div class="to-login">
@@ -76,24 +89,22 @@
 
                     </div>
                     <div class="not-sign-r">
-                        <div class="">
-                            <form class="form-horizontal form-valid" action="/signup" method="post" id="sign-form-2">
-                                <p class="not-sign-title">填写公司信息</p>
-                                <input type="hidden" name="email" value="" />
-                                <input type="hidden" name="loginname" value="" />
-                                <input type="hidden" name="name" value="" />
-                                <input type="hidden" name="pass" value="" />
-                                <div class="input-box">
-                                    <input class="input-xlarge js-comp" name="comp" size="30" type="text" value="" placeholder="公司" autocomplete="off" required>
-                                </div>
-                                <div class="input-box">
-                                    <input class="input-xlarge js-comp_mail" name="comp_mail" size="30" type="text" placeholder="公司邮箱" autocomplete="off" required email="true">
-                                </div>
-                                <p class="forget">自由职业者，学生，或待业中?<a href="javascript:void(0)" class="js-jump">暂时跳过</a></p>
-                                <div class="ui-button-white js-to-step1">返回上一步</div>
-                                <input type="submit" class="ui-button js-submit" value="注册">
-                            </form>
-                        </div>
+                        <form class="form-horizontal form-valid" action="/signup" method="post" id="sign-form-2">
+                            <p class="not-sign-title">填写公司信息</p>
+                            <input type="hidden" name="email" value="" />
+                            <input type="hidden" name="loginname" value="" />
+                            <input type="hidden" name="name" value="" />
+                            <input type="hidden" name="pass" value="" />
+                            <div class="input-box">
+                                <input class="input-xlarge js-comp" name="comp" size="30" type="text" value="" placeholder="公司" autocomplete="off">
+                            </div>
+                            <div class="input-box">
+                                <input class="input-xlarge js-comp_mail" name="comp_mail" size="30" type="text" placeholder="公司邮箱" autocomplete="off" email="true">
+                            </div>
+                            <p class="forget hide">自由职业者，学生，或待业中?<a href="javascript:void(0)" class="js-jump">暂时跳过</a></p>
+                            <div class="ui-button-white js-to-step1">返回上一步</div>
+                            <input type="submit" class="ui-button js-submit" value="注册">
+                        </form>
                     </div>
                 </div>
             </div>
