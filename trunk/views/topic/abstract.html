@@ -30,9 +30,9 @@
             <span title="评论" class="hide cell-other-span"><i class="fa fa-weixin"></i><%= topic.reply_count %></span>
             <span title="收藏" class="hide cell-other-span"><i class="fa fa-heart"></i><%= topic.collect_count %></span>
             <% if (typeof(current_user) !== 'undefined' && current_user._id.equals(topic.author_id)) { %>
-              <span class="cell-other-span hide"> | </span>  
+              <span class="cell-other-span hide"> | </span>
               <a title="编辑" class="cell-other-span js-topic-edit" href="/topic/<%=topic._id%>/edit"><i class="fa fa-edit"></i></a>
-              <a title="删除" class="cell-other-span js-topic-del" href="javascript:void(0)" data-tid="<%=topic._id%>"><i class="fa fa-trash"></i></a>    
+              <a title="删除" class="cell-other-span js-topic-del" href="javascript:void(0)" data-tid="<%=topic._id%>"><i class="fa fa-trash"></i></a>
             <% } %>
           </div>
         </div>
@@ -77,7 +77,9 @@
           <%if(topic.pic && topic.pic.length != 0){%>
             <a href="<%=topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap "><img class="cell-brief-img" src="<%=topic.pic[0]%>"></a>
           <%}%>
-          <div class="cell-brief"><%= topic.summary.replace(/<br>/g, ' ')%></div>
+          <div class="cell-brief">
+            <%= topic.summary ? topic.summary.replace(/<br>/g, ' ') : ''%>
+          </div>
           <div class="clearfix"></div>
         </div>
         <%if(topic.reprint){%>
