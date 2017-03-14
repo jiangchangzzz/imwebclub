@@ -61,7 +61,7 @@
     </div>
 
     <div id='content'>
-      <div class='panel panel-border'>
+      <div class='panel border'>
         <div class="topic-info">
           <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar_url  %>"  data-name="<%= topic.author.loginname %>"/>
           <div class="user-wrap">
@@ -83,7 +83,7 @@
             </li>
           </ul>
         </div>
-        <div class='header topic_header'>
+        <div class='topic_header'>
           <h1 class="topic-title"><%- topic.title %></h1>
           <%if(topic.reprint){%>
             <div class="cell-from">
@@ -121,7 +121,7 @@
             <% } %>
           </div>
         </div>
-        <div class='inner topic'>
+        <div class='topic_content'>
           <div id="topic_content" class='topic_content'>
 
               <div class="markdown-text">
@@ -139,13 +139,11 @@
       </div>
       <% if (typeof(current_user) !== 'undefined' && typeof(topic) !== 'undefined') { %>
       <div class='topic-reply-panel'>
-          <div class='panel-body'>
-              <div class="editor-wrap">
-                  <textarea class="editor"></textarea>
-              </div>
-              <div class="editor-actions">
-                  <button class="ui-button reply-submit" type="button">评论一下</button>
-              </div>
+          <div class="editor-wrap">
+              <textarea class="editor"></textarea>
+          </div>
+          <div class="editor-actions">
+              <button class="ui-button reply-submit fr" type="button">评论一下</button>
           </div>
       </div>
       <% } %>
