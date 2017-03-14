@@ -176,7 +176,7 @@ exports.list = function (req, res, next) {
       }
     }));
     // END 取分页数据
-    
+    var tabs = [['all', '全部']].concat(config.tabs);
     var tabName = renderHelper.tabName(tab);
     proxy.all('topics', 'pages',
       function (topics, pages) {
@@ -185,7 +185,7 @@ exports.list = function (req, res, next) {
           current_page: page,
           list_topic_count: limit,
           pages: pages,
-          tabs: config.tabs,
+          tabs: tabs,
           tab: tab,
           base: '/',
           pageTitle: tabName && (tabName + '版块'),
