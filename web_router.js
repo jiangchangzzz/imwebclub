@@ -100,6 +100,8 @@ router.post('/topic/:tid/edit', auth.userRequired, topic.update);
 router.post('/topic/collect', auth.userRequired, topic.collect); // 关注某话题
 router.post('/topic/de_collect', auth.userRequired, topic.de_collect); // 取消关注某话题
 
+router.get('/topic/tab/:tab', topic.list);
+
 // reply controller
 router.post('/:topic_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
 router.get('/reply/:reply_id/edit', auth.userRequired, reply.showEdit); // 修改自己的评论页

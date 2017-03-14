@@ -22,6 +22,7 @@ var logger = require('../common/logger');
 var escapeHtml = require('escape-html');
 var mail = require('../common/mail');
 var dataAdapter = require('../common/dataAdapter');
+var renderHelper = require('../common/render_helper');
 
 /**
  * Topic page
@@ -121,6 +122,76 @@ exports.create = function (req, res, next) {
   });
 };
 
+/**
+ * 文章列表
+ */
+exports.list = function (req, res, next) {
+    var page = parseInt(req.query.page, 10) || 1;
+    page = page > 0 ? page : 1;
+    var tab = req.params.tab || 'all';
+    var sort =  req.params.sort || 'default';  // 根据不同的参数决定文章排序方式
+    var sortMap = {
+        'hot': '-visit_count -collect_count -reply_count -create_at',
+        'latest': '-create_at',
+        'reply': '-reply_count',
+        'default': '-create_at'
+    };
+    var sortType = sortMap[sort] || sortMap['default'];
+
+    var proxy = new EventProxy();
+    proxy.fail(next);
+    // 取主题
+    var query = {};
+    if (tab && tab !== 'all') {
+        if (tab === 'good') {
+            query.good = true;
+        } else {
+            query.tab = tab;
+        }
+    }
+    var limit = config.list_topic_count;
+    var options = {
+        skip: (page - 1) * limit,
+        limit: limit,
+        sort: sortType
+    };
+    // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
+    // console.log(optionsStr);
+    Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
+      console.log(topics);
+      return topics;
+    }));
+    
+    // 取分页数据
+    var pagesCacheKey = JSON.stringify(query) + 'pages';
+    cache.get(pagesCacheKey, proxy.done(function (pages) {
+      if (pages) {
+        proxy.emit('pages', pages);
+      } else {
+        Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
+          var pages = Math.ceil(all_topics_count / limit);
+          cache.set(pagesCacheKey, pages, 60 * 1);
+          proxy.emit('pages', pages);
+        }));
+      }
+    }));
+    // END 取分页数据
+    
+    var tabName = renderHelper.tabName(tab);
+    proxy.all('topics', 'pages',
+      function (topics, pages) {
+        res.render('topic/list', {
+          topics: topics,
+          current_page: page,
+          list_topic_count: limit,
+          pages: pages,
+          tabs: config.tabs,
+          tab: tab,
+          base: '/',
+          pageTitle: tabName && (tabName + '版块'),
+        });
+      });
+}
 
 // exports.put = function (req, res, next) {
 //   var title   = validator.trim(req.body.title);
