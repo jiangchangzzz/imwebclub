@@ -1,4 +1,7 @@
-var Signin = (function(){
+define([
+	'./jquery.validate.min.js',
+	'./jquery.mailtip.js'
+], function(){
 
 	/*去除chrome自动填表单功能*/
 	var disFill = function(){
@@ -18,13 +21,14 @@ var Signin = (function(){
 			required: "不能为空",
 			email: "请输入正确的邮箱地址"
 		});
-		var validCfg = {
+		$.validator.setDefaults({
+			errorPlacement: function(error, element) {
+				$( element ).closest( ".input-box" ).append( error );
+			},
+			errorElement: "span"
+		});
+		$("#sign-form-1").validate({
 			messages: {
-				email: "请输入正确的邮箱地址",
-				comp_mail: "请输入正确的邮箱地址",
-				comp: {
-					required: "公司名称不能为空",
-				},
 				loginname1: {
 					required: "姓名不能为空",
 					minlength: "请输入2-15个字",
@@ -39,27 +43,18 @@ var Signin = (function(){
 					maxlength: "密码过长"
 				}
 			}
-		}
-		$.validator.setDefaults({
-			errorPlacement: function(error, element) {
-				$( element ).closest( ".input-box" ).append( error );
-			},
-			errorElement: "span"
 		});
-		$("#sign-form-1").validate($.extend(validCfg, {
-			submitHandler: function() {
-				return false;
+		$("#sign-form-2").validate({
+			messages: {
+				comp: {
+					required: "公司名称不能为空",
+				},
 			}
-		}));
-		$("#sign-form-2").validate($.extend(validCfg, {
-			submitHandler: function(form) {
-				form.submit();
-			}
-		}));
+		});
 	}
 	/*事件绑定*/
 	var bind = function(){
-        var signForm2 = $('#sign-form-2');
+    var signForm2 = $('#sign-form-2');
 		/*注册与登录来回切换*/
 		$(".js-to-sign").click(function(){
 			$(".to-login").fadeOut("fast", function(){$(".to-sign").fadeIn()});
@@ -68,21 +63,12 @@ var Signin = (function(){
 			$(".to-sign").fadeOut("fast", function(){$(".to-login").fadeIn()});
 		});
 
-		/*注册的1、2步切换*/
 		$(".js-to-step2").click(function(){
-			setTimeout(function(){
-				var $input = $("#sign-form-1 input[required]");
-				var isValided = true;
-				for(var i=0,len=$input.length; i<len; i++){
-					if(!$input.eq(i).hasClass("valid")){
-						isValided = false;
-						return;
-					}
-				}
-				if(isValided){
-					$(".step1").fadeOut("fast", function(){$(".step2").fadeIn()});
-				}
-			}, 100);
+			var isvalidate=$("#sign-form-1").valid();
+			console.log(isvalidate);
+			if(isvalidate){
+				$(".step1").fadeOut("fast", function(){$(".step2").fadeIn()});
+			}
 		});
 		$(".js-to-step1").click(function(){
 			$(".step2").fadeOut("fast", function(){$(".step1").fadeIn()});
@@ -106,12 +92,12 @@ var Signin = (function(){
 	        }
 	    });
 		/*loginname表单同步*/
-        function updateLoginname() {
-            var loginname = $(".js-loginname-1").val()
-                + $(".js-loginname-2").val();
-            signForm2.find("[name=name]").val(loginname);
-            signForm2.find("[name=loginname]").val(loginname);
-        }
+    function updateLoginname() {
+        var loginname = $(".js-loginname-1").val()
+            + $(".js-loginname-2").val();
+        signForm2.find("[name=name]").val(loginname);
+        signForm2.find("[name=loginname]").val(loginname);
+    }
 		$(".js-loginname-1").eq(0).change(updateLoginname);
 		$(".js-loginname-2").eq(0).change(updateLoginname);
 		/*pass表单同步*/
@@ -120,7 +106,7 @@ var Signin = (function(){
 		});
 
 	}
-	return{
+	return {
 		init: function(){
 			//disFill();
 			validateInit();
@@ -128,4 +114,4 @@ var Signin = (function(){
 
 		}
 	}
-})();
+});

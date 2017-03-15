@@ -13,68 +13,82 @@ exports.showSignup = function (req, res) {
   res.render('sign/signup');
 };
 
-exports.signup = function (req, res, next) {
-  var loginname = validator.trim(req.body.loginname).toLowerCase();
-  var email     = validator.trim(req.body.email).toLowerCase();
-  var pass      = validator.trim(req.body.pass);
-  var rePass    = validator.trim(req.body.re_pass);
+exports.signup = function(req, res, next) {
+    var name = validator.trim(req.body.name);
+    var loginname = validator.trim(req.body.loginname).toLowerCase();
+    var email = validator.trim(req.body.email).toLowerCase();
+    var pass = validator.trim(req.body.pass);
+    var comp = validator.trim(req.body.comp);
+    var comp_mail = validator.trim(req.body.comp_mail) || '';
 
-  var ep = new eventproxy();
-  ep.fail(next);
-  ep.on('prop_err', function (msg) {
-    res.status(422);
-    res.render('sign/signup', {error: msg, loginname: loginname, email: email});
-  });
-
-  // 验证信息的正确性
-  if ([loginname, pass, rePass, email].some(function (item) { return item === ''; })) {
-    ep.emit('prop_err', '信息不完整。');
-    return;
-  }
-  if (loginname.length < 5) {
-    ep.emit('prop_err', '用户名至少需要5个字符。');
-    return;
-  }
-  if (!tools.validateId(loginname)) {
-    return ep.emit('prop_err', '用户名不合法。');
-  }
-  if (!validator.isEmail(email)) {
-    return ep.emit('prop_err', '邮箱不合法。');
-  }
-  if (pass !== rePass) {
-    return ep.emit('prop_err', '两次密码输入不一致。');
-  }
-  // END 验证信息的正确性
-
-
-  User.getUsersByQuery({'$or': [
-    {'loginname': loginname},
-    {'email': email}
-  ]}, {}, function (err, users) {
-    if (err) {
-      return next(err);
-    }
-    if (users.length > 0) {
-      ep.emit('prop_err', '用户名或邮箱已被使用。');
-      return;
-    }
-
-    tools.bhash(pass, ep.done(function (passhash) {
-      // create gravatar
-      var avatarUrl = User.makeGravatar(email);
-      User.newAndSave(loginname, loginname, passhash, email, avatarUrl, false, function (err) {
-        if (err) {
-          return next(err);
-        }
-        // 发送激活邮件
-        mail.sendActiveMail(email, utility.md5(email + passhash + config.session_secret), loginname);
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('prop_err', function(msg) {
+        res.status(422);
         res.render('sign/signup', {
-          success: '欢迎加入 ' + config.name + '！我们已给您的注册邮箱发送了一封邮件，请点击里面的链接来激活您的帐号。'
+            error: msg,
+            name: name,
+            loginname: loginname,
+            email: email,
+            comp: comp,
+            comp_mail: comp_mail
         });
-      });
+    });
 
-    }));
-  });
+    if (!loginname || !pass || !email) {
+        return ep.emit('prop_err', '信息不完整。');
+    }
+    if (loginname.length < 2) {
+        return ep.emit('prop_err', '用户名至少需要2个字符。');
+    }
+    // if (!comp_mail) {
+    //     return ep.emit(
+    //         'prop_err',
+    //         '公司邮箱输入为空，请一并填写公司邮箱和常用邮箱，'
+    //             + '公司邮箱只用于激活验证公司信息，'
+    //             + '常用邮箱用于接受文章更新等。'
+    //     );
+    // }
+    if (!validator.isEmail(email)) {
+        return ep.emit('prop_err', '邮箱不合法。');
+    }
+
+    User.getUsersByQuery(
+        {
+            '$or': [
+                { 'loginname': loginname },
+                { 'email': email }
+            ]
+        },
+        {},
+        ep.done(function(users) {
+            if (users.length > 0) {
+                ep.emit('prop_err', '用户名或邮箱已被使用。');
+            } else {
+                tools.bhash(pass, function(passhash) {
+                    var avatarUrl = User.makeGravatar(email);
+                    User.newAndSave(
+                        name, loginname, passhash, email, avatarUrl, false,
+                        ep.done('saved')
+                    );
+                });
+            }
+        })
+    );
+    ep.on('saved', function(user) {
+        /*mail.sendActiveMail(
+            email,
+            utility.md5(email + user.pass + config.session_secret),
+            loginname
+        );*/
+        res.render('sign/signup', {
+            success: true,
+            appName: config.name,
+            loginname: loginname,
+            comp_mail: comp_mail,
+            email: email
+        });
+    });
 };
 
 /**
@@ -106,62 +120,80 @@ var notJump = [
  * @param {HttpResponse} res
  * @param {Function} next
  */
-exports.login = function (req, res, next) {
-  var loginname = validator.trim(req.body.name).toLowerCase();
-  var pass      = validator.trim(req.body.pass);
-  var ep        = new eventproxy();
+ exports.login = function(req, res, next) {
+     var loginname = validator.trim(req.body.name);
+     var pass = validator.trim(req.body.pass);
+     var ep = new eventproxy();
+     var cookieOpt = {
+         domain: 'iconfont.imweb.io',
+         path: '/',
+         maxAge: 1000 * 60 * 60 * 24 * 30, //cookie 有效期30天
+         signed: true,
+         httpOnly: true
+     };
 
-  ep.fail(next);
+     ep.fail(next);
 
-  if (!loginname || !pass) {
-    res.status(422);
-    return res.render('sign/signin', { error: '信息不完整。' });
-  }
+     if (!loginname || !pass) {
+         res.status(422);
+         return res.render('sign/signin', {
+             error: '信息不完整哦。'
+         });
+     }
 
-  var getUser;
-  if (loginname.indexOf('@') !== -1) {
-    getUser = User.getUserByMail;
-  } else {
-    getUser = User.getUserByLoginName;
-  }
+     var getUser;
+     if (loginname.indexOf('@') !== -1) {
+         getUser = User.getUserByMail;
+     } else {
+         getUser = User.getUserByLoginName;
+     }
 
-  ep.on('login_error', function (login_error) {
-    res.status(403);
-    res.render('sign/signin', { error: '用户名或密码错误' });
-  });
+     ep.on('login_error', function(login_error) {
+         res.status(403);
+         res.render('sign/signin', {
+             error: '用户名或密码错误'
+         });
+     });
 
-  getUser(loginname, function (err, user) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return ep.emit('login_error');
-    }
-    var passhash = user.pass;
-    tools.bcompare(pass, passhash, ep.done(function (bool) {
-      if (!bool) {
-        return ep.emit('login_error');
-      }
-      if (!user.active) {
-        // 重新发送激活邮件
-        mail.sendActiveMail(user.email, utility.md5(user.email + passhash + config.session_secret), user.loginname);
-        res.status(403);
-        return res.render('sign/signin', { error: '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。' });
-      }
-      // store session cookie
-      authMiddleWare.gen_session(user, res);
-      //check at some page just jump to home page
-      var refer = req.session._loginReferer || '/';
-      for (var i = 0, len = notJump.length; i !== len; ++i) {
-        if (refer.indexOf(notJump[i]) >= 0) {
-          refer = '/';
-          break;
-        }
-      }
-      res.redirect(refer);
-    }));
-  });
-};
+     getUser(loginname, function(err, user) {
+         if (err) {
+             return next(err);
+         }
+         if (!user) {
+             return ep.emit('login_error');
+         }
+         var passhash = user.pass;
+         tools.bcompare(pass, passhash, function(bool) {
+             if (!bool) {
+                 return ep.emit('login_error');
+             }
+             /*if (!user.active) {
+                 // 重新发送激活邮件
+                 mail.sendActiveMail(user.email, utility.md5(user.email + passhash + config.session_secret), user.loginname);
+                 res.status(403);
+                 return res.render('sign/signin', {
+                     error: '此帐号还没有被激活，激活链接已发送到 ' + user.comp_email + ' 邮箱，请查收。'
+                 });
+             }*/
+             // store session cookie
+             authMiddleWare.gen_session(user, res);
+             //check at some page just jump to home page
+             authMiddleWare.gen_auth('uin', JSON.stringify(user._id).replace(/"/g,''), res);
+             authMiddleWare.gen_auth('skey', utility.md5(user.pass), res);
+             authMiddleWare.gen_auth('accessToken', user.accessToken, res);
+             authMiddleWare.gen_auth('user', user.name, res);
+
+             var refer = req.session._loginReferer || '/';
+             for (var i = 0, len = notJump.length; i !== len; ++i) {
+                 if (refer.indexOf(notJump[i]) >= 0) {
+                     refer = '/';
+                     break;
+                 }
+             }
+             res.redirect(refer);
+         });
+     });
+ };
 
 // sign out
 exports.signout = function (req, res, next) {
@@ -288,4 +320,3 @@ exports.updatePass = function (req, res, next) {
     }));
   }));
 };
-

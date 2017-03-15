@@ -1,0 +1,97 @@
+@ui-white: #FFF;
+@ui-blue: #38B7EA;
+@ui-gray: #DDD;
+
+.topic-info {
+    position: relative;
+    background: #fff;
+    padding: 20px 20px 30px 20px;
+    border-bottom: 1px solid #ddd;
+    .ui-avatar {
+        float: left;
+    }
+    .user-wrap {
+        padding-left: 65px;
+    }
+    .user-name {
+        font-size: 16px;
+        max-width: 160px;
+    }
+    .other-info {
+        position: absolute;
+        right: 10px;
+        top: 20px;
+        li {
+            float: left;
+            text-align: center;
+            margin-left: 30px;
+            padding-right: 30px;
+            border-right: 1px solid #ddd;
+            &:last-child {
+                padding-right: 20px;
+                border-right: none;
+            }
+            p {
+                font-size: 16px;
+                color: #333;
+            }
+            span {
+                color: #999;
+            }
+        }
+    }
+}
+
+.topic_header {
+    padding-left: 0px;
+    background-color: white;
+    border-bottom: 1px solid @ui-gray;
+    .topic-title {
+        font-weight: normal;
+        margin-top: 20px;
+        font-size: 24px;
+        border-left: 5px solid @ui-blue;
+        padding-left: 30px;
+    }
+    .cell-from {
+        color: #999;
+        line-height: 14px;
+        margin-top: 20px;
+        padding-left: 35px;
+        .cell-reprint {
+            border: 1px solid #fff;
+            border-radius: 100px;
+            font-weight: normal;
+            padding: 0 5px;
+            margin-left: 5px;
+            &:hover {
+                border: 1px solid @ui-blue;
+            }
+        }
+    }
+    .title-wrap {
+        padding: 0 30px;
+        margin-top: 20px;
+    }
+}
+
+.editor-wrap {
+    margin: 20px 0 10px 0;
+    border: 1px solid @ui-gray;
+    border-radius: 5px;
+    overflow: hidden;
+    background: @ui-white;
+    textarea.editor {
+      width: 98%;
+      line-height: 2em;
+      height: 200px;
+      resize: vertical;
+      font-size: 15px;
+      padding: .5em;
+      border: none;
+    }
+    .CodeMirror {
+        height: 100px;
+        padding: 0 6px;
+    }
+}

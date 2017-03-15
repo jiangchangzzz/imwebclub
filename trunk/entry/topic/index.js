@@ -1,4 +1,4 @@
-
+require('../../stylesheets/topicIndex.less');
 // define([
 //     '../template/tplReplyItem.js',
 //     '../template/tplReplySubItem.js',
@@ -25,12 +25,12 @@
 
 //     var Editor = editor.Editor,
 //         CodeMirror = editor.CodeMirror;
-        
+
 // 	//用户侧边栏初始化
 // 	// userSlider.init();
 //     //signin
 //     // signin.init();
-    
+
 //     var topicAction = {
 //         /**
 //          * 初始化文章评论列表
@@ -76,9 +76,9 @@
 //                 markdown: imweb.markdown,
 //                 isAdmin: imweb.user && imweb.user.loginname && imweb.user.is_admin,
 //                 isLogin: imweb.user && imweb.user.loginname,
-//                 isAuthor: user 
+//                 isAuthor: user
 //                     && user.loginname === item.author.loginname,
-//                 isTopicAuthor: user 
+//                 isTopicAuthor: user
 //                     && user.loginname === topic.author.loginname,
 //                 reply: $.extend({}, item, {
 //                     subRepliesHTML: subRepliesHTML
@@ -102,9 +102,9 @@
 //                 markdown: imweb.markdown,
 //                 isAdmin: imweb.user && imweb.user.loginname && imweb.user.is_admin,
 //                 isLogin: imweb.user && imweb.user.loginname,
-//                 isAuthor: user 
+//                 isAuthor: user
 //                     && user.loginname === item.author.loginname,
-//                 isTopicAuthor: user 
+//                 isTopicAuthor: user
 //                     && user.loginname === topic.author.loginname,
 //                 index: index
 //             });
@@ -190,7 +190,7 @@
 //             var me = this;
 //             var topicId = imweb.topic.id;
 //             var editor = $('.topic-reply-panel .editor').data('editor');
-//             var content = editor.codemirror.getValue(); 
+//             var content = editor.codemirror.getValue();
 //             if (!content) {
 //                 alert('回复不可为空');
 //                 return;
@@ -219,7 +219,7 @@
 //             var editor = $reply.find('.editor').data('editor');
 //             var topicId = imweb.topic.id;
 //             var replyId = $reply.data('replyId');
-//             var content = editor.codemirror.getValue(); 
+//             var content = editor.codemirror.getValue();
 //             if (!content) {
 //                 alert('回复不可为空');
 //                 return;
@@ -272,7 +272,7 @@
 //          */
 //         collect: function(e) {
 //             var $ele = $(e.target);
-//             var cancelVal = $ele.data('cancel');            
+//             var cancelVal = $ele.data('cancel');
 //             var cancel = cancelVal.toString() === 'true';
 //             var topicId = imweb.topic.id;
 //             imweb.ajax.post('/topic/collect', {
@@ -285,8 +285,8 @@
 //                     cancel = !cancel;
 //                     $ele.attr('title', cancel ? '取消收藏' : '收藏');
 //                     $ele.data('cancel', cancel);
-//                     cancel 
-//                         ? $ele.addClass('collected') 
+//                     cancel
+//                         ? $ele.addClass('collected')
 //                         : $ele.removeClass('collected');
 //                     $('.topic-collect-count').html(data.data.topicCollectCount);
 //                 }
