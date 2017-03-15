@@ -38,7 +38,7 @@
         </div>
       <%}else{%>
         <div class="cell-topic">
-          <!--<%if(topic.reprint){%>推荐<%}else{%>发表<%}%>的文章：-->
+          <%if(topic.reprint){%>推荐<%}else{%>发表<%}%>的文章：
           <%- partial("../topic/_top_good", {object: topic, as:"topic"}) %>
           <a href='/topic/<%= topic._id %>' class="ex-link" target="_blank"><%- topic.title %></a>
         </div>

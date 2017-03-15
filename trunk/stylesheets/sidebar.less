@@ -1,0 +1,64 @@
+@profile-bg: #f8f8f8;
+@panel-highlight: #2fa0ef;
+
+.avatar(@size:100px, @border-color:@panel-highlight, @border:0, @margin:0) {
+    .avatar {
+        display: inline-block;
+        width: @size;
+        height: @size;
+        line-height: @size;
+        border: solid @border @border-color;
+        border-radius: @size;
+        overflow: hidden;
+
+        img {
+            width: @size - @margin * 2;
+            height: @size - @margin * 2;
+            margin: @margin;
+            line-height: @size - @margin * 2;
+            border-radius: @size - @margin * 2;
+            overflow: hidden;
+
+            &:hover {
+                width: @size;
+                height: @size;
+                margin: 0;
+                line-height: @size;
+                border-radius: @size;
+            }
+        }
+    }
+}
+
+#profile {
+    background-color: @profile-bg;
+    text-align: center;
+    .avatar(100px,1px,@panel-highlight,5px);
+
+    .name {
+        color: @panel-highlight;
+    }
+
+    ul.contribution-list {
+        list-style: none;
+        margin: 0;
+        padding: 5px 20px;
+
+        li {
+            display: inline-block;
+            width: 80px;
+
+            b {
+                font-size: 30px;
+            }
+
+            .title {
+                display: block;
+                margin-top: -10px;
+                color: @panel-highlight;
+            }
+        }
+    }
+}
+
+

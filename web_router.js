@@ -166,7 +166,8 @@ router.get('/auth/weibo/callback', passport.authenticate('weibo', { failureRedir
     res.redirect('/');
   });
 
-router.get('/search', search.index);
+router.post('/search', search.index);
+// router.get('/search', search.index);
 
 if (!config.debug) { // 这个兼容破坏了不少测试
 	router.get('/:name', function (req, res) {

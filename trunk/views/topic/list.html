@@ -9,7 +9,8 @@
         </ul>
     </div>
 </div>
-
+<div id="main" class="clearfix">
+<%- partial('common/sidebar.html') %>
 <div id="topic_list">
   <%- partial("../topic/abstract", {collection:topics, as:"topic"}) %>
 </div>
@@ -51,4 +52,5 @@
     <li class="btn-step" title="尾页"><a href="<%= base_url + pages %>"><i class="fa fa-step-forward"></i></a></li>
     <% } %>
   </ul>
+</div>
 </div>

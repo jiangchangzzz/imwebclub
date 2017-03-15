@@ -1,2 +1,3 @@
-require('../stylesheets/index.less');
-require('../javascripts/index/main.js');
+import '../stylesheets/index.less';
+import '../stylesheets/sidebar.less';
+import '../javascripts/index/main.js';

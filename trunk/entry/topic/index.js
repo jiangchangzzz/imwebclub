@@ -1,4 +1,4 @@
-require('../../stylesheets/topicIndex.less');
+require('../../stylesheets/topic/index.less');
 // define([
 //     '../template/tplReplyItem.js',
 //     '../template/tplReplySubItem.js',
