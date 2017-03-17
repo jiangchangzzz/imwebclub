@@ -1,0 +1,210 @@
+@ui-white: #FFF;
+@ui-gray: #DDD;
+@ui-blue: #38B7EA;
+@ui-black-light: #888;
+@ui-black: #333;
+@ui-blue-light: #6ACDF6;
+
+.clearfix() {
+    overflow: hidden;
+    &:after {
+        display: block;
+        visibility: hidden;
+        clear: both;
+        content: " ";
+        height: 0;
+        font-size: 0;
+    }
+}
+
+.editor-wrap {
+    margin: 20px 0 10px 0;
+    border: 1px solid @ui-gray;
+    border-radius: 5px;
+    overflow: hidden;
+    background: @ui-white;
+    textarea.editor {
+      width: 98%;
+      line-height: 2em;
+      height: 200px;
+      resize: vertical;
+      font-size: 15px;
+      padding: .5em;
+      border: none;
+    }
+    .CodeMirror {
+        height: 100px;
+        padding: 0 6px;
+    }
+}
+
+#reply-list {
+    list-style: none;
+    padding: 0 10px;
+    .anchor {
+        display: none;
+    }
+    .act {
+        cursor: pointer;
+        line-height: 16px;
+        font-size: 12px;
+        &,
+        &:visited {
+            color: @ui-black-light;
+        }
+        &:hover {
+            color: @ui-blue-light;
+        }
+    }
+    .create-at,
+    .edit-at {
+        color: @ui-black-light;
+    }
+    .user-url {
+        font-size: 14px;
+        &,
+        &:visited {
+            color: @ui-blue;
+        }
+        &:hover {
+            color: @ui-blue-light;
+        }
+    }
+    .user-avatar {
+        display: block;
+        width: 48px;
+        height: 48px;
+        border-radius: 2px;
+        overflow: hidden;
+        img {
+            display: block;
+        }
+    }
+    .reply-item {
+        display: block;
+        margin-top: 10px;
+        &:first-child {
+            margin-top: 0;
+        }
+        .user-area {
+            float: left;
+            margin-left: 20px;
+            margin-top: 5px;
+            .user-avatar-wrap {
+                width: 48px;
+                margin: 0 auto;
+            }
+            .user-url-wrap {
+                line-height: 16px;
+                text-align: center;
+                margin-top: 5px;
+            }
+        }
+        .main-area {
+            margin-left: 75px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            & > .content-wrap {
+                color: @ui-black;
+                margin-top: 7px;
+            }
+            .create-at {}
+            .user-url-wrap {
+                position: relative;
+            }
+            .actions {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+        }
+        .info-area {
+            .clearfix();
+            .actions {
+                float: left;
+                width: 250px;
+                .act {
+                    margin-right: 5px;
+                }
+                .up-reply {
+                    margin-right: 0;
+                }
+                .up-count {
+                    margin-right: 5px;
+                    color: @ui-black-light;
+                }
+            }
+            .create-at,
+            .edit-at {
+                float: right;
+            }
+        }
+        .reply-btn-area {
+            margin-top: 10px;
+            span {
+                margin-right: 5px;
+            }
+        }
+        .reply-edit-area {
+            display: none;
+            margin-top: 10px;
+            .editor-actions {
+                width: 10%;
+                margin-left: 90%;
+                text-align: right;
+                @media screen and (max-width: 768px) {
+                    width: 100%;
+                    margin-left:0;
+                }
+            }
+            .editor-wrap {
+                width: 90%;
+                height: 30px;
+                margin-top: 0;
+                float: left;
+                @media screen and (max-width: 768px) {
+                    width: 100%;
+                    height: 100px;
+                    float: none;
+                }
+            }
+        }
+    }
+    #topic-reply-list-container {
+        margin-top: -10px;
+    }
+    .sub-reply {
+        background: #f6f6f6;
+        margin-top: 10px;
+    }
+    .sub-reply-list {
+        list-style: none;
+    }
+    .sub-reply-item {
+        margin-top: 10px;
+        line-height: 16px;
+        padding: 5px 10px;
+        &:first-child {
+            margin-top: 0;
+        }
+        .content-wrap {
+            color: @ui-black;
+            line-height: 20px;
+        }
+        .minus {
+            margin: 0 8px;
+        }
+        .create-at {
+            margin-left: 5px;
+        }
+        .act {
+            margin-left: 3px;
+        }
+    }
+    .editor-wrap {
+        .CodeMirror {
+            height: 80px;
+        }
+    }
+}

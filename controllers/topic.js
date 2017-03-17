@@ -161,7 +161,7 @@ exports.list = function (req, res, next) {
       console.log(topics);
       return topics;
     }));
-    
+
     // 取分页数据
     var pagesCacheKey = JSON.stringify(query) + 'pages';
     cache.get(pagesCacheKey, proxy.done(function (pages) {
@@ -299,7 +299,7 @@ function saveTopic(req, next, callback) {
     }else{
         reprint = "";
     }
-    
+
     // 得到所有的 tab, e.g. ['ask', 'share', ..]
     var allTabs = config.tabs.map(function (tPair) {
         return tPair[0];
@@ -329,8 +329,8 @@ function saveTopic(req, next, callback) {
         // 给team成员发送
         //if (user.company) {
             //User.getTeamMember(
-                //user.company, 
-                //user.team || '' , 
+                //user.company,
+                //user.team || '' ,
                 //ep.done(function(members) {
                     //mail.sendNewTopicToTeamMembers({
                         //members: members,
@@ -350,7 +350,7 @@ function saveTopic(req, next, callback) {
                     user: user,
                     topic: topic
                 });
-            }); 
+            });
             //发送at消息
             at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
         }

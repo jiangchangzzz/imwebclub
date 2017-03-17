@@ -11,8 +11,8 @@
 </div>
 <div id="main" class="clearfix">
 <%- partial('common/sidebar.html') %>
-<div id="topic_list">
-  <%- partial("../topic/abstract", {collection:topics, as:"topic"}) %>
+<div id="content" class="topic_list">
+  <%- partial("../topic/abstract", {collection:topics, as:"topic"})%>
 </div>
 <div class="pagination" current_page="<%= current_page %>">
   <ul>

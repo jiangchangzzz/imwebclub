@@ -1,6 +1,6 @@
 <li title="<%= topic.title %>" >
-  	<div>
-  		<a class='dark topic_title' href="/topic/<%= topic._id %>" title="<%- topic.title %>"><%- topic.title %></a>
-  		<span>(<%= topic.visit_count %>浏览)</span>
-  	</div>
+		<a class='dark' href="/topic/<%= topic._id %>" title="<%- topic.title %>">
+      <div class="topic-visit">(<%= topic.visit_count %>浏览)</div>
+      <div class="topic-title one-line"><%- topic.title %></div>
+    </a>
 </li>
