@@ -12,7 +12,7 @@ var config     = require('../config');
  * 添加回复
  */
 exports.add = function (req, res, next) {
-  var content = req.body.r_content;
+  var content = req.body.content;
   var topic_id = req.params.topic_id;
   var reply_id = req.body.reply_id;
 

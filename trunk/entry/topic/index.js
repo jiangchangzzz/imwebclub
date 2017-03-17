@@ -1,4 +1,7 @@
-require('../../stylesheets/topic/index.less');
+import '../../stylesheets/topic/index.less';
+import '../../stylesheets/reply.less';
+import "../../javascripts/libs/editor/editor.css";
+import '../../javascripts/common/reply.js';
 // define([
 //     '../template/tplReplyItem.js',
 //     '../template/tplReplySubItem.js',
