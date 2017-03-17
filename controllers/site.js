@@ -44,20 +44,21 @@ exports.index = function (req, res, next) {
   }));
 
   // 取排行榜上的用户
-  // cache.get('tops', proxy.done(function (tops) {
-  //   if (tops) {
-  //     proxy.emit('tops', tops);
-  //   } else {
-  //     User.getUsersByQuery(
-  //       { is_block: false },
-  //       { limit: 10, sort: '-score' },
-  //       proxy.done('tops', function (tops) {
-  //         cache.set('tops', tops, 60 * 1);
-  //         return tops;
-  //       })
-  //     );
-  //   }
-  // }));
+  cache.get('tops', proxy.done(function (tops) {
+    if (tops) {
+      proxy.emit('tops', tops);
+    } else {
+      User.getUsersByQuery(
+        { is_block: false },
+        { limit: 10, sort: '-score' },
+        proxy.done('tops', function (tops) {
+          conosole.log(tops);
+          cache.set('tops', tops, 60 * 1);
+          return tops;
+        })
+      );
+    }
+  }));
   // END 取排行榜上的用户
 
   // 取0回复的主题
@@ -92,13 +93,13 @@ exports.index = function (req, res, next) {
   // END 取分页数据
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', /**'tops', 'no_reply_topics',**/ 'pages',
-    function (topics, /**tops, no_reply_topics,**/ pages) {
+  proxy.all('topics', 'tops', /**'no_reply_topics',**/ 'pages',
+    function (topics, tops,/**t no_reply_topics,**/ pages) {
       res.render('index', {
         topics: topics,
         current_page: page,
         list_topic_count: limit,
-        // tops: tops,
+        tops: tops,
         // no_reply_topics: no_reply_topics,
         pages: pages,
         tabs: config.tabs,
@@ -142,6 +143,6 @@ exports.sitemap = function (req, res, next) {
   }));
 };
 
-exports.appDownload = function (req, res, next) {
-  res.redirect('https://github.com/soliury/noder-react-native/blob/master/README.md')
-};
+// exports.appDownload = function (req, res, next) {
+//   res.redirect('https://github.com/soliury/noder-react-native/blob/master/README.md')
+// };
