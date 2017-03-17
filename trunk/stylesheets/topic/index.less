@@ -2,6 +2,47 @@
 @ui-blue: #38B7EA;
 @ui-gray: #DDD;
 
+.editor-actions{
+  min-height: 40px;
+}
+
+.panel{
+  padding: 0;
+  .panel-head{
+    padding: 5px 10px;
+    border-left: none;
+    border-bottom: 3px solid #20afe9;
+  }
+  .panel-body{
+    font-size: 14px;
+    text-align: left;
+    margin: 5px 10px;
+    .topic-list{
+      li{
+        width: 100%;
+        margin: 0;
+        a{
+          display: block;
+          width: 100%;
+          padding: 0 5px;
+          margin: 0 -5px;
+          &:hover{
+            color: @ui-blue;
+            background-color: @ui-gray;
+            border-radius: 5px;
+          }
+          .topic-title{
+            margin-right: 70px;
+          }
+          .topic-visit{
+            float:right;
+          }
+        }
+      }
+    }
+  }
+}
+
 .topic-info {
     position: relative;
     background: #fff;
@@ -75,23 +116,6 @@
     }
 }
 
-.editor-wrap {
-    margin: 20px 0 10px 0;
-    border: 1px solid @ui-gray;
-    border-radius: 5px;
-    overflow: hidden;
-    background: @ui-white;
-    textarea.editor {
-      width: 98%;
-      line-height: 2em;
-      height: 200px;
-      resize: vertical;
-      font-size: 15px;
-      padding: .5em;
-      border: none;
-    }
-    .CodeMirror {
-        height: 100px;
-        padding: 0 6px;
-    }
+.topic_content{
+  padding: 10px;
 }

@@ -26,12 +26,12 @@ if($('#nav-user-menu').length > 0){
   });
 }
 //展示和隐藏登录框
-$(document).on('click', '.user-login-btn', function() {
+$(document).on('click', '#nav-login-menu', function() {
     $('.to-login').show();
     $('.to-sign').hide();
     $(".login-wrapper").show();
 });
-$(document).on('click', '.user-sign-btn', function() {
+$(document).on('click', '#nav-sign-menu,#welcome-btn', function() {
     $('.to-sign').show();
     $('.to-login').hide();
     $(".login-wrapper").show();
@@ -43,4 +43,33 @@ $(document).on('click', '.not-sign-close', function() {
 $(document).ready(function(){
   //注册、登录
   sign.init();
+});
+
+// ajax common
+imweb.ajax = {};
+$.extend(imweb.ajax, {
+    post: function(url, options) {
+        options = options || {};
+        options.data = $.extend({
+            _csrf: imweb._csrf
+        }, options.data || {});
+        return $.ajax(url, $.extend({
+            method: 'post'
+        }, options));
+    },
+    get: function(url, options) {
+        options = options || {};
+        return $.ajax(url, $.extend({
+            method: 'get'
+        }, options));
+    },
+    fail: function(xhr) {
+        if (xhr.status === 403) {
+            alert('请先登录，登陆后即可点赞。');
+        } else if(xhr.status >= 500) {
+            alert('系统异常，请稍候重试。');
+        } else {
+            alert('系统错误，请稍候重试。');
+        }
+    }
 });
