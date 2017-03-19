@@ -16,26 +16,51 @@
         font-size: 0;
     }
 }
-
-.editor-wrap {
-    margin: 20px 0 10px 0;
-    border: 1px solid @ui-gray;
-    border-radius: 5px;
-    overflow: hidden;
-    background: @ui-white;
-    textarea.editor {
-      width: 98%;
-      line-height: 2em;
-      height: 200px;
-      resize: vertical;
-      font-size: 15px;
-      padding: .5em;
-      border: none;
+.topic-reply-panel{
+  position:relative;
+  .inner{
+    margin: 30px auto;
+  }
+  #deckText {
+    display: none;
+    position: absolute;
+    top: -3%;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: rgba(230,230,230,0.9);
+    a{
+      color: @ui-blue;
     }
-    .CodeMirror {
-        height: 100px;
-        padding: 0 6px;
+    .center{
+      text-align: center;
     }
+  }
+  &:hover{
+    #deckText {
+      display: block;
+    }
+  }
+  .editor-wrap {
+      margin: 20px 0 10px 0;
+      border: 1px solid @ui-gray;
+      border-radius: 5px;
+      overflow: hidden;
+      background: @ui-white;
+      textarea.editor {
+        width: 98%;
+        line-height: 2em;
+        height: 200px;
+        resize: vertical;
+        font-size: 15px;
+        padding: .5em;
+        border: none;
+      }
+      .CodeMirror {
+          height: 100px;
+          padding: 0 6px;
+      }
+  }
 }
 
 #reply-list {
@@ -159,10 +184,15 @@
                 }
             }
             .editor-wrap {
-                width: 90%;
                 height: 30px;
-                margin-top: 0;
+                width: 90%;
                 float: left;
+                margin: 0 0 10px 0;
+                border: 1px solid @ui-gray;
+                border-radius: 5px;
+                overflow: hidden;
+                background: @ui-white;
+                padding: 0 5px;
                 @media screen and (max-width: 768px) {
                     width: 100%;
                     height: 100px;

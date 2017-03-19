@@ -26,12 +26,12 @@ if($('#nav-user-menu').length > 0){
   });
 }
 //展示和隐藏登录框
-$(document).on('click', '#nav-login-menu', function() {
+$(document).on('click', '.nav-login', function() {
     $('.to-login').show();
     $('.to-sign').hide();
     $(".login-wrapper").show();
 });
-$(document).on('click', '#nav-sign-menu,#welcome-btn', function() {
+$(document).on('click', '.nav-sign', function() {
     $('.to-sign').show();
     $('.to-login').hide();
     $(".login-wrapper").show();
