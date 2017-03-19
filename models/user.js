@@ -10,6 +10,9 @@ var UserSchema = new Schema({
   loginname: { type: String},
   pass: { type: String },
   email: { type: String},
+  company: {type: String}, 
+  comp_mail: {type: String}, 
+  team: {type: String}, 
   url: { type: String },
   profile_image_url: {type: String},
   location: { type: String },
@@ -75,6 +78,7 @@ UserSchema.index({email: 1}, {unique: true});
 UserSchema.index({score: -1});
 UserSchema.index({githubId: 1});
 UserSchema.index({accessToken: 1});
+UserSchema.index({company: 1});
 
 UserSchema.pre('save', function(next){
   var now = new Date();

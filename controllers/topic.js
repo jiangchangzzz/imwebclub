@@ -69,8 +69,14 @@ exports.index = function (req, res, next) {
     topic.visit_count += 1;
     topic.save();
 
-    topic.author  = author;
-    topic.replies = replies;
+    // format date
+    topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+    topic.friendly_update_at = tools.formatDate(topic.update_at, true);
+
+    topic.author = author;
+
+    var mainReplies = dataAdapter.appendSubRepliesToReplies(replies); 
+    topic.replies = dataAdapter.outReplies(mainReplies);
 
     // 点赞数排名第三的回答，它的点赞数就是阈值
     topic.reply_up_threshold = (function () {

@@ -92,6 +92,7 @@ exports.getRepliesByTopicId = function (id, cb) {
           if (err) {
             return cb(err);
           }
+          // console.log(author);
           replies[i].author = author || { _id: '' };
           replies[i].friendly_create_at = tools.formatDate(replies[i].create_at, true);
           if (replies[i].content_is_html) {

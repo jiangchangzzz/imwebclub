@@ -95,26 +95,56 @@ exports.getUserByNameAndKey = function (loginname, key, callback) {
   User.findOne({loginname: loginname, retrieve_key: key}, callback);
 };
 
-exports.newAndSave = function (name, loginname, pass, email, avatar_url, active, callback) {
-  var user         = new User();
-  user.name        = loginname;
-  user.loginname   = loginname;
-  user.pass        = pass;
-  user.email       = email;
-  user.avatar      = avatar_url;
-  user.active      = active || false;
+exports.newAndSave = function (name, loginname, pass, email, comp, comp_mail, avatar_url, active, callback) {
+  var user = new User();
+  user.name = loginname;
+  user.loginname = loginname;
+  user.pass = pass;
+  user.email = email;
+  user.company = comp;
+  user.comp_mail = comp_mail;
+  user.avatar = avatar_url;
+  user.active = active || false;
   user.accessToken = uuid.v4();
 
   user.save(callback);
 };
 
+/**
+ * 保存用户
+ * Callback:
+ * - err, 数据库异常
+ * - user, 用户
+ * @param {Object} userInfo 用户信息
+ * @param {function(Object, Object)} callback 回调
+ */
+exports.newAndSaveWithAll = function (userInfo, callback) {
+  var user = new User();
+  user.name = userInfo.name || userInfo.loginname;
+  user.loginname = userInfo.loginname;
+  user.pass = userInfo.pass;
+  user.email = userInfo.email;
+  user.company = userInfo.company; 
+  user.team = userInfo.team; 
+  user.avatar = userInfo.avatar_url;
+  user.active = userInfo.active || false; 
+  user.accessToken = uuid.v4();
+  user.save(function(err) {
+    callback(err, user);
+  });
+};
+
 var makeGravatar = function (email) {
-  return 'http://www.gravatar.com/avatar/' + utility.md5(email.toLowerCase()) + '?size=96';
+  return 'http://gravatar.com/avatar/' + utility.md5(email.toLowerCase()) + '?size=48';
 };
 exports.makeGravatar = makeGravatar;
 
 exports.getGravatar = function (user) {
   return user.avatar || makeGravatar(user);
+};
+
+exports.getTeamMember = function (company, team, callback) {
+    User.find({company: company, team: team}, callback);
 };
 
 exports.listOrderByTeam = function(start, limit, callback) {

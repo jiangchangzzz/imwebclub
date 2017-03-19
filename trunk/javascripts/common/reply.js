@@ -55,7 +55,7 @@ define([
               }).join('');
             }
             item.content = render_helper.markdownRender(item.content);
-            console.log(item);
+            // console.log(item);
             return tplReplyItem({
                 topic: topic,
                 index: index,
@@ -67,10 +67,10 @@ define([
                 isTopicAuthor: user && user.loginname === topic.author.loginname,
                 reply: $.extend({}, item, {
                     author: {
-                      loginname:'**',
-                      avatar: '../../images/avatarDefault.jpg'
+                      loginname: item.author.username || item.author.name ||  ' ',
+                      avatar: item.author.avatar || '../../images/avatarDefault.jpg'
                     },
-                    subReplies: [],
+                    subReplies: item.subReplies || [],
                     subRepliesHTML: subRepliesHTML
                 })
             });
