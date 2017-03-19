@@ -176,14 +176,35 @@ exports.list = function (req, res, next) {
       }
     }));
     // END 取分页数据
+
+  // 取排行榜上的用户
+  cache.get('tops', proxy.done(function (tops) {
+    if (tops) {
+      proxy.emit('tops', tops);
+    } else {
+      User.getUsersByQuery(
+        { is_block: false },
+        { limit: 10, sort: '-score' },
+        proxy.done('tops', function (tops) {
+          // console.log(tops);
+          cache.set('tops', tops, 60 * 1);
+          return tops;
+        })
+      );
+    }
+  }));
+  // END 取排行榜上的用户
+
     var tabs = [['all', '全部']].concat(config.tabs);
     var tabName = renderHelper.tabName(tab);
-    proxy.all('topics', 'pages',
-      function (topics, pages) {
+
+    proxy.all('topics', 'pages', 'tops',
+      function (topics, pages, tops) {
         res.render('topic/list', {
           topics: topics,
           current_page: page,
           list_topic_count: limit,
+          tops: tops,
           pages: pages,
           tabs: tabs,
           tab: tab,
