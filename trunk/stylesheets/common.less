@@ -143,9 +143,57 @@ hr {
             margin-right: 0;
         }
         img{
-          max-width: 100%;
+            max-width: 100%;
         }
     }
+}
+
+.pagination {
+  height: 60px;
+  margin: 60px auto 0 auto;
+}
+.pagination ul {
+  text-align: center;
+}
+.pagination li {
+  display: inline;
+  -moz-border-radius: 10%;
+  -webkit-border-radius: 10%;
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin: 0 5px;
+  font-size: 14px;
+  border: solid 1px #DDD;
+}
+.pagination li a {
+  color: #333;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+.pagination li:hover,
+.pagination li.disabled {
+  background: #20AFE9;
+  border-color: #20AFE9;
+}
+.pagination li.disabled {
+  cursor: default;
+}
+.pagination li.hover {
+  cursor: pointer;
+}
+.pagination li.disabled.btn-step {
+  background-color: #DDD;
+  border: solid 1px #DDD;
+}
+.pagination li.disabled.btn-step:hover {
+  border-color: #DDD;
+}
+.pagination li.active {
+  background: #88acdb;
 }
 
 .panel {
