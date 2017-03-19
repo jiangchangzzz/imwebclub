@@ -157,7 +157,7 @@
         <hr class="solid-light">
         <div class="panel-body">
             <ul class="author-list">
-                <% tops.forEach(function(user){ %>
+                <% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
                     <li>
                         <div class="left">
                             <div class="avatar">
@@ -167,12 +167,17 @@
                         <div class="right">
                             <a href="javascript:void(0);" class="link middle">+关注</a>
                         </div>
-                        <div class="center">
-                            <img src="../../images/T.png">
-                            <b class="middle"><%=user.name %>(42)</b>
+                        <div class="center" title="<%=user.name %>">
+                            <div class="middle one-line">
+                              <img src="../../images/T.png">
+                              <b><%=user.name %></b>
+                            </div>
+                            <div class="middle">
+                              (42)
+                            </div>
                         </div>
                     </li>
-                <% })%>
+                <% })}%>
             </ul>
         </div>
     </div>

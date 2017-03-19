@@ -55,6 +55,7 @@ define([
               }).join('');
             }
             item.content = render_helper.markdownRender(item.content);
+            console.log(item);
             return tplReplyItem({
                 topic: topic,
                 index: index,
@@ -286,14 +287,12 @@ define([
          */
         upReply: function(e) {
             var me = this;
-            var $ele = $(e.target);
+            var $ele = $(e.target).closest('.up-reply');console.log($ele);
             var $reply = me._getReplyItem($ele);
-            var replyId = $reply.data('replyId');
+            var replyId = $reply.data('reply-id');
             var cancelVal = $ele.data('cancel');
-            if(!cancelVal) return;
-
             var cancel = cancelVal.toString() === 'true';
-            if (!imweb.userUtils.checkLogin()) {
+            if (!(imweb.user && imweb.user.loginname)) {
                 return;
             }
             imweb.ajax.post('/reply/' + replyId + '/up', {
