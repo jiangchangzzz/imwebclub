@@ -56,3 +56,8 @@ webpack构建：
 npm run build
 ```
 
+webpack开发：
+```bash
+npm run watch  
+npm run dev
+```

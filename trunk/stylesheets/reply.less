@@ -70,15 +70,25 @@
         display: none;
     }
     .act {
+        display: inline-block;
         cursor: pointer;
         line-height: 16px;
         font-size: 12px;
+        margin-right: 10px;
         &,
         &:visited {
             color: @ui-black-light;
         }
         &:hover {
             color: @ui-blue-light;
+        }
+        .up-count,.sub-count{
+          &::before{
+            content: "(";
+          }
+          &::after{
+            content: ")";
+          }
         }
     }
     .create-at,
@@ -149,16 +159,6 @@
             .actions {
                 float: left;
                 width: 250px;
-                .act {
-                    margin-right: 5px;
-                }
-                .up-reply {
-                    margin-right: 0;
-                }
-                .up-count {
-                    margin-right: 5px;
-                    color: @ui-black-light;
-                }
             }
             .create-at,
             .edit-at {
