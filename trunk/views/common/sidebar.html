@@ -1,6 +1,6 @@
 <div id="sidebar">
     <% if (current_user) { console.log(current_user.avatar); %>
-    <div id="profile" class="panel">
+    <div class="box profile">
         <div class="avatar">
             <% if (current_user.avatar) { %>
               <img src="<%= current_user.avatar %>">
@@ -21,25 +21,25 @@
         </ul>
     </div>
     <% } else { %>
-    <a class="panel radius" href="/auth/weibo">
+    <a class="box radius" href="/auth/weibo">
       <img src="../../images/weiboColor.png" class="ico"/>使用微博登陆
     </a>
-    <a class="panel radius" href="javascript:void(0);">
+    <a class="box radius" href="javascript:void(0);">
       <img src="../../images/weixinColor.png" class="ico"/>使用微信登陆
     </a>
-    <a class="panel radius" href="/auth/github">
+    <a class="box radius" href="/auth/github">
       <img src="../../images/githubColor.png" class="ico"/>使用Github登陆
     </a>
-    <a class="panel radius" href="javascript:void(0);">
+    <a class="box radius" href="javascript:void(0);">
       <img src="../../images/qqColor.png" class="ico"/>使用QQ登陆
     </a>
     <% } %>
-    <div id="social" class="panel border">
-        <div class="panel-head">
+    <div id="social" class="box border">
+        <div class="box-head">
             <b>关注我们</b>
         </div>
         <hr class="solid-light">
-        <div class="panel-body">
+        <div class="box-body">
             <ul class="ico-list">
                 <li>
                     <img src="../../images/weiboColor.png">
@@ -60,19 +60,19 @@
                 </li>
             </ul>
         </div>
-        <div class="panel-footer">
+        <div class="box-footer">
             2017 imweb
         </div>
     </div>
-    <div id="hotSeminars" class="panel border">
-        <div class="panel-head">
+    <div id="hotSeminars" class="box border">
+        <div class="box-head">
             <b>热门专题</b>
             <a href="javascript:void(0);" class="link">
           更多
         </a>
         </div>
         <hr class="solid-light">
-        <div class="panel-body">
+        <div class="box-body">
             <ul class="column-list">
                 <li>
                     <div class="left">
@@ -147,15 +147,15 @@
             </ul>
         </div>
     </div>
-    <div id="hotAuthors" class="panel border">
-        <div class="panel-head">
+    <div id="hotAuthors" class="box border">
+        <div class="box-head">
             <b>作者列表</b>
             <a href="javascript:void(0);" class="link">
         更多
       </a>
         </div>
         <hr class="solid-light">
-        <div class="panel-body">
+        <div class="box-body">
             <ul class="author-list">
                 <% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
                     <li>
@@ -170,10 +170,10 @@
                         <div class="center" title="<%=user.name %>">
                             <div class="middle one-line">
                               <img src="../../images/T.png">
-                              <b><%=user.name %></b>
+                              <b><%=user.name || user.loginname || ' ' %></b>
                             </div>
                             <div class="middle">
-                              (<%=user.topic_count %>)
+                              发表文章：<%=user.topic_count %>
                             </div>
                         </div>
                     </li>

@@ -152,14 +152,18 @@ exports.add = function (req, res, next) {
  */
 exports.delete = function (req, res, next) {
   var reply_id = req.body.reply_id;
+  var topic_id = req.body.topic_id;
   var ep = EventProxy.create();
   ep.fail(next);
   ep.on('fail', function(ret, msg) {
     ep.unbind();
     res.send({ret: ret || 400, msg: msg || ''});
   });
-  ep.on('done', function() {
-    res.send({ret: 0});
+  ep.on('done', function(topic) {
+    res.send({
+      ret: 0,
+      reply_count: topic.reply_count
+    });
   });
   Reply.getReplyById(reply_id, ep.done(function(reply) {
     if (!reply) {
@@ -167,6 +171,7 @@ exports.delete = function (req, res, next) {
     }
     ep.emit('reply', reply);
   }));
+
   ep.all('reply', function(reply) {
     if (reply.reply_id) {
       Reply.getReplyById(reply.reply_id, ep.done(function(parent_reply) {
@@ -201,10 +206,19 @@ exports.delete = function (req, res, next) {
           // 删除所有子评论
           Reply.removeByCondition({reply_id: reply_id});
         }
-        Topic.reduceCount(reply.topic_id, _.noop);
-        ep.emit('done');
+        Topic.reduceCount(reply.topic_id, function(){
+          ep.emit('delete');
+        });
     }
   );
+  ep.all('delete',function(){
+    Topic.getTopic(topic_id, ep.doneLater(function (topic) {
+        if (!topic) {
+            return ep.emit('fail', 402);
+        }
+        ep.emit('done', topic);
+    }));
+  });
 };
 
 /*

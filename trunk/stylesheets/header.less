@@ -38,7 +38,7 @@
           display: block;
           height: 100%;
           list-style: none;
-          font-size: 22px;
+          font-size: 20px;
           margin: 0;
           padding-left: 0;
           overflow: hidden;
@@ -86,35 +86,33 @@
             .search {
                 display: inline-block;
                 position: relative;
-                width: 200px;
                 margin: 5px;
                 @media screen and (max-width: 1024px) {
                     display: none;
                 }
 
                 input {
-                    width: 190px;
-                    height: 30px;
+                    width: 180px;
                     background: @header-bg;
                     border: 1px solid @header-active;
                     font-size: 14px;
                     border-radius: 5px;
                     padding: 5px;
-                    line-height: 20px;
+                    line-height: 14px;
+                    &:focus{
+                      width: 300px;
+                      transition: width 1s ease;
+                    }
                 }
 
                 .search-btn {
                     position: absolute;
-                    top: 5px;
-                    right: 0;
+                    top: 3px;
+                    right: 3px;
                     cursor: pointer;
-                    border-radius: 2px;
-                    color: #4d4e4e;
-                    font-size: 20px;
-                    height: 32px;
-                    line-height: 28px;
+                    width: 25px;
+                    height: 25px;
                     display: inline-block;
-                    width: 30px;
                     background-position: center;
                     background-repeat: no-repeat;
                     background-image: url("../images/search.png");
