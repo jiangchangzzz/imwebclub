@@ -61,13 +61,14 @@ exports.outReply = function(reply) {
 exports.outUser = function(user) {
     //如果没有gravatar头像，则用默认
     var avatar = user.avatar;
-    if (avatar 
-        && avatar.indexOf("gravatar.com") >= 0 
+    if (avatar
+        && avatar.indexOf("gravatar.com") >= 0
         && avatar.indexOf("d=retro") < 0
     ) {
         avatar += "&d=retro";
     }
     return {
+        id: user._id,
         name: user.name,
         loginname: user.loginname,
         url: user.url,
@@ -130,4 +131,3 @@ exports.outDraft = function(item, options) {
     }
     return out;
 };
-

@@ -54,10 +54,10 @@ var config = {
 
   // 首页热文显示话题数量
   list_hot_topic_count: 5,
-  
+
   // 文章预览的最大长度
   topic_summary_len: 500,
-  
+
   // 限制发帖时间间隔，单位：毫秒
   post_interval: 2000,
 
@@ -182,7 +182,7 @@ if (process.env.NODE_ENV === 'test') {
   config.WEIBO_OAUTH = {
       clientID: '3489481381',
       clientSecret: '52410f54674964564a475afc64511e5d',
-      callbackURL: `http://localhost:${config.port}/auth/weibo/callback`
+      callbackURL: `http://test.imweb.io:${config.port}/auth/weibo/callback`
   };
 }
 
