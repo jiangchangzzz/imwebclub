@@ -78,7 +78,7 @@
             <a href="<%=topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap "><img class="cell-brief-img" src="<%=topic.pic[0]%>"></a>
           <%}%>
           <div class="cell-brief">
-            <%= topic.content ? topic.content.replace(/<br>/g, ' ') : ''%>
+            <%= topic.summary ? topic.summary.replace(/<br>/g, ' ') : ''%>
           </div>
           <div class="clearfix"></div>
         </div>

@@ -91,10 +91,12 @@ exports.genTopicPic = function(markdownText){
     var imgArr = [];
     // 不用cheerio 用正则匹配图片
     var regImgArr = html.match(/<img.*?(?:>|\/>)/gi);
-    regImgArr.forEach(function(img) {
-        imgArr.push(img.match(/src=[\'\"]?([^\'\"]*)[\'\"]?/i)[1]);
-    })
-
+    if(regImgArr && regImgArr.length >0 ){
+        regImgArr.forEach(function(img) {
+            imgArr.push(img.match(/src=[\'\"]?([^\'\"]*)[\'\"]?/i)[1]);
+        })
+    }
+    
     // var $ = cheerio.load(html);
     // var $img = $("img");
     // var imgArr = [];
