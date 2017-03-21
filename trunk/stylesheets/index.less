@@ -63,6 +63,10 @@
     padding: 5px 10px;
     border-radius: 15px;
     border: solid 1px white;
+    &:hover{
+      font-weight: bolder;
+      border-width: 2px;
+    }
   }
 }
 
@@ -200,7 +204,7 @@
     }
 
     .column-body {
-        min-height: 200px;
+        min-height: 240px;
 
         .slider {
             float: left;
@@ -226,6 +230,10 @@
 
             li {
                 margin: 10px 0;
+                &:hover{
+                  color: @column-highlight;
+                }
+
                 b{
                   display: block;
                 }
@@ -249,7 +257,12 @@
                 border-bottom: solid 1px @column-weak;
 
                 .item-header {
-                    b {}
+                    a{
+                      font-weight: bold;
+                      &:hover{
+                        color: @column-highlight;
+                      }
+                    }
 
                     .commentCount {
                         margin: 0 3px;

@@ -75,7 +75,7 @@ exports.index = function (req, res, next) {
 
     topic.author = author;
 
-    var mainReplies = dataAdapter.appendSubRepliesToReplies(replies); 
+    var mainReplies = dataAdapter.appendSubRepliesToReplies(replies);
     topic.replies = dataAdapter.outReplies(mainReplies);
 
     // 点赞数排名第三的回答，它的点赞数就是阈值
@@ -164,7 +164,7 @@ exports.list = function (req, res, next) {
     // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
     // console.log(optionsStr);
     Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
-      console.log(topics);
+      //console.log(topics);
       return topics;
     }));
 

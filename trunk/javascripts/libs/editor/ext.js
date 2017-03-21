@@ -1,17 +1,18 @@
-(function(Editor, Remarkable, WebUploader){
+define([], function() {
+  return function(Editor, Remarkable, WebUploader){
     // Set default options
-    // var md = new Remarkable();
+    var md = new Remarkable();
 
-    // md.set({
-    //   html:         false,        // Enable HTML tags in source
-    //   xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-    //   breaks:       true,        // Convert '\n' in paragraphs into <br>
-    //   langPrefix:   'language-',  // CSS language prefix for fenced blocks
-    //   linkify:      false,        // Autoconvert URL-like text to links
-    //   typographer:  false,        // Enable smartypants and other sweet transforms
-    // });
+    md.set({
+       html:         false,        // Enable HTML tags in source
+       xhtmlOut:     false,        // Use '/' to close single tags (<br />)
+       breaks:       true,        // Convert '\n' in paragraphs into <br>
+       langPrefix:   'language-',  // CSS language prefix for fenced blocks
+       linkify:      false,        // Autoconvert URL-like text to links
+       typographer:  false,        // Enable smartypants and other sweet transforms
+     });
 
-    // window.remarkable = md;
+    window.remarkable = md;
 
     var toolbar = Editor.toolbar;
 
@@ -243,4 +244,5 @@
         var line = cm.lastLine();
         cm.setLine(line, cm.getLine(line) + txt);
     };
-})(window.Editor, window.Remarkable, window.WebUploader);
+  }
+});

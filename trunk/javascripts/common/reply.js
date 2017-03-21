@@ -4,13 +4,16 @@ define([
     '../template/tplReplyItem.js',
     '../template/tplReplySubItem.js',
     '../libs/editor/editor.js',
+    '../libs/editor/ext.js',
+    '../libs/remarkable.js',
     '../libs/webuploader/webuploader.withoutimage.js',
     './jquery.caret.js',
     './jquery.atwho.js',
     './md.js'
-], function(_, render_helper, tplReplyItem, tplReplySubItem, editor){
+], function(_, render_helper, tplReplyItem, tplReplySubItem, editor, ext, Remarkable, webuploader){
     var Editor = editor.Editor,
         CodeMirror = editor.CodeMirror;
+    ext(Editor, Remarkable, webuploader.Webuploader);
     //console.log(Editor);
     var topicAction = {
         /**
@@ -55,7 +58,7 @@ define([
               }).join('');
             }
             item.content = render_helper.markdownRender(item.content);
-            // console.log(item);
+            //console.log(item);
             return tplReplyItem({
                 topic: topic,
                 index: index,
@@ -63,11 +66,11 @@ define([
                 markdown: imweb.markdown,
                 isAdmin: user && user.loginname && user.is_admin,
                 isLogin: user && user.loginname,
-                isAuthor: user && user.id === item.author_id,
+                isAuthor: user && user.id === item.author.id,
                 isTopicAuthor: user && user.loginname === topic.author.loginname,
                 reply: $.extend({}, item, {
                     author: {
-                      loginname: item.author.username || item.author.name ||  ' ',
+                      loginname: item.author.name || item.author.loginname || ' ',
                       avatar: item.author.avatar || '../../images/avatarDefault.jpg'
                     },
                     subReplies: item.subReplies || [],
@@ -77,7 +80,7 @@ define([
 
         },
         /**
-         * 渲染一天二级评论
+         * 渲染一条二级评论
          * @param {Object} item 评论
          * @param {number} index 评论索引
          * @return {string} html
@@ -85,7 +88,7 @@ define([
         renderSubReplyItem: function(item, index) {
             var user = imweb.user;
             var topic = imweb.topic;
-
+            item.text = $(item.content).text();
             return tplReplySubItem({
                 reply: item,
                 user: imweb.user,
@@ -141,7 +144,8 @@ define([
             $ele.data('editorInited', true);
 
             var editor = new Editor({
-                status: []
+                status: [],
+                markdown: imweb.markdown
             });
             editor.render($ele[0]);
             $ele.data('editor', editor);
@@ -206,6 +210,7 @@ define([
             var $reply = $ele.closest('.reply-item');
             var $subReplyList = $reply.find('.sub-reply-list');
             var editor = $reply.find('.editor').data('editor');
+            var $subCount = $reply.find('.sub-count');
             var topicId = imweb.topic.id;
             var replyId = $reply.data('replyId');
             var content = editor.codemirror.getValue();
@@ -221,6 +226,7 @@ define([
             }).done(function(data) {
                 if (data.ret === 0) {
                     me.subReplyListAppend($subReplyList, data.data.reply);
+                    $subCount.text(parseInt($subCount.text())+1);
                     editor.codemirror.setValue('');
                     $('.topic-reply-count').html(data.data.topic.reply_count);
                 }
@@ -288,6 +294,10 @@ define([
         upReply: function(e) {
             var me = this;
             var $ele = $(e.target).closest('.up-reply');console.log($ele);
+            if($ele.data('mine').toString() === 'true'){
+              alert('您无法对自己的评论点赞。');
+              return;
+            }
             var $reply = me._getReplyItem($ele);
             var replyId = $reply.data('reply-id');
             var cancelVal = $ele.data('cancel');
@@ -338,7 +348,7 @@ define([
                 $subReply.removeClass("hide");
             } else {
                 $editArea.hide();
-                $ele.html('回复('+$ele.data("count")+')');
+                $ele.html('回复');
                 $subReply.addClass("hide");
             }
             // 隐藏其它的编辑器
@@ -347,7 +357,7 @@ define([
             $otherEditorAreas.hide();
             var $notActived = $('.open-sub-reply').not($ele);
             for(var i=0,len=$notActived.length;i<len;i++){
-                $notActived.eq(i).html('回复('+$notActived.eq(i).data("count")+')');
+                $notActived.eq(i).html('回复');
             }
         },
         /**
