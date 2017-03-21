@@ -65,20 +65,20 @@
           <a title="删除" class="cell-other-span js-topic-del" href="javascript:void(0)" data-tid="<%=topic._id%>"><i class="fa fa-trash"></i></a>
           <% } %>
         </div>
-        <!--<div class="cell-info">-->
-            <!--<span class="cell-name user-slider-btn nor-link" data-name="<%= topic.author.loginname %>">-->
-                <!--<%= topic.author.name || topic.author.loginname %>-->
-                <!--<%if(topic.author.signature){%>-->
-                <!--<span class="cell-signature">，<%= topic.author.signature %></span>-->
-                <!--<%}%>-->
-            <!--</span>-->
-        <!--</div>-->
+        <div class="cell-info">
+            <span class="cell-name user-slider-btn nor-link" data-name="<%= topic.author.loginname %>">
+                <%= topic.author.name || topic.author.loginname %>
+                <%if(topic.author.signature){%>
+                <span class="cell-signature">，<%= topic.author.signature %></span>
+                <%}%>
+            </span>
+        </div>
         <div class="cell-brief-wrap">
           <%if(topic.pic && topic.pic.length != 0){%>
             <a href="<%=topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap "><img class="cell-brief-img" src="<%=topic.pic[0]%>"></a>
           <%}%>
           <div class="cell-brief">
-            <%= topic.content ? topic.content.replace(/<br>/g, ' ') : ''%>
+            <%= topic.summary ? topic.summary.replace(/<br>/g, ' ') : ''%>
           </div>
           <div class="clearfix"></div>
         </div>

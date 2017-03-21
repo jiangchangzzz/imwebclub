@@ -214,7 +214,7 @@ exports.list = function (req, res, next) {
           pages: pages,
           tabs: tabs,
           tab: tab,
-          base: '/',
+          base: '/topic/tab/'+ tab,
           pageTitle: tabName && (tabName + '版块'),
         });
       });

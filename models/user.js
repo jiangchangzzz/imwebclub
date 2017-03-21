@@ -45,27 +45,33 @@ var UserSchema = new Schema({
   retrieve_time: {type: Number},
   retrieve_key: {type: String},
 
-  accessToken: {type: String},
+    accessToken: {type: String},
+    evernoteAccessToken: {type: String}, //新增evernote支持 for marktang
+    yinxiangAccessToken: {type: String}, //新增evernote支持 for marktang
+    evernoteType: {type: String, default: 'yinxiang'}, //新增evernote支持 for marktang
+    wechatId: {type: String, default: ''} //新增wechatId for 微信用户对imweb公众号的唯一openid
 });
 
 UserSchema.plugin(BaseModel);
 UserSchema.virtual('avatar_url').get(function () {
-  var url = this.avatar || ('https://gravatar.com/avatar/' + utility.md5(this.email.toLowerCase()) + '?size=48');
+    var url = this.avatar || ('//gravatar.com/avatar/' + utility.md5(this.email.toLowerCase()) + '?size=48');
 
-  // www.gravatar.com 被墙
-  url = url.replace('www.gravatar.com', 'gravatar.com');
+    // www.gravatar.com 被墙
+    url = url.replace('//www.gravatar.com', '//gravatar.com');
+    // 让协议自适应 protocol
+    if (url.indexOf('http:') === 0) {
+        url = url.slice(5);
+    }
 
-  // 让协议自适应 protocol，使用 `//` 开头
-  if (url.indexOf('http:') === 0) {
-    url = url.slice(5);
-  }
-
-  // 如果是 github 的头像，则限制大小
-  if (url.indexOf('githubusercontent') !== -1) {
-    url += '&s=120';
-  }
-
-  return url;
+    //如果没有gravatar头像，则用默认
+    if(url.indexOf("gravatar.com") >=0 && url.indexOf("d=retro") < 0){
+        url += "&d=retro";
+    }
+    // 如果是 github 的头像，则限制大小
+    if (url.indexOf('githubusercontent') !== -1) {
+        url += '&s=120';
+    }
+    return url;
 });
 
 UserSchema.virtual('isAdvanced').get(function () {
