@@ -3,6 +3,8 @@
 //   q = encodeURIComponent(q);
 //   res.redirect('https://www.google.com.hk/#hl=zh-CN&q=site:cnodejs.org+' + q);
 // };
+
+
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
 var Topic = require('../proxy').Topic;

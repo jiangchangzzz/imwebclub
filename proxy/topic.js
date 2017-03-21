@@ -7,6 +7,7 @@ var tools      = require('../common/tools');
 var at         = require('../common/at');
 var _          = require('lodash');
 var config = require('../config');
+var tools = require('../common/tools');
 
 
 /**
@@ -96,6 +97,7 @@ exports.getTopicsByQuery = function (query, opt, callback) {
         if (author) {
           topic.author = author;
           topic.reply = reply;
+          topic.friendly_create_at = tools.formatDate(topic.create_at, true);
         } else {
           topics[i] = null;
         }
