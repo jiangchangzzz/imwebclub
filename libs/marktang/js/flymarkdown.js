@@ -422,11 +422,7 @@ $(function() {
         },
         loadMyTopic: function() {
             var $list = $('#sidebar-mytopic-list');
-            imweb.ajax.get('/topic/listmy', {
-                data: {
-                    limit: 100
-                }
-            }).done(function(data) {
+            imweb.ajax.get('/api/v1/topic/listmy/100').done(function(data) {
                 var list = data.data;
                 var html = $.map(list, function(item, i) {
                     return imweb.template('topic-list-item', {

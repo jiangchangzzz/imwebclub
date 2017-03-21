@@ -7,17 +7,16 @@
  */
 
 var validator = require('validator');
-
-var at           = require('../common/at');
-var User         = require('../proxy').User;
-var Topic        = require('../proxy').Topic;
+var at = require('../common/at');
+var User = require('../proxy').User;
+var Topic = require('../proxy').Topic;
 var TopicCollect = require('../proxy').TopicCollect;
-var EventProxy   = require('eventproxy');
-var tools        = require('../common/tools');
-var store        = require('../common/store');
-var config       = require('../config');
-var _            = require('lodash');
-var cache        = require('../common/cache');
+var EventProxy = require('eventproxy');
+var tools = require('../common/tools');
+var store = require('../common/store');
+var config = require('../config');
+var _ = require('lodash');
+var cache = require('../common/cache');
 var logger = require('../common/logger');
 var escapeHtml = require('escape-html');
 var mail = require('../common/mail');
@@ -48,15 +47,15 @@ exports.index = function (req, res, next) {
   var events = ['topic', 'other_topics', 'no_reply_topics', 'is_collect'];
   var ep = EventProxy.create(events,
     function (topic, other_topics, no_reply_topics, is_collect) {
-    res.render('topic/index', {
-      topic: topic,
-      author_other_topics: other_topics,
-      no_reply_topics: no_reply_topics,
-      is_uped: isUped,
-      is_collect: is_collect,
-      tabs: config.tabs
+      res.render('topic/index', {
+        topic: topic,
+        author_other_topics: other_topics,
+        no_reply_topics: no_reply_topics,
+        is_uped: isUped,
+        is_collect: is_collect,
+        tabs: config.tabs
+      });
     });
-  });
 
   ep.fail(next);
 
@@ -95,8 +94,8 @@ exports.index = function (req, res, next) {
     ep.emit('topic', topic);
 
     // get other_topics
-    var options = { limit: 5, sort: '-last_reply_at'};
-    var query = { author_id: topic.author_id, _id: { '$nin': [ topic._id ] } };
+    var options = { limit: 5, sort: '-last_reply_at' };
+    var query = { author_id: topic.author_id, _id: { '$nin': [topic._id] } };
     Topic.getTopicsByQuery(query, options, ep.done('other_topics'));
 
     // get no_reply_topics
@@ -105,8 +104,8 @@ exports.index = function (req, res, next) {
         ep.emit('no_reply_topics', no_reply_topics);
       } else {
         Topic.getTopicsByQuery(
-          { reply_count: 0, tab: {$ne: 'job'}},
-          { limit: 5, sort: '-create_at'},
+          { reply_count: 0, tab: { $ne: 'job' } },
+          { limit: 5, sort: '-create_at' },
           ep.done('no_reply_topics', function (no_reply_topics) {
             cache.set('no_reply_topics', no_reply_topics, 60 * 1);
             return no_reply_topics;
@@ -128,60 +127,78 @@ exports.create = function (req, res, next) {
   });
 };
 
+//topic类型过滤器
+var _topicFormat = function (topics) {
+  var arr = [];
+  for (var i = 0, len = topics.length; i < len; i++) {
+    if (topics[i].type && topics[i].type == 1) {
+      var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
+      if (proArr.length >= 3) {
+        topics[i].proName = proArr[2];
+        topics[i].proAuthor = proArr[1];
+        arr.push(topics[i]);
+      }
+    } else {
+      arr.push(topics[i]);
+    }
+  }
+  return topics;
+}
+
 /**
  * 文章列表
  */
 exports.list = function (req, res, next) {
-    var page = parseInt(req.query.page, 10) || 1;
-    page = page > 0 ? page : 1;
-    var tab = req.params.tab || 'all';
-    var sort =  req.params.sort || 'default';  // 根据不同的参数决定文章排序方式
-    var sortMap = {
-        'hot': '-visit_count -collect_count -reply_count -create_at',
-        'latest': '-create_at',
-        'reply': '-reply_count',
-        'default': '-create_at'
-    };
-    var sortType = sortMap[sort] || sortMap['default'];
+  var page = parseInt(req.query.page, 10) || 1;
+  page = page > 0 ? page : 1;
+  var tab = req.params.tab || 'all';
+  var sort = req.params.sort || 'default';  // 根据不同的参数决定文章排序方式
+  var sortMap = {
+    'hot': '-visit_count -collect_count -reply_count -create_at',
+    'latest': '-create_at',
+    'reply': '-reply_count',
+    'default': '-create_at'
+  };
+  var sortType = sortMap[sort] || sortMap['default'];
 
-    var proxy = new EventProxy();
-    proxy.fail(next);
-    // 取主题
-    var query = {};
-    if (tab && tab !== 'all') {
-        if (tab === 'good') {
-            query.good = true;
-        } else {
-            query.tab = tab;
-        }
+  var proxy = new EventProxy();
+  proxy.fail(next);
+  // 取主题
+  var query = {};
+  if (tab && tab !== 'all') {
+    if (tab === 'good') {
+      query.good = true;
+    } else {
+      query.tab = tab;
     }
-    var limit = config.list_topic_count;
-    var options = {
-        skip: (page - 1) * limit,
-        limit: limit,
-        sort: sortType
-    };
-    // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
-    // console.log(optionsStr);
-    Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
-      //console.log(topics);
-      return topics;
-    }));
+  }
+  var limit = config.list_topic_count;
+  var options = {
+    skip: (page - 1) * limit,
+    limit: limit,
+    sort: sortType
+  };
+  // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
+  // console.log(optionsStr);
+  Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
+    //console.log(topics);
+    return topics;
+  }));
 
-    // 取分页数据
-    var pagesCacheKey = JSON.stringify(query) + 'pages';
-    cache.get(pagesCacheKey, proxy.done(function (pages) {
-      if (pages) {
+  // 取分页数据
+  var pagesCacheKey = JSON.stringify(query) + 'pages';
+  cache.get(pagesCacheKey, proxy.done(function (pages) {
+    if (pages) {
+      proxy.emit('pages', pages);
+    } else {
+      Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
+        var pages = Math.ceil(all_topics_count / limit);
+        cache.set(pagesCacheKey, pages, 60 * 1);
         proxy.emit('pages', pages);
-      } else {
-        Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
-          var pages = Math.ceil(all_topics_count / limit);
-          cache.set(pagesCacheKey, pages, 60 * 1);
-          proxy.emit('pages', pages);
-        }));
-      }
-    }));
-    // END 取分页数据
+      }));
+    }
+  }));
+  // END 取分页数据
 
   // 取排行榜上的用户
   cache.get('tops', proxy.done(function (tops) {
@@ -201,23 +218,23 @@ exports.list = function (req, res, next) {
   }));
   // END 取排行榜上的用户
 
-    var tabs = [['all', '全部']].concat(config.tabs);
-    var tabName = renderHelper.tabName(tab);
+  var tabs = [['all', '全部']].concat(config.tabs);
+  var tabName = renderHelper.tabName(tab);
 
-    proxy.all('topics', 'pages', 'tops',
-      function (topics, pages, tops) {
-        res.render('topic/list', {
-          topics: topics,
-          current_page: page,
-          list_topic_count: limit,
-          tops: tops,
-          pages: pages,
-          tabs: tabs,
-          tab: tab,
-          base: '/topic/tab/'+ tab,
-          pageTitle: tabName && (tabName + '版块'),
-        });
+  proxy.all('topics', 'pages', 'tops',
+    function (topics, pages, tops) {
+      res.render('topic/list', {
+        topics: _topicFormat(topics),
+        current_page: page,
+        list_topic_count: limit,
+        tops: tops,
+        pages: pages,
+        tabs: tabs,
+        tab: tab,
+        base: '/topic/tab/' + tab,
+        pageTitle: tabName && (tabName + '版块'),
       });
+    });
 }
 
 // exports.put = function (req, res, next) {
@@ -279,113 +296,113 @@ exports.list = function (req, res, next) {
 
 
 exports.put = function (req, res, next) {
-    var json = req.body.json === 'true';
-    //for marktang
-    if (!json && req.body.content){
-        res.render('topic/edit', {
-            tabs: config.tabs,
-            content_from_marktang : req.body.content || ''
-        });
-        return;
-    }
-    saveTopic(req, next, function(err, topic) {
-        if (!json) {
-            if (err || !topic) {
-                return res.render('topic/edit', {
-                    edit_error: err,
-                    title: topic.title,
-                    content: topic.content,
-                    tabs: config.tabs
-                });
-            } else {
-                res.redirect('/topic/' + topic._id);
-            }
-        } else {
-            if (err || !topic) {
-                res.send({
-                    ret: 400
-                });
-            } else {
-                res.send({
-                    ret: 0,
-                    data: dataAdapter.outTopic(topic)
-                });
-            }
-        }
+  var json = req.body.json === 'true';
+  //for marktang
+  if (!json && req.body.content) {
+    res.render('topic/edit', {
+      tabs: config.tabs,
+      content_from_marktang: req.body.content || ''
     });
+    return;
+  }
+  saveTopic(req, next, function (err, topic) {
+    if (!json) {
+      if (err || !topic) {
+        return res.render('topic/edit', {
+          edit_error: err,
+          title: topic.title,
+          content: topic.content,
+          tabs: config.tabs
+        });
+      } else {
+        res.redirect('/topic/' + topic._id);
+      }
+    } else {
+      if (err || !topic) {
+        res.send({
+          ret: 400
+        });
+      } else {
+        res.send({
+          ret: 0,
+          data: dataAdapter.outTopic(topic)
+        });
+      }
+    }
+  });
 };
 
 function saveTopic(req, next, callback) {
-    var title = escapeHtml(validator.trim(req.body.title));
-    var tab = validator.escape(validator.trim(req.body.tab));
-    var content = validator.trim(req.body.content || req.body.t_content);
-    var type = escapeHtml(req.body.type || 0);
-    var reprint = req.body.reprint;
-    if(reprint && reprint.length != 0 && reprint != "false"){
-        reprint = req.body.link;
-    }else{
-        reprint = "";
-    }
+  var title = escapeHtml(validator.trim(req.body.title));
+  var tab = validator.escape(validator.trim(req.body.tab));
+  var content = validator.trim(req.body.content || req.body.t_content);
+  var type = escapeHtml(req.body.type || 0);
+  var reprint = req.body.reprint;
+  if (reprint && reprint.length != 0 && reprint != "false") {
+    reprint = req.body.link;
+  } else {
+    reprint = "";
+  }
 
-    // 得到所有的 tab, e.g. ['ask', 'share', ..]
-    var allTabs = config.tabs.map(function (tPair) {
-        return tPair[0];
-    });
-    // if (!config.regExps.topicTitle.test(title)
-    //     || !config.regExps.topicContent.test(content)
-    //     || !_.contains(allTabs, tab)
-    // ) {
-    //     return callback('param error', null);
-    // }
+  // 得到所有的 tab, e.g. ['ask', 'share', ..]
+  var allTabs = config.tabs.map(function (tPair) {
+    return tPair[0];
+  });
+  // if (!config.regExps.topicTitle.test(title)
+  //     || !config.regExps.topicContent.test(content)
+  //     || !_.contains(allTabs, tab)
+  // ) {
+  //     return callback('param error', null);
+  // }
 
-    var user = req.session.user;
-    var ep = new EventProxy();
-    ep.fail(next);
+  var user = req.session.user;
+  var ep = new EventProxy();
+  ep.fail(next);
 
-    // console.log(title+"is done !");
+  // console.log(title+"is done !");
 
-    Topic.newAndSave(title, type, content, tab, reprint, user._id, ep.done('topic'));
-    ep.all('topic', function(topic) {
-        User.getUserById(user._id, ep.done(function (user) {
-            user.score += 5;
-            user.topic_count += 1;
-            user.save();
-            req.session.user = user;
-            ep.emit('score_saved', user);
-        }));
-        // 给team成员发送
-        //if (user.company) {
-            //User.getTeamMember(
-                //user.company,
-                //user.team || '' ,
-                //ep.done(function(members) {
-                    //mail.sendNewTopicToTeamMembers({
-                        //members: members,
-                        //user: user,
-                        //topic: topic
-                    //});
-                //})
-            //);
-        //}
-        if(type == 0){
-            User.listOrderByTeam(0, 1000, function(err, members) {
-                if (err) {
-                    return;
-                }
-                mail.sendNewTopicToTeamMembers({
-                    members: members,
-                    user: user,
-                    topic: topic
-                });
-            });
-            //发送at消息
-            at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
+  Topic.newAndSave(title, type, content, tab, reprint, user._id, ep.done('topic'));
+  ep.all('topic', function (topic) {
+    User.getUserById(user._id, ep.done(function (user) {
+      user.score += 5;
+      user.topic_count += 1;
+      user.save();
+      req.session.user = user;
+      ep.emit('score_saved', user);
+    }));
+    // 给team成员发送
+    //if (user.company) {
+    //User.getTeamMember(
+    //user.company,
+    //user.team || '' ,
+    //ep.done(function(members) {
+    //mail.sendNewTopicToTeamMembers({
+    //members: members,
+    //user: user,
+    //topic: topic
+    //});
+    //})
+    //);
+    //}
+    if (type == 0) {
+      User.listOrderByTeam(0, 1000, function (err, members) {
+        if (err) {
+          return;
         }
-    });
+        mail.sendNewTopicToTeamMembers({
+          members: members,
+          user: user,
+          topic: topic
+        });
+      });
+      //发送at消息
+      at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
+    }
+  });
 
-    ep.all('topic', 'score_saved', function (topic, user) {
-        callback(null, topic);
-    });
+  ep.all('topic', 'score_saved', function (topic, user) {
+    callback(null, topic);
+  });
 };
 
 exports.showEdit = function (req, res, next) {
@@ -414,9 +431,9 @@ exports.showEdit = function (req, res, next) {
 
 exports.update = function (req, res, next) {
   var topic_id = req.params.tid;
-  var title    = req.body.title;
-  var tab      = req.body.tab;
-  var content  = req.body.t_content;
+  var title = req.body.title;
+  var tab = req.body.tab;
+  var content = req.body.t_content;
 
   Topic.getTopicById(topic_id, function (err, topic, tags) {
     if (!topic) {
@@ -425,8 +442,8 @@ exports.update = function (req, res, next) {
     }
 
     if (topic.author_id.equals(req.session.user._id) || req.session.user.is_admin) {
-      title   = validator.trim(title);
-      tab     = validator.trim(tab);
+      title = validator.trim(title);
+      tab = validator.trim(tab);
       content = validator.trim(content);
 
       // 验证
@@ -451,9 +468,9 @@ exports.update = function (req, res, next) {
       }
 
       //保存话题
-      topic.title     = title;
-      topic.content   = content;
-      topic.tab       = tab;
+      topic.title = title;
+      topic.content = content;
+      topic.tab = tab;
       topic.update_at = new Date();
 
       topic.save(function (err) {
@@ -485,7 +502,7 @@ exports.delete = function (req, res, next) {
     }
     if (!req.session.user.is_admin && !(topic.author_id.equals(req.session.user._id))) {
       res.status(403);
-      return res.send({success: false, message: '无权限'});
+      return res.send({ success: false, message: '无权限' });
     }
     if (!topic) {
       res.status(422);
@@ -508,7 +525,7 @@ exports.delete = function (req, res, next) {
 // 设为置顶
 exports.top = function (req, res, next) {
   var topic_id = req.params.tid;
-  var referer  = req.get('referer');
+  var referer = req.get('referer');
 
   if (topic_id.length !== 24) {
     res.render404('此话题不存在或已被删除。');
@@ -528,7 +545,7 @@ exports.top = function (req, res, next) {
         return next(err);
       }
       var msg = topic.top ? '此话题已置顶。' : '此话题已取消置顶。';
-      res.render('notify/notify', {success: msg, referer: referer});
+      res.render('notify/notify', { success: msg, referer: referer });
     });
   });
 };
@@ -552,7 +569,7 @@ exports.good = function (req, res, next) {
         return next(err);
       }
       var msg = topic.good ? '此话题已加精。' : '此话题已取消加精。';
-      res.render('notify/notify', {success: msg, referer: referer});
+      res.render('notify/notify', { success: msg, referer: referer });
     });
   });
 };
@@ -575,7 +592,7 @@ exports.lock = function (req, res, next) {
         return next(err);
       }
       var msg = topic.lock ? '此话题已锁定。' : '此话题已取消锁定。';
-      res.render('notify/notify', {success: msg, referer: referer});
+      res.render('notify/notify', { success: msg, referer: referer });
     });
   });
 };
@@ -589,7 +606,7 @@ exports.collect = function (req, res, next) {
       return next(err);
     }
     if (!topic) {
-      res.json({status: 'failed'});
+      res.json({ status: 'failed' });
     }
 
     TopicCollect.getTopicCollect(req.session.user._id, topic._id, function (err, doc) {
@@ -597,7 +614,7 @@ exports.collect = function (req, res, next) {
         return next(err);
       }
       if (doc) {
-        res.json({status: 'failed'});
+        res.json({ status: 'failed' });
         return;
       }
 
@@ -605,7 +622,7 @@ exports.collect = function (req, res, next) {
         if (err) {
           return next(err);
         }
-        res.json({status: 'success'});
+        res.json({ status: 'success' });
       });
       User.getUserById(req.session.user._id, function (err, user) {
         if (err) {
@@ -629,14 +646,14 @@ exports.de_collect = function (req, res, next) {
       return next(err);
     }
     if (!topic) {
-      res.json({status: 'failed'});
+      res.json({ status: 'failed' });
     }
     TopicCollect.remove(req.session.user._id, topic._id, function (err, removeResult) {
       if (err) {
         return next(err);
       }
       if (removeResult.result.n == 0) {
-        return res.json({status: 'failed'})
+        return res.json({ status: 'failed' })
       }
 
       User.getUserById(req.session.user._id, function (err, user) {
@@ -651,7 +668,7 @@ exports.de_collect = function (req, res, next) {
       topic.collect_count -= 1;
       topic.save();
 
-      res.json({status: 'success'});
+      res.json({ status: 'success' });
     });
   });
 };
@@ -659,29 +676,30 @@ exports.de_collect = function (req, res, next) {
 exports.upload = function (req, res, next) {
   var isFileLimit = false;
   req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-      file.on('limit', function () {
-        isFileLimit = true;
+    file.on('limit', function () {
+      isFileLimit = true;
 
-        res.json({
-          success: false,
-          msg: 'File size too large. Max is ' + config.file_limit
-        })
-      });
-
-      store.upload(file, {filename: filename}, function (err, result) {
-        if (err) {
-          return next(err);
-        }
-        if (isFileLimit) {
-          return;
-        }
-        res.json({
-          success: true,
-          url: result.url,
-        });
-      });
-
+      res.json({
+        success: false,
+        msg: 'File size too large. Max is ' + config.file_limit
+      })
     });
+
+    store.upload(file, { filename: filename }, function (err, result) {
+      if (err) {
+        return next(err);
+      }
+      if (isFileLimit) {
+        return;
+      }
+      res.json({
+        success: true,
+        url: result.url,
+      });
+    });
+
+  });
 
   req.pipe(req.busboy);
 };
+

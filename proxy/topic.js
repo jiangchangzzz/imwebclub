@@ -1,11 +1,11 @@
 var EventProxy = require('eventproxy');
-var models     = require('../models');
-var Topic      = models.Topic;
-var User       = require('./user');
-var Reply      = require('./reply');
-var tools      = require('../common/tools');
-var at         = require('../common/at');
-var _          = require('lodash');
+var models = require('../models');
+var Topic = models.Topic;
+var User = require('./user');
+var Reply = require('./reply');
+var tools = require('../common/tools');
+var at = require('../common/at');
+var _ = require('lodash');
 var config = require('../config');
 var tools = require('../common/tools');
 
@@ -30,7 +30,7 @@ exports.getTopicById = function (id, callback) {
     return callback(null, topic, author, last_reply);
   }).fail(callback);
 
-  Topic.findOne({_id: id}, proxy.done(function (topic) {
+  Topic.findOne({ _id: id }, proxy.done(function (topic) {
     if (!topic) {
       proxy.emit('topic', null);
       proxy.emit('author', null);
@@ -113,7 +113,7 @@ exports.getTopicsByQuery = function (query, opt, callback) {
 
 // for sitemap
 exports.getLimit5w = function (callback) {
-  Topic.find({deleted: false}, '_id', {limit: 50000, sort: '-create_at'}, callback);
+  Topic.find({ deleted: false }, '_id', { limit: 50000, sort: '-create_at' }, callback);
 };
 
 /**
@@ -136,7 +136,7 @@ exports.getFullTopic = function (id, callback) {
     })
     .fail(callback);
 
-  Topic.findOne({_id: id, deleted: false}, proxy.done(function (topic) {
+  Topic.findOne({ _id: id, deleted: false }, proxy.done(function (topic) {
     if (!topic) {
       proxy.unbind();
       return callback(null, '此话题不存在或已被删除。');
@@ -165,11 +165,11 @@ exports.getFullTopic = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.updateLastReply = function (topicId, replyId, callback) {
-  Topic.findOne({_id: topicId}, function (err, topic) {
+  Topic.findOne({ _id: topicId }, function (err, topic) {
     if (err || !topic) {
       return callback(err);
     }
-    topic.last_reply    = replyId;
+    topic.last_reply = replyId;
     topic.last_reply_at = new Date();
     topic.reply_count += 1;
     topic.save(callback);
@@ -182,7 +182,7 @@ exports.updateLastReply = function (topicId, replyId, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getTopic = function (id, callback) {
-  Topic.findOne({_id: id}, callback);
+  Topic.findOne({ _id: id }, callback);
 };
 
 /**
@@ -191,7 +191,7 @@ exports.getTopic = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.reduceCount = function (id, callback) {
-  Topic.findOne({_id: id}, function (err, topic) {
+  Topic.findOne({ _id: id }, function (err, topic) {
     if (err) {
       return callback(err);
     }
@@ -218,19 +218,19 @@ exports.reduceCount = function (id, callback) {
   });
 };
 
-exports.newAndSave = function(title, type, content, tab, reprint, authorId, callback) {
-    type = type || 0;
-    var topic = new Topic();
-    topic.type = type;
-    topic.title = title;
-    topic.content = content;
-    // todo topic pic
-    topic.pic = tools.genTopicPic(content);
-    topic.summary = tools.genTopicSummary(content, config.topic_summary_len);
-    topic.tab = tab;
-    topic.reprint = reprint;
-    topic.author_id = authorId;
-    topic.save(callback);
+exports.newAndSave = function (title, type, content, tab, reprint, authorId, callback) {
+  type = type || 0;
+  var topic = new Topic();
+  topic.type = type;
+  topic.title = title;
+  topic.content = content;
+  // todo topic pic
+  topic.pic = tools.genTopicPic(content);
+  topic.summary = tools.genTopicSummary(content, config.topic_summary_len);
+  topic.tab = tab;
+  topic.reprint = reprint;
+  topic.author_id = authorId;
+  topic.save(callback);
 };
 
 
@@ -243,3 +243,19 @@ exports.newAndSave = function(title, type, content, tab, reprint, authorId, call
 
 //   topic.save(callback);
 // };
+
+/**
+ * 查询用户某时间点之前创建的topic
+ */
+exports.queryAuthorTopic = function (authorId, beforeTime, limit, callback) {
+  Topic.find({
+    author_id: authorId,
+    create_at: {
+      $lt: beforeTime
+    }
+  })
+    .populate('draft')
+    .sort('-create_at')
+    .limit(limit)
+    .exec(callback);
+};
