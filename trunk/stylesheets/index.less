@@ -1,10 +1,6 @@
 @column-highlight: #2fa0ef;
 @column-light: #878787;
 @column-weak: #e0e0e0;
-@profile-bg: #f8f8f8;
-@panel-highlight: #2fa0ef;
-@panel-light: #878787;
-@panel-border: #dfdfdf;
 @shadow-color: #ddd;
 
 .avatar(@size:100px, @border-color:@panel-highlight, @border:0, @margin:0) {
@@ -69,117 +65,6 @@
     }
   }
 }
-
-.panel {
-    .panel-head {
-        padding: 0 6px;
-        border-left: solid 3px @panel-highlight;
-        font-size: 17px;
-
-        a {
-            color: @column-highlight;
-            font-size: 14px;
-
-            &.link {
-                float: right;
-            }
-        }
-    }
-
-    .panel-body {
-        text-align: center;
-
-        ul {
-            list-style: none;
-            margin: 0;
-
-            li {
-                display: inline-block;
-                margin: 10px;
-            }
-
-            &.ico-list {
-                li {
-                    max-width: 40px;
-
-                    img {
-                        width: 100%;
-                    }
-                }
-            }
-
-            &.author-list,
-            &.column-list {
-                margin: 0 -10px;
-
-                li {
-                    width: 100%;
-                    margin: 10px 0;
-                    font-size: 10px;
-
-                    .left {
-                        float: left;
-                        width: 50px;
-                        .avatar(40px);
-                    }
-
-                    .right {
-                        float: right;
-                        width: 50px;
-
-                        a.link {
-                            color: @column-highlight;
-                            font-weight: bold;
-
-                            &.middle {
-                                line-height: 40px;
-                            }
-                        }
-                    }
-
-                    .center {
-                        margin: 0 50px;
-                        text-align: left;
-
-                        .middle {
-                            line-height: 20px;
-                        }
-
-                        img {
-                            vertical-align: middle;
-                            margin: 5px;
-                        }
-
-                        span {
-                            display: block;
-                            color: @panel-light;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .panel-footer {
-        text-align: center;
-        color: @panel-light;
-    }
-
-    &.radius {
-      border: solid 1px @panel-border;
-      background-color: white;
-      border-radius: 6px;
-      color: @panel-light;
-      padding-left: 20px;
-      .ico{
-        display: inline-block;
-        width: 30px;
-        vertical-align:middle;
-        margin-right: 20px;
-      }
-    }
-}
-
 
 .column {
     margin-bottom: 20px;
@@ -275,6 +160,8 @@
                     }
 
                     .tag {
+                        font-weight: normal;
+                        font-size: 13px;
                         margin: 0 3px;
                         color: @column-highlight;
                     }

@@ -245,11 +245,13 @@ define([
             }
             imweb.ajax.post('/reply/' + replyId + '/delete', {
                 data: {
-                    reply_id: replyId
+                    reply_id: replyId,
+                    topic_id: imweb.topic.id
                 }
             }).done(function(data) {
                 if (data.ret === 0) {
                     $reply.remove();
+                    $('.topic-reply-count').html(data.reply_count);
                 } else {
                     alert(data.msg || '');
                 }
@@ -262,32 +264,6 @@ define([
                 return $child.closest('.reply-item');
             }
         },
-        /**
-         * 收藏文章
-         */
-        collect: function(e) {
-            var $ele = $(e.target);
-            var cancelVal = $ele.data('cancel');
-            var cancel = cancelVal.toString() === 'true';
-            var topicId = imweb.topic.id;
-            imweb.ajax.post('/topic/collect', {
-                data: {
-                    cancel: cancel,
-                    topic_id: topicId
-                }
-            }).done(function(data) {
-                if (data.ret === 0) {
-                    cancel = !cancel;
-                    $ele.attr('title', cancel ? '取消收藏' : '收藏');
-                    $ele.data('cancel', cancel);
-                    cancel
-                        ? $ele.addClass('collected')
-                        : $ele.removeClass('collected');
-                    $('.topic-collect-count').html(data.data.topicCollectCount);
-                }
-            });
-        },
-
         /**
          * 赞评论
          */
@@ -360,23 +336,6 @@ define([
                 $notActived.eq(i).html('回复');
             }
         },
-        /**
-         * 删除文章
-         */
-        deleteTopic: function(e) {
-            var topicId = imweb.topic.id;
-            if (!confirm('确定要删除此话题吗？')) {
-                return ;
-            }
-            imweb.ajax.post('/topic/' + topicId + '/delete')
-                .done(function(data) {
-                    if (data.ret === 0) {
-                        location.href = '/';
-                    } else if (data.msg) {
-                        alert(data.msg);
-                    }
-                });
-        }
     };
 
     $(function() {
@@ -401,9 +360,6 @@ define([
             '.open-sub-reply',
             _.bind(me.openSubReply, me)
         );
-        $('.collect-topic-btn').click(_.bind(me.collect, me));
-        $('.delete-topic-btn').click(_.bind(me.deleteTopic, me));
-
 
         //修改rich meta
         var rich_name = $('meta[itemprop = "name"]');

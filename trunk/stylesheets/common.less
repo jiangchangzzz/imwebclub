@@ -1,6 +1,4 @@
-@body-bg: #eee;
-@banner-color: white;
-@banner-bg: #2fa0ef;
+@body-bg: #fff;
 @panel-border: #dfdfdf;
 @shadow-color: #ddd;
 @ui-white: #FFF;
@@ -83,42 +81,6 @@ hr {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-}
-
-#banner {
-    height: 50px;
-    overflow: hidden;
-    color: @banner-color;
-    background: @banner-bg;
-    @media screen and (max-width: 425px) {
-        display: none;
-    }
-
-    ul.tag-list {
-        list-style: none;
-        font-size: 15px;
-        margin: 0;
-        padding-left: 0;
-
-        li {
-            float: left;
-            width: auto;
-            margin-right: 12px;
-            // padding: 0 20px;
-            display: inline-block;
-
-            a {
-                height: 50px;
-                display: table-cell;
-                vertical-align: middle;
-
-                &:hover{
-                  background-color: @banner-color;
-                  color: @banner-bg;
-                }
-            }
-        }
-    }
 }
 
 #main {
@@ -206,10 +168,8 @@ hr {
     box-shadow: 0 4px 6px @shadow-color;
     margin-bottom: 10px;
     padding: 10px;
-    &.border {
-        border: solid 1px @panel-border;
-        background-color: white;
-    }
+    border: solid 1px @panel-border;
+    background-color: white;
 }
 
 .not-sign {
