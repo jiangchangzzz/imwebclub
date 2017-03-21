@@ -54,15 +54,14 @@ var UserSchema = new Schema({
 
 UserSchema.plugin(BaseModel);
 UserSchema.virtual('avatar_url').get(function () {
-  var url = this.avatar || ('https://gravatar.com/avatar/' + utility.md5(this.email.toLowerCase()) + '?size=48');
+    var url = this.avatar || ('//gravatar.com/avatar/' + utility.md5(this.email.toLowerCase()) + '?size=48');
 
-  // www.gravatar.com 被墙
-  url = url.replace('www.gravatar.com', 'gravatar.com');
-
-  // 让协议自适应 protocol，使用 `//` 开头
-  if (url.indexOf('http:') === 0) {
-    url = url.slice(5);
-  }
+    // www.gravatar.com 被墙
+    url = url.replace('//www.gravatar.com', '//gravatar.com');
+    // 让协议自适应 protocol
+    if (url.indexOf('http:') === 0) {
+        url = url.slice(5);
+    }
 
     //如果没有gravatar头像，则用默认
     if(url.indexOf("gravatar.com") >=0 && url.indexOf("d=retro") < 0){

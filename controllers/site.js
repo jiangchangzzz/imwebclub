@@ -52,7 +52,6 @@ exports.index = function (req, res, next) {
         { is_block: false },
         { limit: 10, sort: '-score' },
         proxy.done('tops', function (tops) {
-          // console.log(tops);
           cache.set('tops', tops, 60 * 1);
           return tops;
         })
