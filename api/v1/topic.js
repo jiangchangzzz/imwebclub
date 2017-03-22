@@ -10,6 +10,7 @@ var _ = require('lodash');
 var at = require('../../common/at');
 var renderHelper = require('../../common/render_helper');
 var validator = require('validator');
+var dataAdapter = require('../../common/dataAdapter');
 
 var index = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
@@ -233,18 +234,58 @@ exports.update = function (req, res, next) {
  * 我的文章　
  */
 var listmy = function (req, res, next) {
-  console.log('test');
   var userId = req.session.user._id;
-  var limit =  parseInt(_.trim(req.body.limit) ? _.trim(req.body.limit) : 100, 10);
+  var limit = parseInt(_.trim(req.body.limit) ? _.trim(req.body.limit) : 100, 10);
   if (limit < 0 || limit > 1000) {
     limit = 100;
   }
   var beforeTime = req.query.beforeTime || Date.now();
   var ep = new eventproxy();
   ep.fail(next);
-  TopicProxy.queryAuthorTopic(userId, beforeTime, limit, ep.done(function(list){
-    console.log(list);
+  TopicProxy.queryAuthorTopic(userId, beforeTime, limit, ep.done(function (list) {
+    list = _.map(list, function (item) {
+      var out = dataAdapter.outTopic(item);
+      if (item.draft) {
+        out.draft = dataAdapter.outDraft(item.draft);
+      }
+      return out;
+    });
+    res.send({ ret: 0, data: list });
   }));
+
+  ep.on('fail', function (ret, msg) {
+    ep.unbind();
+    res.send({ ret: ret || 400, msg: msg || '' });
+  });
 }
 
 exports.listmy = listmy;
+
+/**
+ * 文章编辑 获取我的文章
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+var get = function (req, res, next) {
+  var topic_id = req.params.id;
+  var ep = new eventproxy();
+  ep.fail(next);
+  TopicProxy.getFullTopic(topic_id, ep.done(function (message, topic, author, replies) {
+    if (message) {
+      return ep.emit('fail');
+    }
+    res.send({
+      ret: 0, data: {
+        topic: dataAdapter.outTopic(topic, {
+          content: true
+        })
+      }
+    })
+  }));
+  ep.on('fail', function (ret, msg) {
+    ep.unbind();
+    res.send({ ret: ret || 400, msg: msg || '' });
+  });
+}
+exports.get = get;

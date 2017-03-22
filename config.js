@@ -23,7 +23,7 @@ var config = {
   // 右上角的导航区
   site_navs: [
     // 格式 [ path, title, [target=''] ]
-    [ '/about', '关于' ]
+    ['/about', '关于']
   ],
   // cdn host，如 http://cnodejs.qiniudn.com
   site_static_host: '', // 静态文件存储域名
@@ -87,13 +87,13 @@ var config = {
 
   // github 登陆的配置
   GITHUB_OAUTH: {
-      clientID: 'a32d122e769fae39b898',
-      clientSecret: '9cd819a15a6e886077b5a937aa0e1b8aac55f859',
-      callbackURL: 'http://imweb.io/auth/github/callback'
+    clientID: 'a32d122e769fae39b898',
+    clientSecret: '9cd819a15a6e886077b5a937aa0e1b8aac55f859',
+    callbackURL: 'http://imweb.io/auth/github/callback'
   },
 
   //weibo app key
-  WEIBO_OAUTH:{
+  WEIBO_OAUTH: {
     clientID: '3489481381',
     clientSecret: '52410f54674964564a475afc64511e5d',
     callbackURL: "http://imweb.io/auth/weibo/callback"
@@ -119,10 +119,10 @@ var config = {
   // },
   //7牛的access信息，用于文件上传
   qn_access: {
-      accessKey: '1VQoqeNeV4kDaOHO7ajqYZNm-2lgQ093BUBQKC1U',
-      secretKey: 'Q1xh9qaj25Y6jzLt8-4vp5lzbkC9-uAtIOPw02Xj',
-      bucket: 'imweb',
-      domain: 'http://7tszky.com1.z0.glb.clouddn.com'
+    accessKey: '1VQoqeNeV4kDaOHO7ajqYZNm-2lgQ093BUBQKC1U',
+    secretKey: 'Q1xh9qaj25Y6jzLt8-4vp5lzbkC9-uAtIOPw02Xj',
+    bucket: 'imweb',
+    domain: 'http://7tszky.com1.z0.glb.clouddn.com'
   },
 
   // 文件上传配置
@@ -155,7 +155,17 @@ var config = {
     ['tools', '工具建设'],
     ['op', '运维']
   ],
-
+  // 正则配置
+  regExps: {
+    email: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
+    loginname: /^[\w]{5,20}$/,
+    pass: /^[\w~`!@#$%\^&*()\-+=;:'",.<>\/?\\|\[\]{}]{6,20}$/,
+    name: /^[\u4e00-\u9fa5]{2,5}$/,
+    company: /^[\s\S]{1,50}$/,
+    team: /^[\s\S]{0,50}$/,
+    topicTitle: /^[\s\S]{1,100}$/,
+    topicContent: /^[\s\S]{1,}$/
+  },
   // 极光推送
   jpush: {
     appKey: 'YourAccessKeyyyyyyyyyyyy',

@@ -7,7 +7,7 @@ var auth = function (req, res, next) {
   var ep = new eventproxy();
   ep.fail(next);
 
-  var accessToken = String(req.body.accesstoken || req.query.accesstoken || '');
+  var accessToken = String(req.body.accesstoken || req.query.accesstoken || req.session.user.accessToken || '');
   accessToken = validator.trim(accessToken);
 
   UserModel.findOne({accessToken: accessToken}, ep.done(function (user) {

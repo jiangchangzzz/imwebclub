@@ -597,7 +597,7 @@ $(function(){
                     }
                 });
             }
-            imweb.ajax.get('/topic/' + id + '/get').done(function(data) {
+            imweb.ajax.get('/api/v1/topic/' + id + '/get').done(function(data) {
                 if (data.ret === 0) {
                     var item = data.data.topic;
                     mainAction.setContext({

@@ -443,63 +443,72 @@ exports.showEdit = function (req, res, next) {
 };
 
 exports.update = function (req, res, next) {
-  var topic_id = req.params.tid;
-  var title = req.body.title;
-  var tab = req.body.tab;
-  var content = req.body.t_content;
+    var json = req.body.json === 'true';
+    var topic_id = req.params.tid;
+    var title = escapeHtml(validator.trim(req.body.title));
+    var tab = validator.escape(validator.trim(req.body.tab));
+    var content = validator.trim(req.body.content || req.body.t_content);
 
-  Topic.getTopicById(topic_id, function (err, topic, tags) {
-    if (!topic) {
-      res.render404('此话题不存在或已被删除。');
-      return;
-    }
-
-    if (topic.author_id.equals(req.session.user._id) || req.session.user.is_admin) {
-      title = validator.trim(title);
-      tab = validator.trim(tab);
-      content = validator.trim(content);
-
-      // 验证
-      var editError;
-      if (title === '') {
-        editError = '标题不能是空的。';
-      } else if (title.length < 5 || title.length > 100) {
-        editError = '标题字数太多或太少。';
-      } else if (!tab) {
-        editError = '必须选择一个版块。';
-      }
-      // END 验证
-
-      if (editError) {
-        return res.render('topic/edit', {
-          action: 'edit',
-          edit_error: editError,
-          topic_id: topic._id,
-          content: content,
-          tabs: config.tabs
-        });
-      }
-
-      //保存话题
-      topic.title = title;
-      topic.content = content;
-      topic.tab = tab;
-      topic.update_at = new Date();
-
-      topic.save(function (err) {
-        if (err) {
-          return next(err);
+    var ep = new EventProxy();
+    ep.fail(next);
+    ep.on('done', function(topic) {
+        ep.unbind();
+        if (json) {
+            res.send({
+                ret: 0,
+                data: dataAdapter.outTopic(topic)
+            });
+        } else {
+            //res.redirect('/topic/' + topic._id);
+            res.redirect('/');
         }
-        //发送at消息
-        at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
-
-        res.redirect('/topic/' + topic._id);
-
-      });
-    } else {
-      res.renderError('对不起，你不能编辑此话题。', 403);
-    }
-  });
+    });
+    ep.on('fail', function(msg, topic) {
+        ep.unbind()
+        topic = topic || {};
+        if (json) {
+            res.send({
+                ret: 400,
+                msg: msg
+            });
+        } else {
+            return res.render('topic/edit', {
+                action: 'edit',
+                edit_error: msg,
+                topic_id: topic._id || '',
+                content: topic.content || '',
+                tabs: config.tabs
+            });
+        }
+    });
+    var user = req.session.user;
+    Topic.getTopicById(topic_id, ep.done(function(topic, tags) {
+        if (!topic) {
+            return ep.emit('faile',  '此话题不存在或已被删除。');
+        }
+        if (!tools.idEqual(topic.author_id, user._id) && !user.is_admin) {
+            return ep.emit('faile', '无操作权限。', topic);
+        }
+        // 得到所有的 tab, e.g. ['ask', 'share', ..]
+        var allTabs = config.tabs.map(function (tPair) {
+            return tPair[0];
+        });
+        if (!config.regExps.topicTitle.test(title)
+            || !config.regExps.topicContent.test(content)
+            || !_.contains(allTabs, tab)
+        ) {
+            return ep.emit('fail', 'param error', topic);
+        }
+        topic.title = title;
+        topic.content = content;
+        topic.summary = html_encode(tools.genTopicSummary(content, config.topic_summary_len)); 
+        topic.tab = tab;
+        topic.update_at = new Date();
+        topic.save(ep.done(function() {
+            at.sendMessageToMentionUsers(content, topic._id, user._id);
+            ep.emit('done', topic);
+        }));
+    }));
 };
 
 exports.delete = function (req, res, next) {
