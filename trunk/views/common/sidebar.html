@@ -164,16 +164,11 @@
                                 <img src="<%=user.avatar%>">
                             </div>
                         </div>
-                        <div class="right">
-                            <a href="javascript:void(0);" class="link middle">+关注</a>
-                        </div>
                         <div class="center" title="<%=user.name %>">
                             <div class="middle one-line">
                               <img src="../../images/T.png">
                               <b><%=user.name || user.loginname || ' ' %></b>
-                            </div>
-                            <div class="middle">
-                              发表文章：<%=user.topic_count %>
+                              （<%=user.topic_count %>）
                             </div>
                         </div>
                     </li>

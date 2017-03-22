@@ -98,8 +98,6 @@ router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topi
 
 router.post('/topic/:tid/edit', auth.userRequired, topic.update);
 router.post('/topic/collect', auth.userRequired, topic.collect); // 关注某话题
-router.post('/topic/de_collect', auth.userRequired, topic.de_collect); // 取消关注某话题
-
 router.get('/topic/tab/:tab', topic.list);
 
 // reply controller
@@ -111,11 +109,11 @@ router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 
 // 草稿
-router.post('/draft/autosave', auth.userRequired, draft.autosave); 
-router.get('/draft/countmy', auth.userRequired, draft.countmy); 
-router.get('/draft/listmy', auth.userRequired, draft.listmy); 
-router.post('/draft/delete/:id', auth.userRequired, draft.delete); 
-router.get('/draft/get/:id', auth.userRequired, draft.get); 
+router.post('/draft/autosave', auth.userRequired, draft.autosave);
+router.get('/draft/countmy', auth.userRequired, draft.countmy);
+router.get('/draft/listmy', auth.userRequired, draft.listmy);
+router.post('/draft/delete/:id', auth.userRequired, draft.delete);
+router.get('/draft/get/:id', auth.userRequired, draft.get);
 
 // static
 router.get('/about', staticController.about);

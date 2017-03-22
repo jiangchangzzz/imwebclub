@@ -22,3 +22,16 @@ exports.remove = function (userId, topicId, callback) {
   TopicCollect.remove({user_id: userId, topic_id: topicId}, callback);
 };
 
+/**
+ * 获取文章的收藏数目
+ */
+exports.getTopicCollectCount = function (topicId, callback) {
+    TopicCollect.count({topic_id: topicId}, callback);
+};
+
+/**
+ * 获取用户收藏文章数
+ */
+exports.getUserCollectCount = function (userId, callback) {
+    TopicCollect.count({user_id: userId}, callback);
+};

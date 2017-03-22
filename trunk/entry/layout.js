@@ -1,5 +1,6 @@
 require('../stylesheets/reset.less');
 require('../stylesheets/ui.less');
+require('../stylesheets/font-awesome/css/font-awesome.less');
 require('../stylesheets/iconfont.less');
 require('../stylesheets/base.less');
 require('../stylesheets/common.less');
