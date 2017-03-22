@@ -28,7 +28,7 @@ var config = {
   // cdn host，如 http://cnodejs.qiniudn.com
   site_static_host: '', // 静态文件存储域名
   // 社区的域名
-  host: 'localhost',
+  host: 'imweb.io',
   // 默认的Google tracker ID，自有站点请修改，申请地址：http://www.google.com/analytics/
   google_tracker_id: '',
   // 默认的cnzz tracker ID，自有站点请修改
@@ -173,17 +173,18 @@ var config = {
 if (process.env.NODE_ENV === 'test') {
   config.db = 'mongodb://127.0.0.1/node_club_test';
   // 本地测试github
-  config.GITHUB_OAUTH = {
-      clientID: 'cb1872e84af2cb965cc8',
-      clientSecret: '097d8c85ac8a246abf7dafa94a0c4d78f95db506',
-      callbackURL: `http://localhost:${config.port}/auth/github/callback`
-  };
+  // config.GITHUB_OAUTH = {
+  //     clientID: 'cb1872e84af2cb965cc8',
+  //     clientSecret: '097d8c85ac8a246abf7dafa94a0c4d78f95db506',
+  //     callbackURL: `http://localhost:${config.port}/auth/github/callback`
+  // };
   // 本地测试weibo
-  config.WEIBO_OAUTH = {
-      clientID: '3489481381',
-      clientSecret: '52410f54674964564a475afc64511e5d',
-      callbackURL: `http://test.imweb.io:${config.port}/auth/weibo/callback`
-  };
+  // config.WEIBO_OAUTH = {
+  //     clientID: '3489481381',
+  //     clientSecret: '52410f54674964564a475afc64511e5d',
+  //     callbackURL: `http://test.imweb.io:${config.port}/auth/weibo/callback`
+  // };
+  config.port = 80;
 }
 
 module.exports = config;

@@ -24,6 +24,19 @@ var mail = require('../common/mail');
 var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 
+function html_encode(str){
+    var s = "";
+    if (str.length == 0) return "";
+    s = str.replace(/&/g, ">");
+    s = s.replace(/</g, "<");
+    s = s.replace(/>/g, ">");
+    s = s.replace(/ /g, " ");
+    s = s.replace(/\'/g, "\'");
+    s = s.replace(/\"/g, "\"");
+    s = s.replace(/\n/g, "<br>");
+    return s;
+}
+
 /**
  * Topic page
  *
@@ -118,7 +131,7 @@ exports.index = function (req, res, next) {
   if (!currentUser) {
     ep.emit('is_collect', null);
   } else {
-    TopicCollect.getTopicCollect(currentUser._id, topic_id, ep.done('is_collect'))
+    TopicCollect.getTopicCollect(currentUser._id, topic_id, ep.done('is_collect'));
   }
 };
 
@@ -413,63 +426,69 @@ exports.showEdit = function (req, res, next) {
 };
 
 exports.update = function (req, res, next) {
-  var topic_id = req.params.tid;
-  var title    = req.body.title;
-  var tab      = req.body.tab;
-  var content  = req.body.t_content;
+    var json = req.body.json === 'true';
+    var topic_id = req.params.tid;
+    var title = escapeHtml(validator.trim(req.body.title));
+    var tab = validator.escape(validator.trim(req.body.tab));
+    var content = validator.trim(req.body.content || req.body.t_content);
 
-  Topic.getTopicById(topic_id, function (err, topic, tags) {
-    if (!topic) {
-      res.render404('此话题不存在或已被删除。');
-      return;
-    }
-
-    if (topic.author_id.equals(req.session.user._id) || req.session.user.is_admin) {
-      title   = validator.trim(title);
-      tab     = validator.trim(tab);
-      content = validator.trim(content);
-
-      // 验证
-      var editError;
-      if (title === '') {
-        editError = '标题不能是空的。';
-      } else if (title.length < 5 || title.length > 100) {
-        editError = '标题字数太多或太少。';
-      } else if (!tab) {
-        editError = '必须选择一个版块。';
-      }
-      // END 验证
-
-      if (editError) {
-        return res.render('topic/edit', {
-          action: 'edit',
-          edit_error: editError,
-          topic_id: topic._id,
-          content: content,
-          tabs: config.tabs
-        });
-      }
-
-      //保存话题
-      topic.title     = title;
-      topic.content   = content;
-      topic.tab       = tab;
-      topic.update_at = new Date();
-
-      topic.save(function (err) {
-        if (err) {
-          return next(err);
+    var ep = new EventProxy();
+    ep.fail(next);
+    ep.on('done', function(topic) {
+        ep.unbind();
+        if (json) {
+            res.send({
+                ret: 0,
+                data: dataAdapter.outTopic(topic)
+            });
+        } else {
+            //res.redirect('/topic/' + topic._id);
+            res.redirect('/');
         }
-        //发送at消息
-        at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
-
-        res.redirect('/topic/' + topic._id);
-
-      });
-    } else {
-      res.renderError('对不起，你不能编辑此话题。', 403);
-    }
-  });
+    });
+    ep.on('fail', function(msg, topic) {
+        ep.unbind()
+        topic = topic || {};
+        if (json) {
+            res.send({
+                ret: 400,
+                msg: msg
+            });
+        } else {
+            return res.render('topic/edit', {
+                action: 'edit',
+                edit_error: msg,
+                topic_id: topic._id || '',
+                content: topic.content || '',
+                tabs: config.tabs
+            });
+        }
+    });
+    var user = req.session.user;
+    Topic.getTopicById(topic_id, ep.done(function(topic, tags) {
+        if (!topic) {
+            return ep.emit('faile',  '此话题不存在或已被删除。');
+        }
+        if (!tools.idEqual(topic.author_id, user._id) && !user.is_admin) {
+            return ep.emit('faile', '无操作权限。', topic);
+        }
+        // 得到所有的 tab, e.g. ['ask', 'share', ..]
+        var allTabs = config.tabs.map(function (tPair) {
+            return tPair[0];
+        });
+        if (allTabs.indexOf(tab) < 0) {
+            return ep.emit('fail', 'param error', topic);
+        }
+        topic.title = title;
+        topic.content = content;
+        topic.summary = html_encode(tools.genTopicSummary(content, config.topic_summary_len));
+        topic.tab = tab;
+        topic.update_at = new Date();
+        topic.save(ep.done(function() {
+            at.sendMessageToMentionUsers(content, topic._id, user._id);
+            ep.emit('done', topic);
+        }));
+    }));
 };
 
 exports.delete = function (req, res, next) {
@@ -478,18 +497,17 @@ exports.delete = function (req, res, next) {
   //删除topic_collect，用户collect_topic_count减1
 
   var topic_id = req.params.tid;
+  var ep = tools.createJsonEventProxy(res, next);
 
   Topic.getFullTopic(topic_id, function (err, err_msg, topic, author, replies) {
     if (err) {
-      return res.send({ success: false, message: err.message });
+      return ep.emit('fail', 403, err.message);
     }
     if (!req.session.user.is_admin && !(topic.author_id.equals(req.session.user._id))) {
-      res.status(403);
-      return res.send({success: false, message: '无权限'});
+      return ep.emit('fail', 403, '无权限');
     }
     if (!topic) {
-      res.status(422);
-      return res.send({ success: false, message: '此话题不存在或已被删除。' });
+      return ep.emit('fail', 403, '此话题不存在或已被删除。');
     }
     author.score -= 5;
     author.topic_count -= 1;
@@ -500,7 +518,7 @@ exports.delete = function (req, res, next) {
       if (err) {
         return res.send({ success: false, message: err.message });
       }
-      res.send({ success: true, message: '话题已被删除。' });
+      return ep.emit('done');
     });
   });
 };
@@ -582,78 +600,65 @@ exports.lock = function (req, res, next) {
 
 // 收藏主题
 exports.collect = function (req, res, next) {
-  var topic_id = req.body.topic_id;
-
-  Topic.getTopic(topic_id, function (err, topic) {
-    if (err) {
-      return next(err);
-    }
-    if (!topic) {
-      res.json({status: 'failed'});
-    }
-
-    TopicCollect.getTopicCollect(req.session.user._id, topic._id, function (err, doc) {
-      if (err) {
-        return next(err);
-      }
-      if (doc) {
-        res.json({status: 'failed'});
-        return;
-      }
-
-      TopicCollect.newAndSave(req.session.user._id, topic._id, function (err) {
-        if (err) {
-          return next(err);
-        }
-        res.json({status: 'success'});
-      });
-      User.getUserById(req.session.user._id, function (err, user) {
-        if (err) {
-          return next(err);
-        }
-        user.collect_topic_count += 1;
-        user.save();
-      });
-
-      req.session.user.collect_topic_count += 1;
-      topic.collect_count += 1;
-      topic.save();
+    var topic_id = req.body.topic_id;
+    var cancel = req.body.cancel === 'true';
+    var ep = EventProxy.create();
+    ep.fail(next);
+    ep.on('fail', function() {
+        res.send({
+            ret: 1
+        });
     });
-  });
-};
 
-exports.de_collect = function (req, res, next) {
-  var topic_id = req.body.topic_id;
-  Topic.getTopic(topic_id, function (err, topic) {
-    if (err) {
-      return next(err);
-    }
-    if (!topic) {
-      res.json({status: 'failed'});
-    }
-    TopicCollect.remove(req.session.user._id, topic._id, function (err, removeResult) {
-      if (err) {
-        return next(err);
-      }
-      if (removeResult.result.n == 0) {
-        return res.json({status: 'failed'})
-      }
-
-      User.getUserById(req.session.user._id, function (err, user) {
-        if (err) {
-          return next(err);
+    Topic.getTopic(topic_id, ep.done(function(topic) {
+        if (!topic) {
+            return ep.emit('fail');
         }
-        user.collect_topic_count -= 1;
-        req.session.user = user;
-        user.save();
-      });
+        return ep.emit('topic', topic);
+    }));
 
-      topic.collect_count -= 1;
-      topic.save();
-
-      res.json({status: 'success'});
+    User.getUserById(req.session.user._id, ep.done(function(user) {
+        if (!user) {
+            return ep.emit('fail');
+        }
+        return ep.emit('user', user);
+    }));
+    ep.all('topic', 'user', function(topic, user) {
+        TopicCollect.getTopicCollect(user._id, topic._id, ep.done(function(c) {
+            if (cancel && c) {
+                c.remove(ep.done('collect'));
+            } else if (!cancel && !c) {
+                TopicCollect
+                    .newAndSave(user._id, topic._id, ep.done('collect'));
+            } else {
+                ep.emit('collect');
+            }
+        }));
     });
-  });
+
+    ep.all('topic', 'user', 'collect', function(topic, user) {
+        TopicCollect.getTopicCollectCount(topic._id, ep.done(function(count) {
+            topic.collect_count = count;
+            topic.save(ep.done('topic_updated'));
+        }));
+        TopicCollect.getUserCollectCount(user._id, ep.done(function(count) {
+            user.collect_topic_count = count;
+            user.save(ep.done('user_updated'));
+        }));
+    });
+
+    ep.all(
+        'topic', 'user', 'topic_updated', 'user_updated',
+        function(topic, user) {
+            res.send({
+                ret: 0,
+                data: {
+                    topicCollectCount: topic.collect_count,
+                    userCollectCount: user.collect_topic_count
+                }
+            });
+        }
+    );
 };
 
 exports.upload = function (req, res, next) {

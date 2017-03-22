@@ -14,7 +14,7 @@
                 </form>
                 <% if (current_user) {%>
                   <div class="menu-btn">
-                    <a id="nav-post-menu" href="javascript:void(0);" class="ico"></a>
+                    <a id="nav-post-menu" href="javascript:void(0);" class="ico fa fa-plus"></a>
                     <ol id="nav-post-menu-layer" class="ui-dropdown-layer">
                         <li>
                             <a href="/marktang/index?autoOpenInfo=true">发布文章</a>
@@ -25,10 +25,10 @@
                     </ol>
                   </div>
                   <div class="menu-btn">
-                    <a id="nav-message-menu" href="javascript:void(0);" class="ico"></a>
+                    <a id="nav-message-menu" href="javascript:void(0);" class="ico fa fa-envelope"></a>
                   </div>
-                  <div class="menu-btn" title="<%= current_user.loginname %>">
-                    <a id="nav-user-menu" href="javascript:void(0);" class="ico"></a>
+                  <div class="menu-btn">
+                    <a id="nav-user-menu" href="javascript:void(0);" class="ico fa fa-user" title="<%= current_user.loginname %>"></a>
                     <ol id="nav-user-menu-layer" class="ui-dropdown-layer">
                         <li>
                             <a href="javascript:void(0);">我的主页</a>

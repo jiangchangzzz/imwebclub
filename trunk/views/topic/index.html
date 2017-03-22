@@ -102,18 +102,19 @@
             <%}%>
             <% if (current_user) { %>
               <div class="btn-wrap">
-                <% if (current_user._id.equals(topic.author_id)) { %>
+                  <% if (current_user._id.equals(topic.author_id)) { %>
                   <a href='/marktang/index?autoOpenInfo=true&topic_id=<%= topic._id %>' class="btn-ico">
-                    <i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
-                  <a href='javascript:;'
-                     class='delete-topic-btn btn-ico'>
-                     <i class="fa fa-lg fa-trash" title='删除'></i></a>
+                    <i class="ico fa fa-lg fa-pencil-square-o" title='编辑'></i>
+                  </a>
+                  <a href='javascript:;' class='delete-topic-btn btn-ico'>
+                     <i class="ico fa fa-lg fa-trash" title='删除'></i>
+                  </a>
                   <% } %>
-                  <% if (!topic.in_collection) { %>
-                  <span class='btn-ico ico-collect collect-topic-btn'
+                  <% if (!is_collect) { %>
+                  <span class='ico fa fa-heart-o collect-topic-btn'
                       title='收藏' data-cancel="false"></span>
                   <% } else { %>
-                  <span class='btn-ico ico-collect collected collect-topic-btn'
+                  <span class='ico fa fa-heart collect-topic-btn'
                       title='取消收藏' data-cancel="true"></span>
                   <% } %>
               </div>
