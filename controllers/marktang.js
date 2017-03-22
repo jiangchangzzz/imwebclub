@@ -72,9 +72,12 @@ function index(req, res, next){
     // 获取草稿
     Marktang.getRecently(user._id, ep.done('marktang'));
 
-    ep.all('topic', 'marktang', function(topic, marktang) {
+    // User.getUserById(user._id, ep.done('user'));
+
+    ep.all('topic', 'marktang',  function(topic, marktang) {
         res.render('marktang/index', _.extend({
             _layoutFile: false,
+            // accessToken: user.accessToken,
             topic: topic ? dataAdapter.outTopic(topic, {content: true}) : null,
             title: '',
             _id: '',

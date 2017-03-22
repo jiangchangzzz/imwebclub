@@ -31,7 +31,7 @@ router.get('/user/:loginname', userController.show);
 router.post('/accesstoken', middleware.auth, toolsController.accesstoken);
 
 // 我的文章
-router.get('/topic/listmy/:limit', middleware.auth, topicController.listmy);
+router.post('/topic/listmy', middleware.auth, topicController.listmy);
 
 // 评论
 router.post('/topic/:topic_id/replies', middleware.auth, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: true}), replyController.create);

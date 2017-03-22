@@ -235,7 +235,7 @@ exports.update = function (req, res, next) {
 var listmy = function (req, res, next) {
   console.log('test');
   var userId = req.session.user._id;
-  var limit =  _.trim(req.body.limit) ? _.trim(req.body.limit) : 100;
+  var limit =  parseInt(_.trim(req.body.limit) ? _.trim(req.body.limit) : 100, 10);
   if (limit < 0 || limit > 1000) {
     limit = 100;
   }

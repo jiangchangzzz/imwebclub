@@ -10,6 +10,7 @@
         imweb.user = {
             id: '<%= current_user._id %>',
             loginname: '<%= current_user.loginname %>',
+            accessToken: '<%= current_user.accessToken %>',
             is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
         };
     <% } else { %>
