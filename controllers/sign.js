@@ -182,8 +182,7 @@ var notJump = [
              authMiddleWare.gen_auth('skey', utility.md5(user.pass), res);
              authMiddleWare.gen_auth('accessToken', user.accessToken, res);
              authMiddleWare.gen_auth('user', user.name, res);
-
-             var refer = req.session._loginReferer || '/';
+             var refer = req.session._loginReferer || req.headers.referer || '/';
              for (var i = 0, len = notJump.length; i !== len; ++i) {
                  if (refer.indexOf(notJump[i]) >= 0) {
                      refer = '/';

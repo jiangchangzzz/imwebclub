@@ -23,9 +23,7 @@ $(document).on('click', '.collect-topic-btn', function(e) {
           cancel = !cancel;
           $ele.attr('title', cancel ? '取消收藏' : '收藏');
           $ele.data('cancel', cancel);
-          cancel
-              ? $ele.addClass('collected')
-              : $ele.removeClass('collected');
+          $ele.toggleClass('fa-heart').toggleClass('fa-heart-o');
           $('.topic-collect-count').html(data.data.topicCollectCount);
       }
   });
@@ -41,7 +39,7 @@ $(document).on('click', '.delete-topic-btn', function(e) {
   imweb.ajax.post('/topic/' + topicId + '/delete')
       .done(function(data) {
           if (data.ret === 0) {
-              location.href = '/';
+              location.reload();
           } else if (data.msg) {
               alert(data.msg);
           }
