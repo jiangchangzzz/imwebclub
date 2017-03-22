@@ -27,10 +27,11 @@ router.get('/topic_collect/:loginname', topicCollectController.list);
 // 用户
 router.get('/user/:loginname', userController.show);
 
-
-
 // accessToken 测试
 router.post('/accesstoken', middleware.auth, toolsController.accesstoken);
+
+// 我的文章
+router.get('/topic/listmy/:limit', middleware.auth, topicController.listmy);
 
 // 评论
 router.post('/topic/:topic_id/replies', middleware.auth, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: true}), replyController.create);

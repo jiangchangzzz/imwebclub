@@ -56,7 +56,7 @@ webpack构建：
 npm run build
 ```
 
-webpack开发：
+webpack开发：(修改/etc/hosts文件：127.0.0.1 imweb.io)
 ```bash
 npm run watch  
 npm run dev

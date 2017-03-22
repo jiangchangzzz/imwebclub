@@ -139,8 +139,9 @@ var config = {
     // ['share', '分享'],
     // ['ask', '问答'],
     // ['job', '招聘'],
-    ['html', 'HTML&HTML5'],
-    ['rebuild', 'CSS/重构'],
+    ['html', 'HTML'],
+    ['rebuild', 'CSS'],
+    ['js', 'javascript技术'],
     ['network', 'HTTP网络'],
     ['secure', 'Web安全'],
     ['browser', '浏览器'],
@@ -152,9 +153,7 @@ var config = {
     ['node', 'nodeJS全栈'],
     ['mobile', '移动开发'],
     ['tools', '工具建设'],
-    ['op', '运维'],
-    ['frame', '基础库'],
-    ['js', 'javascript技术']
+    ['op', '运维']
   ],
 
   // 极光推送
