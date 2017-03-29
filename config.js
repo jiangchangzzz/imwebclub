@@ -153,7 +153,9 @@ var config = {
     ['node', 'nodeJS全栈'],
     ['mobile', '移动开发'],
     ['tools', '工具建设'],
-    ['op', '运维']
+    ['op', '运维'],
+    ['image', '封面图片'],
+    ['intro', '简介']
   ],
   // 正则配置
   regExps: {
