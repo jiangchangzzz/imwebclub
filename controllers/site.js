@@ -5,10 +5,6 @@
  * MIT Licensed
  */
 
-/**
- * Module dependencies.
- */
-
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var config = require('../config');
@@ -37,7 +33,7 @@ exports.index = function (req, res, next) {
   }
 
   var limit = config.list_hot_topic_count;
-  var options = { skip: (page - 1) * limit, limit: limit, sort: '-top -last_reply_at' };
+  var options = { skip: (page - 1) * limit, limit: limit, sort: '-top -reply_count -create_at' };
 
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
     return topics;
@@ -94,7 +90,6 @@ exports.index = function (req, res, next) {
   var tabName = renderHelper.tabName(tab);
   proxy.all('topics', 'tops', /**'no_reply_topics',**/ 'pages',
     function (topics, tops,/**t no_reply_topics,**/ pages) {
-      console.log(topics);
       res.render('index', {
         topics: topics,
         current_page: page,
@@ -104,7 +99,7 @@ exports.index = function (req, res, next) {
         pages: pages,
         tabs: config.tabs,
         tab: tab,
-        pageTitle: tabName && (tabName + '版块'),
+        pageTitle: tabName && (tabName + '版块')
       });
     });
 };

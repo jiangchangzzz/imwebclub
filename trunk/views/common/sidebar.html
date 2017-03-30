@@ -1,5 +1,5 @@
 <div id="sidebar">
-    <% if (current_user) { console.log(current_user.avatar); %>
+    <% if (current_user) { %>
     <div class="box profile">
         <div class="avatar">
             <% if (current_user.avatar) { %>
@@ -11,11 +11,11 @@
         <div class="name"><%= current_user.loginname %></div>
         <ul class="contribution-list">
             <li>
-                <b>10</b>
+                <b><%= current_user.topic_count || 0%></b>
                 <span class="title">文章</span>
             </li>
             <li>
-                <b>10</b>
+                <b><%= current_user.question_count || 0%></b>
                 <span class="title">问答</span>
             </li>
         </ul>
@@ -42,18 +42,23 @@
         <div class="box-body">
             <ul class="ico-list">
                 <li>
-                    <img src="../../images/weiboColor.png">
+                    <a target="_blank" href="http://weibo.com/u/5623195454?refer_flag=1001030201">
+                        <img src="../../images/weiboColor.png">
+                    </a>
                 </li>
-                <li>
+                <li >  
                     <img src="../../images/weixinColor.png">
                 </li>
                 <li>
                     <img src="../../images/zhihuColor.png">
                 </li>
             </ul>
+            <div class="q_code">
+                <img src="../../images/official-account-new.jpg">
+            </div>
             <ul class="txt-list">
                 <li>
-                    <a href="javascript:void(0);">关于我们</a>
+                    <a href="http://imweb.github.io/" target="_blank">关于我们</a>
                 </li>
                 <li>
                     <a href="javascript:void(0);">加入我们</a>

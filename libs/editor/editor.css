@@ -97,7 +97,7 @@ you can use the generic selector below, but it's slower:
   /* Set scrolling behaviour here */
   overflow: auto;
   cursor: text;
-  background: #fff;
+  /*background: #fff;*/
 }
 
 /* PADDING */

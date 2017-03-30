@@ -14,6 +14,7 @@ var site = require('./controllers/site');
 var user = require('./controllers/user');
 var message = require('./controllers/message');
 var draft = require('./controllers/draft');
+var question = require('./controllers/question');
 var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
 var rss = require('./controllers/rss');
@@ -107,6 +108,10 @@ router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改
 router.post('/reply/:reply_id/delete', auth.userRequired, reply.delete); // 删除某评论
 router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点赞
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
+
+// 问答
+router.get('/question/create', auth.userRequired, question.create);
+router.post('/question/create', auth.userRequired, limit.peruserperday('create_question', config.create_post_per_day, {showJson: false}), question.put);
 
 // 草稿
 router.post('/draft/autosave', auth.userRequired, draft.autosave);

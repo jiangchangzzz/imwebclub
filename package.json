@@ -30,7 +30,6 @@
     "helmet": "1.3.0",
     "html-to-text": "1.2.0",
     "ioredis": "1.15.1",
-    "jpush-sdk": "3.2.1",
     "juice": "*",
     "loader": "2.1.1",
     "loader-builder": "2.4.1",

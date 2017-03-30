@@ -8689,5 +8689,4 @@
     global.Editor = Editor;
     global.CodeMirror = CodeMirror;
 })(this);
-
-module.exports = this.Editor;
+if(typeof exports === 'object') module.exports = this.Editor;

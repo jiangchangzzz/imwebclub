@@ -167,11 +167,11 @@ var config = {
     topicContent: /^[\s\S]{1,}$/
   },
   // 极光推送
-  jpush: {
-    appKey: 'YourAccessKeyyyyyyyyyyyy',
-    masterSecret: 'YourSecretKeyyyyyyyyyyyyy',
-    isDebug: false,
-  },
+  // jpush: {
+  //   appKey: 'YourAccessKeyyyyyyyyyyyy',
+  //   masterSecret: 'YourSecretKeyyyyyyyyyyyyy',
+  //   isDebug: false,
+  // },
 
   create_post_per_day: 1000, // 每个用户一天可以发的主题数
   create_reply_per_day: 1000, // 每个用户一天可以发的评论数
@@ -180,7 +180,7 @@ var config = {
 };
 
 if (process.env.NODE_ENV === 'test') {
-  config.db = 'mongodb://127.0.0.1/node_club_test';
+  config.db = 'mongodb://127.0.0.1/node_club_dev';
   // 本地测试github
   // config.GITHUB_OAUTH = {
   //     clientID: 'cb1872e84af2cb965cc8',

@@ -1,4 +1,3 @@
-<%- partial('../editor_sidebar') %>
 
 <div id='content'>
     <div class="panel edit-topic-panel">
@@ -116,57 +115,6 @@
       }
     });
     // END 版块选择的检查，必须选择
-
-    // 选择招聘版块时，给出提示
-    $('#tab-value').on('change', function () {
-      var $this = $(this);
-      var value = $this.val();
-      var warnMsg = '';
-      if (value === 'job') {
-        warnMsg = '<strong>为避免被管理员删帖，发帖时请好好阅读<a href="http://cnodejs.org/topic/541ed2d05e28155f24676a12" target="_blank">《招聘帖规范》</a></strong>';
-      } else if (value === 'ask') {
-        warnMsg = '<strong>提问时，请遵循 <a href="http://www.beiww.com/doc/oss/smart-questions.html" target="_blank">《提问的智慧》</a>中提及的要点，以便您更接收到高质量回复。</strong>'
-      }
-      $('#topic_create_warn').html(warnMsg);
-    });
-    // END 选择招聘版块时，给出提示
-
-    //通过链接从其他博客导入文字内容
-    $('#getImport').on('click', function(){
-      var tabValue = $('#tab-value').val();
-      var importLink = $('#importLink').val();
-      if (!tabValue) {
-        alert('必须选择一个版块！');
-        return false;
-      }
-
-      if (!importLink) {
-        alert('请输入导入博客链接！');
-        return false;
-      }
-
-      $('#getImport').val('导入中').css('background-color','#999999').attr('disabled', true);
-      $.ajax({
-        type: "GET",
-        url: "/importlink/getPageInfo",
-        data: {link:importLink},
-        success: function(data){
-          var title = data.title;
-          var content = data.content;
-
-          $('.inner #create_topic_form').attr('id','import_topic_form');
-          $('.markdown_in_editor').html('<textarea class="editor" id="t_content" name="t_content" rows="20" \
-            placeholder="文章支持 Markdown 语法, 请注意标记代码"></textarea>');
-          $('#t_content').html(content);
-          $('#title').html(title);
-          $('.editor_buttons').remove();
-          
-          $('#import_topic_form').submit();
-        }
-      });
-      return false;
-    });
-    // END 通过链接从其他博客导入文字内容
 
   })();
 </script>

@@ -74,3 +74,4 @@ $.extend(imweb.ajax, {
         }
     }
 });
+//二维码
