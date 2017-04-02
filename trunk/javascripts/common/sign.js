@@ -29,13 +29,10 @@ define([
 		});
 		$("#sign-form-1").validate({
 			messages: {
-				loginname1: {
-					required: "姓名不能为空",
+				loginname: {
+					required: "昵称不能为空",
 					minlength: "请输入2-15个字",
 					maxlength: "请输入2-15个字"
-				},
-				loginname2: {
-					required: "姓名不能为空"
 				},
 				passw: {
 					required: "密码不能为空",
@@ -54,7 +51,7 @@ define([
 	}
 	/*事件绑定*/
 	var bind = function(){
-    var signForm2 = $('#sign-form-2');
+        var signForm2 = $('#sign-form-2');
 		/*注册与登录来回切换*/
 		$(".js-to-sign").click(function(){
 			$(".to-login").fadeOut("fast", function(){$(".to-sign").fadeIn()});
@@ -93,13 +90,11 @@ define([
 	    });
 		/*loginname表单同步*/
     function updateLoginname() {
-        var loginname = $(".js-loginname-1").val()
-            + $(".js-loginname-2").val();
+        var loginname = $(".js-loginname").val();
         signForm2.find("[name=name]").val(loginname);
         signForm2.find("[name=loginname]").val(loginname);
     }
-		$(".js-loginname-1").eq(0).change(updateLoginname);
-		$(".js-loginname-2").eq(0).change(updateLoginname);
+		$(".js-loginname").eq(0).change(updateLoginname);
 		/*pass表单同步*/
 		$(".js-pass").eq(0).change(function(){
             signForm2.find("[name=pass]").val($(this).val());
