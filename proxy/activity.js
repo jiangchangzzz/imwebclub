@@ -1,6 +1,6 @@
 var EventProxy = require('eventproxy');
 var models = require('../models');
-var Topic = models.Topic;
+var Activity = models.Activity;
 var User = require('./user');
 var Reply = require('./reply');
 var tools = require('../common/tools');
@@ -20,29 +20,29 @@ var tools = require('../common/tools');
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getTopicById = function (id, callback) {
+exports.getActivityById = function (id, callback) {
   var proxy = new EventProxy();
-  var events = ['topic', 'author', 'last_reply'];
-  proxy.assign(events, function (topic, author, last_reply) {
+  var events = ['activity', 'author', 'last_reply'];
+  proxy.assign(events, function (activity, author, last_reply) {
     if (!author) {
       return callback(null, null, null, null);
     }
-    return callback(null, topic, author, last_reply);
+    return callback(null, activity, author, last_reply);
   }).fail(callback);
 
-  Topic.findOne({ _id: id }, proxy.done(function (topic) {
-    if (!topic) {
-      proxy.emit('topic', null);
+  Activity.findOne({ _id: id }, proxy.done(function (activity) {
+    if (!activity) {
+      proxy.emit('activity', null);
       proxy.emit('author', null);
       proxy.emit('last_reply', null);
       return;
     }
-    proxy.emit('topic', topic);
+    proxy.emit('activity', activity);
 
-    User.getUserById(topic.author_id, proxy.done('author'));
+    User.getUserById(activity.author_id, proxy.done('author'));
 
-    if (topic.last_reply) {
-      Reply.getReplyById(topic.last_reply, proxy.done(function (last_reply) {
+    if (activity.last_reply) {
+      Reply.getReplyById(activity.last_reply, proxy.done(function (last_reply) {
         proxy.emit('last_reply', last_reply);
       }));
     } else {
@@ -60,7 +60,7 @@ exports.getTopicById = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getCountByQuery = function (query, callback) {
-  Topic.count(query, callback);
+  Activity.count(query, callback);
 };
 
 /**
@@ -72,48 +72,48 @@ exports.getCountByQuery = function (query, callback) {
  * @param {Object} opt 搜索选项
  * @param {Function} callback 回调函数
  */
-exports.getTopicsByQuery = function (query, opt, callback) {
+exports.getActivitiesByQuery = function (query, opt, callback) {
   query.deleted = false;
-  Topic.find(query, {}, opt, function (err, topics) {
+  Activity.find(query, {}, opt, function (err, activities) {
     if (err) {
       return callback(err);
     }
-    if (topics.length === 0) {
+    if (activities.length === 0) {
       return callback(null, []);
     }
-    // console.log(topics);
+    // console.log(activities);
     var proxy = new EventProxy();
-    proxy.after('topic_ready', topics.length, function () {
-      topics = _.compact(topics); // 删除不合规的 topic
-      return callback(null, topics);
+    proxy.after('activity_ready', activities.length, function () {
+      activities = _.compact(activities); // 删除不合规的 activity
+      return callback(null, activities);
     });
     proxy.fail(callback);
 
-    topics.forEach(function (topic, i) {
+    activities.forEach(function (activity, i) {
       var ep = new EventProxy();
       ep.all('author', 'reply', function (author, reply) {
         // 保证顺序
         // 作者可能已被删除
         if (author) {
-          topic.author = author;
-          topic.reply = reply;
-          topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+          activity.author = author;
+          activity.reply = reply;
+          activity.friendly_create_at = tools.formatDate(activity.create_at, true);
         } else {
-          topics[i] = null;
+          activities[i] = null;
         }
-        proxy.emit('topic_ready');
+        proxy.emit('activity_ready');
       });
 
-      User.getUserById(topic.author_id, ep.done('author'));
+      User.getUserById(activity.author_id, ep.done('author'));
       // 获取主题的最后回复
-      Reply.getReplyById(topic.last_reply, ep.done('reply'));
+      Reply.getReplyById(activity.last_reply, ep.done('reply'));
     });
   });
 };
 
 // for sitemap
 exports.getLimit5w = function (callback) {
-  Topic.find({ deleted: false }, '_id', { limit: 50000, sort: '-create_at' }, callback);
+  Activity.find({ deleted: false }, '_id', { limit: 50000, sort: '-create_at' }, callback);
 };
 
 /**
@@ -121,32 +121,32 @@ exports.getLimit5w = function (callback) {
  * Callback:
  * - err, 数据库异常
  * - message, 消息
- * - topic, 主题
+ * - activity, 主题
  * - author, 主题作者
  * - replies, 主题的回复
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getFullTopic = function (id, callback) {
+exports.getFullActivity = function (id, callback) {
   var proxy = new EventProxy();
-  var events = ['topic', 'author', 'replies'];
+  var events = ['activity', 'author', 'replies'];
   proxy
-    .assign(events, function (topic, author, replies) {
-      callback(null, '', topic, author, replies);
+    .assign(events, function (activity, author, replies) {
+      callback(null, '', activity, author, replies);
     })
     .fail(callback);
 
-  Topic.findOne({ _id: id, deleted: false }, proxy.done(function (topic) {
-    if (!topic) {
+  Activity.findOne({ _id: id, deleted: false }, proxy.done(function (activity) {
+    if (!activity) {
       proxy.unbind();
       return callback(null, '此话题不存在或已被删除。');
     }
-    at.linkUsers(topic.content, proxy.done('topic', function (str) {
-      topic.linkedContent = str;
-      return topic;
+    at.linkUsers(activity.content, proxy.done('activity', function (str) {
+      activity.linkedContent = str;
+      return activity;
     }));
 
-    User.getUserById(topic.author_id, proxy.done(function (author) {
+    User.getUserById(activity.author_id, proxy.done(function (author) {
       if (!author) {
         proxy.unbind();
         return callback(null, '话题的作者丢了。');
@@ -154,25 +154,25 @@ exports.getFullTopic = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByTopicId(topic._id, proxy.done('replies'));
+    Reply.getRepliesByActivityId(activity._id, proxy.done('replies'));
   }));
 };
 
 /**
  * 更新主题的最后回复信息
- * @param {String} topicId 主题ID
+ * @param {String} activityId 主题ID
  * @param {String} replyId 回复ID
  * @param {Function} callback 回调函数
  */
-exports.updateLastReply = function (topicId, replyId, callback) {
-  Topic.findOne({ _id: topicId }, function (err, topic) {
-    if (err || !topic) {
+exports.updateLastReply = function (activityId, replyId, callback) {
+  Activity.findOne({ _id: activityId }, function (err, activity) {
+    if (err || !activity) {
       return callback(err);
     }
-    topic.last_reply = replyId;
-    topic.last_reply_at = new Date();
-    topic.reply_count += 1;
-    topic.save(callback);
+    activity.last_reply = replyId;
+    activity.last_reply_at = new Date();
+    activity.reply_count += 1;
+    activity.save(callback);
   });
 };
 
@@ -181,8 +181,8 @@ exports.updateLastReply = function (topicId, replyId, callback) {
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getTopic = function (id, callback) {
-  Topic.findOne({ _id: id }, callback);
+exports.getActivity = function (id, callback) {
+  Activity.findOne({ _id: id }, callback);
 };
 
 /**
@@ -191,15 +191,15 @@ exports.getTopic = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.reduceCount = function (id, callback) {
-  Topic.findOne({ _id: id }, function (err, topic) {
+  Activity.findOne({ _id: id }, function (err, activity) {
     if (err) {
       return callback(err);
     }
 
-    if (!topic) {
+    if (!activity) {
       return callback(new Error('该主题不存在'));
     }
-    topic.reply_count -= 1;
+    activity.reply_count -= 1;
 
     Reply.getLastReplyByTopId(id, function (err, reply) {
       if (err) {
@@ -207,12 +207,12 @@ exports.reduceCount = function (id, callback) {
       }
 
       if (reply.length !== 0) {
-        topic.last_reply = reply[0]._id;
+        activity.last_reply = reply[0]._id;
       } else {
-        topic.last_reply = null;
+        activity.last_reply = null;
       }
 
-      topic.save(callback);
+      activity.save(callback);
     });
 
   });
@@ -220,35 +220,35 @@ exports.reduceCount = function (id, callback) {
 
 exports.newAndSave = function (title, type, content, tab, reprint, authorId, callback) {
   type = type || 0;
-  var topic = new Topic();
-  topic.type = type;
-  topic.title = title;
-  topic.content = content;
-  // todo topic pic
-  topic.pic = tools.genTopicPic(content);
-  topic.summary = tools.genTopicSummary(content, config.topic_summary_len);
-  topic.tab = tab;
-  topic.reprint = reprint;
-  topic.author_id = authorId;
-  topic.save(callback);
+  var activity = new Activity();
+  activity.type = type;
+  activity.title = title;
+  activity.content = content;
+  // todo activity pic
+  activity.pic = tools.genActivityPic(content);
+  activity.summary = tools.genActivitySummary(content, config.activity_summary_len);
+  activity.tab = tab;
+  activity.reprint = reprint;
+  activity.author_id = authorId;
+  activity.save(callback);
 };
 
 
 // exports.newAndSave = function (title, content, tab, authorId, callback) {
-//   var topic       = new Topic();
-//   topic.title     = title;
-//   topic.content   = content;
-//   topic.tab       = tab;
-//   topic.author_id = authorId;
+//   var activity       = new Activity();
+//   activity.title     = title;
+//   activity.content   = content;
+//   activity.tab       = tab;
+//   activity.author_id = authorId;
 
-//   topic.save(callback);
+//   activity.save(callback);
 // };
 
 /**
- * 查询用户某时间点之前创建的topic
+ * 查询用户某时间点之前创建的activity
  */
-exports.queryAuthorTopic = function (authorId, beforeTime, limit, callback) {
-  Topic.find({
+exports.queryAuthorActivity = function (authorId, beforeTime, limit, callback) {
+  Activity.find({
     author_id: authorId,
     create_at: {
       $lt: beforeTime

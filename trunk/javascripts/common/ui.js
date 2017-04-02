@@ -52,7 +52,7 @@ define([], function(){
  			options.mode = options.mode || 'click';
  			options.enter = options.enter || $.noop;
  			options.leave = options.leave || $.noop;
-			options.left = typeof options.left === 'undefined' ? -30 : options.left;
+			options.left = typeof options.left === 'undefined' ? -40 : options.left;
 			options.top = typeof options.top === 'undefined' ? 30 : options.top;
  			var showTimeout = null;
  			var hideTimeout = null;

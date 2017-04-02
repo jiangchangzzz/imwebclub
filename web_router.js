@@ -16,6 +16,7 @@ var message = require('./controllers/message');
 var draft = require('./controllers/draft');
 var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
+var activity = require('./controllers/activity');
 var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');
@@ -23,8 +24,8 @@ var limit = require('./middlewares/limit');
 var github = require('./controllers/github');
 var search = require('./controllers/search');
 var passport = require('passport');
-var passportWeibo = require('passport-weibo');
-var WeiboStrategy = passportWeibo.Strategy;
+var weibo = require('./controllers/weibo');
+var WeiboStrategy = require('passport-weibo').Strategy;
 var configMiddleware = require('./middlewares/conf');
 var config = require('./config');
 // 新markdown编辑器  发布
@@ -76,31 +77,39 @@ router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // �
 // message controler
 router.get('/my/messages', auth.userRequired, message.index); // 用户个人的所有消息页
 
-// topic
+// 文章
 
 // 保存新建的文章 markdown
 router.post('/topic/save', auth.userRequired, limit.postInterval, topic.put);
 
 // 新建文章界面
-router.get('/topic/create', auth.userRequired, topic.create);
+router.get('/topic/create', auth.userRequired, topic.create); //新增某话题
+router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topic', config.create_post_per_day, {showJson: false}), topic.put);
+router.get('/topic/:tid/edit', auth.userRequired, topic.showEdit);  // 编辑某话题
+router.post('/topic/:tid/edit', auth.userRequired, topic.update);
+
+router.post('/topic/:tid/delete', auth.userRequired, topic.delete);
 
 router.get('/topic/:tid', topic.index);  // 显示某个话题
 router.post('/topic/:tid/top', auth.adminRequired, topic.top);  // 将某话题置顶
 router.post('/topic/:tid/good', auth.adminRequired, topic.good); // 将某话题加精
-router.get('/topic/:tid/edit', auth.userRequired, topic.showEdit);  // 编辑某话题
 router.post('/topic/:tid/lock', auth.adminRequired, topic.lock); // 锁定主题，不能再回复
-
-router.post('/topic/:tid/delete', auth.userRequired, topic.delete);
-
-
-// 保存新建的文章
-router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topic', config.create_post_per_day, {showJson: false}), topic.put);
-
-router.post('/topic/:tid/edit', auth.userRequired, topic.update);
-router.post('/topic/collect', auth.userRequired, topic.collect); // 关注某话题
+router.post('/topic/collect', auth.userRequired, topic.collect); // 收藏某个话题
 router.get('/topic/tab/:tab', topic.list);
 
-// reply controller
+// 活动
+router.get('/activity/create', auth.userRequired, activity.create); //新增某活动
+router.post('/activity/create', auth.userRequired, activity.put);
+router.get('/activity/:tid/edit', auth.userRequired, activity.showEdit);  // 编辑某活动
+router.post('/actvity/:tid/edit', auth.userRequired, activity.update);
+
+router.post('/activity/:tid/delete', auth.userRequired, activity.delete);
+
+router.get('/activity/:tid', activity.index);  // 显示某个话题
+router.get('/activity/tab/:tab', activity.list);
+
+
+// 回复
 router.post('/:topic_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
 router.get('/reply/:reply_id/edit', auth.userRequired, reply.showEdit); // 修改自己的评论页
 router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改某评论
@@ -137,7 +146,7 @@ router.get('/marktang/evernote_getnote', auth.userRequired, marktang.evernote_ge
 router.get('/rss', rss.index);
 
 // github oauth
-router.get('/auth/github', configMiddleware.github, passport.authenticate('github'));
+router.get('/auth/github', passport.authenticate('github'));
 router.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/signin' }),
   github.callback);
@@ -145,24 +154,36 @@ router.get('/auth/github/new', github.new);
 router.post('/auth/github/create', limit.peripperday('create_user_per_ip', config.create_user_per_ip, {showJson: false}), github.create);
 
 // weibo oauth
+// Use the WeiboStrategy within Passport.
+//   Strategies in Passport require a `verify` function, which accept
+//   credentials (in this case, an accessToken, refreshToken, and Weibo
+//   profile), and invoke a callback with a user object.
 passport.use(new WeiboStrategy({
     clientID: config.WEIBO_OAUTH.clientID,
     clientSecret: config.WEIBO_OAUTH.clientSecret,
     callbackURL: config.WEIBO_OAUTH.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
-  	//console.log(profile);
-    // User.findOrCreate({ weiboId: profile.id }, function (err, user) {
-    //   return done(err, user);
-    // });
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+
+      // To keep the example simple, the user's Weibo profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the Weibo account with a user record in your database,
+      // and return that user instead.
+      return done(null, profile);
+    });
   }
 ));
-router.get('/auth/weibo', passport.authenticate('weibo'));
-router.get('/auth/weibo/callback', passport.authenticate('weibo', { failureRedirect: '/sigin' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });
+
+router.get('/auth/weibo',passport.authenticate('weibo'));
+
+router.get('/auth/weibo/callback',
+  passport.authenticate('weibo', { failureRedirect: '/signin' }),
+  weibo.callback);
+router.get('/auth/weibo/new', weibo.new);
+router.post('/auth/weibo/create', limit.peripperday('create_user_per_ip', config.create_user_per_ip, {showJson: false}), weibo.create);
+
 
 router.post('/search', search.index);
 router.get('/search/:key', search.index);

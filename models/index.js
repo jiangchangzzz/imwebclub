@@ -19,6 +19,7 @@ require('./topic_collect');
 require('./message');
 require('./marktang');
 require('./draft');
+require('./activity');
 
 exports.User         = mongoose.model('User');
 exports.Topic        = mongoose.model('Topic');
@@ -27,3 +28,4 @@ exports.TopicCollect = mongoose.model('TopicCollect');
 exports.Message      = mongoose.model('Message');
 exports.Marktang     = mongoose.model('Marktang');
 exports.Draft     = mongoose.model('Draft');
+exports.Activity     = mongoose.model('Activity');

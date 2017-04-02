@@ -1,11 +1,11 @@
-require('../stylesheets/reset.less');
-require('../stylesheets/ui.less');
-require('../stylesheets/font-awesome/css/font-awesome.less');
-require('../stylesheets/iconfont.less');
-require('../stylesheets/base.less');
-require('../stylesheets/common.less');
-require('../stylesheets/header.less');
-require('../stylesheets/footer.less');
+import '../stylesheets/reset.less';
+import '../stylesheets/ui.less';
+import '../stylesheets/font-awesome/css/font-awesome.less';
+import '../stylesheets/iconfont.less';
+import '../stylesheets/base.less';
+import '../stylesheets/common.less';
+import '../stylesheets/header.less';
+import '../stylesheets/footer.less';
 
 var sign = require('../javascripts/common/sign.js');
 require('../javascripts/common/ui.js');
@@ -44,6 +44,13 @@ $(document).on('click', '.not-sign-close', function() {
 $(document).ready(function(){
   //注册、登录
   sign.init();
+  //修改rich meta
+  // var rich_name = $('meta[itemprop = "name"]');
+  // var rich_description = $('meta[itemprop = "description"]');
+  // var rich_image = $('meta[itemprop = "image"]');
+  // rich_name.attr("content","imweb前端社区文章：" + RICH_META.name);
+  // rich_description.attr("content",RICH_META.author +":" +RICH_META.name);
+  // rich_image.attr("content",RICH_META.img);
 });
 
 // ajax common

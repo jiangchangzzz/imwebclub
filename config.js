@@ -28,7 +28,7 @@ var config = {
   // cdn host，如 http://cnodejs.qiniudn.com
   site_static_host: '', // 静态文件存储域名
   // 社区的域名
-  host: 'imweb.io',
+  host: 'localhost',
   // 默认的Google tracker ID，自有站点请修改，申请地址：http://www.google.com/analytics/
   google_tracker_id: '',
   // 默认的cnzz tracker ID，自有站点请修改
@@ -60,6 +60,9 @@ var config = {
 
   // 限制发帖时间间隔，单位：毫秒
   post_interval: 2000,
+
+  // 活动列表显示的活动数量
+  list_activity_count: 20,
 
   // RSS配置
   rss: {
@@ -155,6 +158,13 @@ var config = {
     ['tools', '工具建设'],
     ['op', '运维']
   ],
+
+  // 活动类型
+  activityTabs: [
+    ['imweb', 'imweb'],
+    ['industry', '行业']
+  ],
+
   // 正则配置
   regExps: {
     email: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
@@ -193,6 +203,7 @@ if (process.env.NODE_ENV === 'test') {
   //     clientSecret: '52410f54674964564a475afc64511e5d',
   //     callbackURL: `http://test.imweb.io:${config.port}/auth/weibo/callback`
   // };
+  config.host = 'imweb.io';
   config.port = 80;
 }
 

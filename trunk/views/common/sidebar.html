@@ -8,7 +8,7 @@
               <img src="../../images/avatarDefault.jpg">
             <% } %>
         </div>
-        <div class="name"><%= current_user.loginname %></div>
+        <div class="name"><%= current_user.name || current_user.loginname %></div>
         <ul class="contribution-list">
             <li>
                 <b>10</b>
