@@ -218,17 +218,18 @@ exports.reduceCount = function (id, callback) {
   });
 };
 
-exports.newAndSave = function (title, type, content, tab, reprint, authorId, callback) {
-  type = type || 0;
+exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_time, end_str, location_str, authorId, callback) {
   var activity = new Activity();
-  activity.type = type;
   activity.title = title;
-  activity.content = content;
-  // todo activity pic
-  activity.pic = tools.genActivityPic(content);
-  activity.summary = tools.genActivitySummary(content, config.activity_summary_len);
   activity.tab = tab;
-  activity.reprint = reprint;
+  activity.content = content;
+  //activity.pic = tools.genActivityPic(content);
+  //activity.summary = tools.genActivitySummary(content, config.activity_summary_len);
+  activity.begin_time = begin_time;
+  activity.begin_str = begin_str;
+  activity.end_time = end_time;
+  activity.end_str = end_str;
+  activity.location_str = location_str;
   activity.author_id = authorId;
   activity.save(callback);
 };

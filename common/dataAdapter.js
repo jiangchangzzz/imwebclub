@@ -131,3 +131,24 @@ exports.outDraft = function(item, options) {
     }
     return out;
 };
+
+exports.outActivity = function(activity) {
+  var out = {
+    title: activity.title,
+    content: activity.content,
+    begin_time: activity.begin_time,
+    begin_str: activity.begin_str,
+    end_time: activity.end_time,
+    end_str: activity.end_str,
+    location_str: activity.location_str
+  }
+  var now_time = (new Date()).getTime();
+  if(now_time < begin_time){
+    out.status = '活动未开始';
+  }else if(now_time > end_time){
+    out.status = '活动已结束';
+  }else{
+    out.status = '活动进行中';
+  }
+  return out;
+}

@@ -10,9 +10,10 @@ var ActivitySchema = new Schema({
   content: { type: String },
   summary: { type: String },
   begin_time: { type: Date },
+  begin_str: { type: String },
   end_time: { type: Date },
-  location: { type: String },
-  status: {type: Number, default: 1 }, //1-活动未开始; 2-活动进行中; 3-活动已结束
+  end_str: { type: String },
+  location_str: { type: String },
   pic: { type: Array },
   type: { type: String }, //活动类型
   author_id: { type: ObjectId },
