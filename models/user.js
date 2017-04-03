@@ -10,9 +10,9 @@ var UserSchema = new Schema({
   loginname: { type: String},
   pass: { type: String },
   email: { type: String},
-  company: {type: String}, 
-  comp_mail: {type: String}, 
-  team: {type: String}, 
+  company: {type: String},
+  comp_mail: {type: String},
+  team: {type: String},
   url: { type: String },
   profile_image_url: {type: String},
   location: { type: String },
@@ -23,6 +23,8 @@ var UserSchema = new Schema({
   githubId: { type: String},
   githubUsername: {type: String},
   githubAccessToken: {type: String},
+  weiboId: { type: String},
+  weiboUsername: {type: String},
   is_block: {type: Boolean, default: false},
 
   score: { type: Number, default: 0 },
@@ -83,6 +85,7 @@ UserSchema.index({loginname: 1}, {unique: true});
 UserSchema.index({email: 1}, {unique: true});
 UserSchema.index({score: -1});
 UserSchema.index({githubId: 1});
+UserSchema.index({weiboId: 1});
 UserSchema.index({accessToken: 1});
 UserSchema.index({company: 1});
 

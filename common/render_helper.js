@@ -86,6 +86,15 @@ exports.tabName = function (tab) {
   }
 };
 
+exports.activityTypeName = function (type) {
+  var pair = _.find(config.activityTypes, function (pair) {
+    return pair[0] === type;
+  });
+  if (pair) {
+    return pair[1];
+  }
+};
+
 exports.inlineScript = function(str) {
     return str && str.replace(/</g, '\\x3C') || '';
 };

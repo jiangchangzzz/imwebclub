@@ -7,21 +7,16 @@ var uuid           = require('node-uuid');
 var validator      = require('validator');
 
 exports.callback = function (req, res, next) {
-  var profile = req.user;
-  var email = profile.emails && profile.emails[0] && profile.emails[0].value;
-  User.findOne({githubId: profile.id}, function (err, user) {
+  var profile = req.session.passport.user._json;
+  User.findOne({weiboId: profile.id}, function (err, user) {
     if (err) {
       return next(err);
     }
-    // 当用户已经是 cnode 用户时，通过 github 登陆将会更新他的资料
+    // 当用户已经是 cnode 用户时，通过 weibo 登陆将会更新他的资料
     if (user) {
-      user.githubUsername = profile.username;
-      user.githubId = profile.id;
-      user.githubAccessToken = profile.accessToken;
-      // user.loginname = profile.username;
-      user.avatar = profile._json.avatar_url;
-      user.email = email || user.email;
-
+      user.weiboUsername = profile.name;
+      user.weiboId = profile.id;
+      user.avatar = profile.avatar_large;
 
       user.save(function (err) {
         if (err) {
@@ -44,18 +39,19 @@ exports.callback = function (req, res, next) {
     } else {
       // 如果用户还未存在，则建立新用户
       req.session.profile = profile;
-      return res.redirect('/auth/github/new');
+      return res.redirect('/auth/weibo/new');
     }
   });
 };
 
 exports.new = function (req, res, next) {
-  res.render('sign/new_oauth', {actionPath: '/auth/github/create'});
+  res.render('sign/new_oauth', {actionPath: '/auth/weibo/create'});
 };
 
 exports.create = function (req, res, next) {
   var profile = req.session.profile;
 
+  console.log(profile);
   var isnew = req.body.isnew;
   var loginname = validator.trim(req.body.name || '').toLowerCase();
   var password = validator.trim(req.body.pass || '');
@@ -67,16 +63,13 @@ exports.create = function (req, res, next) {
   }
   delete req.session.profile;
 
-  var email = profile.emails && profile.emails[0] && profile.emails[0].value;
   if (isnew) { // 注册新账号
     var user = new User({
       loginname: uuid.v4(),
-      name: profile.username,
-      email: email,
-      avatar: profile._json.avatar_url,
-      githubId: profile.id,
-      githubUsername: profile.username,
-      githubAccessToken: profile.accessToken,
+      name: profile.name,
+      avatar: profile.avatar_large,
+      weiboId: profile.id,
+      weiboUsername: profile.name,
       active: true,
       accessToken: uuid.v4(),
     });
@@ -109,10 +102,9 @@ exports.create = function (req, res, next) {
           if (!bool) {
             return ep.emit('login_error');
           }
-          user.githubUsername = profile.username;
-          user.githubId = profile.id;
-          user.avatar = profile._json.avatar_url;
-          user.githubAccessToken = profile.accessToken;
+          user.weiboUsername = profile.name;
+          user.weiboId = profile.id;
+          user.avatar = profile.avatar_large;
 
           user.save(function (err) {
             if (err) {

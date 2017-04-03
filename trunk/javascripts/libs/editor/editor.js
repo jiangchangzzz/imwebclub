@@ -8348,7 +8348,7 @@ define([], function() {
             toolbar.className += ' active';
         }
         var text = cm.getValue();
-        console.log(editor);
+        //console.log(editor);
         preview.innerHTML = parse(text);
     }
 
