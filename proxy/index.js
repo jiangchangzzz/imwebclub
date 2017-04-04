@@ -6,3 +6,4 @@ exports.Draft        = require('./draft');
 exports.TopicCollect = require('./topic_collect');
 exports.Marktang = require('./marktang');
 exports.Question = require('./question');
+exports.Activity = require('./activity');

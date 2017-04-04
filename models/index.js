@@ -20,6 +20,7 @@ require('./message');
 require('./marktang');
 require('./draft');
 require('./question');
+require('./activity');
 
 exports.User         = mongoose.model('User');
 exports.Topic        = mongoose.model('Topic');
@@ -29,3 +30,4 @@ exports.Message      = mongoose.model('Message');
 exports.Marktang     = mongoose.model('Marktang');
 exports.Draft     = mongoose.model('Draft');
 exports.Question  = mongoose.model('Question');
+exports.Activity     = mongoose.model('Activity');

@@ -1,0 +1,78 @@
+<div id="main" class="clearfix">
+    <%- partial('common/sidebar.html') %>
+
+    <div id='content'>
+        <div class="panel edit-activity-panel">
+            <div class="panel-head">
+              <% if(typeof(action) !== 'undefined' && action == 'edit'){ %>
+              编辑活动
+              <% }else{ %>
+              发布活动
+              <% } %>
+            </div>
+            <div class="panel-body post">
+            <% if(typeof(edit_error) !== 'undefined' && edit_error){ %>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong><%= edit_error %></strong>
+            </div>
+            <% } %>
+            <% if(typeof(error) !== 'undefined' && error){ %>
+            <div class="alert alert-error">
+                <strong><%= error %></strong>
+            </div>
+            <% } %>
+            <%
+                var $post;
+                var $activity_id;
+                if (typeof(action) !== 'undefined' && action === 'edit') {
+                  $post = '/activity/' + activity_id + '/edit';
+                  $activity_id = activity_id;
+                } else {
+                  $post = '/activity/save';
+                  $activity_id = '';
+                }
+            %>
+            <form id='create_activity_form' action='/activity/create' method='post'>
+                <div id="activity_create_warn"></div>
+                <div class="control-group">
+                  <label class="control-label">活动标题：</label>
+                  <input type="text" name="title">
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="tab-value">选择版块：</label>
+                    <select name="tab" id="tab-value">
+                      <option value="imweb" <%= typeof(tabValue) !== 'undefined' && tabValue === 'imweb' ? 'selected': '' %>>imweb</option>
+                      <option value="行业" <%= typeof(tabValue) !== 'undefined' && tabValue === '行业' ? 'selected': '' %>>行业</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label">开始时间：</label>
+                    <input type="number" name="begin_time" class="hide">
+                    <input type="text" name="begin_str" class="datetime">
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label">结束时间：</label>
+                    <input type="number" name="end_time" class="hide">
+                    <input type="text" name="end_str" class="datetime">
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label">活动地点：</label>
+                    <input type="text" name="location_str">
+                  </div>
+                  <div class="control-group">
+                      <div class='markdown_editor in_editor'>
+                          <div class='markdown_in_editor'>
+                              <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= typeof(content_from_marktang) !== 'undefined' && content_from_marktang || '' %></textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-actions">
+                      <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
+                      <button class="ui-button" type="submit">提交</button>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>

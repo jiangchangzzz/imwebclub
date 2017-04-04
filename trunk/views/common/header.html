@@ -20,7 +20,10 @@
                             <a href="/marktang/index?autoOpenInfo=true">发布文章</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0);">发布问题</a>
+                            <a href="/question/create">发布问题</a>
+                        </li>
+                        <li>
+                            <a href="/activity/create">发布活动</a>
                         </li>
                     </ol>
                   </div>
@@ -58,16 +61,28 @@
         </div>
         <div class="center">
             <ul class="menu-list">
-                <li><a href="/topic/tab/all">文章</a></li>
-                <li><a href="javascript:void(0);">问答</a></li>
-                <li><a href="javascript:void(0);">专题</a></li>
-                <li><a href="javascript:void(0);">活动</a></li>
-                <li><a href="javascript:void(0);">名人堂</a></li>
-                <li><a id="nav-team-menu" href="javascript:void(0);">Imweb团队</a></li>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'topic' ? 'active' : '' %>">
+                  <a href="/topic/tab/all">文章</a>
+                </li>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'question' ? 'active' : '' %>">
+                  <a href="javascript:void(0);">问答</a></li>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'column' ? 'active' : '' %>">
+                  <a href="javascript:void(0);">专题</a>
+                </li>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'activity' ? 'active' : '' %>">
+                  <a href="/activity/tab/all">活动</a>
+                </li>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'celebrity' ? 'active' : '' %>">
+                  <a href="javascript:void(0);">名人堂</a>
+                </li>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'team' ? 'active' : '' %>">
+                  <a id="nav-team-menu" href="javascript:void(0);">Imweb团队</a>
+                </li>
             </ul>
         </div>
     </div>
 </div>
+
 <ol id="nav-team-menu-layer" class="ui-dropdown-layer">
     <li>
         <a href="javascript:void(0);">开源组件</a>

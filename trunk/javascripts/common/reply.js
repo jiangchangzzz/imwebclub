@@ -11,11 +11,11 @@ define([
     './jquery.atwho.js',
     './md.js'
 ], function(_, render_helper, tplReplyItem, tplReplySubItem, editor, ext, Remarkable, webuploader){
-    var Editor = editor.Editor,
-        CodeMirror = editor.CodeMirror;
+    window.Editor = editor.Editor;
+    var CodeMirror = editor.CodeMirror;
     ext(Editor, Remarkable, webuploader.Webuploader);
     //console.log(Editor);
-    var topicAction = {
+    window.replyAction = {
         /**
          * 初始化文章评论列表
          */
@@ -337,37 +337,4 @@ define([
             }
         },
     };
-
-    $(function() {
-        var me = topicAction;
-        me.initReplyList();
-        me.initEditor($('.topic-reply-panel .editor'));
-        $('.reply-submit').click(_.bind(me.replySubmit, me));
-        $('#content').on(
-            'click',
-            '.sub-reply-submit',
-            _.bind(me.subReplySubmit, me)
-        ).on(
-            'click',
-            '.delete-reply',
-            _.bind(me.deleteReply, me)
-        ).on(
-            'click',
-            '.up-reply',
-            _.bind(me.upReply, me)
-        ).on(
-            'click',
-            '.open-sub-reply',
-            _.bind(me.openSubReply, me)
-        );
-
-        //修改rich meta
-        var rich_name = $('meta[itemprop = "name"]');
-        var rich_description = $('meta[itemprop = "description"]');
-        var rich_image = $('meta[itemprop = "image"]');
-
-        rich_name.attr("content","imweb前端社区文章：" + RICH_META.name);
-        rich_description.attr("content",RICH_META.author +":" +RICH_META.name);
-        rich_image.attr("content",RICH_META.img);
-    });
 });
