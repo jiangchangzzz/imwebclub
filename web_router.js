@@ -112,6 +112,7 @@ router.post('/upload', auth.userRequired, topic.upload); //上传图片
 // 问答
 router.get('/question/create', auth.userRequired, question.create);
 router.post('/question/create', auth.userRequired, limit.peruserperday('create_question', config.create_post_per_day, {showJson: false}), question.put);
+router.get('/question/:qid', question.index);  // 显示某个话题
 
 // 草稿
 router.post('/draft/autosave', auth.userRequired, draft.autosave);
