@@ -75,11 +75,11 @@ exports.index = function (req, res, next) {
   var events = ['activity', 'is_collect'];
   var ep = EventProxy.create(events,
     function (activity, is_collect) {
-    res.render('activity/index', {
-      activity: activity,
-      is_uped: isUped,
-      is_collect: is_collect,
-    });
+      res.render('activity/index', {
+        activity: activity,
+        is_uped: isUped,
+        is_collect: is_collect,
+      });
   });
 
   ep.fail(next);
@@ -141,6 +141,7 @@ exports.put = function (req, res, next) {
           ret: 400
         });
       } else {
+        res.redirect('activity/list');
         res.send({
           ret: 0,
           data: dataAdapter.outActivity(activity)
@@ -179,7 +180,7 @@ exports.list = function (req, res, next) {
   // console.log(optionsStr);
   Activity.getActivitiesByQuery(query, options, proxy.done('activities', function (activities) {
     //console.log(activities);
-    return activityMock;
+    return activities;//activityMock;
   }));
 
   // 取分页数据

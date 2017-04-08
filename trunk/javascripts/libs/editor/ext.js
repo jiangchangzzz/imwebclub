@@ -32,31 +32,29 @@ define([], function() {
     var ToolLink = function(){
         var self = this;
         this.$win = $([
-            '<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true">',
-                '<div class="modal-header">',
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>',
-                    '<h3 id="editorToolImageTitle">添加连接</h3>',
-                '</div>',
-                '<div class="modal-body">',
-                    '<form class="form-horizontal">',
-                        '<div class="control-group">',
-                            '<label class="control-label">标题</label>',
-                            '<div class="controls">',
-                                '<input type="text" name="title" placeholder="Title">',
-                            '</div>',
-                        '</div>',
-                        '<div class="control-group">',
-                            '<label class="control-label">连接</label>',
-                            '<div class="controls">',
-                                '<input type="text" name="link" value="http://" placeholder="Link">',
-                            '</div>',
-                        '</div>',
-                    '</form>',
-                '</div>',
-                '<div class="modal-footer">',
-                    '<button class="btn btn-primary" role="save">确定</button>',
-                '</div>',
-            '</div>'
+           '<div class="modal link" style="display: none;">',
+              '<div class="mask"></div>',
+              '<div class="modal-wrapper link-wrapper">',
+                  '<div class="modal-close icon-cuowu iconfont"></div>',
+                  '<div class="modal-content">',
+                      '<form class="form-horizontal">',
+                          '<div class="control-group">',
+                              '<label class="control-label">标题</label>',
+                              '<div class="controls">',
+                                  '<input type="text" name="title" placeholder="Title">',
+                              '</div>',
+                          '</div>',
+                          '<div class="control-group">',
+                              '<label class="control-label">连接</label>',
+                              '<div class="controls">',
+                                  '<input type="text" name="link" value="http://" placeholder="Link">',
+                              '</div>',
+                          '</div>',
+                      '</form>',
+                      '<button class="ui-button-white fr" role="save">确定</button>',
+                  '</div>',
+              '</div>',
+          '</div>'
         ].join('')).appendTo($body);
 
         this.$win.on('click', '[role=save]', function(){
@@ -66,7 +64,7 @@ define([], function() {
             var title = $el.find('[name=title]').val();
             var link = $el.find('[name=link]').val();
 
-            self.$win.modal('hide');
+            self.$win.hide();
             self.editor.push(' ['+ title +']('+ link +')');
 
             $el.find('[name=title]').val('');
@@ -78,14 +76,28 @@ define([], function() {
 
     ToolLink.prototype.bind = function(editor){
         this.editor = editor;
-        this.$win.modal('show');
+        this.$win.show();
     };
 
     //图片上传工具
     var ToolImage = function(){
         var self = this;
         this.$win = $([
-            '<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true">',
+            '<div class="modal image" style="display: none;">',
+               '<div class="mask"></div>',
+               '<div class="modal-wrapper image-wrapper">',
+                   '<div class="modal-close icon-cuowu iconfont"></div>',
+                   '<div class="modal-content">',
+                   '<div class="upload-img">',
+                       '<div class="button">上传图片</div>',
+                       '<span class="tip"></span>',
+                       '<div class="alert alert-error hide"></div>',
+                   '</div>',
+                   '</div>',
+               '</div>',
+            '</div>'
+
+            /*'<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true">',
                 '<div class="modal-header">',
                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>',
                     '<h3 id="editorToolImageTitle">图片</h3>',
@@ -97,7 +109,7 @@ define([], function() {
                         '<div class="alert alert-error hide"></div>',
                     '</div>',
                 '</div>',
-            '</div>'
+            '</div>'*/
         ].join('')).appendTo($body);
 
         this.$upload = this.$win.find('.upload-img').css({
@@ -108,8 +120,8 @@ define([], function() {
         });
 
         this.$uploadBtn = this.$upload.find('.button').css({
-            width: 86,
-            height: 40,
+            width: 150,
+            height: 30,
             margin: '0 auto'
         });
 
@@ -149,7 +161,7 @@ define([], function() {
 
         this.uploader.on('uploadSuccess', function(file, res){
             if(res.success){
-                self.$win.modal('hide');
+                self.$win.hide();
                 self.editor.push(' !['+ file.name +']('+ res.url +')');
             }
             else{
@@ -215,7 +227,7 @@ define([], function() {
 
     ToolImage.prototype.bind = function(editor){
         this.editor = editor;
-        this.$win.modal('show');
+        this.$win.show();
     };
 
     var toolImage = new ToolImage();

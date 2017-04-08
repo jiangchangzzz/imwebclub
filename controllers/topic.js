@@ -501,7 +501,7 @@ exports.update = function (req, res, next) {
         }
         topic.title = title;
         topic.content = content;
-        topic.summary = html_encode(tools.genTopicSummary(content, config.topic_summary_len));
+        topic.summary = html_encode(tools.genSummaryFromContent(content, config.topic_summary_len));
         topic.tab = tab;
         topic.update_at = new Date();
         topic.save(ep.done(function() {

@@ -143,9 +143,9 @@ exports.outActivity = function(activity) {
     location_str: activity.location_str
   }
   var now_time = (new Date()).getTime();
-  if(now_time < begin_time){
+  if(now_time < activity.begin_time){
     out.status = '活动未开始';
-  }else if(now_time > end_time){
+  }else if(now_time > activity.end_time){
     out.status = '活动已结束';
   }else{
     out.status = '活动进行中';

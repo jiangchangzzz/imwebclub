@@ -57,11 +57,11 @@ exports.idEqual = function(idA, idB) {
 
 /**
  * 文章概述
- * @param {String} markdownText 
+ * @param {String} markdownText
  * @param {number} maxLen
  * @return {String} summary
  */
-exports.genTopicSummary = function(markdownText, maxLen) {
+exports.genSummaryFromContent = function(markdownText, maxLen) {
     var html = render_helper.markdownRender(markdownText || '');
     var text = htmlToText.fromString(html);
     var lines = text.split(/[\r\n]+/);
@@ -83,10 +83,10 @@ exports.genTopicSummary = function(markdownText, maxLen) {
 
 /**
  * 文章图片
- * @param {String} markdownText 
+ * @param {String} markdownText
  * @return {Array} imgArr
  */
-exports.genTopicPic = function(markdownText){
+exports.genPicFromContent = function(markdownText){
     var html = render_helper.markdownRender(markdownText || '');
     var imgArr = [];
     // 不用cheerio 用正则匹配图片
@@ -96,7 +96,7 @@ exports.genTopicPic = function(markdownText){
             imgArr.push(img.match(/src=[\'\"]?([^\'\"]*)[\'\"]?/i)[1]);
         })
     }
-    
+
     // var $ = cheerio.load(html);
     // var $img = $("img");
     // var imgArr = [];
@@ -107,7 +107,7 @@ exports.genTopicPic = function(markdownText){
 }
 /**
  * 提取回复的文本
- * @param {String} markdownText 
+ * @param {String} markdownText
  * @return {String} text
  */
 exports.genReplyText = function(markdownText) {
@@ -120,7 +120,7 @@ exports.genReplyText = function(markdownText) {
 
 /**
  * 创建一个json 处理的eventproxy
- * @param {Object} res 
+ * @param {Object} res
  * @param {function} next
  * @return {EventProxy}
  */
