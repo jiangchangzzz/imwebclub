@@ -64,6 +64,9 @@ var config = {
   // 活动列表显示的活动数量
   list_activity_count: 20,
 
+  // 活动列表显示的活动数量
+  list_question_count: 20,
+
   // RSS配置
   rss: {
     title: 'CNode：Node.js专业中文社区',

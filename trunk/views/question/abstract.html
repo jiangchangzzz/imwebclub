@@ -1,0 +1,12 @@
+<li>
+    <a href="javascript:void(0);">
+        <% if(question.pic && question.pic.length > 0){ %>
+          <img src="<%= question.pic[0] %>">
+        <% }else{ %>
+          <img src="../../images/activity1.jpg">
+        <% } %>
+        <div class="content">
+            <h5 class="one-line" title="<%= question.title %>"><%= question.title %></h5>
+        </div>
+    </a>
+</li>

@@ -102,7 +102,7 @@ router.get('/topic/tab/:tab', topic.list);
 router.get('/activity/create', auth.userRequired, activity.create); //新增某活动
 router.post('/activity/create', auth.userRequired, activity.put);
 router.get('/activity/:tid/edit', auth.userRequired, activity.showEdit);  // 编辑某活动
-router.post('/actvity/:tid/edit', auth.userRequired, activity.update);
+router.post('/activity/:tid/edit', auth.userRequired, activity.update);
 
 router.post('/activity/:tid/delete', auth.userRequired, activity.delete);
 
@@ -119,9 +119,15 @@ router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 
 // 问答
-router.get('/question/create', auth.userRequired, question.create);
+router.get('/question/create', auth.userRequired, question.create); //新增某活动
 router.post('/question/create', auth.userRequired, limit.peruserperday('create_question', config.create_post_per_day, {showJson: false}), question.put);
-router.get('/question/:qid', question.index);  // 显示某个话题
+router.get('/question/:tid/edit', auth.userRequired, question.showEdit);  // 编辑某活动
+router.post('/question/:tid/edit', auth.userRequired, question.update);
+
+router.post('/question/:tid/delete', auth.userRequired, question.delete);
+
+router.get('/question/:tid', question.index);  // 显示某个问答
+router.get('/question/tab/:tab', question.list);
 
 // 草稿
 router.post('/draft/autosave', auth.userRequired, draft.autosave);

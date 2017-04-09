@@ -140,7 +140,8 @@ exports.outActivity = function(activity) {
     begin_str: activity.begin_str,
     end_time: activity.end_time,
     end_str: activity.end_str,
-    location_str: activity.location_str
+    location_str: activity.location_str,
+    pic: activity.pic
   }
   var now_time = (new Date()).getTime();
   if(now_time < activity.begin_time){
@@ -151,4 +152,8 @@ exports.outActivity = function(activity) {
     out.status = '活动进行中';
   }
   return out;
+}
+
+exports.outQuestion = function(question){
+  return question;
 }

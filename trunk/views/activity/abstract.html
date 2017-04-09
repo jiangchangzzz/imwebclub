@@ -1,6 +1,15 @@
 <li>
     <a href="javascript:void(0);">
-        <img src="../../images/activity1.jpg">
-        <span class="one-line"><%= activity.title %></span>
+        <% if(activity.pic && activity.pic.length > 0){ %>
+          <img src="<%= activity.pic[0] %>">
+        <% }else{ %>
+          <img src="../../images/activity1.jpg">
+        <% } %>
+        <div class="content">
+            <h5 class="one-line" title="<%= activity.title %>"><%= activity.title %></h5>
+            <p class="one-line"><b>时间：</b><span><%= activity.begin_str %></span></p>
+            <p class="one-line"><b>城市：</b><span><%= activity.location_str %></span></p>
+            <span class="status fr"><%= activity.status %></span>
+        </div>
     </a>
 </li>
