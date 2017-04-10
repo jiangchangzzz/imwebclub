@@ -65,13 +65,13 @@ exports.signup = function(req, res, next) {
             if (users.length > 0) {
                 ep.emit('prop_err', '用户名或邮箱已被使用。');
             } else {
-                tools.bhash(pass, function(passhash) {
+                tools.bhash(pass, ep.done(function(passhash) {
                     var avatarUrl = User.makeGravatar(email);
                     User.newAndSave(
-                        name, loginname, passhash, email, avatarUrl, false,
+                        name, loginname, passhash, email, comp, comp_mail, avatarUrl, false,
                         ep.done('saved')
                     );
-                });
+                }));
             }
         })
     );
@@ -163,7 +163,7 @@ var notJump = [
              return ep.emit('login_error');
          }
          var passhash = user.pass;
-         tools.bcompare(pass, passhash, function(bool) {
+         tools.bcompare(pass, passhash, ep.done(function(bool) {
              if (!bool) {
                  return ep.emit('login_error');
              }
@@ -190,7 +190,7 @@ var notJump = [
                  }
              }
              res.redirect(refer);
-         });
+         }));
      });
  };
 
