@@ -48,6 +48,9 @@ var UserSchema = new Schema({
   retrieve_time: {type: Number},
   retrieve_key: {type: String},
 
+  following: [], // 关注的人
+  follower: [],  // 粉丝
+
     accessToken: {type: String},
     evernoteAccessToken: {type: String}, //新增evernote支持 for marktang
     yinxiangAccessToken: {type: String}, //新增evernote支持 for marktang

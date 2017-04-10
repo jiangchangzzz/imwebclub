@@ -1,0 +1,51 @@
+.user-panel {
+	display: flex;
+	&__content {
+		flex-grow: 1;
+		&__detail {
+			display: flex;
+			
+			padding: 10px;
+			margin: 20px;
+		}
+	}
+	#sidebar {
+		width: 250px;
+	}
+}
+
+.breadcrumb {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  width: 20%;
+  &__link {
+  	flex-grow:1;
+    a {
+      display: block;
+      cursor: pointer;
+    }
+  	&:hover {
+  	  background-color: #ddd;
+  	}
+  }
+  .active {
+		background-color: #ccc;
+	}
+  &--content {
+  	width: 80%;
+  	&__section {
+	    padding: 6px 12px;
+	    border-top: none;
+  	}
+  	.section{
+  		&--show {
+  			display: block;
+  		}
+  		&--hide {
+  			display: none;
+  		}
+  	}
+
+  }
+}

@@ -65,14 +65,6 @@
           <a title="删除" class="cell-other-span js-topic-del" href="javascript:void(0)" data-tid="<%=topic._id%>"><i class="fa fa-trash"></i></a>
           <% } %>
         </div>
-        <div class="cell-info">
-            <span class="cell-name user-slider-btn nor-link" data-name="<%= topic.author.loginname %>">
-                <%= topic.author.name || topic.author.loginname %>
-                <%if(topic.author.signature){%>
-                <span class="cell-signature">，<%= topic.author.signature %></span>
-                <%}%>
-            </span>
-        </div>
         <div class="cell-brief-wrap">
           <%if(topic.pic && topic.pic.length != 0){%>
             <a href="<%=topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap "><img class="cell-brief-img" src="<%=topic.pic[0]%>"></a>
@@ -102,9 +94,8 @@
   <div class="cell-time">
     <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= topic.friendly_create_at %></span>
   </div>
-  <%if(topic.tabName){%>
-    <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == topic.tabName){link = "/tab/"+tabs[i][0];}}%>
-    <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= topic.tabName %></a>
+  <%if(topic.tab){%>
+    <a class="ui-tag ui-tag-blue" href="tab/<%= topic.tab %>"><%= topic.tab %></a>
   <%}%>
   </div>
 </div>

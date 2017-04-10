@@ -2,7 +2,8 @@ var models  = require('../models');
 var User    = models.User;
 var utility = require('utility');
 var uuid    = require('node-uuid');
-
+var EventProxy   = require('eventproxy');
+var _       = require('lodash');
 /**
  * 根据用户名列表查找用户列表
  * Callback:
@@ -146,6 +147,28 @@ exports.getGravatar = function (user) {
 exports.getTeamMember = function (company, team, callback) {
     User.find({company: company, team: team}, callback);
 };
+
+exports.getFollowUser = function(followUser=[], callback) {
+  var ep = new EventProxy();
+  ep.after('follow', followUser.length, function(users) {
+    callback(null, users);
+  });
+  ep.fail(callback);
+
+  _.forEach(followUser, id => {
+    User.findOne({_id: id}, ep.done(function(user) {
+      if (!user) {
+        return res.render404('这个用户不存在。');
+      }
+      ep.emit('follow', {
+        id,
+        loginname: user.loginname,
+        score: user.score,
+        avatar_url: user.avatar_url,
+      }) 
+    }));
+  })
+}
 
 exports.listOrderByTeam = function(start, limit, callback) {
     start = start || 0;
