@@ -7,3 +7,4 @@ exports.TopicCollect = require('./topic_collect');
 exports.Marktang = require('./marktang');
 exports.Question = require('./question');
 exports.Activity = require('./activity');
+exports.UserFollow = require('./user_follow');
