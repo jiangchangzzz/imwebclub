@@ -21,7 +21,6 @@ require('./marktang');
 require('./draft');
 require('./question');
 require('./activity');
-require('./user_follow');
 
 exports.User         = mongoose.model('User');
 exports.Topic        = mongoose.model('Topic');
@@ -32,4 +31,3 @@ exports.Marktang     = mongoose.model('Marktang');
 exports.Draft     = mongoose.model('Draft');
 exports.Question  = mongoose.model('Question');
 exports.Activity     = mongoose.model('Activity');
-exports.UserFollow    = mongoose.model('UserFollow');
