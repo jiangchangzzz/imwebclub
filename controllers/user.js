@@ -90,7 +90,24 @@ exports.showSetting = function (req, res, next) {
       user.success = '保存成功。';
     }
     user.error = null;
-    return res.render('user/setting', user);
+    return res.render('user/setting', {user: user});
+  });
+};
+
+exports.showFollowing = function (req, res, next) {
+  User.getUserById(req.session.user._id, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    if (req.query.save === 'success') {
+      user.success = '保存成功。';
+    }
+    user.error = null;
+    var ep = new EventProxy();
+    ep.all('following', function(followUser) {
+      return res.render('user/follow', {followUser: followUser});
+    })
+    User.getFollowUser(user.following , ep.done('following'));
   });
 };
 
@@ -115,7 +132,7 @@ exports.setting = function (req, res, next) {
     } else {
       data2.error = msg;
     }
-    res.render('user/setting', data2);
+    res.render('user/setting', {user: data2});
   }
 
   // post
@@ -136,7 +153,7 @@ exports.setting = function (req, res, next) {
           return next(err);
         }
         req.session.user = user.toObject({virtual: true});
-        return res.redirect('/setting?save=success');
+        return res.render('user/setting', {user: user});
       });
     }));
   }
@@ -167,6 +184,56 @@ exports.setting = function (req, res, next) {
     }));
   }
 };
+
+exports.addFollowUser = function(req, res, next) {
+  var user_id = req.session.user.id;
+  var followUser_id = req.body.followUser_id;
+  
+  var proxy = EventProxy.create('following', 'follower', function(){
+      res.send({ status: 'success' });
+  });
+  proxy.fail(next);
+  function addUser(user_id, followUser_id, field){
+    User.getUserById(user_id, proxy.done(field, function(user) {
+      if(!user) {
+        return next(new Error('user is not exists'));
+      }
+      const index = user[field].findIndex((id) => (id === followUser_id));
+      if(index === -1) {
+        user[field].push(followUser_id);
+        user[field+'_count'] ++;
+      }
+      user.save();
+    }))
+  }
+  addUser(user_id, followUser_id,'following');
+  addUser(followUser_id, user_id,'follower');
+}
+
+exports.deleteFollowUser = function(req, res, next) {
+  var user_id = req.session.user.id;
+  var followUser_id = req.body.followUser_id;
+
+  var proxy = EventProxy.create('following', 'follower', function(){
+      res.send({ status: 'success' });
+  });
+  proxy.fail(next);
+  function deleteUser(user_id, followUser_id, field){
+    User.getUserById(user_id, proxy.done(field, function(user) {
+      if(!user) {
+        return next(new Error('user is not exists'));
+      }
+      const index = user[field].findIndex((id) => (id === followUser_id));
+      if(index !== -1) {
+        user[field].splice(index, 1);
+        user[field+'_count'] --;
+      }
+      user.save();
+    }))
+  }
+  deleteUser(user_id, followUser_id,'following');
+  deleteUser(followUser_id, user_id,'follower');
+}
 
 exports.toggleStar = function (req, res, next) {
   var user_id = req.body.user_id;

@@ -1,0 +1,27 @@
+<div class='user-panel'>
+  <div class='user-panel__content'>
+    <div class='user-panel__content__detail'>
+      <ul class='breadcrumb'>
+        <li class='breadcrumb__link'><a href='/user/<%= current_user.loginname %>'>主页</a></li>
+        <li class='breadcrumb__link'><a href='/user/<%= current_user.loginname %>/setting'>设置</a></li>
+        <li class='breadcrumb__link active'><a href='/user/<%= current_user.loginname %>/following'>用户关注</a></li>
+      </ul>
+      <div class='breadcrumb--content'>
+        <div class='breadcrumb--content__section section--show'>
+          <div id='content'>
+            <% followUser.forEach(function(user) { %>
+            <div class='panel' id='<%= user.id %>'>
+             <div class="avatar">
+              <img src="<%=user.avatar_url%>">
+            </div>
+              <div><%= user.loginname %></div>
+              <div>积分:<%= user.score %></div>
+              <div class='follow-cancel'><button>取消关注</button></div>
+            </div>
+          <% }) %>
+          </div>           
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

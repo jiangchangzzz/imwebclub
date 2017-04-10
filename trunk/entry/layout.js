@@ -71,6 +71,12 @@ $.extend(imweb.ajax, {
             method: 'get'
         }, options));
     },
+    delete: function(url, options) {
+      options = options || {};
+      return $.ajax(url, $.extend({
+        type: 'DELETE'
+      }, options));
+    },
     fail: function(xhr) {
         if (xhr.status === 403) {
             alert('请先登录，登陆后即可点赞。');

@@ -1,34 +1,12 @@
-<div class='user'>
-  <div>
-    <a href="/user/<%= user.loginname %>">
-      <img class='user_avatar' src="<%= proxy(user.avatar_url) %>" title="<%= user.loginname %>"/>
-    </a>
-    <span class='user_name'><a class='dark' href="/user/<%= user.loginname %>"><%= user.loginname %></a></span>
-
-    <div class='space'></div>
-    <span class='col_fade'><%= user.follower_count %> 粉丝 </span>
-    <span class='space'></span>
-    <span class='col_fade'><%= user.following_count %> 关注 </span>
-  </div>
-  <div>
-		<span>
-			<a href='mailto:<%= user.email %>'>
-        <i class="fa fa-envelope-o" title='电子邮箱'></i>
-      </a>
-		</span>
-    <% if (user.url) { %>
-		<span>
-			<a href="<%= user.url %>" target='_blank'>
-        <i class="fa fa-home" title='个人网站'></i>
-      </a>
-		</span>
-    <% } %>
-    <% if (user.weibo) { %>
-		<span>
-			<a href="<%= user.weibo %>" target='_blank'>
-        <i class="fa fa-weibo" title='微博'></i>
-      </a>
-		</span>
-    <% } %>
-  </div>
+<div class='content'>
+  <% followUser.forEach(function(user) { %>
+    <div class='panel' id='<%= user.id %>'>
+     <div class="avatar">
+      <img src="<%=user.avatar_url%>">
+    </div>
+      <div><%= user.loginname %></div>
+      <div>积分:<%= user.score %></div>
+      <div class='follow-cancel'><button>取消关注</button></div>
+    </div>
+  <% }) %>
 </div>

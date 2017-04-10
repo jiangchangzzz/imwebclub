@@ -26,12 +26,12 @@ exports.validateId = function (str) {
 
 exports.bhash = function (str, callback) {
   //bcrypt.hash(str, 10, callback);
-  callback(passwordHash.generate(str));
+  callback(null, passwordHash.generate(str));
 };
 
 exports.bcompare = function (str, hash, callback) {
     var result = passwordHash.verify(str, hash);
-    callback(result);
+    callback(null, result);
   //bcrypt.compare(str, hash, callback);
 };
 

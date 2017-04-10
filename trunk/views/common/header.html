@@ -34,7 +34,7 @@
                     <a id="nav-user-menu" href="javascript:void(0);" class="ico fa fa-user" title="<%= current_user.loginname %>"></a>
                     <ol id="nav-user-menu-layer" class="ui-dropdown-layer">
                         <li>
-                            <a href="javascript:void(0);">我的主页</a>
+                            <a href="/user/<%= current_user.name %>">我的主页</a>
                         </li>
                         <% if (current_user.is_admin) { %>
                         <li>
