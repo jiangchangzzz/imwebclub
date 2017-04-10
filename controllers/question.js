@@ -122,12 +122,6 @@ exports.index = function (req, res, next) {
       }
     }));
   }));
-
-  if (!currentUser) {
-    ep.emit('is_collect', null);
-  } else {
-    QuestionCollect.getQuestionCollect(currentUser._id, question_id, ep.done('is_collect'));
-  }
 };
 
 exports.create = function (req, res, next) {

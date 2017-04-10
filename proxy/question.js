@@ -151,7 +151,7 @@ exports.getFullQuestion = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByQuestionId(question._id, proxy.done('replies'));
+    Reply.getRepliesByTopicId(question._id, proxy.done('replies'));
   }));
 };
 
@@ -222,6 +222,6 @@ exports.newAndSave = function (title, tab, content, authorId, callback) {
   question.tab       = tab;
   question.author_id = authorId;
   question.pic = tools.genPicFromContent(content);
-  
+
   question.save(callback);
 };

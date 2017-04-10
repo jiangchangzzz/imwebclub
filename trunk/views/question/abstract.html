@@ -1,12 +1,35 @@
 <li>
-    <a href="javascript:void(0);">
-        <% if(question.pic && question.pic.length > 0){ %>
-          <img src="<%= question.pic[0] %>">
-        <% }else{ %>
-          <img src="../../images/activity1.jpg">
-        <% } %>
-        <div class="content">
-            <h5 class="one-line" title="<%= question.title %>"><%= question.title %></h5>
+    <div class="fl">
+      <div class="avatar">
+          <img src="../../images/avatarDefault.png">
+      </div>
+      <div class="status">
+          已解决
+      </div>
+    </div>
+    <div class="main">
+      <div class="item-header">
+        <div class="fr">
+            <div class="time">
+              <span class="questionTime">8分钟前的提问</span>
+              /
+              <span class="answerTime">10分钟前的回答</span>
+            </div>
+            <span class="tag"><%= question.tab %></span>
         </div>
-    </a>
+        <div class="main">
+          <h4>
+            <a href="/question/<%= question._id %>"><%= question.title %></a>
+          </h4>
+          <div class="relative">
+            <span class="author">结衣</span>
+            <span class="viewCount">20浏览</span>
+            <span class="answerCount">3回答</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+          <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
+      </div>
+    </div>
 </li>

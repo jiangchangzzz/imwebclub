@@ -23,28 +23,27 @@
 
 ul.question-list {
     li {
-        display: inline-block;
-        width: 48%;
-        @media screen and (max-width: 768px) {
-            width: 100%;
+        margin-top: 10px;
+        >.fl{
+          width: 65px;
         }
-
-        a {
-            display: block;
-            margin: 10px;
-            height: 120px;
-            overflow: hidden;
-            img {
-                width: 150px;
-                float: left;
-            }
-            .content{
-                margin: 0 5px 0 155px;
-                font-size: 12px;
-            }
-            &:hover {
+        >.main{
+          margin-left: 65px;
+          .item-header{
+            >.fr{
+              text-align: right;
+              width: 230px;
+              .tag{
                 color: @card-highlight;
+              }
             }
+            .main{
+              margin-right: 230px;
+            }
+          }
+          .item-body{
+            color: @shadow-color;
+          }
         }
     }
 }
