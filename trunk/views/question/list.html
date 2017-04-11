@@ -1,19 +1,27 @@
+<div id="banner">
+    <div class="inner">
+        <ul class="tag-list">
+            <% tabs.forEach(function (pair) {
+                var value = pair[0];
+                var text = pair[1]; %>
+                <li><a href="<%= value ? '/question/tab/' + value : '/' %>" class="topic-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a></li>
+            <% }) %>
+        </ul>
+    </div>
+</div>
+
 <div id="main" class="clearfix">
   <%- partial('common/sidebar.html',{
       tops: tops
   }) %>
   <div id="content" class="topic_list">
     <div class="tabs">
-      <% tabs.forEach(function (pair) {
-          var value = pair[0];
-          var text = pair[1]; %>
-          <a href="<%= value ? '/activity/tab/' + value : '/' %>" class="activity-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a>
-          &nbsp;&nbsp;&nbsp;
-      <% }) %>
-      <a class="fr" href="javascript:void(0);">活动合作</a>
+      <a href="javascript:void(0);" class="question-tab">热门</a>&nbsp;|&nbsp;
+      <a href="javascript:void(0);" class="question-tab">最新</a>&nbsp;|&nbsp;
+      <a href="javascript:void(0);" class="question-tab">未解决</a>
     </div>
-    <ul class="activity-list">
-    <%- partial("../activity/abstract", {collection:activities, as:"activity"})%>
+    <ul class="question-list">
+    <%- partial("../question/abstract", {collection:questions, as:"question"})%>
     </ul>
   </div>
   <div class="pagination" current_page="<%= current_page %>">

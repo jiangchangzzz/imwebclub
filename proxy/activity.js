@@ -201,7 +201,7 @@ exports.reduceCount = function (id, callback) {
     }
     activity.reply_count -= 1;
 
-    Reply.getLastReplyByTopId(id, function (err, reply) {
+    Reply.getLastReplyByParentId(id, function (err, reply) {
       if (err) {
         return callback(err);
       }
@@ -223,8 +223,7 @@ exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_t
   activity.title = title;
   activity.tab = tab;
   activity.content = content;
-  //activity.pic = tools.genActivityPic(content);
-  //activity.summary = tools.genActivitySummary(content, config.activity_summary_len);
+  activity.pic = tools.genPicFromContent(content);
   activity.begin_time = begin_time;
   activity.begin_str = begin_str;
   activity.end_time = end_time;

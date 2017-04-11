@@ -106,7 +106,7 @@ router.get('/topic/tab/:tab', topic.list);
 router.get('/activity/create', auth.userRequired, activity.create); //新增某活动
 router.post('/activity/create', auth.userRequired, activity.put);
 router.get('/activity/:tid/edit', auth.userRequired, activity.showEdit);  // 编辑某活动
-router.post('/actvity/:tid/edit', auth.userRequired, activity.update);
+router.post('/activity/:tid/edit', auth.userRequired, activity.update);
 
 router.post('/activity/:tid/delete', auth.userRequired, activity.delete);
 
@@ -115,7 +115,7 @@ router.get('/activity/tab/:tab', activity.list);
 
 
 // 回复
-router.post('/:topic_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
+router.post('/:kind/:parent_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
 router.get('/reply/:reply_id/edit', auth.userRequired, reply.showEdit); // 修改自己的评论页
 router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改某评论
 router.post('/reply/:reply_id/delete', auth.userRequired, reply.delete); // 删除某评论
@@ -123,9 +123,15 @@ router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 
 // 问答
-router.get('/question/create', auth.userRequired, question.create);
+router.get('/question/create', auth.userRequired, question.create); //新增某活动
 router.post('/question/create', auth.userRequired, limit.peruserperday('create_question', config.create_post_per_day, {showJson: false}), question.put);
-router.get('/question/:qid', question.index);  // 显示某个话题
+router.get('/question/:qid/edit', auth.userRequired, question.showEdit);  // 编辑某活动
+router.post('/question/:qid/edit', auth.userRequired, question.update);
+
+router.post('/question/:qid/delete', auth.userRequired, question.delete);
+
+router.get('/question/:qid', question.index);  // 显示某个问答
+router.get('/question/tab/:tab', question.list);
 
 // 草稿
 router.post('/draft/autosave', auth.userRequired, draft.autosave);

@@ -1,0 +1,37 @@
+<li>
+    <div class="fl">
+      <div class="avatar">
+          <img src="../../images/avatarDefault.png">
+      </div>
+      <div class="status">
+          <%= question.solved ? '已解决' : '未解决' %>
+      </div>
+    </div>
+    <div class="main">
+      <div class="item-header">
+        <div class="fr">
+            <div class="time">
+              <span class="questionTime"><%= question.friendly_create_at %>的提问</span>
+              /
+              <span class="answerTime"><%= question.friendly_last_reply_at %>的回答</span>
+            </div>
+            <span class="tag"><%= question.tab %></span>
+        </div>
+        <div class="main">
+          <h4>
+            <a href="/question/<%= question.id %>"><%= question.title %></a>
+          </h4>
+          <div class="relative">
+            <span class="author"><%= question.author.name || question.author.loginname %></span>
+            <span class="viewCount"><%= question.visit_count %>浏览</span>
+            <span class="answerCount"><%= question.reply_count %>回答</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+          <p>
+            <b><%= question.content %></b>
+          </p>
+      </div>
+    </div>
+</li>

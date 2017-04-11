@@ -40,7 +40,7 @@ describe('test/controllers/github.test.js', function () {
             emails: [
               {value: 'notexists@gmail.com'}
             ],
-            _json: {avatar_url: 'http://avatar_url'}
+            _json: {avatar: 'http://avatar'}
           };
           next();
         },
@@ -101,7 +101,7 @@ describe('test/controllers/github.test.js', function () {
           emails: [
             {value: email}
           ],
-          _json: {avatar_url: 'http://avatar_url.com/1.jpg'},
+          _json: {avatar: 'http://avatar.com/1.jpg'},
           id: 22
         };
         next();

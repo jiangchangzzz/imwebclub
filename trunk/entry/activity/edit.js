@@ -1,4 +1,3 @@
-require('../../stylesheets/sidebar.less');
 require('../../stylesheets/reply.less');
 require('../../stylesheets/activity/edit.less');
 require('../../javascripts/libs/editor/editor.css');
@@ -10,7 +9,7 @@ require('../../../node_modules/flatpickr/dist/flatpickr.min.css');
 Flatpickr.localize(l10n.zh);
 
 // 版块选择的检查，必须选择
-$('#create_topic_form').on('submit', function (e) {
+$('#create_activity_form').on('submit', function (e) {
   var tabValue = $('#tab-value').val();
   if (!tabValue) {
     alert('必须选择一个版块！');
@@ -25,12 +24,6 @@ $('#create_topic_form').on('submit', function (e) {
 // END 版块选择的检查，必须选择
 
 $(document).ready(function(){
-  // $(".form_datetime").datetimepicker({
-  //     format: "dd MM yyyy - HH:ii P",
-  //     showMeridian: true,
-  //     autoclose: true,
-  //     todayBtn: true
-  // });
   $('.datetime').flatpickr({
     enableTime: true,
     dateFormat: 'Y-m-j H:i D',

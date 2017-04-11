@@ -1,6 +1,6 @@
 <script>
     imweb.question = {
-        id: '<%= question._id %>',
+        id: '<%= question.id %>',
         reply_up_threshold: <%= question.reply_up_threshold %>,
         author: {
             name: '<%= question.author.name %>',
@@ -18,51 +18,14 @@
 </script>
 
 <div id="main" class="clearfix">
-    <div id='sidebar'>
-      <div class='box question' style="display:none">
-        <div class='box-head'>
-          <span class='col_fade'>作者</span>
-        </div>
-        <div class='box-body'>
-          <%- partial('../user/card', { object: question.author, as: 'user' }) %>
-        </div>
-      </div>
-
-      <div class='box question' id="box-author-otherArticle">
-        <div class='box-head'>
-          <span class='col_fade'>作者其它文章</span>
-        </div>
-        <div class='box-body'>
-          <% if (typeof(author_other_questions) === 'undefined' || author_other_questions.length > 0) { %>
-          <ul class='unstyled question-list'>
-            <%- partial('../question/small', { collection: author_other_questions, as: 'question' }) %>
-          </ul>
-          <% } else { %>
-          <p>无</p>
-          <% } %>
-        </div>
-      </div>
-
-      <div class='box question' id="box-article-recommend">
-        <div class='box-head'>
-          <span class='col_fade'>推荐文章</span>
-        </div>
-        <div class='box-body'>
-          <% if (typeof(no_reply_questions) !== 'undefined' && no_reply_questions.length > 0) { %>
-          <ul class='unstyled question-list'>
-            <%- partial('../question/small', { collection: no_reply_questions, as: 'question' }) %>
-          </ul>
-          <% } else { %>
-          <p>无</p>
-          <% } %>
-        </div>
-      </div>
-    </div>
+    <%- partial('common/sidebar.html',{
+        tops: tops
+    }) %>
 
     <div id='content'>
       <div class='panel'>
-        <div class="question-info">
-          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= question.author.avatar_url  %>"  data-name="<%= question.author.loginname %>"/>
+        <div class="detail-info">
+          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= question.author.avatar  %>"  data-name="<%= question.author.loginname %>"/>
           <div class="user-wrap">
             <p class="user-name user-slider-btn" data-name="<%= question.author.loginname %>"><%= question.author.name || question.author.loginname%></p>
             <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= question.friendly_create_at %></span>
@@ -73,17 +36,13 @@
               <span>浏览</span>
             </li>
             <li>
-              <p class="question-reply-count"><%= question.reply_count %> </p>
+              <p class="reply-count"><%= question.reply_count %> </p>
               <span>评论</span>
-            </li>
-            <li>
-              <p class="question-collect-count"><%= question.collect_count %></p>
-              <span>收藏</span>
             </li>
           </ul>
         </div>
-        <div class='question_header'>
-          <h1 class="question-title"><%- question.title %></h1>
+        <div class='detail-header'>
+          <h1 class="detail-title"><%- question.title %></h1>
           <%if(question.reprint){%>
             <div class="cell-from">
               <%
@@ -102,42 +61,32 @@
             <%}%>
             <% if (current_user) { %>
               <div class="btn-wrap">
-                  <% if (current_user._id.equals(question.author_id)) { %>
-                  <a href='/marktang/index?autoOpenInfo=true&question_id=<%= question._id %>' class="btn-ico">
+                  <% if (current_user._id.equals(question.author.id)) { %>
+                  <a href='/question/<%= question.id %>/edit' class="btn-ico">
                     <i class="ico fa fa-lg fa-pencil-square-o" title='编辑'></i>
                   </a>
                   <a href='javascript:;' class='delete-question-btn btn-ico'>
                      <i class="ico fa fa-lg fa-trash" title='删除'></i>
                   </a>
                   <% } %>
-                  <% if (!is_collect) { %>
-                  <span class='ico fa fa-heart-o collect-question-btn'
-                      title='收藏' data-cancel="false"></span>
-                  <% } else { %>
-                  <span class='ico fa fa-heart collect-question-btn'
-                      title='取消收藏' data-cancel="true"></span>
-                  <% } %>
               </div>
             <% } %>
           </div>
         </div>
-        <div class='question_content'>
-          <div id="question_content" class='question_content'>
-              <div class="markdown-text">
-                  <blockquote>
-                      <p><span style="margin-left: 10px;">本文作者：imweb <%= question.author.name || question.author.loginname %></span>
-                          <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/question/<%= question._id %>">imweb社区</a></span>
-                          <b style="margin-left: 10px;">未经同意，禁止转载</b>
-                          </p>
-                  </blockquote>
-                  <%- markdownRender(question.linkedContent) %>
-              </div>
-
-          </div>
+        <div class='detail-content'>
+            <div class="markdown-text">
+                <blockquote>
+                    <p><span style="margin-left: 10px;">本文作者：imweb <%= question.author.name || question.author.loginname %></span>
+                        <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/question/<%= question._id %>">imweb社区</a></span>
+                        <b style="margin-left: 10px;">未经同意，禁止转载</b>
+                        </p>
+                </blockquote>
+                <%- markdownRender(question.content) %>
+            </div>
         </div>
       </div>
       <% if (typeof(question) !== 'undefined') { %>
-      <div class='question-reply-panel'>
+      <div class='reply-panel'>
           <div class="editor-wrap">
               <textarea class="editor"></textarea>
           </div>
@@ -157,18 +106,13 @@
       </div>
       <% } %>
 
-      <div class="panel reply-panel <%if(question.reply_count == 0){%>hide<% } %> clearfix">
+      <div class="panel reply-panel <%if(question.reply_count == 0){%>hide<% } %>">
           <div class="panel-head">
-              <span class="panel-head-title"><span class="question-reply-count"><span class="question-reply-num"><%= question.reply_count %></span></span>  条评论</span>
+              <span class="panel-head-title"><span class="reply-count"><%= question.reply_count %></span>  条评论</span>
           </div>
           <div class='panel-body'>
               <ul id="reply-list"></ul>
           </div>
       </div>
     </div>
-</div>
-
-<div class="replies_history hide">
-  <div class="inner_content"></div>
-  <div class="anchor"></div>
 </div>

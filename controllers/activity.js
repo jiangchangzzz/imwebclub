@@ -34,17 +34,6 @@ function saveActivity(req, next, callback) {
   var end_str = req.body.end_str;
   var location_str = req.body.location_str;
 
-  // 得到所有的 tab, e.g. ['ask', 'share', ..]
-  var allTabs = config.tabs.map(function (tPair) {
-    return tPair[0];
-  });
-  // if (!config.regExps.topicTitle.test(title)
-  //     || !config.regExps.topicContent.test(content)
-  //     || !_.contains(allTabs, tab)
-  // ) {
-  //     return callback('param error', null);
-  // }
-
   var user = req.session.user;
   var ep = new EventProxy();
   ep.fail(next);
@@ -75,11 +64,12 @@ exports.index = function (req, res, next) {
   var events = ['activity', 'is_collect'];
   var ep = EventProxy.create(events,
     function (activity, is_collect) {
-    res.render('activity/index', {
-      activity: activity,
-      is_uped: isUped,
-      is_collect: is_collect,
-    });
+      res.render('activity/index', {
+        active: 'activity',
+        activity: activity,
+        is_uped: isUped,
+        is_collect: is_collect,
+      });
   });
 
   ep.fail(next);
@@ -122,6 +112,8 @@ exports.index = function (req, res, next) {
 
 exports.create = function (req, res, next) {
   res.render('activity/edit',{
+    active: 'activity',
+    tabs: config.activityTabs,
     tabValue: 'imweb'
   });
 };
@@ -130,7 +122,7 @@ exports.put = function (req, res, next) {
   console.log(req.body);
   //for marktang
   if (!req.body.title || !req.body.content || !req.body.tab) {
-    res.render('activity/edit', {
+    res.render('/activity/edit', {
       content_from_marktang: req.body.content || ''
     });
     return;
@@ -141,10 +133,7 @@ exports.put = function (req, res, next) {
           ret: 400
         });
       } else {
-        res.send({
-          ret: 0,
-          data: dataAdapter.outActivity(activity)
-        });
+        res.redirect('/activity/tab/'+activity.tab);
       }
   });
 };
@@ -152,7 +141,7 @@ exports.put = function (req, res, next) {
 exports.list = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
-  var tab = req.params.tab || 'all';
+  var tab = req.params.tab || 'imweb';
   var sort = req.params.sort || 'default';  // 根据不同的参数决定文章排序方式
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
@@ -179,7 +168,9 @@ exports.list = function (req, res, next) {
   // console.log(optionsStr);
   Activity.getActivitiesByQuery(query, options, proxy.done('activities', function (activities) {
     //console.log(activities);
-    return activityMock;
+    return activities.map(function(activity){
+      return dataAdapter.outActivity(activity);
+    });//activityMock;
   }));
 
   // 取分页数据
@@ -189,7 +180,7 @@ exports.list = function (req, res, next) {
       proxy.emit('pages', pages);
     } else {
       Activity.getCountByQuery(query, proxy.done(function (all_activities_count) {
-        var pages = Math.ceil(activityMock.length / limit);
+        var pages = Math.ceil(all_activities_count / limit);
         cache.set(pagesCacheKey, pages, 60 * 1);
         proxy.emit('pages', pages);
       }));
@@ -215,7 +206,6 @@ exports.list = function (req, res, next) {
   }));
   // END 取排行榜上的用户
 
-  var tabs = [['all', '全部']].concat(config.activityTypes);
   var tabName = renderHelper.activityTypeName(tab);
 
   proxy.all('activities', 'pages', 'tops',
@@ -227,7 +217,7 @@ exports.list = function (req, res, next) {
         list_activity_count: limit,
         tops: tops,
         pages: pages,
-        tabs: tabs,
+        tabs: config.activityTabs,
         tab: tab,
         base: '/activity/tab/' + tab,
         pageTitle: tabName && (tabName + '活动'),

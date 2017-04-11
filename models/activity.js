@@ -6,6 +6,7 @@ var config = require('../config');
 var _ = require('lodash');
 
 var ActivitySchema = new Schema({
+  tab: { type: String },//活动类型
   title: { type: String },
   content: { type: String },
   summary: { type: String },
@@ -15,7 +16,6 @@ var ActivitySchema = new Schema({
   end_str: { type: String },
   location_str: { type: String },
   pic: { type: Array },
-  type: { type: String }, //活动类型
   author_id: { type: ObjectId },
   top: { type: Boolean, default: false }, // 置顶帖
   good: { type: Boolean, default: false }, // 精华帖

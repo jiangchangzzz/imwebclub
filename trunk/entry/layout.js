@@ -30,15 +30,15 @@ if($('#nav-user-menu').length > 0){
 $(document).on('click', '.nav-login', function() {
     $('.to-login').show();
     $('.to-sign').hide();
-    $(".login-wrapper").show();
+    $(".modal.login").show();
 });
 $(document).on('click', '.nav-sign', function() {
     $('.to-sign').show();
     $('.to-login').hide();
-    $(".login-wrapper").show();
+    $(".modal.login").show();
 });
-$(document).on('click', '.not-sign-close', function() {
-    $('.login-wrapper').hide();
+$(document).on('click', '.modal-close', function() {
+    $('.modal').hide();
 });
 
 $(document).ready(function(){

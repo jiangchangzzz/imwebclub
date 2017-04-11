@@ -154,7 +154,7 @@ exports.getFullTopic = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByTopicId(topic._id, proxy.done('replies'));
+    Reply.getRepliesByParentId(topic._id, proxy.done('replies'));
   }));
 };
 
@@ -201,7 +201,7 @@ exports.reduceCount = function (id, callback) {
     }
     topic.reply_count -= 1;
 
-    Reply.getLastReplyByTopId(id, function (err, reply) {
+    Reply.getLastReplyByParentId(id, function (err, reply) {
       if (err) {
         return callback(err);
       }
@@ -225,8 +225,8 @@ exports.newAndSave = function (title, type, content, tab, reprint, authorId, cal
   topic.title = title;
   topic.content = content;
   // todo topic pic
-  topic.pic = tools.genTopicPic(content);
-  topic.summary = tools.genTopicSummary(content, config.topic_summary_len);
+  topic.pic = tools.genPicFromContent(content);
+  topic.summary = tools.genSummaryFromContent(content, config.topic_summary_len);
   topic.tab = tab;
   topic.reprint = reprint;
   topic.author_id = authorId;

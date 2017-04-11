@@ -11,7 +11,6 @@ var QuestionSchema = new Schema({
   content: { type: String },
   summary: { type: String },
   pic: { type: Array },
-  type: { type: Number, default: 0 }, // 0 问题
   solve: {type: Number, default: 0}, // 0 未解决  1 已解决
   author_id: { type: ObjectId },
   top: { type: Boolean, default: false }, // 置顶
@@ -21,6 +20,7 @@ var QuestionSchema = new Schema({
   collect_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  answer_id: { type: ObjectId },
   last_reply: { type: ObjectId },
   last_reply_at: { type: Date, default: Date.now },
   content_is_html: { type: Boolean },

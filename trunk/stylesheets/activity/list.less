@@ -2,10 +2,29 @@
 @card-highlight: #2fa0ef;
 @shadow-color: #ddd;
 
+.tabs {
+  border-bottom: 1px solid @shadow-color;
+  a{
+    display: inline-block;
+    padding: 3px;
+    color: @card-highlight;
+    &.activity-tab{
+      color: black;
+      &:hover {
+        color: @card-highlight;
+      }
+      &.current-tab {
+        color: @card-highlight;
+        border-bottom: 3px solid @card-highlight;
+      }
+    }
+  }
+}
+
 ul.activity-list {
     li {
         display: inline-block;
-        width: 32%;
+        width: 48%;
         @media screen and (max-width: 768px) {
             width: 100%;
         }
@@ -13,18 +32,24 @@ ul.activity-list {
         a {
             display: block;
             margin: 10px;
-            background-color: @card-bg;
+            height: 120px;
+            overflow: hidden;
             img {
-                width: 100%;
+                width: 150px;
+                float: left;
             }
-
+            .content{
+                margin: 0 5px 0 155px;
+                font-size: 12px;
+            }
             &:hover {
                 color: @card-highlight;
             }
-
-            span {
-                display: block;
-                font-size: 10px;
+            .status{
+              border-radius: 5px;
+              padding: 0 5px;
+              color: white;
+              background-color: @card-highlight;
             }
         }
     }

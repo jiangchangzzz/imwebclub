@@ -19,8 +19,13 @@ define([
         /**
          * 初始化文章评论列表
          */
-        initReplyList: function() {
-            this.replyListAppend(imweb.topic.replies || []);
+        initReplyList: function(kind, parentId, parentAuthor, replies, reply_up_threshold) {
+            this.kind = kind;
+            this.parentId = parentId;
+            this.parentAuthor = parentAuthor;
+            this.replies = replies || [];
+            this.reply_up_threshold = reply_up_threshold || 100;
+            this.replyListAppend(replies);
         },
         /**
          * 添加评论
@@ -35,7 +40,7 @@ define([
                 return me.renderReplyItem(item, i + currLen);
             }).join('');
             list.append(html);
-            $('#topic-reply-panel').removeClass('hide');
+            $('#reply-panel').removeClass('hide');
 
             me.changeImgSrc();
         },
@@ -49,8 +54,6 @@ define([
             //console.log(item);
             var me = this;
             var user = imweb.user;
-            var topic = imweb.topic;
-            //console.log(topic);
             var subRepliesHTML = null;
             if(item.subReplies){
               subRepliesHTML = $.map(item.subReplies, function(item, i) {
@@ -60,14 +63,14 @@ define([
             item.content = render_helper.markdownRender(item.content);
             //console.log(item);
             return tplReplyItem({
-                topic: topic,
+                reply_up_threshold: me.reply_up_threshold,
                 index: index,
                 user: user,
                 markdown: imweb.markdown,
                 isAdmin: user && user.loginname && user.is_admin,
                 isLogin: user && user.loginname,
                 isAuthor: user && user.id === item.author.id,
-                isTopicAuthor: user && user.loginname === topic.author.loginname,
+                isParentAuthor: user && user.loginname === me.parentAuthor.loginname,
                 reply: $.extend({}, item, {
                     author: {
                       loginname: item.author.name || item.author.loginname || ' ',
@@ -86,8 +89,8 @@ define([
          * @return {string} html
          */
         renderSubReplyItem: function(item, index) {
+            var me = this;
             var user = imweb.user;
-            var topic = imweb.topic;
             item.text = $(item.content).text();
             return tplReplySubItem({
                 reply: item,
@@ -97,8 +100,8 @@ define([
                 isLogin: imweb.user && imweb.user.loginname,
                 isAuthor: user
                     && user.loginname === item.author.loginname,
-                isTopicAuthor: user
-                    && user.loginname === topic.author.loginname,
+                isParentAuthor: user
+                    && user.loginname === me.parentAuthor.loginname,
                 index: index
             });
         },
@@ -137,58 +140,59 @@ define([
          * 初始化一个编辑器
          * @param {Object} $ele textarea
          */
-        initEditor: function($ele) {
-            if (!$ele.length || $ele.data('editorInited')) {
-                return;
+        initEditor: function(selector) {
+            var $ele = $(selector);
+            if($ele.data('editorInited')){
+              return;
+            }else{
+              $ele.data('editorInited', true);
+
+              var editor = new Editor({
+                  status: [],
+                  markdown: imweb.markdown
+              });
+              editor.render($ele[0]);
+              $ele.data('editor', editor);
+
+              var $input = $(editor.codemirror.display.input);
+              $input.keydown(function(event) {
+                  if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {
+                      event.preventDefault();
+                      $ele.closest('form').submit();
+                  }
+              });
+
+              // at.js 配置
+              var allNames = this.getAllNames();
+              var codeMirrorGoLineUp = CodeMirror.commands.goLineUp;
+              var codeMirrorGoLineDown = CodeMirror.commands.goLineDown;
+              var codeMirrorNewlineAndIndent = CodeMirror.commands.newlineAndIndent;
+              $input.atwho({
+                  at: '@',
+                  data: allNames
+              }).on('shown.atwho', function() {
+                  CodeMirror.commands.goLineUp = _.noop;
+                  CodeMirror.commands.goLineDown = _.noop;
+                  CodeMirror.commands.newlineAndIndent = _.noop;
+              }).on('hidden.atwho', function() {
+                  CodeMirror.commands.goLineUp = codeMirrorGoLineUp;
+                  CodeMirror.commands.goLineDown = codeMirrorGoLineDown;
+                  CodeMirror.commands.newlineAndIndent = codeMirrorNewlineAndIndent;
+              });
             }
-            $ele.data('editorInited', true);
-
-            var editor = new Editor({
-                status: [],
-                markdown: imweb.markdown
-            });
-            editor.render($ele[0]);
-            $ele.data('editor', editor);
-
-            var $input = $(editor.codemirror.display.input);
-            $input.keydown(function(event) {
-                if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {
-                    event.preventDefault();
-                    $ele.closest('form').submit();
-                }
-            });
-
-            // at.js 配置
-            var allNames = this.getAllNames();
-            var codeMirrorGoLineUp = CodeMirror.commands.goLineUp;
-            var codeMirrorGoLineDown = CodeMirror.commands.goLineDown;
-            var codeMirrorNewlineAndIndent = CodeMirror.commands.newlineAndIndent;
-            $input.atwho({
-                at: '@',
-                data: allNames
-            }).on('shown.atwho', function() {
-                CodeMirror.commands.goLineUp = _.noop;
-                CodeMirror.commands.goLineDown = _.noop;
-                CodeMirror.commands.newlineAndIndent = _.noop;
-            }).on('hidden.atwho', function() {
-                CodeMirror.commands.goLineUp = codeMirrorGoLineUp;
-                CodeMirror.commands.goLineDown = codeMirrorGoLineDown;
-                CodeMirror.commands.newlineAndIndent = codeMirrorNewlineAndIndent;
-            });
         },
         /**
          * 提交评论
          */
         replySubmit: function(e) {
             var me = this;
-            var topicId = imweb.topic.id;
-            var editor = $('.topic-reply-panel .editor').data('editor');
+            var editor = $('.reply-panel .editor').data('editor');
             var content = editor.codemirror.getValue();
             if (!content) {
                 alert('回复不可为空');
                 return;
             }
-            imweb.ajax.post('/' + topicId + '/reply',{
+            imweb.ajax.post('/' + me.kind + '/' + me.parentId + '/reply',{
                 data: {
                     content: content
                 }
@@ -197,7 +201,7 @@ define([
                     $(".reply-panel").removeClass("hide");
                     me.replyListAppend(data.data.reply);
                     editor.codemirror.setValue('');
-                    $('.topic-reply-count').html(data.data.topic.reply_count);
+                    $('.reply-count').html(data.data.reply_count);
                 }
             }).fail(imweb.ajax.fail);
         },
@@ -209,16 +213,15 @@ define([
             var $ele = $(e.target);
             var $reply = $ele.closest('.reply-item');
             var $subReplyList = $reply.find('.sub-reply-list');
-            var editor = $reply.find('.editor').data('editor');
             var $subCount = $reply.find('.sub-count');
-            var topicId = imweb.topic.id;
             var replyId = $reply.data('replyId');
-            var content = editor.codemirror.getValue();
+            var $editor = $reply.find('.editor');
+            var content = $editor.data('editor').codemirror.getValue() || $editor.val();
             if (!content) {
                 alert('回复不可为空');
                 return;
             }
-            imweb.ajax.post('/' + topicId + '/reply',{
+            imweb.ajax.post('/' + me.kind + '/' +  me.parentId + '/reply',{
                 data: {
                     reply_id: replyId,
                     content: content
@@ -227,8 +230,8 @@ define([
                 if (data.ret === 0) {
                     me.subReplyListAppend($subReplyList, data.data.reply);
                     $subCount.text(parseInt($subCount.text())+1);
-                    editor.codemirror.setValue('');
-                    $('.topic-reply-count').html(data.data.topic.reply_count);
+                    $editor.data('editor').codemirror.setValue('');
+                    $('.reply-count').html(data.data.reply_count);
                 }
             }).fail(imweb.ajax.fail);
         },
@@ -246,12 +249,12 @@ define([
             imweb.ajax.post('/reply/' + replyId + '/delete', {
                 data: {
                     reply_id: replyId,
-                    topic_id: imweb.topic.id
+                    parent_id: me.parentId
                 }
             }).done(function(data) {
                 if (data.ret === 0) {
                     $reply.remove();
-                    $('.topic-reply-count').html(data.reply_count);
+                    $('.reply-count').html(data.reply_count);
                 } else {
                     alert(data.msg || '');
                 }

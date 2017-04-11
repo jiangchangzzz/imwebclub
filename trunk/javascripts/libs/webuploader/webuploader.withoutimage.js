@@ -4034,7 +4034,7 @@
                     opts = me.options,
                     lable = $(document.createElement('label')),
                     input = $(document.createElement('input')),
-                    arr, i, len, mouseHandler;
+                    arr, i, len, mouseHandler, changeHandler;
 
                 input.attr('type', 'file');
                 input.attr('name', opts.name);
@@ -4075,23 +4075,22 @@
                     owner.trigger(e.type);
                 };
 
-                input.on('change', function (e) {
-                    var fn = arguments.callee,
-                        clone;
+                changeHandler = function (e){
+                  me.files = e.target.files;
 
-                    me.files = e.target.files;
+                  // reset input
+                  var clone = this.cloneNode(true);
+                  clone.value = null;
+                  this.parentNode.replaceChild(clone, this);
 
-                    // reset input
-                    clone = this.cloneNode(true);
-                    clone.value = null;
-                    this.parentNode.replaceChild(clone, this);
+                  input.off();
+                  input = $(clone).on('change', changeHandler)
+                          .on('mouseenter mouseleave', mouseHandler);
 
-                    input.off();
-                    input = $(clone).on('change', fn)
-                            .on('mouseenter mouseleave', mouseHandler);
+                  owner.trigger('change');
+                };
 
-                    owner.trigger('change');
-                });
+                input.on('change', changeHandler);
 
                 lable.on('mouseenter mouseleave', mouseHandler);
 

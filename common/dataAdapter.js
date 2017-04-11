@@ -61,6 +61,26 @@ exports.outReply = function(reply) {
 exports.outUser = function(user) {
     //如果没有gravatar头像，则用默认
     var avatar = user.avatar;
+    if(!avatar){
+      avatar = '//gravatar.com/avatar/' + utility.md5(user.email.toLowerCase()) + '?size=48';
+
+      // www.gravatar.com 被墙
+      //url = url.replace('//www.gravatar.com', '//gravatar.com');
+      // 让协议自适应 protocol
+      if (avatar.indexOf('http:') === 0) {
+          avatar = avatar.slice(5);
+      }
+
+      //如果没有gravatar头像，则用默认
+      if(avatar.indexOf("gravatar.com") >=0 && avatar.indexOf("d=retro") < 0){
+          avatar += "&d=retro";
+      }
+      // 如果是 github 的头像，则限制大小
+      if (avatar.indexOf('githubusercontent') !== -1) {
+          avatar += '&s=120';
+      }
+    }
+
     if (avatar
         && avatar.indexOf("gravatar.com") >= 0
         && avatar.indexOf("d=retro") < 0
@@ -134,21 +154,45 @@ exports.outDraft = function(item, options) {
 
 exports.outActivity = function(activity) {
   var out = {
+    id: activity._id.toString(),
     title: activity.title,
     content: activity.content,
     begin_time: activity.begin_time,
     begin_str: activity.begin_str,
     end_time: activity.end_time,
     end_str: activity.end_str,
-    location_str: activity.location_str
+    location_str: activity.location_str,
+    pic: activity.pic
   }
   var now_time = (new Date()).getTime();
-  if(now_time < begin_time){
+  if(now_time < activity.begin_time){
     out.status = '活动未开始';
-  }else if(now_time > end_time){
+  }else if(now_time > activity.end_time){
     out.status = '活动已结束';
   }else{
     out.status = '活动进行中';
   }
+  return out;
+}
+
+exports.outQuestion = function(question){
+  var out = {
+    id: question._id.toString(),
+    tab: question.tab,
+    tabName: render_helper.tabName(question.tab),
+    author: question.author,
+    friendly_create_at: tools.formatDate(question.create_at, true),
+    friendly_update_at: tools.formatDate(question.update_at, true),
+    title: question.title,
+    content: question.content,
+    reply_count: question.reply_count,
+    visit_count: question.visit_count,
+    solved: !!question.answer_id,
+    last_reply: question.last_reply,
+    last_reply_at: question.last_reply_at,
+    friendly_last_reply_at: tools.formatDate(question.last_reply_at, true),
+    replies: question.replies,
+    reply_up_threshold: question.reply_up_threshold
+  };
   return out;
 }
