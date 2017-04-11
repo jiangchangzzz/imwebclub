@@ -7,8 +7,8 @@ import '../../javascripts/common/reply.js';
 
 $(document).ready(function(){
     var me = window.replyAction;
-    me.initReplyList();
-    me.initEditor($('.topic-reply-panel .editor'));
+    me.initReplyList('topic', imweb.topic.id, imweb.topic.author, imweb.topic.replies);
+    me.initEditor('.reply-panel .editor');
     $('.reply-submit').click(_.bind(me.replySubmit, me));
     $('#content').on(
         'click',

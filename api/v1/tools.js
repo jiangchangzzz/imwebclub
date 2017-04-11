@@ -7,7 +7,7 @@ var accesstoken = function (req, res, next) {
   res.send({
     success: true,
     loginname: req.user.loginname,
-    avatar_url: req.user.avatar_url,
+    avatar: req.user.avatar,
     id: req.user.id
   });
 };

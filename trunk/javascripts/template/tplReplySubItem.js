@@ -9,7 +9,8 @@
         it = it || {};
         var _$out_ = [];
         var reply = it.reply;
-        _$out_.push('<li class="sub-reply-item" data-reply-id="', reply.id, '"> <span class=\'content-wrap\'> ', reply.text, ' </span> <span class="minus">–</span> <a href="javascript:void(0);" title="', reply.author.loginname, '" class="user-url user-slider-btn" data-name="', reply.author.loginname, '">', reply.author.loginname, '</a> ');
+        var name = reply.author.name || reply.author.loginname;
+        _$out_.push('<li class="sub-reply-item" data-reply-id="', reply.id, '"> <span class=\'content-wrap\'> ', reply.text, ' </span> <span class="minus">–</span> <a href="javascript:void(0);" title="', name, '" class="user-url user-slider-btn" data-name="', name, '">', name, '</a> ');
         if (it.isAdmin || it.isAuthor || it.isTopicAuthor) {
             _$out_.push(' <span class="act delete-reply"><i class="fa fa-trash" title="删除"></i></span> ');
         }

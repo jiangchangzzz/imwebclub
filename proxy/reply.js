@@ -56,12 +56,12 @@ exports.getReplyById = function (id, callback) {
 };
 
 /**
- * 根据topicId查询到最新的一条未删除回复
- * @param topicId 主题ID
+ * 根据parentId查询到最新的一条未删除回复
+ * @param parentId 主题ID
  * @param callback 回调函数
  */
-exports.getLastReplyByTopId = function (topicId, callback) {
-  Reply.find({topic_id: topicId, deleted: false}, '_id', {sort: {create_at : -1}, limit : 1}, callback);
+exports.getLastReplyByParentId = function (parentId, callback) {
+  Reply.find({parent_id: parentId, deleted: false}, '_id', {sort: {create_at : -1}, limit : 1}, callback);
 };
 
 /**
@@ -72,25 +72,26 @@ exports.getLastReplyByTopId = function (topicId, callback) {
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getRepliesByTopicId = function (id, cb) {
-  Reply.find({topic_id: id}, '', {sort: 'create_at'}, function (err, replies) {
+exports.getRepliesByParentId = function (parentId, callback) {
+  Reply.find({parent_id: parentId}, '', {sort: 'create_at'}, function (err, replies) {
+    //console.log(replies);
     if (err) {
-      return cb(err);
+      return callback(err);
     }
     if (replies.length === 0) {
-      return cb(null, []);
+      return callback(null, []);
     }
 
     var proxy = new EventProxy();
     proxy.after('reply_find', replies.length, function () {
-      cb(null, replies);
+      callback(null, replies);
     });
     for (var j = 0; j < replies.length; j++) {
       (function (i) {
         var author_id = replies[i].author_id;
         User.getUserById(author_id, function (err, author) {
           if (err) {
-            return cb(err);
+            return callback(err);
           }
           // console.log(author);
           replies[i].author = author || { _id: '' };
@@ -100,7 +101,7 @@ exports.getRepliesByTopicId = function (id, cb) {
           }
           at.linkUsers(replies[i].content, function (err, str) {
             if (err) {
-              return cb(err);
+              return callback(err);
             }
             replies[i].content = str;
             proxy.emit('reply_find');
@@ -114,21 +115,22 @@ exports.getRepliesByTopicId = function (id, cb) {
 /**
  * 创建并保存一条回复信息
  * @param {String} raw 回复内容markdown
- * @param {String} topicId 主题ID
+ * @param {String} parentId 主题ID
  * @param {String} authorId 回复作者
  * @param {String} [replyId] 回复ID，当二级回复时设定该值
  * @param {Function} callback 回调函数
  */
-exports.newAndSave = function (raw, topicId, authorId, replyId, callback) {
+exports.newAndSave = function (kind ,raw, parentId, authorId, replyId, callback) {
     if (typeof replyId === 'function') {
         callback = replyId;
         replyId = null;
     }
     var reply = new Reply();
+    reply.kind = kind;
     reply.raw = raw;
     reply.content = renderHelper.markdownRender(raw);
     reply.text = tools.genReplyText(reply.content);
-    reply.topic_id = topicId;
+    reply.parent_id = parentId;
     reply.author_id = authorId;
     if (replyId) {
         reply.reply_id = replyId;
@@ -179,7 +181,7 @@ exports.queryAuthorReply = function(authorId, beforeTime, limit, callback) {
             $lt: beforeTime
         }
     })
-    .populate('topic_id')
+    .populate('parent_id')
     .sort('-create_at')
     .limit(limit)
     .exec(callback);
@@ -201,8 +203,8 @@ exports.replyList2 = function(callback) {
 /**
  * 获取文章评论数
  */
-exports.getTopicReplyCount = function(topicId, callback) {
-    Reply.count({topic_id: topicId}, callback);
+exports.getParentReplyCount = function(parentId, callback) {
+    Reply.count({parent_id: parentId}, callback);
 };
 
 /**

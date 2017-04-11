@@ -53,20 +53,37 @@ exports.index = function (req, res, next) {
   if (question_id.length !== 24) {
     return res.render404('此话题不存在或已被删除。');
   }
-  var events = ['question', 'other_questions', 'no_reply_questions', 'is_collect'];
+  var events = ['question', 'tops'];
   var ep = EventProxy.create(events,
-    function (question, other_questions, no_reply_questions, is_collect) {
+    function (question, tops) {
+      //console.log(tops);
       res.render('question/index', {
-        question: question,
-        author_other_questions: other_questions,
-        no_reply_questions: no_reply_questions,
+        active: 'question',
+        question: dataAdapter.outQuestion(question),
+        tops: tops,
         is_uped: isUped,
-        is_collect: is_collect,
         tabs: config.tabs
       });
     });
 
   ep.fail(next);
+
+  // 取排行榜上的用户
+  cache.get('tops', ep.done(function (tops) {
+    if (tops) {
+      ep.emit('tops', tops);
+    } else {
+      User.getUsersByQuery(
+        { is_block: false },
+        { limit: 10, sort: '-score' },
+        ep.done('tops', function (tops) {
+          cache.set('tops', tops, 60 * 1);
+          return tops;
+        })
+      );
+    }
+  }));
+  // END 取排行榜上的用户
 
   Question.getFullQuestion(question_id, ep.done(function (message, question, author, replies) {
     if (message) {
@@ -77,12 +94,7 @@ exports.index = function (req, res, next) {
     question.visit_count += 1;
     question.save();
 
-    // format date
-    question.friendly_create_at = tools.formatDate(question.create_at, true);
-    question.friendly_update_at = tools.formatDate(question.update_at, true);
-
     question.author = author;
-
     var mainReplies = dataAdapter.appendSubRepliesToReplies(replies);
     question.replies = dataAdapter.outReplies(mainReplies);
 
@@ -101,31 +113,12 @@ exports.index = function (req, res, next) {
     })();
 
     ep.emit('question', question);
-
-    // get other_questions
-    var options = { limit: 5, sort: '-last_reply_at' };
-    var query = { author_id: question.author_id, _id: { '$nin': [question._id] } };
-    Question.getQuestionsByQuery(query, options, ep.done('other_questions'));
-
-    // get no_reply_questions
-    cache.get('no_reply_questions', ep.done(function (no_reply_questions) {
-      if (no_reply_questions) {
-        ep.emit('no_reply_questions', no_reply_questions);
-      } else {
-        Question.getQuestionsByQuery(
-          { reply_count: 0, tab: { $ne: 'job' } },
-          { limit: 5, sort: '-create_at' },
-          ep.done('no_reply_questions', function (no_reply_questions) {
-            cache.set('no_reply_questions', no_reply_questions, 60 * 1);
-            return no_reply_questions;
-          }));
-      }
-    }));
   }));
 };
 
 exports.create = function (req, res, next) {
   res.render('question/edit', {
+    active: 'question',
     tabs: config.tabs
   });
 };
@@ -219,11 +212,11 @@ exports.list = function (req, res, next) {
     }
   }));
   // END 取排行榜上的用户
+
   var tabs = [['all', '全部']].concat(config.tabs);
   var tabName = renderHelper.tabName(tab);
 
-  proxy.all('questions', 'pages', 'tops',
-    function (questions, pages, tops) {
+  proxy.all('questions', 'pages', 'tops', function (questions, pages, tops) {
       res.render('question/list', {
         active: 'question',
         questions: questions,
@@ -240,7 +233,7 @@ exports.list = function (req, res, next) {
 }
 
 exports.showEdit = function (req, res, next) {
-  var question_id = req.params.tid;
+  var question_id = req.params.qid;
 
   Question.getQuestionById(question_id, function (err, question, tags) {
     if (!question) {
@@ -250,6 +243,7 @@ exports.showEdit = function (req, res, next) {
 
     if (String(question.author_id) === String(req.session.user._id) || req.session.user.is_admin) {
       res.render('question/edit', {
+        active: 'question',
         action: 'edit',
         question_id: question._id,
         title: question.title,
@@ -265,7 +259,7 @@ exports.showEdit = function (req, res, next) {
 
 exports.update = function (req, res, next) {
     var json = req.body.json === 'true';
-    var question_id = req.params.tid;
+    var question_id = req.params.qid;
     var title = escapeHtml(validator.trim(req.body.title));
     var tab = validator.escape(validator.trim(req.body.tab));
     var content = validator.trim(req.body.content || req.body.t_content);
@@ -280,8 +274,7 @@ exports.update = function (req, res, next) {
                 data: dataAdapter.outQuestion(question)
             });
         } else {
-            //res.redirect('/question/' + question._id);
-            res.redirect('/');
+            res.redirect('/question/' + question._id);
         }
     });
     ep.on('fail', function(msg, question) {
@@ -314,15 +307,16 @@ exports.update = function (req, res, next) {
         var allTabs = config.tabs.map(function (tPair) {
             return tPair[0];
         });
-        if (!config.regExps.questionTitle.test(title)
+        /*if (!config.regExps.questionTitle.test(title)
             || !config.regExps.questionContent.test(content)
             || !_.contains(allTabs, tab)
         ) {
             return ep.emit('fail', 'param error', question);
-        }
+        }*/
         question.title = title;
         question.content = content;
-        question.summary = html_encode(tools.genQuestionSummary(content, config.question_summary_len));
+        question.pic = tools.genPicFromContent(content);
+        question.summary = tools.genSummaryFromContent(content, config.question_summary_len);
         question.tab = tab;
         question.update_at = new Date();
         question.save(ep.done(function() {

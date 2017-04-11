@@ -201,7 +201,7 @@ exports.reduceCount = function (id, callback) {
     }
     activity.reply_count -= 1;
 
-    Reply.getLastReplyByTopId(id, function (err, reply) {
+    Reply.getLastReplyByParentId(id, function (err, reply) {
       if (err) {
         return callback(err);
       }

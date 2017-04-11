@@ -21,20 +21,17 @@
         <% } %>
         <%
             var $post;
-            var $question_id;
             if (typeof(action) !== 'undefined' && action === 'edit') {
               $post = '/question/' + question_id + '/edit';
-              $question_id = question_id;
             } else {
               $post = '/question/create';
-              $question_id = '';
             }
         %>
           <form id='create_question_form' action='<%= $post %>' method='post'>
             <div id="activity_create_warn"></div>
             <div class="control-group">
               <label class="control-label" for="title">活动标题：</label>
-              <input type="text" name="title" id="title">
+              <input type="text" name="title" id="title" value="<%= title %>"/>
             </div>
             <div class="control-group">
                 <label class="control-label" for="tab-value">选择版块：</label>
@@ -42,15 +39,14 @@
                   <% tabs.forEach(function (pair) {
                       var value = pair[0];
                       var text = pair[1]; %>
-                      <option value="<%= value %>" <%= typeof(tabValue) !== 'undefined' && tabValue === value ? 'selected': '' %>><%= text %></option>
-                      &nbsp;&nbsp;&nbsp;
+                      <option value="<%= value %>" <%= typeof(tab) !== 'undefined' && tab === value ? 'selected': '' %>><%= text %></option>
                   <% }) %>
                 </select>
               </div>
               <div class="control-group">
                   <div class='markdown_editor in_editor'>
                       <div class='markdown_in_editor'>
-                          <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= typeof(content_from_marktang) !== 'undefined' && content_from_marktang || '' %></textarea>
+                          <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= content %></textarea>
                       </div>
                   </div>
               </div>

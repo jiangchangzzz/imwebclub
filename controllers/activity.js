@@ -65,6 +65,7 @@ exports.index = function (req, res, next) {
   var ep = EventProxy.create(events,
     function (activity, is_collect) {
       res.render('activity/index', {
+        active: 'activity',
         activity: activity,
         is_uped: isUped,
         is_collect: is_collect,
@@ -111,6 +112,7 @@ exports.index = function (req, res, next) {
 
 exports.create = function (req, res, next) {
   res.render('activity/edit',{
+    active: 'activity',
     tabs: config.activityTabs,
     tabValue: 'imweb'
   });

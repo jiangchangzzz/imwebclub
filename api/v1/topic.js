@@ -41,7 +41,7 @@ var index = function (req, res, next) {
         if (mdrender) {
           topic.content = renderHelper.markdown(at.linkUsers(topic.content));
         }
-        topic.author = _.pick(author, ['loginname', 'avatar_url']);
+        topic.author = _.pick(author, ['loginname', 'avatar']);
         ep.emit('author');
       }));
     });
@@ -83,13 +83,13 @@ var show = function (req, res, next) {
     if (mdrender) {
       topic.content = renderHelper.markdown(at.linkUsers(topic.content));
     }
-    topic.author = _.pick(author, ['loginname', 'avatar_url']);
+    topic.author = _.pick(author, ['loginname', 'avatar']);
 
     topic.replies = replies.map(function (reply) {
       if (mdrender) {
         reply.content = renderHelper.markdown(at.linkUsers(reply.content));
       }
-      reply.author = _.pick(reply.author, ['loginname', 'avatar_url']);
+      reply.author = _.pick(reply.author, ['loginname', 'avatar']);
       reply = _.pick(reply, ['id', 'author', 'content', 'ups', 'create_at', 'reply_id']);
       reply.reply_id = reply.reply_id || null;
       return reply;

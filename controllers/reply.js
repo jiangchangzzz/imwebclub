@@ -11,6 +11,7 @@ var renderHelper = require('../common/render_helper');
 
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
+var Question = require('../proxy').Question;
 var Reply = require('../proxy').Reply;
 var config = require('../config');
 
@@ -19,7 +20,8 @@ var config = require('../config');
  */
 exports.add = function (req, res, next) {
     var raw = (req.body.r_content || req.body.content || '').trim();
-    var topic_id = req.params.topic_id;
+    var kind = req.params.kind.toLowerCase();
+    var parent_id = req.params.parent_id;
     var reply_id = req.body.reply_id || null;
 
     var ep = EventProxy.create();
@@ -36,15 +38,38 @@ exports.add = function (req, res, next) {
         return ep.emit('fail', 401, '回复内容不能为空！');
     }
 
-    Topic.getTopic(topic_id, ep.doneLater(function (topic) {
-        if (!topic) {
-            return ep.emit('fail', 402);
-        }
-        User.getUserById(topic.author_id, ep.done(function(author) {
-            topic.author = author;
-            ep.emit('topic', topic);
+    switch(kind){
+      case 'topic':
+        Topic.getTopic(parent_id, ep.doneLater(function (topic) {
+            if (!topic) {
+                return ep.emit('fail', 402);
+            } else{
+              User.getUserById(topic.author_id, ep.done(function(author) {
+                  topic.author = author;
+                  ep.emit('parent', topic);
+              }));
+            }
         }));
-    }));
+        break;
+      case 'question':
+        Question.getQuestion(parent_id, ep.doneLater(function (question) {
+            if (!question) {
+                return ep.emit('fail', 402);
+            } else{
+              User.getUserById(question.author_id, ep.done(function(author) {
+                  question.author = author;
+                  ep.emit('parent', question);
+              }));
+            }
+        }));
+        break;
+      case 'activity':
+        break;
+      default:
+        ep.emit('fail', 402);
+        break;
+    }
+
 
     if (reply_id) {
         Reply.getReplyById(reply_id, ep.doneLater(function(parentReply) {
@@ -65,47 +90,43 @@ exports.add = function (req, res, next) {
     }));
 
     ep.all(
-        'topic', 'user', 'parent_reply',
-        function (topic, user, pReply) {
-            Reply.newAndSave(
-                raw, topic_id, user._id, reply_id,
-                ep.done('reply_saved')
-            );
+        'parent', 'user', 'parent_reply',
+        function (parent, user, pReply) {
+            Reply.newAndSave(kind, raw, parent_id, user._id, reply_id, ep.done('reply_saved'));
         }
     );
 
-    ep.all('topic', 'user', 'parent_reply', 'reply_saved',
-        function(topic, user, pReply, reply) {
-        Reply.getTopicReplyCount(topic._id, ep.done(function(count) {
-            topic.last_reply = reply._id;
-            topic.last_reply_at = Date.now();
-            topic.reply_count = count;
-            topic.save(ep.done('topic_updated'));
+    ep.all('parent', 'user', 'parent_reply', 'reply_saved', function(parent, user, pReply, reply) {
+        Reply.getParentReplyCount(parent._id, ep.done(function(count) {
+            parent.last_reply = reply._id;
+            parent.last_reply_at = Date.now();
+            parent.reply_count = count;
+            parent.save(ep.done('parent_updated'));
         }));
         Reply.getAuthorReplyCount(user._id, ep.done(function(count) {
             user.score += 5;
             user.reply_count = count;
             user.save(ep.done('user_updated'));
         }));
-
+        console.log(reply);
         // 发送at消息，并防止重复 at 作者
-        var newContent = reply.content.replace('@' + topic.author.loginname + ' ', '');
-        at.sendMessageToMentionUsers(newContent, topic._id, user._id, reply._id);
+        var newContent = reply.content.replace('@' + parent.author.loginname + ' ', '');
+        at.sendMessageToMentionUsers(newContent, parent._id, user._id, reply._id);
 
-        if (topic.author_id.toString() !== user._id.toString()) {
+        if (parent.author_id.toString() !== user._id.toString()) {
             if (!pReply) {
                 // 一级评论给文章作者
                 message.sendReplyMessage(
-                    topic.author_id, user._id, topic._id, reply._id
+                    parent.author_id, user._id, parent._id, reply._id
                 );
-                mail.sendReplyMail(topic, topic.author, reply, user);
+                mail.sendReplyMail(parent, parent.author, reply, user);
             } else {
                 // 二级评论给文章作者
                 message.sendReplyMessage(
-                    topic.author_id, user._id, topic._id, reply._id
+                    parent.author_id, user._id, parent._id, reply._id
                 );
                 mail.sendSubReplyMail(
-                    topic, topic.author, pReply, pReply.author, reply, user
+                    parent, parent.author, pReply, pReply.author, reply, user
                 );
             }
         }
@@ -115,7 +136,7 @@ exports.add = function (req, res, next) {
         wechatShowContent = (wechatShowContent.length <= 10) ? wechatShowContent : wechatShowContent.substring(0, 15) + '...';
         if (pReply
             && pReply.author._id.toString() !== user._id.toString()
-            && pReply.author._id.toString() !== topic.author_id.toString()
+            && pReply.author._id.toString() !== parent.author_id.toString()
         ) {
             message.sendReplyMessage(
                pReply.author._id, user._id, topic._id, reply._id
@@ -127,16 +148,14 @@ exports.add = function (req, res, next) {
     });
 
     ep.all(
-        'topic', 'user', 'reply_saved', 'topic_updated', 'user_updated',
+        'parent', 'user', 'reply_saved', 'parent_updated', 'user_updated',
         function(topic, user, reply) {
             reply.author = user;
             res.send({
                 ret: 0,
                 data: {
                     reply: dataAdapter.outReply(reply),
-                    topic: {
-                        reply_count: topic.reply_count
-                    },
+                    reply_count: topic.reply_count,
                     user: {
                         score: user.score,
                         reply_count: user.reply_count
@@ -152,8 +171,9 @@ exports.add = function (req, res, next) {
  */
 exports.delete = function (req, res, next) {
   var reply_id = req.body.reply_id;
-  var topic_id = req.body.topic_id;
+  var parent_id = req.body.parent_id;
   var ep = EventProxy.create();
+  var kind;
   ep.fail(next);
   ep.on('fail', function(ret, msg) {
     ep.unbind();
@@ -180,13 +200,28 @@ exports.delete = function (req, res, next) {
     } else {
         ep.emitLater('parent_reply', null);
     }
-    Topic.getTopicById(reply.topic_id, ep.done(function(topic, author) {
-       ep.emit('topic_author', author);
-    }));
+    kind = reply.kind;
+    switch(kind){
+      case 'topic':
+        Topic.getTopicById(reply.parent_id, ep.done(function(topic, author) {
+           ep.emit('parent_author', author);
+        }));
+        break;
+      case 'question':
+        Question.getQuestionById(reply.parent_id, ep.doneLater(function (question, author) {
+            ep.emit('parent_author', author);
+        }));
+        break;
+      case 'activity':
+        break;
+      default:
+        ep.emit('fail', 402);
+        break;
+    }
   });
   ep.all(
-    'reply', 'parent_reply', 'topic_author',
-    function(reply, parent_reply, topic_author) {
+    'reply', 'parent_reply', 'parent_author',
+    function(reply, parent_reply, parent_author) {
         var user = req.session.user;
         var hasPermission = user.is_admin
             // 评论者
@@ -194,7 +229,7 @@ exports.delete = function (req, res, next) {
             // 一级评论者
             || (parent_reply && tools.modelEqual(parent_reply.author, user))
             // 文章作者
-            || tools.modelEqual(topic_author, user);
+            || tools.modelEqual(parent_author, user);
         if (!hasPermission) {
             return ep.emit('fail', 404, 'no permission');
         }
@@ -206,18 +241,50 @@ exports.delete = function (req, res, next) {
           // 删除所有子评论
           Reply.removeByCondition({reply_id: reply_id});
         }
-        Topic.reduceCount(reply.topic_id, function(){
-          ep.emit('delete');
-        });
+        switch(kind){
+          case 'topic':
+            Topic.reduceCount(reply.parent_id, function(){
+              ep.emit('delete');
+            });
+            break;
+          case 'question':
+            Question.reduceCount(reply.parent_id, function(){
+              ep.emit('delete');
+            });
+            break;
+          case 'activity':
+            break;
+          default:
+            ep.emit('fail', 402);
+            break;
+        }
     }
   );
   ep.all('delete',function(){
-    Topic.getTopic(topic_id, ep.doneLater(function (topic) {
-        if (!topic) {
-            return ep.emit('fail', 402);
-        }
-        ep.emit('done', topic);
-    }));
+    switch(kind){
+      case 'topic':
+        Topic.getTopic(parent_id, ep.doneLater(function (topic) {
+            if (!topic) {
+                return ep.emit('fail', 402);
+            }
+            ep.emit('done', topic);
+        }));
+        break;
+      case 'question':
+        Question.getQuestion(parent_id, ep.doneLater(function (question) {
+            if (!question) {
+                return ep.emit('fail', 402);
+            }
+            ep.emit('done', question);
+        }));
+        break;
+      case 'activity':
+        break;
+      default:
+        ep.emit('fail', 402);
+        break;
+    }
+
   });
 };
 
@@ -264,7 +331,7 @@ exports.update = function (req, res, next) {
               if (err) {
                 return next(err);
               }
-              res.redirect('/topic/' + reply.topic_id + '#' + reply._id);
+              res.redirect('/topic/' + reply.parent_id + '#' + reply._id);
           });
       } else {
         res.render('notify/notify', {error: '回复的字数太少。'});

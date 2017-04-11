@@ -154,7 +154,7 @@ exports.getFullTopic = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByTopicId(topic._id, proxy.done('replies'));
+    Reply.getRepliesByParentId(topic._id, proxy.done('replies'));
   }));
 };
 
@@ -201,7 +201,7 @@ exports.reduceCount = function (id, callback) {
     }
     topic.reply_count -= 1;
 
-    Reply.getLastReplyByTopId(id, function (err, reply) {
+    Reply.getLastReplyByParentId(id, function (err, reply) {
       if (err) {
         return callback(err);
       }

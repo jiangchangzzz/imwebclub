@@ -20,6 +20,7 @@ var QuestionSchema = new Schema({
   collect_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  answer_id: { type: ObjectId },
   last_reply: { type: ObjectId },
   last_reply_at: { type: Date, default: Date.now },
   content_is_html: { type: Boolean },

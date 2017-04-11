@@ -6,6 +6,7 @@ var utility   = require('utility');
 var _ = require('lodash');
 
 var UserSchema = new Schema({
+  roles: { type: Array },
   name: { type: String},
   loginname: { type: String},
   pass: { type: String },
@@ -59,26 +60,6 @@ var UserSchema = new Schema({
 });
 
 UserSchema.plugin(BaseModel);
-UserSchema.virtual('avatar_url').get(function () {
-    var url = this.avatar || ('//gravatar.com/avatar/' + utility.md5(this.email.toLowerCase()) + '?size=48');
-
-    // www.gravatar.com 被墙
-    url = url.replace('//www.gravatar.com', '//gravatar.com');
-    // 让协议自适应 protocol
-    if (url.indexOf('http:') === 0) {
-        url = url.slice(5);
-    }
-
-    //如果没有gravatar头像，则用默认
-    if(url.indexOf("gravatar.com") >=0 && url.indexOf("d=retro") < 0){
-        url += "&d=retro";
-    }
-    // 如果是 github 的头像，则限制大小
-    if (url.indexOf('githubusercontent') !== -1) {
-        url += '&s=120';
-    }
-    return url;
-});
 
 UserSchema.virtual('isAdvanced').get(function () {
   // 积分高于 700 则认为是高级用户

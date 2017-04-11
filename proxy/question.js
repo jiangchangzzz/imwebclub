@@ -151,7 +151,7 @@ exports.getFullQuestion = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByTopicId(question._id, proxy.done('replies'));
+    Reply.getRepliesByParentId(question._id, proxy.done('replies'));
   }));
 };
 
@@ -198,7 +198,7 @@ exports.reduceCount = function (id, callback) {
     }
     question.reply_count -= 1;
 
-    Reply.getLastReplyByTopId(id, function (err, reply) {
+    Reply.getLastReplyByParentId(id, function (err, reply) {
       if (err) {
         return callback(err);
       }
@@ -222,6 +222,6 @@ exports.newAndSave = function (title, tab, content, authorId, callback) {
   question.tab       = tab;
   question.author_id = authorId;
   question.pic = tools.genPicFromContent(content);
-
+  question.summary = tools.genSummaryFromContent(content, config.question_summary_len);
   question.save(callback);
 };

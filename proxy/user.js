@@ -96,7 +96,7 @@ exports.getUserByNameAndKey = function (loginname, key, callback) {
   User.findOne({loginname: loginname, retrieve_key: key}, callback);
 };
 
-exports.newAndSave = function (name, loginname, pass, email, comp, comp_mail, avatar_url, active, callback) {
+exports.newAndSave = function (name, loginname, pass, email, comp, comp_mail, avatar, active, callback) {
   var user = new User();
   user.name = loginname;
   user.loginname = loginname;
@@ -104,7 +104,7 @@ exports.newAndSave = function (name, loginname, pass, email, comp, comp_mail, av
   user.email = email;
   user.company = comp;
   user.comp_mail = comp_mail;
-  user.avatar = avatar_url;
+  user.avatar = avatar;
   user.active = active || false;
   user.accessToken = uuid.v4();
 
@@ -125,10 +125,10 @@ exports.newAndSaveWithAll = function (userInfo, callback) {
   user.loginname = userInfo.loginname;
   user.pass = userInfo.pass;
   user.email = userInfo.email;
-  user.company = userInfo.company; 
-  user.team = userInfo.team; 
-  user.avatar = userInfo.avatar_url;
-  user.active = userInfo.active || false; 
+  user.company = userInfo.company;
+  user.team = userInfo.team;
+  user.avatar = userInfo.avatar;
+  user.active = userInfo.active || false;
   user.accessToken = uuid.v4();
   user.save(function(err) {
     callback(err, user);
@@ -164,8 +164,8 @@ exports.getFollowUser = function(followUser=[], callback) {
         id,
         loginname: user.loginname,
         score: user.score,
-        avatar_url: user.avatar_url,
-      }) 
+        avatar: user.avatar,
+      })
     }));
   })
 }

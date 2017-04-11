@@ -61,8 +61,8 @@
 
     <div id='content'>
       <div class='panel'>
-        <div class="topic-info">
-          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar_url  %>"  data-name="<%= topic.author.loginname %>"/>
+        <div class="detail-info">
+          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar  %>"  data-name="<%= topic.author.loginname %>"/>
           <div class="user-wrap">
             <p class="user-name user-slider-btn" data-name="<%= topic.author.loginname %>"><%= topic.author.name || topic.author.loginname%></p>
             <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= topic.friendly_create_at %></span>
@@ -73,17 +73,17 @@
               <span>浏览</span>
             </li>
             <li>
-              <p class="topic-reply-count"><%= topic.reply_count %> </p>
+              <p class="reply-count"><%= topic.reply_count %> </p>
               <span>评论</span>
             </li>
             <li>
-              <p class="topic-collect-count"><%= topic.collect_count %></p>
+              <p class="collect-count"><%= topic.collect_count %></p>
               <span>收藏</span>
             </li>
           </ul>
         </div>
-        <div class='topic_header'>
-          <h1 class="topic-title"><%- topic.title %></h1>
+        <div class='detail-header'>
+          <h1 class="detail-title"><%- topic.title %></h1>
           <%if(topic.reprint){%>
             <div class="cell-from">
               <%
@@ -121,23 +121,20 @@
             <% } %>
           </div>
         </div>
-        <div class='topic_content'>
-          <div id="topic_content" class='topic_content'>
-              <div class="markdown-text">
-                  <blockquote>
-                      <p><span style="margin-left: 10px;">本文作者：imweb <%= topic.author.name || topic.author.loginname %></span>
-                          <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/topic/<%= topic._id %>">imweb社区</a></span>
-                          <b style="margin-left: 10px;">未经同意，禁止转载</b>
-                          </p>
-                  </blockquote>
-                  <%- markdownRender(topic.linkedContent) %>
-              </div>
-
-          </div>
+        <div class='topic-content'>
+            <div class="markdown-text">
+                <blockquote>
+                    <p><span style="margin-left: 10px;">本文作者：imweb <%= topic.author.name || topic.author.loginname %></span>
+                        <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/topic/<%= topic._id %>">imweb社区</a></span>
+                        <b style="margin-left: 10px;">未经同意，禁止转载</b>
+                        </p>
+                </blockquote>
+                <%- markdownRender(topic.linkedContent) %>
+            </div>
         </div>
       </div>
       <% if (typeof(topic) !== 'undefined') { %>
-      <div class='topic-reply-panel'>
+      <div class='reply-panel'>
           <div class="editor-wrap">
               <textarea class="editor"></textarea>
           </div>
@@ -157,9 +154,9 @@
       </div>
       <% } %>
 
-      <div class="panel reply-panel <%if(topic.reply_count == 0){%>hide<% } %> clearfix">
+      <div class="panel reply-panel <%if(topic.reply_count == 0){%>hide<% } %>">
           <div class="panel-head">
-              <span class="panel-head-title"><span class="topic-reply-count"><span class="topic-reply-num"><%= topic.reply_count %></span></span>  条评论</span>
+              <span class="panel-head-title"><span class="reply-count"><%= topic.reply_count %></span>条评论</span>
           </div>
           <div class='panel-body'>
               <ul id="reply-list"></ul>
