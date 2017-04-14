@@ -19,12 +19,13 @@ define([
         /**
          * 初始化文章评论列表
          */
-        initReplyList: function(kind, parentId, parentAuthor, replies, reply_up_threshold) {
+        initReplyList: function(kind, parentId, parentAuthor, replies, reply_up_threshold, customerIcos) {
             this.kind = kind;
             this.parentId = parentId;
             this.parentAuthor = parentAuthor;
             this.replies = replies || [];
             this.reply_up_threshold = reply_up_threshold || 100;
+            this.customerIcos = customerIcos;
             this.replyListAppend(replies);
         },
         /**
@@ -78,7 +79,8 @@ define([
                     },
                     subReplies: item.subReplies || [],
                     subRepliesHTML: subRepliesHTML
-                })
+                }),
+                customerIcos: me.customerIcos
             });
 
         },

@@ -103,7 +103,7 @@ exports.add = function (req, res, next) {
             parent.reply_count = count;
             parent.save(ep.done('parent_updated'));
         }));
-        Reply.getAuthorReplyCount(user._id, ep.done(function(count) {
+        Reply.getCountByAuthorId(user._id, kind, ep.done(function(count) {
             user.score += 5;
             user.reply_count = count;
             user.save(ep.done('user_updated'));

@@ -8,15 +8,14 @@
         },
         replies: <%- inlineScript(JSON.stringify(question.replies)) %>
     };
+    imweb.answer = <%- inlineScript(JSON.stringify(answer)) %>;
 
     var RICH_META = {
         name :'<%= question.title %>',
         author :'<%= question.author.name %>',
         img : '<%= question.pic && question.pic[0] %>'||'http://imweb.io/public/images/logo-white.png'
     }
-
 </script>
-
 <div id="main" class="clearfix">
     <%- partial('common/sidebar.html',{
         tops: tops
@@ -38,6 +37,10 @@
             <li>
               <p class="reply-count"><%= question.reply_count %> </p>
               <span>评论</span>
+            </li>
+            <li>
+              <p class="collect-count"><%= question.collect_count %></p>
+              <span>收藏</span>
             </li>
           </ul>
         </div>
@@ -69,6 +72,11 @@
                      <i class="ico fa fa-lg fa-trash" title='删除'></i>
                   </a>
                   <% } %>
+                  <% if (!is_collect) { %>
+                  <span class='ico fa fa-heart-o collect-question-btn' title='收藏'></span>
+                  <% } else { %>
+                  <span class='ico fa fa-heart collect-question-btn' title='取消收藏'></span>
+                  <% } %>
               </div>
             <% } %>
           </div>
@@ -85,6 +93,30 @@
             </div>
         </div>
       </div>
+      <% if (answer) { %>
+        <div class="panel answer-panel">
+          <div class="user-area">
+              <div class="user-avatar-wrap">
+                  <a href="javascript:void(0);">
+                      <img class="avatar ui-avatar-38" src="<%= answer.author.avatar %>"/>
+                  </a>
+              </div>
+          </div>
+          <div class="tag-area">
+            答案
+          </div>
+          <div class="main-area">
+              <div class="user-url-wrap ">
+                  <a href="javascript:void(0);"><%= answer.author.name ||answer.author.loginname %></a>
+                  <span class="create-at"><%= answer.friendly_create_at%></span>
+              </div>
+              <div class="content-wrap">
+                  <%- markdownRender(answer.content) %>
+              </div>
+          </div>
+        </div>
+      <% } %>
+
       <% if (typeof(question) !== 'undefined') { %>
       <div class='reply-panel'>
           <div class="editor-wrap">

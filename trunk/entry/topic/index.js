@@ -34,21 +34,17 @@ $(document).ready(function(){
  */
 $(document).on('click', '.collect-topic-btn', function(e) {
   var $ele = $(e.target);
-  var cancelVal = $ele.data('cancel');
-  var cancel = cancelVal.toString() === 'true';
   var topicId = imweb.topic.id;
-  imweb.ajax.post('/topic/collect', {
+  imweb.ajax.post('/operate/collect', {
       data: {
-          cancel: cancel,
-          topic_id: topicId
+          kind: 'topic',
+          object_id: topicId
       }
   }).done(function(data) {
       if (data.ret === 0) {
-          cancel = !cancel;
-          $ele.attr('title', cancel ? '取消收藏' : '收藏');
-          $ele.data('cancel', cancel);
-          $ele.toggleClass('fa-heart').toggleClass('fa-heart-o');
-          $('.topic-collect-count').html(data.data.topicCollectCount);
+        $ele.toggleClass('fa-heart').toggleClass('fa-heart-o');
+        $ele.attr('title', $ele.hasClass('fa-heart') ? '取消收藏' : '收藏');
+        $('.collect-count').text(data.data.objectCollectCount);
       }
   });
 });

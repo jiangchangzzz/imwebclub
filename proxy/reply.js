@@ -1,5 +1,6 @@
 var models = require('../models');
 var Reply = models.Reply;
+var QuestionAnswer = require('./question_answer');
 var EventProxy = require('eventproxy');
 
 var tools = require('../common/tools');
@@ -83,35 +84,48 @@ exports.getRepliesByParentId = function (parentId, callback) {
     }
 
     var proxy = new EventProxy();
-    proxy.after('reply_find', replies.length, function () {
+    proxy.after('reply_ready', replies.length, function () {
       callback(null, replies);
     });
-    for (var j = 0; j < replies.length; j++) {
-      (function (i) {
-        var author_id = replies[i].author_id;
-        User.getUserById(author_id, function (err, author) {
+    replies.forEach(function (reply, i) {
+      var ep = new EventProxy();
+      var author_id = reply.author_id;
+      var reply_id = reply._id;
+      ep.all('reply_find', 'answer', function () {
+        proxy.emit('reply_ready');
+      });
+      User.getUserById(author_id, function (err, author) {
+        if (err) {
+          return callback(err);
+        }
+        // console.log(author);
+        reply.author = author || { _id: '' };
+        reply.friendly_create_at = tools.formatDate(reply.create_at, true);
+        if (reply.content_is_html) {
+          return ep.emit('reply_find');
+        }
+        at.linkUsers(reply.content, function (err, str) {
           if (err) {
             return callback(err);
           }
-          // console.log(author);
-          replies[i].author = author || { _id: '' };
-          replies[i].friendly_create_at = tools.formatDate(replies[i].create_at, true);
-          if (replies[i].content_is_html) {
-            return proxy.emit('reply_find');
-          }
-          at.linkUsers(replies[i].content, function (err, str) {
-            if (err) {
-              return callback(err);
-            }
-            replies[i].content = str;
-            proxy.emit('reply_find');
-          });
+          reply.content = str;
+          ep.emit('reply_find');
         });
-      })(j);
-    }
+      });
+      QuestionAnswer.getQuestionAnswer(parentId, reply_id, function (err, question_answer) {
+        if (err || !question_answer) {
+          reply.answer = false;
+        } else {
+          reply.answer = true;
+        }
+        return ep.emit('answer');
+      });
+    });
   });
 };
-
+exports.getParentReplyCount = function(parentId, callback) {
+    Reply.count({parent_id: parentId}, callback);
+};
 /**
  * 创建并保存一条回复信息
  * @param {String} raw 回复内容markdown
@@ -151,17 +165,25 @@ exports.update = function(reply, raw, cb) {
     reply.save(cb);
 };
 
-exports.getRepliesByAuthorId = function (authorId, opt, callback) {
+exports.getRepliesByAuthorId = function (authorId, kind, opt, callback) {
   if (!callback) {
     callback = opt;
     opt = null;
   }
-  Reply.find({author_id: authorId}, {}, opt, callback);
+  if(kind && kind !== 'all'){
+    Reply.find({author_id: authorId, kind: kind}, {}, opt, callback);
+  }else{
+    Reply.find({author_id: authorId}, {}, opt, callback);
+  }
 };
 
 // 通过 author_id 获取回复总数
-exports.getCountByAuthorId = function (authorId, callback) {
-  Reply.count({author_id: authorId}, callback);
+exports.getCountByAuthorId = function (authorId, kind, callback) {
+  if(kind && kind !== 'all'){
+    Reply.count({author_id: authorId, kind: kind}, callback);
+  } else {
+    Reply.count({author_id: authorId}, callback);
+  }
 };
 
 /**
@@ -174,13 +196,17 @@ exports.removeByCondition = function (query, callback) {
 /**
  * 查询用户某时间点之前创建的reply
  */
-exports.queryAuthorReply = function(authorId, beforeTime, limit, callback) {
-    Reply.find({
+exports.queryAuthorReply = function(authorId, kind, beforeTime, limit, callback) {
+    var query = {
         author_id: authorId,
         create_at: {
             $lt: beforeTime
         }
-    })
+    };
+    if(kind && kind !== 'all'){
+      query.kind = kind;
+    }
+    Reply.find(query)
     .populate('parent_id')
     .sort('-create_at')
     .limit(limit)
@@ -198,18 +224,4 @@ exports.replyList2 = function(callback) {
     Reply.find({}, function(err, results){
         callback && callback(results);
     });
-};
-
-/**
- * 获取文章评论数
- */
-exports.getParentReplyCount = function(parentId, callback) {
-    Reply.count({parent_id: parentId}, callback);
-};
-
-/**
- * 获取用户评论数
- */
-exports.getAuthorReplyCount = function(authorId, callback) {
-    Reply.count({author_id: authorId}, callback);
 };

@@ -2,6 +2,9 @@ var validator = require('validator');
 var at = require('../common/at');
 var User = require('../proxy').User;
 var Question = require('../proxy').Question;
+var Reply = require('../proxy').Reply;
+var QuestionAnswer = require('../proxy').QuestionAnswer;
+var UserCollect = require('../proxy').UserCollect;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var store = require('../common/store');
@@ -53,15 +56,16 @@ exports.index = function (req, res, next) {
   if (question_id.length !== 24) {
     return res.render404('此话题不存在或已被删除。');
   }
-  var events = ['question', 'tops'];
+  var events = ['question', 'tops', 'is_collect', 'answer'];
   var ep = EventProxy.create(events,
-    function (question, tops) {
-      //console.log(tops);
+    function (question, tops, is_collect, answer) {
       res.render('question/index', {
         active: 'question',
         question: dataAdapter.outQuestion(question),
+        answer: dataAdapter.outReply(answer),
         tops: tops,
         is_uped: isUped,
+        is_collect: is_collect,
         tabs: config.tabs
       });
     });
@@ -113,6 +117,25 @@ exports.index = function (req, res, next) {
     })();
 
     ep.emit('question', question);
+  }));
+
+  if (!currentUser) {
+    ep.emit('is_collect', null);
+  } else {
+    UserCollect.getUserCollect(currentUser._id, question_id, ep.done('is_collect'));
+  }
+  QuestionAnswer.getQuestionAnswer(question_id, null, ep.done(function(item) {
+      if (!item) {
+          return ep.emit('answer', null);
+      }else{
+        Reply.getReplyById(item.answer_id, ep.done(function(reply) {
+            //console.log(reply);
+            if (!reply) {
+                return ep.emit('answer', null);
+            }
+            ep.emit('answer', reply);
+        }));
+      }
   }));
 };
 
@@ -331,7 +354,7 @@ exports.delete = function (req, res, next) {
   //删除回复，回复作者reply_count减1
   //删除question_collect，用户collect_question_count减1
 
-  var question_id = req.params.tid;
+  var question_id = req.params.qid;
   var ep = tools.createJsonEventProxy(res, next);
 
   Question.getFullQuestion(question_id, function (err, err_msg, question, author, replies) {
@@ -356,4 +379,48 @@ exports.delete = function (req, res, next) {
       return ep.emit('done');
     });
   });
+};
+
+exports.answer = function (req, res, next) {
+  var question_id = req.params.qid;
+  var action = req.body.action;
+  var reply_id = req.body.reply_id;
+  var ep = tools.createJsonEventProxy(res, next);
+
+  if(action ==='set' && !reply_id){
+    return ep.emit('fail', 403, '参数不合法。');
+  }
+  Question.getQuestionById(question_id, function (err, question) {
+    if (err) {
+      return ep.emit('fail', 403, err.message);
+    }
+    if (!req.session.user.is_admin && !(question.author_id.equals(req.session.user._id))) {
+      return ep.emit('fail', 403, '无权限');
+    }
+    if (!question) {
+      return ep.emit('fail', 403, '此话题不存在或已被删除。');
+    }
+  });
+  if(action === 'set'){
+    QuestionAnswer.remove(question_id, null, function(err){
+      if (err) {
+        return res.send({ success: false, message: err.message });
+      }
+      QuestionAnswer.newAndSave(question_id, reply_id, function (err) {
+        if (err) {
+          return res.send({ success: false, message: err.message });
+        }
+        return ep.emit('done');
+      });
+    });
+  } else if(action === 'clear'){
+    QuestionAnswer.remove(question_id, reply_id, function (err) {
+      if (err) {
+        return res.send({ success: false, message: err.message });
+      }
+      return ep.emit('done');
+    });
+  }else{
+    return ep.emit('fail', 403, '参数不合法。');
+  }
 };

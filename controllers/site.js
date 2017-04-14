@@ -7,10 +7,13 @@
 
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
+var Question = require('../proxy').Question;
+var Activity = require('../proxy').Activity;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
 var xmlbuilder = require('xmlbuilder');
+var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 var _ = require('lodash');
 
@@ -37,6 +40,11 @@ exports.index = function (req, res, next) {
 
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
     return topics;
+  }));
+  Question.getQuestionsByQuery({}, options, proxy.done('questions', function (questions) {
+    return questions.map(function(item){
+      return dataAdapter.outQuestion(item);
+    });
   }));
 
   // 取排行榜上的用户
@@ -88,10 +96,11 @@ exports.index = function (req, res, next) {
   // END 取分页数据
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'tops', /**'no_reply_topics',**/ 'pages',
-    function (topics, tops,/**t no_reply_topics,**/ pages) {
+  proxy.all('topics', 'questions', 'tops', /**'no_reply_topics',**/ 'pages',
+    function (topics, questions, tops,/**t no_reply_topics,**/ pages) {
       res.render('index', {
         topics: topics,
+        questions: questions,
         current_page: page,
         list_topic_count: limit,
         tops: tops,

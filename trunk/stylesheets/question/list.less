@@ -1,5 +1,6 @@
 @card-bg: #f3f3f3;
 @card-highlight: #2fa0ef;
+@card-gray: #666;
 @shadow-color: #ddd;
 
 .tabs {
@@ -24,8 +25,20 @@
 ul.question-list {
     li {
         margin-top: 10px;
+        height: 130px;
+        overflow: hidden;
         >.fl{
           width: 65px;
+          .status{
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+            width: 56px;
+            height: 56px;
+            color: white;
+            background-color: @card-highlight;
+            border-radius: 56px;
+          }
         }
         >.main{
           margin-left: 65px;
@@ -33,16 +46,21 @@ ul.question-list {
             >.fr{
               text-align: right;
               width: 230px;
+              font-size: 12px;
               .tag{
                 color: @card-highlight;
               }
             }
             .main{
               margin-right: 230px;
+              .relative{
+                font-size: 12px;
+              }
             }
           }
           .item-body{
-            color: @shadow-color;
+            font-size: 14px;
+            color: @card-gray;
           }
         }
     }

@@ -115,11 +115,9 @@
 
             li {
                 margin: 10px 0;
-                &:hover{
-                  color: @column-highlight;
-                }
 
-                b{
+                a {
+                  font-weight: bold;
                   display: block;
                 }
                 p {
@@ -140,6 +138,8 @@
         ul.question-list {
             li.question-item {
                 border-bottom: solid 1px @column-weak;
+                height: 130px;
+                overflow: hidden;
 
                 .item-header {
                     a{
@@ -176,7 +176,7 @@
 
                     .content {
                         margin-left: 60px;
-                        padding: 10px;
+                        padding: 0 10px;
 
                         b {
                             font-size: 13px;

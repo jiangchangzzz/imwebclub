@@ -39,8 +39,12 @@ exports.outReplies = function(replies) {
 };
 
 exports.outReply = function(reply) {
+    if(!reply){
+      return null;
+    }
     var out = {
         id: reply._id,
+        answer: reply.answer,
         reply_id: reply.reply_id || null,
         content: reply.content,
         text: reply.text || '',
@@ -187,10 +191,12 @@ exports.outQuestion = function(question){
     content: question.content,
     reply_count: question.reply_count,
     visit_count: question.visit_count,
+    collect_count: question.collect_count,
     solved: !!question.answer_id,
     last_reply: question.last_reply,
     last_reply_at: question.last_reply_at,
     friendly_last_reply_at: tools.formatDate(question.last_reply_at, true),
+    answer: question.answer,
     replies: question.replies,
     reply_up_threshold: question.reply_up_threshold
   };

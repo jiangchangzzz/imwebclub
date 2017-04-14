@@ -17,6 +17,11 @@
         if (it.isAdmin || it.isAuthor || it.isParentAuthor) {
             _$out_.push('<a href="javascript:;" class="delete-reply btn-ico"><i class="fa fa-trash" title="删除"></i></a>');
         }
+        if(typeof(it.customerIcos) === 'function'){
+          _$out_.push(it.customerIcos(reply));
+        }else if(typeof(it.customerIcos) === 'string'){
+          _$out_.push(it.customerIcos);
+        }
         _$out_.push('</div> </div> <div class="content-wrap"> ', reply.content, '</div> <div class="info-area"> <div class="edit-at">', reply.friendly_edit_at, '</div> </div>');
         if (it.isLogin) {
             _$out_.push('<div class="reply-btn-area"><div class="act ups">');
