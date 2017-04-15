@@ -172,12 +172,12 @@ exports.list = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var tab = req.params.tab || 'all';
-  var sort = req.params.sort || 'default';  // 根据不同的参数决定文章排序方式
+  var solved = req.query.solved || 'all';
+  var sort = req.query.sort || 'hot';
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
     'latest': '-create_at',
-    'reply': '-reply_count',
-    'default': '-create_at'
+    'reply': '-reply_count'
   };
   var sortType = sortMap[sort] || sortMap['default'];
 
@@ -187,6 +187,11 @@ exports.list = function (req, res, next) {
   var query = {};
   if (tab && tab !== 'all') {
     query.tab = tab;
+  }
+  if(solved === 'true'){
+    query.solved = true;
+  }else if(solved === 'false'){
+    query.solved = false;
   }
   var limit = config.list_question_count;
   var options = {
@@ -249,6 +254,8 @@ exports.list = function (req, res, next) {
         pages: pages,
         tabs: tabs,
         tab: tab,
+        sort: sort,
+        solved: solved,
         base: '/question/tab/' + tab,
         pageTitle: tabName && (tabName + '活动'),
       });
@@ -400,27 +407,31 @@ exports.answer = function (req, res, next) {
     if (!question) {
       return ep.emit('fail', 403, '此话题不存在或已被删除。');
     }
-  });
-  if(action === 'set'){
-    QuestionAnswer.remove(question_id, null, function(err){
-      if (err) {
-        return res.send({ success: false, message: err.message });
-      }
-      QuestionAnswer.newAndSave(question_id, reply_id, function (err) {
+    if(action === 'set'){
+      QuestionAnswer.remove(question_id, null, function(err){
         if (err) {
           return res.send({ success: false, message: err.message });
         }
+        QuestionAnswer.newAndSave(question_id, reply_id, function (err) {
+          if (err) {
+            return res.send({ success: false, message: err.message });
+          }
+          question.solved = true;
+          question.save();
+          return ep.emit('done');
+        });
+      });
+    } else if(action === 'clear'){
+      QuestionAnswer.remove(question_id, reply_id, function (err) {
+        if (err) {
+          return res.send({ success: false, message: err.message });
+        }
+        question.solved = false;
+        question.save();
         return ep.emit('done');
       });
-    });
-  } else if(action === 'clear'){
-    QuestionAnswer.remove(question_id, reply_id, function (err) {
-      if (err) {
-        return res.send({ success: false, message: err.message });
-      }
-      return ep.emit('done');
-    });
-  }else{
-    return ep.emit('fail', 403, '参数不合法。');
-  }
+    }else{
+      return ep.emit('fail', 403, '参数不合法。');
+    }
+  });
 };

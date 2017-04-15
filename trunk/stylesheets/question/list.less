@@ -3,18 +3,18 @@
 @card-gray: #666;
 @shadow-color: #ddd;
 
-.tabs {
+.query-list {
   border-bottom: 1px solid @shadow-color;
   a{
     display: inline-block;
     padding: 3px;
     color: @card-highlight;
-    &.question-tab{
+    &.question-query{
       color: black;
       &:hover {
         color: @card-highlight;
       }
-      &.current-tab {
+      &.current-query {
         color: @card-highlight;
         border-bottom: 3px solid @card-highlight;
       }
@@ -27,6 +27,8 @@ ul.question-list {
         margin-top: 10px;
         height: 130px;
         overflow: hidden;
+        border-bottom: solid 1px @card-gray;
+
         >.fl{
           width: 65px;
           .status{
@@ -61,6 +63,10 @@ ul.question-list {
           .item-body{
             font-size: 14px;
             color: @card-gray;
+            p{
+              height: 60px;
+              overflow: hidden;
+            }
           }
         }
     }

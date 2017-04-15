@@ -11,7 +11,7 @@ var QuestionSchema = new Schema({
   content: { type: String },
   summary: { type: String },
   pic: { type: Array },
-  solve: {type: Number, default: 0}, // 0 未解决  1 已解决
+  solved: {type: Boolean, default: false},
   author_id: { type: ObjectId },
   reply_count: { type: Number, default: 0 },
   visit_count: { type: Number, default: 0 },

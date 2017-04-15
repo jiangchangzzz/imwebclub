@@ -1,10 +1,10 @@
 <div id="banner">
     <div class="inner">
-        <ul class="tag-list">
+        <ul class="tab-list">
             <% tabs.forEach(function (pair) {
                 var value = pair[0];
                 var text = pair[1]; %>
-                <li><a href="<%= value ? '/topic/tab/' + value : '/' %>" class="topic-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a></li>
+                <li class="topic-tab <%= value === tab ? 'current-tab' : '' %>"><a href="<%= value ? '/topic/tab/' + value : '/' %>"><%= text %></a></li>
             <% }) %>
         </ul>
     </div>
