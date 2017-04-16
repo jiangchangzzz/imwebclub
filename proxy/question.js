@@ -6,7 +6,7 @@ var Reply      = require('./reply');
 var tools      = require('../common/tools');
 var at         = require('../common/at');
 var _          = require('lodash');
-
+var config     = require('../config');
 
 /**
  * 根据主题ID获取主题
@@ -129,6 +129,7 @@ exports.getFullQuestion = function (id, callback) {
   var events = ['question', 'author', 'replies'];
   proxy
     .assign(events, function (question, author, replies) {
+
       callback(null, '', question, author, replies);
     })
     .fail(callback);

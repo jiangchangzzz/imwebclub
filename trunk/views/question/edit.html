@@ -20,18 +20,22 @@
         </div>
         <% } %>
         <%
-            var $post;
+            var $post,$title,$content;
             if (typeof(action) !== 'undefined' && action === 'edit') {
               $post = '/question/' + question_id + '/edit';
+              $title = title;
+              $content = content;
             } else {
               $post = '/question/create';
+              $title = '';
+              $content = '';
             }
         %>
           <form id='create_question_form' action='<%= $post %>' method='post'>
             <div id="activity_create_warn"></div>
             <div class="control-group">
               <label class="control-label" for="title">活动标题：</label>
-              <input type="text" name="title" id="title" value="<%= title %>"/>
+              <input type="text" name="title" id="title" value="<%= $title %>"/>
             </div>
             <div class="control-group">
                 <label class="control-label" for="tab-value">选择版块：</label>
@@ -46,7 +50,7 @@
               <div class="control-group">
                   <div class='markdown_editor in_editor'>
                       <div class='markdown_in_editor'>
-                          <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= content %></textarea>
+                          <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= $content %></textarea>
                       </div>
                   </div>
               </div>

@@ -11,7 +11,7 @@
         display: none;
     }
 
-    ul.tag-list {
+    ul.tab-list {
         list-style: none;
         font-size: 15px;
         margin: 0;
@@ -19,16 +19,15 @@
 
         li {
             float: left;
-            width: auto;
-            padding: 0 6px;
             // padding: 0 20px;
             display: inline-block;
-            &:hover{
+            &:hover,&.current-tab{
               background-color: @banner-bg-active;
             }
             a {
                 height: 50px;
                 display: table-cell;
+                padding: 0 6px;
                 vertical-align: middle;
             }
         }

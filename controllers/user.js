@@ -1,7 +1,7 @@
 var User         = require('../proxy').User;
 var Topic        = require('../proxy').Topic;
 var Reply        = require('../proxy').Reply;
-var TopicCollect = require('../proxy').TopicCollect;
+var UserCollect = require('../proxy').UserCollect;
 var utility      = require('utility');
 var util         = require('util');
 var TopicModel   = require('../models').Topic;
@@ -52,11 +52,11 @@ exports.index = function (req, res, next) {
     var opt = {limit: 5, sort: '-create_at'};
     Topic.getTopicsByQuery(query, opt, proxy.done('recent_topics'));
 
-    Reply.getRepliesByAuthorId(user._id, {limit: 20, sort: '-create_at'},
+    Reply.getRepliesByAuthorId(user._id, 'topic', {limit: 20, sort: '-create_at'},
       proxy.done(function (replies) {
 
         var topic_ids = replies.map(function (reply) {
-          return reply.topic_id.toString()
+          return reply.parent_id.toString()
         })
         topic_ids = _.uniq(topic_ids).slice(0, 5); //  只显示最近5条
 
@@ -188,7 +188,7 @@ exports.setting = function (req, res, next) {
 exports.addFollowUser = function(req, res, next) {
   var user_id = req.session.user.id;
   var followUser_id = req.body.followUser_id;
-  
+
   var proxy = EventProxy.create('following', 'follower', function(){
       res.send({ status: 'success' });
   });
@@ -281,7 +281,7 @@ exports.listCollectedTopics = function (req, res, next) {
       limit: limit,
     };
 
-    TopicCollect.getTopicCollectsByUserId(user._id, opt, proxy.done(function (docs) {
+    UserCollect.getUserCollectsByUserId(user._id, 'topic', opt, proxy.done(function (docs) {
       var ids = docs.map(function (doc) {
         return String(doc.topic_id)
       })
@@ -448,4 +448,3 @@ exports.deleteAll = function (req, res, next) {
     ReplyModel.update({}, {$pull: {'ups': user._id}}, {multi: true}, ep.done('del_ups'));
   }));
 };
-

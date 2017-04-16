@@ -11,21 +11,20 @@ var QuestionSchema = new Schema({
   content: { type: String },
   summary: { type: String },
   pic: { type: Array },
-  solve: {type: Number, default: 0}, // 0 未解决  1 已解决
+  solved: {type: Boolean, default: false},
   author_id: { type: ObjectId },
-  top: { type: Boolean, default: false }, // 置顶
-  good: { type: Boolean, default: false }, // 精华
   reply_count: { type: Number, default: 0 },
   visit_count: { type: Number, default: 0 },
   collect_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
-  answer_id: { type: ObjectId },
   last_reply: { type: ObjectId },
   last_reply_at: { type: Date, default: Date.now },
   content_is_html: { type: Boolean },
   // reprint: { type: String, default: '' },
-  lock: {type: Boolean, default: false}, // 被锁定主题
+  top: { type: Boolean, default: false }, // 置顶
+  good: { type: Boolean, default: false }, // 精华
+  lock: {type: Boolean, default: false}, // 锁定
   deleted: {type: Boolean, default: false},
   draft: { type: ObjectId, ref: 'Draft' } // 更新时的草稿保存
 });

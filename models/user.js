@@ -6,7 +6,6 @@ var utility   = require('utility');
 var _ = require('lodash');
 
 var UserSchema = new Schema({
-  roles: { type: Array },
   name: { type: String},
   loginname: { type: String},
   pass: { type: String },
@@ -41,7 +40,8 @@ var UserSchema = new Schema({
   is_star: { type: Boolean },
   level: { type: String },
   active: { type: Boolean, default: false },
-
+  is_admin: { type: Boolean, default: false },
+  
   receive_reply_mail: {type: Boolean, default: false },
   receive_at_mail: { type: Boolean, default: false },
   from_wp: { type: Boolean },

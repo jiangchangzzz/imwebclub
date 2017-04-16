@@ -14,6 +14,7 @@ var site = require('./controllers/site');
 var user = require('./controllers/user');
 var message = require('./controllers/message');
 var draft = require('./controllers/draft');
+var operate = require('./controllers/operate');
 var question = require('./controllers/question');
 var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
@@ -92,14 +93,8 @@ router.get('/topic/create', auth.userRequired, topic.create); //新增某话题
 router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topic', config.create_post_per_day, {showJson: false}), topic.put);
 router.get('/topic/:tid/edit', auth.userRequired, topic.showEdit);  // 编辑某话题
 router.post('/topic/:tid/edit', auth.userRequired, topic.update);
-
 router.post('/topic/:tid/delete', auth.userRequired, topic.delete);
-
 router.get('/topic/:tid', topic.index);  // 显示某个话题
-router.post('/topic/:tid/top', auth.adminRequired, topic.top);  // 将某话题置顶
-router.post('/topic/:tid/good', auth.adminRequired, topic.good); // 将某话题加精
-router.post('/topic/:tid/lock', auth.adminRequired, topic.lock); // 锁定主题，不能再回复
-router.post('/topic/collect', auth.userRequired, topic.collect); // 收藏某个话题
 router.get('/topic/tab/:tab', topic.list);
 
 // 活动
@@ -113,6 +108,11 @@ router.post('/activity/:tid/delete', auth.userRequired, activity.delete);
 router.get('/activity/:tid', activity.index);  // 显示某个话题
 router.get('/activity/tab/:tab', activity.list);
 
+// 通用操作
+router.post('/operate/top', auth.adminRequired, operate.top);  // 将某主题置顶
+router.post('/operate/good', auth.adminRequired, operate.good); // 将某主题加精
+router.post('/operate/lock', auth.adminRequired, operate.lock); // 锁定主题，不能再回复
+router.post('/operate/collect', auth.userRequired, operate.collect); // （取消）收藏某个主题
 
 // 回复
 router.post('/:kind/:parent_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
@@ -127,7 +127,7 @@ router.get('/question/create', auth.userRequired, question.create); //新增某�
 router.post('/question/create', auth.userRequired, limit.peruserperday('create_question', config.create_post_per_day, {showJson: false}), question.put);
 router.get('/question/:qid/edit', auth.userRequired, question.showEdit);  // 编辑某活动
 router.post('/question/:qid/edit', auth.userRequired, question.update);
-
+router.post('/question/:qid/answer', auth.userRequired, question.answer);
 router.post('/question/:qid/delete', auth.userRequired, question.delete);
 
 router.get('/question/:qid', question.index);  // 显示某个问答

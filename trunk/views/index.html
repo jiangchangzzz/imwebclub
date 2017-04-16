@@ -51,10 +51,8 @@
                 <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
                     <% topics.slice(0,5).forEach(function (topic, index) { %>
                         <li <% if(index === 0) { %>class="active"<% } %>>
-                            <a href="/topic/<%= topic._id %>">
-                                <b class="one-line"><%= topic.title %></b>
-                                <p><%= topic.summary || topic.content %></p>
-                            </a>
+                            <a href="/topic/<%= topic._id %>" class="one-line"><%= topic.title %></a>
+                            <p><%= topic.summary || topic.content %></p>
                         </li>
                     <%})%>
                 <% } %>
@@ -64,89 +62,48 @@
         <div id="hotQuestions" class="column">
             <div class="column-head">
                 <b>热问</b>
-                <a class="link" href="javascript:void(0);">更多</a>
+                <a class="link" href="/question/tab/all">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
                 <ul class="question-list">
-                    <li class="question-item">
-                        <div class="item-header">
-                            <a href="javascript:(0);">前端进阶之路：如何高质量完成产品需求开发</a>
-                            <div class="fr">
-                                <span class="commentCount">
-                            <img src="../images/comment.png">
-                          </span>
-                                <a class="tag">javascript</a>
-                            </div>
-                        </div>
-                        <div class="item-body">
-                            <div class="avatar">
-                                <img src="../images/avatarDefault.png">
-                            </div>
-                            <div class="content">
-                                <b>回答用户</b><span>一天前</span>
-                                <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
-                                <div class="footer">
-                                    <span class="likeCount">
-                              <img src="../images/thumb.png">173
-                            </span>
-                                    <a class="link" href="javascript:void(0);">详情</a>
+                    <% if (typeof(questions) !== 'undefined' && questions.length > 0) { %>
+                        <% questions.slice(0,5).forEach(function (question, index) { %>
+                            <li class="question-item">
+                                <div class="item-header">
+                                    <a href="/question/<%= question.id %>"><%= question.title %></a>
+                                    <div class="fr">
+                                        <span class="commentCount">
+                                    <img src="../images/comment.png">
+                                  </span>
+                                        <a class="tag"><%= question.tabName %></a>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="question-item">
-                        <div class="item-header">
-                            <a href="javascript:(0);">前端进阶之路：如何高质量完成产品需求开发</a>
-                            <div class="fr">
-                                <span class="commentCount">
-                            <img src="../images/comment.png">
-                          </span>
-                                <a class="tag">javascript</a>
-                            </div>
-                        </div>
-                        <div class="item-body">
-                            <div class="avatar">
-                                <img src="../images/avatarDefault.png">
-                            </div>
-                            <div class="content">
-                                <b>回答用户</b><span>一天前</span>
-                                <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
-                                <div class="footer">
-                                    <span class="likeCount">
-                              <img src="../images/thumb.png">173
-                            </span>
-                                    <a class="link" href="javascript:void(0);">详情</a>
+                                <div class="item-body">
+                                    <div class="avatar">
+                                        <img src="../images/avatarDefault.png">
+                                    </div>
+                                    <div class="content">
+                                        <b><%= question.author.name || question.author.loginname %></b>
+                                        <span><%= question.friendly_last_reply_at %></span>
+                                        <p class="one-line"><%= question.summary || question.content %></p>
+                                        <div class="footer">
+                                            <span class="replyCount">
+                                              <%= question.reply_count %>回复
+                                            </span>
+                                            <span class="collectCount">
+                                              <%= question.collect_count %>收藏
+                                            </span>
+                                            <span class="visitCount">
+                                              <%= question.visit_count %>浏览
+                                            </span>
+                                            <a class="link" href="/question/<%= question.id %>">详情</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="question-item">
-                        <div class="item-header">
-                            <a href="javascript:(0);">前端进阶之路：如何高质量完成产品需求开发</a>
-                            <div class="fr">
-                                <span class="commentCount">
-                            <img src="../images/comment.png">
-                          </span>
-                                <a class="tag">javascript</a>
-                            </div>
-                        </div>
-                        <div class="item-body">
-                            <div class="avatar">
-                                <img src="../images/avatarDefault.png">
-                            </div>
-                            <div class="content">
-                                <b>回答用户</b><span>一天前</span>
-                                <p>写在前面 作为一个互联网前端老鸟，这么些年下来，做过的项目也不少。从最初的我的QQ中心 、 QQ圈子 ，到后面的 QQ群项目 、 腾讯课堂 。从几个人的项目，到近百号人的项目都经历过。从几个人的项目，到近百号人的项目都经历过。</p>
-                                <div class="footer">
-                                    <span class="likeCount">
-                              <img src="../images/thumb.png">173
-                            </span>
-                                    <a class="link" href="javascript:void(0);">详情</a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                            </li>
+                        <%})%>
+                    <% } %>
                 </ul>
             </div>
         </div>

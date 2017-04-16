@@ -15,7 +15,7 @@
               /
               <span class="answerTime"><%= question.friendly_last_reply_at %>的回答</span>
             </div>
-            <span class="tag"><%= question.tab %></span>
+            <span class="tag"><%= question.tabName %></span>
         </div>
         <div class="main">
           <h4>
@@ -30,7 +30,11 @@
       </div>
       <div class="item-body">
           <p>
-            <b><%= question.content %></b>
+            <%if(question.reply){%>
+              <b>A:</b><%= question.reply.content %>
+            <%} else {%>
+              <b>Q:</b><%= question.content %>
+            <%}%>
           </p>
       </div>
     </div>
