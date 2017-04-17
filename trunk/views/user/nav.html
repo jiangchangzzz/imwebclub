@@ -1,0 +1,15 @@
+<ul class='breadcrumb'>
+	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/index'>我的主页</a></li>
+	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/topics'>我的文章</a></li>
+	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/question'>我的问题</a></li>
+	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/replies'>我的评论</a></li>
+	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/following'>我的关注</a></li>
+	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/follower'>我的粉丝</a></li>
+</ul>
+
+<script>
+ $(function(){
+ 	 var pathname = window.location.pathname;
+ 	 $('.breadcrumb').find(`[href='${pathname}']`).parent().addClass('active');
+ })
+</script>
