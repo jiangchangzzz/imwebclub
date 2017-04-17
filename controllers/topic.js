@@ -166,7 +166,7 @@ exports.list = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var tab = req.params.tab || 'all';
-  var sort = req.params.sort || 'default';  // 根据不同的参数决定文章排序方式
+  var sort = req.query.sort || 'default';  // 根据不同的参数决定文章排序方式
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
     'latest': '-create_at',
@@ -246,6 +246,7 @@ exports.list = function (req, res, next) {
         pages: pages,
         tabs: tabs,
         tab: tab,
+        sort: sort,
         base: '/topic/tab/' + tab,
         pageTitle: tabName && (tabName + '版块'),
       });

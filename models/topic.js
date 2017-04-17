@@ -32,6 +32,7 @@ var TopicSchema = new Schema({
 TopicSchema.plugin(BaseModel);
 TopicSchema.index({ create_at: -1 });
 TopicSchema.index({ top: -1, last_reply_at: -1 });
+TopicSchema.index({ visit_count: -1, collect_count: -1, reply_count: -1, create_at: -1 });
 TopicSchema.index({ author_id: 1, create_at: -1 });
 
 TopicSchema.virtual('tabName').get(function () {
