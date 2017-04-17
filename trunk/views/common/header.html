@@ -34,7 +34,7 @@
                     <a id="nav-user-menu" href="javascript:void(0);" class="ico fa fa-user" title="<%= current_user.loginname %>"></a>
                     <ol id="nav-user-menu-layer" class="ui-dropdown-layer">
                         <li>
-                            <a href="/user/<%= current_user.loginname %>">我的主页</a>
+                            <a href="/user/<%= current_user.loginname %>/index">我的主页</a>
                         </li>
                         <% if (current_user.is_admin) { %>
                         <li>
@@ -42,7 +42,7 @@
                         </li>
                         <% } %>
                         <li>
-                            <a href="javascript:void(0);">设置</a>
+                            <a href="/user/<%= current_user.loginname %>/setting">设置</a>
                         </li>
                         <li>
                             <a href="/signout">退出登录</a>

@@ -1,19 +1,16 @@
-<%- partial('../sidebar') %>
-
-<div id='content'>
-  <div class='panel'>
-    <div class='header'>
-      <ul class='breadcrumb'>
-        <li><a href='/'>主页</a><span class='divider'>/</span></li>
-        <li class='active'>关注 <%= user.loginname %> 的人</li>
-      </ul>
-    </div>
-    <div class='inner'>
-      <% if (users.length > 0) { %>
-      <%- partial('../user/user', { collection: users, as: 'user' }) %>
-      <% } else { %>
-      <p>还没有任何人关注他</p>
-      <% } %>
+<div class='user-panel'>
+  <div class='user-panel__content'>
+    <div class='user-panel__content__detail'>
+      <%- partial('./nav') %>
+      <div class='breadcrumb--content'>
+        <div class='breadcrumb--content__section section--show'>
+          <div id='content'>
+            <%- partial('./user', { users: follower, follow: false }) %>
+          </div>           
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+

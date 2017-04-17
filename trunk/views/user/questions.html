@@ -1,0 +1,25 @@
+<div class='user-panel'>
+  <div class='user-panel__content'>
+    <div class='user-panel__content__detail'>
+      <%- partial('./nav') %>
+      <div class='breadcrumb--content'>
+        <div class='breadcrumb--content__section section--show'>
+        <%  if(questions && questions.length > 0 ){ %>
+          <% questions.forEach(question => { %>
+              <div class="panel">
+                <div><a href='/question/<%= question._id %>' class="ex-link" target="_blank"><%- question.title %></a></div>
+                <% if(question.reply) { %>
+                  <div>最后回复:<span><%- question.reply.content %></span></div>
+                <% } else { %>
+                  <div>没有回复</div>
+                <% } %>
+              </div>
+          <%  }) %>
+          <% } else { %>
+            <div>没有问题</div>
+        <%  } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

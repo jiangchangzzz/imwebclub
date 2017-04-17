@@ -1,6 +1,7 @@
 var User         = require('../proxy').User;
 var Topic        = require('../proxy').Topic;
 var Reply        = require('../proxy').Reply;
+var Question     = require('../proxy').Question;
 var UserCollect = require('../proxy').UserCollect;
 var utility      = require('utility');
 var util         = require('util');
@@ -94,6 +95,19 @@ exports.showSetting = function (req, res, next) {
   });
 };
 
+exports.showPassword = function (req, res, next) {
+  User.getUserById(req.session.user._id, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    if (req.query.save === 'success') {
+      user.success = '保存成功。';
+    }
+    user.error = null;
+    return res.render('user/password', {user: user});
+  });
+};
+
 exports.showFollowing = function (req, res, next) {
   User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
@@ -105,9 +119,24 @@ exports.showFollowing = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('following', function(followUser) {
-      return res.render('user/follow', {followUser: followUser});
+      return res.render('user/follow', { user: user, followUser: followUser });
     })
     User.getFollowUser(user.following , ep.done('following'));
+  });
+};
+
+exports.showFollower = function (req, res, next) {
+  User.getUserById(req.session.user._id, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+
+    user.error = null;
+    var ep = new EventProxy();
+    ep.all('follower', function(follower) {
+      return res.render('user/followers', { user: user, follower: follower});
+    })
+    User.getFollowUser(user.follower , ep.done('follower'));
   });
 };
 
@@ -328,7 +357,7 @@ exports.listTopics = function (req, res, next) {
     var render = function (topics, pages) {
       res.render('user/topics', {
         user: user,
-        topics: topics,
+        recent_topics: topics,
         current_page: page,
         pages: pages
       });
@@ -349,6 +378,41 @@ exports.listTopics = function (req, res, next) {
   });
 };
 
+exports.listQuestions = function(req, res, next) {
+  var user_name = req.params.name;
+  var page = Number(req.query.page) || 1;
+  var limit = config.list_topic_count;
+
+  User.getUserByLoginName(user_name, function (err, user) {
+    if (!user) {
+      res.render404('这个用户不存在。');
+      return;
+    }
+
+    var render = function (questions, pages) {
+      res.render('user/questions', {
+        user: user,
+        questions: questions,
+        current_page: page,
+        pages: pages
+      });
+    };
+
+    var proxy = new EventProxy();
+    proxy.assign('questions', 'pages', render);
+    proxy.fail(next);
+
+    var query = {'author_id': user._id};
+    var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
+    Question.getQuestionsByQuery(query, opt, proxy.done('questions'));
+
+    Question.getCountByQuery(query, proxy.done(function (all_topics_count) {
+      var pages = Math.ceil(all_topics_count / limit);
+      proxy.emit('pages', pages);
+    }));
+  });
+}
+
 exports.listReplies = function (req, res, next) {
   var user_name = req.params.name;
   var page = Number(req.query.page) || 1;
@@ -363,34 +427,51 @@ exports.listReplies = function (req, res, next) {
     var render = function (topics, pages) {
       res.render('user/replies', {
         user: user,
-        topics: topics,
+        recent_replies: topics,
         current_page: page,
         pages: pages
       });
     };
 
     var proxy = new EventProxy();
-    proxy.assign('topics', 'pages', render);
+    proxy.assign('recent_replies', 'pages', render);
     proxy.fail(next);
 
     var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
-    Reply.getRepliesByAuthorId(user._id, opt, proxy.done(function (replies) {
-      // 获取所有有评论的主题
-      var topic_ids = replies.map(function (reply) {
-        return reply.topic_id.toString();
-      });
-      topic_ids = _.uniq(topic_ids);
+    // Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
+    //   // 获取所有有评论的主题
+    //   var topic_ids = replies.map(function (reply) {
+    //     return reply.topic_id.toString();
+    //   });
+    //   topic_ids = _.uniq(topic_ids);
 
-      var query = {'_id': {'$in': topic_ids}};
-      Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
-        topics = _.sortBy(topics, function (topic) {
-          return topic_ids.indexOf(topic._id.toString())
+    //   var query = {'_id': {'$in': topic_ids}};
+    //   Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
+    //     topics = _.sortBy(topics, function (topic) {
+    //       return topic_ids.indexOf(topic._id.toString())
+    //     })
+    //     return topics;
+    //   }));
+    // }));
+    Reply.getRepliesByAuthorId(user._id, 'topic', opt,
+      proxy.done(function (replies) {
+
+        var topic_ids = replies.map(function (reply) {
+          return reply.parent_id.toString()
         })
-        return topics;
-      }));
-    }));
+        topic_ids = _.uniq(topic_ids); 
 
-    Reply.getCountByAuthorId(user._id, proxy.done('pages', function (count) {
+        var query = {_id: {'$in': topic_ids}};
+        var opt = {};
+        Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
+          recent_replies = _.sortBy(recent_replies, function (topic) {
+            return topic_ids.indexOf(topic._id.toString())
+          })
+          return recent_replies;
+        }));
+      }));
+
+    Reply.getCountByAuthorId(user._id, 'topic', proxy.done('pages', function (count) {
       var pages = Math.ceil(count / limit);
       return pages;
     }));

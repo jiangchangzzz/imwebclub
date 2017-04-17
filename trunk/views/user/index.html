@@ -1,11 +1,7 @@
 <div class='user-panel'>
   <div class='user-panel__content'>
     <div class='user-panel__content__detail'>
-      <ul class='breadcrumb'>
-        <li class='breadcrumb__link active'><a href='/user/<%= user.loginname %>'>主页</a></li>
-        <li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/setting'>设置</a></li>
-        <li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/following'>用户关注</a></li>
-      </ul>
+      <%- partial('./nav') %>
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
           <%- partial('./userInfo') %>
