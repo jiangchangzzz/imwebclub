@@ -11,6 +11,10 @@ $(document).ready(function(){
       }else{
         return '<a href="javascript:;" class="answer btn-ico" data-answer="false"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>';
       }
+    }, function(reply){
+      if(reply.answer){
+        return '<div class="status">答案</div>';
+      }
     });
     me.initEditor('.reply-panel .editor');
     $('.reply-submit').click(_.bind(me.replySubmit, me));

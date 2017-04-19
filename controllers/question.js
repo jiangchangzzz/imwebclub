@@ -52,6 +52,7 @@ exports.index = function (req, res, next) {
 
   var question_id = req.params.qid;
   var currentUser = req.session.user;
+  var tabs = [['all', '全部']].concat(config.tabs);
 
   if (question_id.length !== 24) {
     return res.render404('此话题不存在或已被删除。');
@@ -63,10 +64,10 @@ exports.index = function (req, res, next) {
         active: 'question',
         question: dataAdapter.outQuestion(question),
         answer: dataAdapter.outReply(answer),
+        tabs: tabs,
         tops: tops,
         is_uped: isUped,
-        is_collect: is_collect,
-        tabs: config.tabs
+        is_collect: is_collect
       });
     });
 
@@ -397,6 +398,15 @@ exports.answer = function (req, res, next) {
   if(action ==='set' && !reply_id){
     return ep.emit('fail', 403, '参数不合法。');
   }
+  Reply.getReply(reply_id,function(err, reply){
+    if (err) {
+      return ep.emit('fail', 403, err.message);
+    }
+    if (!reply) {
+      return ep.emit('fail', 403, '此回答不存在或已被删除。');
+    }
+    return ep.emit('reply', reply);
+  });
   Question.getQuestionById(question_id, function (err, question) {
     if (err) {
       return ep.emit('fail', 403, err.message);
@@ -407,10 +417,25 @@ exports.answer = function (req, res, next) {
     if (!question) {
       return ep.emit('fail', 403, '此话题不存在或已被删除。');
     }
+    return ep.emit('question', question);
+  });
+  ep.all('reply','question',function(reply,question){
     if(action === 'set'){
-      QuestionAnswer.remove(question_id, null, function(err){
+      QuestionAnswer.removeOne(question_id, function(err,item){
         if (err) {
           return res.send({ success: false, message: err.message });
+        }
+        if(item){
+          console.log(item);
+          Reply.getReply(item.answer_id,function(err, ansewer){
+            if (err) {
+              return ep.emit('fail', 403, err.message);
+            }
+            if (ansewer) {
+              ansewer.top = false;
+              ansewer.save();
+            }
+          });
         }
         QuestionAnswer.newAndSave(question_id, reply_id, function (err) {
           if (err) {
@@ -418,6 +443,8 @@ exports.answer = function (req, res, next) {
           }
           question.solved = true;
           question.save();
+          reply.top = true;
+          reply.save();
           return ep.emit('done');
         });
       });

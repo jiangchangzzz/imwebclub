@@ -89,7 +89,10 @@ var config = {
   },
 
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
-  admins: { testjay: true },
+  admins: {
+    testjay: true,
+    'f1aecae2-dcad-4fc6-8bf6-888d7fb45025': true
+  },
 
   // github 登陆的配置
   GITHUB_OAUTH: {

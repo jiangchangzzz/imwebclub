@@ -16,6 +16,49 @@
         img : '<%= question.pic && question.pic[0] %>'||'http://imweb.io/public/images/logo-white.png'
     }
 </script>
+
+<div id="banner">
+    <div class="inner">
+        <ul class="tab-list">
+            <% tabs.forEach(function (pair) {
+                var value = pair[0];
+                var text = pair[1]; %>
+                <li class="topic-tab"><a href="<%= value ? '/question/tab/' + value : '/' %>"><%= text %></a></li>
+            <% }) %>
+        </ul>
+    </div>
+</div>
+<div id="questionHeader">
+  <div class="inner">
+    <div class="side">
+      <button class="ui-button-white collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button>
+
+      <ul class="other-info">
+        <li>
+          <span><%= question.visit_count %></span>浏览
+        </li>
+        <li>
+          <span class="reply-count"><%= question.reply_count %> </span>评论
+        </li>
+        <li>
+          <span class="collect-count"><%= question.collect_count %></span>收藏
+        </li>
+      </ul>
+    </div>
+    <div class="main">
+      <h1 class="detail-title"><i class="ico fa fa-question-circle" aria-hidden="true"></i><%- question.title %></h1>
+      <div class="about">
+        <%if(question.tabName){var link = "#";%>
+          <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == question.tabName){link = "/tab/"+tabs[i][0];}}%>
+          <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= question.tabName %></a>
+        <%}%>
+        <a class="user-name" href="/user/<%= question.author.loginname %>/index"><%= question.author.name || question.author.loginname%></a>
+        <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= question.friendly_create_at %></span>
+        <span class="origin">原文出处:<a href="http://imweb.io/question/<%= question.id %>">imweb社区</a>(未经同意，禁止转载)</span>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="main" class="clearfix">
     <%- partial('common/sidebar.html',{
         tops: tops
@@ -23,10 +66,10 @@
 
     <div id='content'>
       <div class='panel'>
-        <div class="detail-info">
+        <div class="detail-info hidden">
           <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= question.author.avatar  %>"  data-name="<%= question.author.loginname %>"/>
           <div class="user-wrap">
-            <p class="user-name user-slider-btn" data-name="<%= question.author.loginname %>"><%= question.author.name || question.author.loginname%></p>
+            <a class="user-name user-slider-btn" data-name="<%= question.author.loginname %>"><%= question.author.name || question.author.loginname%></a>
             <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= question.friendly_create_at %></span>
           </div>
           <ul class="other-info">
@@ -44,7 +87,7 @@
             </li>
           </ul>
         </div>
-        <div class='detail-header'>
+        <div class='detail-header hidden'>
           <h1 class="detail-title"><%- question.title %></h1>
           <%if(question.reprint){%>
             <div class="cell-from">
@@ -83,39 +126,18 @@
         </div>
         <div class='detail-content'>
             <div class="markdown-text">
-                <blockquote>
-                    <p><span style="margin-left: 10px;">本文作者：imweb <%= question.author.name || question.author.loginname %></span>
-                        <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/question/<%= question._id %>">imweb社区</a></span>
-                        <b style="margin-left: 10px;">未经同意，禁止转载</b>
-                        </p>
-                </blockquote>
                 <%- markdownRender(question.content) %>
             </div>
+            <% if (current_user && (current_user._id.equals(question.author.id) || current_user.is_admin)) { %>
+            <a href='/question/<%= question.id %>/edit' class="btn-ico">
+              <i class="ico fa fa-lg fa-pencil-square-o" title='编辑'></i>
+            </a>
+            <a href='javascript:;' class='delete-question-btn btn-ico'>
+               <i class="ico fa fa-lg fa-trash" title='删除'></i>
+            </a>
+            <% } %>
         </div>
       </div>
-      <% if (answer) { %>
-        <div class="panel answer-panel">
-          <div class="user-area">
-              <div class="user-avatar-wrap">
-                  <a href="javascript:void(0);">
-                      <img class="avatar ui-avatar-38" src="<%= answer.author.avatar %>"/>
-                  </a>
-              </div>
-          </div>
-          <div class="tag-area">
-            答案
-          </div>
-          <div class="main-area">
-              <div class="user-url-wrap ">
-                  <a href="javascript:void(0);"><%= answer.author.name ||answer.author.loginname %></a>
-                  <span class="create-at"><%= answer.friendly_create_at%></span>
-              </div>
-              <div class="content-wrap">
-                  <%- markdownRender(answer.content) %>
-              </div>
-          </div>
-        </div>
-      <% } %>
 
       <% if (typeof(question) !== 'undefined') { %>
       <div class='reply-panel'>

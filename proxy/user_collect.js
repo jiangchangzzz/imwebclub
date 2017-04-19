@@ -35,7 +35,7 @@ exports.getObjectCollectCount = function (objectId, callback) {
 };
 
 /**
- * 获取用户收藏文章数
+ * 获取用户收藏某类型数目
  */
 exports.getUserCollectCount = function (userId, kind, callback) {
     if(kind && kind !== 'all'){

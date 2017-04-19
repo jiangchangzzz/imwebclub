@@ -27,3 +27,10 @@ exports.remove = function (questionId, answerId, callback) {
   }
   QuestionAnswer.remove(query, callback);
 };
+
+exports.removeOne = function (questionId, callback) {
+  var query = {
+    question_id: questionId
+  }
+  QuestionAnswer.findOneAndRemove(query, callback);
+};
