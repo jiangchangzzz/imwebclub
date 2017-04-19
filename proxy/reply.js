@@ -74,7 +74,7 @@ exports.getLastReplyByParentId = function (parentId, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getRepliesByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId}, '', {sort: 'create_at'}, function (err, replies) {
+  Reply.find({parent_id: parentId, deleted: false}, '', {sort: {top: -1, create_at : 1}}, function (err, replies) {
     //console.log(replies);
     if (err) {
       return callback(err);
@@ -180,9 +180,9 @@ exports.getRepliesByAuthorId = function (authorId, kind, opt, callback) {
 // 通过 author_id 获取回复总数
 exports.getCountByAuthorId = function (authorId, kind, callback) {
   if(kind && kind !== 'all'){
-    Reply.count({author_id: authorId, kind: kind}, callback);
+    Reply.count({author_id: authorId, kind: kind, deleted: false}, callback);
   } else {
-    Reply.count({author_id: authorId}, callback);
+    Reply.count({author_id: authorId, deleted: false}, callback);
   }
 };
 
@@ -199,6 +199,7 @@ exports.removeByCondition = function (query, callback) {
 exports.queryAuthorReply = function(authorId, kind, beforeTime, limit, callback) {
     var query = {
         author_id: authorId,
+        deleted: false,
         create_at: {
             $lt: beforeTime
         }

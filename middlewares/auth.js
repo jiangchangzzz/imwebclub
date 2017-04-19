@@ -94,7 +94,7 @@ exports.authUser = function (req, res, next) {
     }
     user = res.locals.current_user = req.session.user = new UserModel(user);
 
-    if (config.admins.hasOwnProperty(user.loginname)) {
+    if (config.admins.hasOwnProperty(user.loginname) && config.admins[user.loginname]) {
       user.is_admin = true;
     }
 
@@ -103,7 +103,7 @@ exports.authUser = function (req, res, next) {
       next();
     }));
   });
-  
+
     var auth_token = req.signedCookies[config.auth_cookie_name];
     if (!auth_token) {
       return next();

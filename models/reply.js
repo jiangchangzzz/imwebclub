@@ -12,6 +12,7 @@ var ReplySchema = new Schema({
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   content_is_html: { type: Boolean },
+  top: { type: Boolean, default: false }, // 置顶
   lock: {type: Boolean, default: false}, // 被锁定
   ups: [Schema.Types.ObjectId],
   deleted: {type: Boolean, default: false},

@@ -10,7 +10,13 @@
         var _$out_ = [];
         var user = it.user;
         var reply = it.reply;
-        _$out_.push('<li class=\'reply-item ', reply.ups.length >= it.reply_up_threshold ? 'reply-highlight' : '', '\' data-reply-id="', reply.id, '"> <a class="anchor" id="', reply.id, '"></a> <div class="user-area"> <div class="user-avatar-wrap"> <a href="javascript:void(0);" class="user-avatar user-slider-btn" data-name="', reply.author.loginname, '"> <img class="ui-avatar ui-avatar-38 js-identicon" src="', reply.author.avatar, '" title="', reply.author.loginname, '" /> </a> </div> </div> <div class="main-area"> <div class="user-url-wrap "> <a href="javascript:void(0);" title="', reply.author.loginname, '" class="user-url user-slider-btn" data-name="', reply.author.loginname, '">', reply.author.loginname, '</a> <span class="create-at">', reply.friendly_create_at, '</span> <div class="actions btn-wrap">');
+        _$out_.push('<li class=\'reply-item ', reply.ups.length >= it.reply_up_threshold ? 'reply-highlight' : '', '\' data-reply-id="', reply.id, '"> <a class="anchor" id="', reply.id, '"></a> <div class="user-area"> <div class="user-avatar-wrap"> <a href="javascript:void(0);" class="user-avatar user-slider-btn" data-name="', reply.author.loginname, '"> <img class="ui-avatar ui-avatar-38 js-identicon" src="', reply.author.avatar, '" title="', reply.author.loginname, '" /> </a> </div>');
+        if(typeof(it.customerStatus) === 'function'){
+          _$out_.push(it.customerStatus(reply));
+        }else if(typeof(it.customerStatus) === 'string'){
+          _$out_.push(it.customerStatus);
+        }
+        _$out_.push('</div><div class="main-area"> <div class="user-url-wrap "> <a href="javascript:void(0);" title="', reply.author.loginname, '" class="user-url user-slider-btn" data-name="', reply.author.loginname, '">', reply.author.loginname, '</a> <span class="create-at">', reply.friendly_create_at, '</span> <div class="actions btn-wrap">');
         if (it.isAdmin || it.isAuthor) {
             _$out_.push('<a href="/reply/', reply.id, '/edit" class="btn-ico"> <i class="fa fa-pencil-square-o" title="编辑"></i></a>');
         }

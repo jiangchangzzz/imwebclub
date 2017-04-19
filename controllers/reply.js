@@ -12,6 +12,7 @@ var renderHelper = require('../common/render_helper');
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var Question = require('../proxy').Question;
+var QuestionAnswer = require('../proxy').QuestionAnswer;
 var Reply = require('../proxy').Reply;
 var config = require('../config');
 
@@ -233,7 +234,9 @@ exports.delete = function (req, res, next) {
         if (!hasPermission) {
             return ep.emit('fail', 404, 'no permission');
         }
-        reply.remove();
+        reply.deleted = true;
+        reply.top = false;
+        reply.save();
         if (!parent_reply) {
           reply.author.score -= 5;
           reply.author.reply_count -= 1;
@@ -249,7 +252,9 @@ exports.delete = function (req, res, next) {
             break;
           case 'question':
             Question.reduceCount(reply.parent_id, function(){
-              ep.emit('delete');
+              QuestionAnswer.remove(reply.parent_id, reply.reply_id, function(){
+                ep.emit('delete');
+              });
             });
             break;
           case 'activity':
