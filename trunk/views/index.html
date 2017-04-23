@@ -73,10 +73,11 @@
                                 <div class="item-header">
                                     <a href="/question/<%= question.id %>"><%= question.title %></a>
                                     <div class="fr">
-                                        <span class="commentCount">
-                                    <img src="../images/comment.png">
-                                  </span>
-                                        <a class="tag"><%= question.tabName %></a>
+                                        <span class="commentCount" alt="<%= question.reply_count %>回复">
+                                             <%= question.reply_count %>
+                                            <i></i>
+                                        </span>
+                                        <a class="tag" href="/question/tab/<%= question.tabName %>"><%= question.tabName %></a>
                                     </div>
                                 </div>
                                 <div class="item-body">

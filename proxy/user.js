@@ -148,7 +148,8 @@ exports.getTeamMember = function (company, team, callback) {
     User.find({company: company, team: team}, callback);
 };
 
-exports.getFollowUser = function(followUser=[], callback) {
+exports.getFollowUser = function(followUser, callback) {
+  followUser = followUser || [];
   var ep = new EventProxy();
   ep.after('follow', followUser.length, function(users) {
     callback(null, users);
