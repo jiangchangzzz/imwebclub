@@ -98,11 +98,7 @@
 .set-background( @background:@ui-blue; ) {
     background: @background;
 
-    &:hover {
-        background: @ui-blue-light;
-    }
-
-    &:active {
+    &:hover,&:active {
         background: @ui-blue-dark;
     }
 
@@ -137,45 +133,75 @@
     border: solid 1px @ui-gray-dark;
 }
 
+.updown{
+    text-align: center;
+    width: 40px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    background-color: @ui-gray-light;
+
+    i{
+      font-size: 24px;
+      cursor: pointer;
+
+      &:hover,&.active{
+        color:@ui-blue;
+      }
+    }
+    .count{
+      padding: 0;
+    }
+}
+
 .ui-button {
     .inline-block();
     .set-text();
     .set-background();
     .set-border();
     overflow: hidden;
-    height: 28px;
-    line-height: 28px;
+    line-height: 20px;
     padding: 0 12px;
     border-radius: 3px;
     vertical-align: baseline;
-}
-
-.ui-button-white {
-    .inline-block();
+    font-size: 12px;
     cursor: pointer;
-    color: @ui-blue;
-    background: #e8edf1;
-    border: 1px solid @ui-blue;
-    overflow: hidden;
-    height: 28px;
-    line-height: 28px;
-    padding: 0 12px;
-    border-radius: 3px;
-    vertical-align: baseline;
 
-    &:hover {
-        .set-background();
-        color: @ui-white;
+    .ui-button-white{
+      .inline-block();
+      cursor: pointer;
+      color: @ui-blue;
+      background: @ui-white;
+      overflow: hidden;
+      height: 28px;
+      line-height: 28px;
+      padding: 0 10px;
+      border-radius: 3px;
+      vertical-align: baseline;
+
+      &:hover {
+          .set-background();
+          color: @ui-white;
+      }
     }
-}
+    .ui-button-blue{
+      .inline-block();
+      color: @ui-white;
+      background: @ui-blue;
 
-.ui-button-wide {
-    min-width: 150px;
-    height: 34px;
-    line-height: 34px;
-    padding: 0;
-    border-radius: 17px;
-    vertical-align: baseline;
+      &:hover {
+          .set-background();
+          color: @ui-blue;
+      }
+    }
+
+    .ui-button-wide {
+        min-width: 150px;
+        height: 34px;
+        line-height: 34px;
+        padding: 0;
+        border-radius: 17px;
+        vertical-align: baseline;
+    }
 }
 
 .ui-link {

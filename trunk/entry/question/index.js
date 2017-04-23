@@ -3,22 +3,31 @@ import '../../stylesheets/reply.less';
 import "../../javascripts/libs/editor/editor.css";
 import '../../javascripts/common/reply.js';
 
-$(document).ready(function(){
-    var me = window.replyAction;
-    me.initReplyList('question', imweb.question.id, imweb.question.author, imweb.question.replies, null, function(reply){
+function initReplies(replies){
+  var me = window.replyAction;
+  $('#reply-list').empty();
+  me.initReplyList('question', imweb.question.id, imweb.question.author, replies, null, function(reply){
+    if(imweb.user && (imweb.user.is_admin || imweb.user.id === reply.author.id)){
       if(reply.answer){
-        return '<a href="javascript:;" class="answer btn-ico" data-answer="true"><i class="fa fa-times-circle-o" aria-hidden="true"></i></a>';
+        return '<a href="javascript:;" class="answer btn-ico" data-answer="true">取消答案</a>';
       }else{
-        return '<a href="javascript:;" class="answer btn-ico" data-answer="false"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>';
+        return '<a href="javascript:;" class="answer btn-ico" data-answer="false">设为答案</a>';
       }
-    }, function(reply){
-      if(reply.answer){
-        return '<div class="status">答案</div>';
-      }
-    });
-    me.initEditor('.reply-panel .editor');
+    }
+  }, function(reply){
+    if(reply.answer){
+      return '<div class="status">答案</div>';
+    }
+  });
+}
+
+$(document).ready(function(){
+    //回复
+    var me = window.replyAction;
+    initReplies(imweb.question.replies);
+    me.initEditor('.editor-wrap .editor');
     $('.reply-submit').click(_.bind(me.replySubmit, me));
-    $('#content').on(
+    $('#reply-list').on(
         'click',
         '.sub-reply-submit',
         _.bind(me.subReplySubmit, me)
@@ -28,7 +37,7 @@ $(document).ready(function(){
         _.bind(me.deleteReply, me)
     ).on(
         'click',
-        '.up-reply',
+        '.updown .fa',
         _.bind(me.upReply, me)
     ).on(
         'click',
@@ -42,28 +51,25 @@ $(document).ready(function(){
             var $ele = $(e.target).closest('.answer');
             var $reply = me._getReplyItem($ele);
             var replyId = $reply.data('replyId');
-            var action = $ele.data('answer') ? 'clear' : 'set';
             if (!confirm('确定要将此回复设置为回答吗？')) {
                 return;
             }
             imweb.ajax.post('/question/'+me.parentId+'/answer/', {
                 data: {
-                    action: action,
+                    action: $ele.data('answer') ? 'clear' : 'set',
                     reply_id: replyId,
                 }
             }).done(function(data) {
                 if (data.ret === 0) {
-                    var $others = $ele.closest('.reply-item ').siblings().find('.answer');
+                    var $others = $ele.closest('.reply-item').siblings();
                     if($ele.data('answer')){
-                      $others.children('i').addClass('fa-times-circle-o').removeClass('fa-check-circle-o');
-                      $others.data('answer',true);
-                      $ele.children('i').addClass('fa-check-circle-o').removeClass('fa-times-circle-o');
-                      $ele.data('answer',false);
+                      $ele.text('设为答案').data('answer', false);
+                      $ele.closest('.reply-item').find('.left-area .status').remove();
                     }else{
-                      $others.children('i').removeClass('fa-times-circle-o').addClass('fa-check-circle-o');
-                      $others.data('answer',false);
-                      $ele.children('i').removeClass('fa-check-circle-o').addClass('fa-times-circle-o');
-                      $ele.data('answer',true);
+                      $others.find('.answer').text('设为答案').data('answer', false);
+                      $others.find('.left-area .status').remove();
+                      $ele.text('取消答案').data('answer',true)
+                      $ele.closest('.reply-item').find('.left-area').append('<div class="status">答案</div>');
                     }
                 } else {
                     alert(data.msg || '');
@@ -71,6 +77,57 @@ $(document).ready(function(){
             }).fail(imweb.ajax.fail);
         },me)
     );
+});
+
+$(document).on('click', '.sorts li', function(e) {
+  var $ele = $(e.target);
+  var questionId = imweb.question.id;
+  if($ele.hasClass('active')){
+    return;
+  }
+  var sortby = $ele.data('sortby');
+  console.log(sortby);
+  $('.sorts li').toggleClass('active');
+  imweb.ajax.get('/reply/'+questionId+'/query?sortby='+sortby).done(function(data) {
+      if (data.ret === 0) {
+        initReplies(data.data);
+      }
+  });
+});
+$(document).on('click', '.sorts .time', function(e) {
+  console.log('time');
+  $('.sorts .ups').removeClass('active');
+  $('.sorts .time').addClass('active');
+});
+
+$(document).on('click', '.detail-content .updown .fa', function(e) {
+    var me = this;
+    var $ele = $(e.target);
+    if (!(imweb.user && imweb.user.loginname)) {
+        alert('请登陆。');
+        return;
+    }
+    if(imweb.user.loginname !== imweb.question.author.loginname){
+      alert('您无法对自己的评论点赞。');
+      return;
+    }
+    var cancel = $ele.hasClass('fa-caret-down');
+
+    imweb.ajax.post('/operate/up', {
+        data: {
+            kind: 'question',
+            object_id: imweb.question.id,
+            cancel: cancel
+        }
+    }).done(function(data) {
+        if (data.ret === 0) {
+            $ele.toggleClass('hidden');
+            $ele.siblings('.fa').toggleClass('hidden');
+            $('.detail-content .updown .count').text(data.data.count);
+        } else if (data.msg) {
+            alert(data.msg);
+        }
+    }).fail(imweb.ajax.fail);
 });
 
 /**
@@ -86,9 +143,27 @@ $(document).on('click', '.collect-question-btn', function(e) {
       }
   }).done(function(data) {
       if (data.ret === 0) {
-          $ele.toggleClass('fa-heart').toggleClass('fa-heart-o');
-          $ele.attr('title', $ele.hasClass('fa-heart') ? '取消收藏' : '收藏');
+          $ele.text(data.data.ifCollect ? '取消收藏' : '收藏');
           $('.collect-count').html(data.data.objectCollectCount);
+      }
+  });
+});
+
+/**
+ * 关注问答
+ */
+$(document).on('click', '.follow-question-btn', function(e) {
+  var $ele = $(e.target);
+  var questionId = imweb.question.id;
+  imweb.ajax.post('/operate/follow', {
+      data: {
+          kind: 'question',
+          object_id: questionId
+      }
+  }).done(function(data) {
+      if (data.ret === 0) {
+          $ele.text(data.data.ifFollow ? '取消关注' : '关注');
+          $('.follow-count').html(data.data.objectFollowerCount);
       }
   });
 });

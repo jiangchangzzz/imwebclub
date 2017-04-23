@@ -152,7 +152,7 @@ exports.getFullQuestion = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByParentId(question._id, proxy.done('replies'));
+    Reply.getRepliesByParentId(question._id, {score:-1,create_at: 1}, proxy.done('replies'));
   }));
 };
 

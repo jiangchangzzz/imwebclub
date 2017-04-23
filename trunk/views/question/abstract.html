@@ -4,7 +4,8 @@
           <img src="<%= question.author.avatar %>">
       </div>
       <div class="status">
-          <%= question.solved ? '已解决' : '未解决' %>
+          <i class="fa fa-check" aria-hidden="true"></i>
+          <div class="txt"><%= question.solved ? '已解决' : '未解决' %></div>
       </div>
     </div>
     <div class="main">
@@ -22,9 +23,9 @@
             <a href="/question/<%= question.id %>"><%= question.title %></a>
           </h4>
           <div class="relative">
-            <span class="author"><%= question.author.name || question.author.loginname %></span>
-            <span class="viewCount"><%= question.visit_count %>浏览</span>
-            <span class="answerCount"><%= question.reply_count %>回答</span>
+            <span class="item author"><%= question.author.name || question.author.loginname %></span>
+            <span class="item viewCount"><%= question.visit_count %>浏览</span>
+            <span class="item answerCount"><%= question.reply_count %>回答</span>
           </div>
         </div>
       </div>

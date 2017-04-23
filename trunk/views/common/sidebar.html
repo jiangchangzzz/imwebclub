@@ -157,9 +157,7 @@
     <div id="hotAuthors" class="box border">
         <div class="box-head">
             <b>作者列表</b>
-            <a href="javascript:void(0);" class="link">
-        更多
-      </a>
+            <a href="javascript:void(0);" class="link">更多</a>
         </div>
         <hr class="solid-light">
         <div class="box-body">
@@ -171,13 +169,12 @@
                                 <div class="avatar">
                                     <img src="<%=user.avatar%>">
                                 </div>
-                           </div>
-                            <div class="middle one-line">
-                              <img src="../../images/T.png">
-                              <b><%=user.name || user.loginname || ' ' %></b>
-                              （<%=user.topic_count %>）
                             </div>
-
+                            <div class="middle one-line">
+                                <img src="../../images/T.png">
+                                <b><%=user.name || user.loginname || ' ' %></b>
+                                （<%=user.topic_count %>）
+                            </div>
                             <div class="right">
                               <% if(current_user && current_user.following.indexOf(user._id) == -1) {%>
                                 <a href="javascript:void(0);" class="link focus-add">+关注</a>
@@ -186,7 +183,6 @@
                               <%  } %>
                             </div>
                         </div>
-
                     </li>
                 <% })}%>
             </ul>

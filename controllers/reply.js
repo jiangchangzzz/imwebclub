@@ -16,6 +16,34 @@ var QuestionAnswer = require('../proxy').QuestionAnswer;
 var Reply = require('../proxy').Reply;
 var config = require('../config');
 
+exports.query = function (req, res, next){
+  var parent_id = req.params.parent_id;
+  var sortby = req.query.sortby;
+
+  var sorts = {
+    score:-1,
+    create_at: 1
+  };
+  if(sortby === 'time'){
+    sorts = {
+      create_at: -1
+    };
+  }
+  Reply.getRepliesByParentId(parent_id, sorts, function(err, replies){
+    if(err){
+      return res.send({
+          ret: 1,
+          msg: err
+      });
+    }
+    var mainReplies = dataAdapter.appendSubRepliesToReplies(replies);
+    res.send({
+        ret: 0,
+        data: dataAdapter.outReplies(mainReplies)
+    });
+  });
+}
+
 /**
  * 添加回复
  */
@@ -109,7 +137,7 @@ exports.add = function (req, res, next) {
             user.reply_count = count;
             user.save(ep.done('user_updated'));
         }));
-        console.log(reply);
+        //console.log(reply);
         // 发送at消息，并防止重复 at 作者
         var newContent = reply.content.replace('@' + parent.author.loginname + ' ', '');
         at.sendMessageToMentionUsers(newContent, parent._id, user._id, reply._id);
@@ -345,45 +373,6 @@ exports.update = function (req, res, next) {
       res.render('notify/notify', {error: '对不起，你不能编辑此回复。'});
     }
   });
-};
-
-exports.up = function (req, res, next) {
-    var replyId = req.params.reply_id;
-    var cancel = req.body.cancel === 'true';
-    var ep = EventProxy.create();
-    ep.fail(next);
-    ep.on('fail', function(ret, msg) {
-        ep.unbind();
-        res.send({ret: ret || 400, msg: msg || ''});
-    });
-    Reply.getReplyById(replyId, ep.done(function(reply) {
-        if (!reply) {
-            return ep.emit('fail');
-        }
-        var userId = req.session.user._id;
-        // 不能帮自己点赞
-        if (reply.author_id.equals(userId)) {
-            return ep.emit('fail', 401, '不能帮自己点赞');
-        }
-        reply.ups = reply.ups || [];
-        var upIndex = reply.ups.indexOf(userId);
-        if (cancel && upIndex !== -1) {
-            reply.ups.splice(upIndex, 1);
-        } else if (!cancel && upIndex === -1) {
-            reply.ups.push(userId);
-        }
-        reply.save(ep.done(function() {
-            ep.emit('reply_updated', reply);
-        }));
-    }));
-    ep.on('reply_updated', function(reply) {
-        res.send({
-            ret: 0,
-            data: {
-                reply: dataAdapter.outReply(reply)
-            }
-        });
-    });
 };
 
 /**

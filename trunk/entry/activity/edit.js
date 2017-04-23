@@ -15,7 +15,7 @@ $('#create_activity_form').on('submit', function (e) {
     alert('必须选择一个版块！');
     return false;
   }
-  var title = $('#title').val();
+  var title = $('input[name="title"]').val();
   if(!title){
     alert('标题不可为空！');
     return false;

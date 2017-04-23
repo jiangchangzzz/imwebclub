@@ -31,8 +31,8 @@
 <div id="questionHeader">
   <div class="inner">
     <div class="side">
-      <button class="ui-button-white collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button>
-
+      <button class="ui-button ui-button-blue collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button>
+      <button class="ui-button ui-button-blue follow-question-btn"><%= is_follow ? '取消关注' : '关注' %></button>
       <ul class="other-info">
         <li>
           <span><%= question.visit_count %></span>浏览
@@ -46,7 +46,7 @@
       </ul>
     </div>
     <div class="main">
-      <h1 class="detail-title"><i class="ico fa fa-question-circle" aria-hidden="true"></i><%- question.title %></h1>
+      <h1 class="detail-title"><i class="ico fa fa-question-circle-o" aria-hidden="true"></i><%- question.title %></h1>
       <div class="about">
         <%if(question.tabName){var link = "#";%>
           <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == question.tabName){link = "/tab/"+tabs[i][0];}}%>
@@ -54,7 +54,7 @@
         <%}%>
         <a class="user-name" href="/user/<%= question.author.loginname %>/index"><%= question.author.name || question.author.loginname%></a>
         <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= question.friendly_create_at %></span>
-        <span class="origin">原文出处:<a href="http://imweb.io/question/<%= question.id %>">imweb社区</a>(未经同意，禁止转载)</span>
+        <span class="origin hidden">原文出处:<a href="http://imweb.io/question/<%= question.id %>">imweb社区</a>(未经同意，禁止转载)</span>
       </div>
     </div>
   </div>
@@ -65,104 +65,53 @@
     }) %>
 
     <div id='content'>
-      <div class='panel'>
-        <div class="detail-info hidden">
-          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= question.author.avatar  %>"  data-name="<%= question.author.loginname %>"/>
-          <div class="user-wrap">
-            <a class="user-name user-slider-btn" data-name="<%= question.author.loginname %>"><%= question.author.name || question.author.loginname%></a>
-            <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= question.friendly_create_at %></span>
-          </div>
-          <ul class="other-info">
-            <li>
-              <p><%= question.visit_count %> </p>
-              <span>浏览</span>
-            </li>
-            <li>
-              <p class="reply-count"><%= question.reply_count %> </p>
-              <span>评论</span>
-            </li>
-            <li>
-              <p class="collect-count"><%= question.collect_count %></p>
-              <span>收藏</span>
-            </li>
-          </ul>
-        </div>
-        <div class='detail-header hidden'>
-          <h1 class="detail-title"><%- question.title %></h1>
-          <%if(question.reprint){%>
-            <div class="cell-from">
-              <%
-              var host = question.reprint;
-              var regex = /.*\:\/\/([^\/]*).*/;
-              var match = question.reprint.match(regex);
-              if(typeof match != "undefined" && null != match) host = match[1];
-              %>
-              转载自<a href="<%=question.reprint%>" class="cell-reprint ex-link" target="_blank"><%=host%></a>
+      <div class='detail-content'>
+          <div class="left">
+            <div class="updown">
+              <i class="fa fa-caret-up <%if(is_uped){%>hidden <%}%>" aria-hidden="true"></i>
+              <div class="count"><%= question.ups.length %></div>
+              <i class="fa fa-caret-down <%if(!is_uped){%>hidden <%}%>" aria-hidden="true"></i>
             </div>
-          <%}%>
-          <div class="title-wrap">
-            <%if(question.tabName){var link = "#";%>
-              <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == question.tabName){link = "/tab/"+tabs[i][0];}}%>
-              <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= question.tabName %></a>
-            <%}%>
-            <% if (current_user) { %>
-              <div class="btn-wrap">
-                  <% if (current_user._id.equals(question.author.id)) { %>
-                  <a href='/question/<%= question.id %>/edit' class="btn-ico">
-                    <i class="ico fa fa-lg fa-pencil-square-o" title='编辑'></i>
-                  </a>
-                  <a href='javascript:;' class='delete-question-btn btn-ico'>
-                     <i class="ico fa fa-lg fa-trash" title='删除'></i>
-                  </a>
-                  <% } %>
-                  <% if (!is_collect) { %>
-                  <span class='ico fa fa-heart-o collect-question-btn' title='收藏'></span>
-                  <% } else { %>
-                  <span class='ico fa fa-heart collect-question-btn' title='取消收藏'></span>
-                  <% } %>
-              </div>
-            <% } %>
           </div>
-        </div>
-        <div class='detail-content'>
+          <div class="main">
             <div class="markdown-text">
                 <%- markdownRender(question.content) %>
             </div>
-            <% if (current_user && (current_user._id.equals(question.author.id) || current_user.is_admin)) { %>
-            <a href='/question/<%= question.id %>/edit' class="btn-ico">
-              <i class="ico fa fa-lg fa-pencil-square-o" title='编辑'></i>
-            </a>
-            <a href='javascript:;' class='delete-question-btn btn-ico'>
-               <i class="ico fa fa-lg fa-trash" title='删除'></i>
-            </a>
-            <% } %>
-        </div>
-      </div>
-
-      <% if (typeof(question) !== 'undefined') { %>
-      <div class='reply-panel'>
-          <div class="editor-wrap">
-              <textarea class="editor"></textarea>
-          </div>
-          <div class="editor-actions">
-              <button class="ui-button reply-submit fr" type="button">评论一下</button>
-          </div>
-          <% if(!current_user) {%>
-            <div id="deckText">
-              <div class="inner">
-                <p>
-                  您需要 <a class="nav-sign" href="javascript:void(0);">注册</a> 一个imweb账号或者
-                  <a class="nav-login" href="javascript:void(0);">登录</a> 才能进行评论。
-                </p>
-              </div>
+            <div class="main-foot">
+              <span class="item"><%= question.friendly_create_at %>的提问</span>
+              <% if (current_user && (current_user._id.equals(question.author.id) || current_user.is_admin)) { %>
+                <a href='/question/<%= question.id %>/edit' class="item">编辑</a>
+                <a href='javascript:;' class=item' delete-question-btn'>删除</a>
+              <% } %>
             </div>
-          <%}%>
+            <div class='newComment'>
+                <div class="editor-wrap">
+                    <textarea class="editor"></textarea>
+                </div>
+                <div class="editor-actions">
+                    <button class="ui-button reply-submit fr" type="button">评论一下</button>
+                </div>
+                <% if(!current_user) {%>
+                  <div id="deckText">
+                    <div class="inner">
+                      <p>
+                        您需要 <a class="nav-sign" href="javascript:void(0);">注册</a> 一个imweb账号或者
+                        <a class="nav-login" href="javascript:void(0);">登录</a> 才能进行评论。
+                      </p>
+                    </div>
+                  </div>
+                <%}%>
+            </div>
+          </div>
       </div>
-      <% } %>
 
-      <div class="panel reply-panel <%if(question.reply_count == 0){%>hide<% } %>">
+      <div class="reply-panel <%if(question.reply_count == 0){%>hide<% } %>">
           <div class="panel-head">
               <span class="panel-head-title"><span class="reply-count"><%= question.reply_count %></span>  条评论</span>
+              <ul class="sorts">
+                <li class="active" data-sortby="ups">默认排序</li>
+                <li data-sortby="time">时间排序</li>
+              </div>
           </div>
           <div class='panel-body'>
               <ul id="reply-list"></ul>
