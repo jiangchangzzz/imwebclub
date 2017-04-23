@@ -79,6 +79,7 @@
             </div>
             <div class="main-foot">
               <span class="item"><%= question.friendly_create_at %>的提问</span>
+              <a href="javascript:;" class="item">邀请回答</a>
               <% if (current_user && (current_user._id.equals(question.author.id) || current_user.is_admin)) { %>
                 <a href='/question/<%= question.id %>/edit' class="item">编辑</a>
                 <a href='javascript:;' class=item' delete-question-btn'>删除</a>

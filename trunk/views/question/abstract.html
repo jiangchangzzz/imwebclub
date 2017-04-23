@@ -4,8 +4,13 @@
           <img src="<%= question.author.avatar %>">
       </div>
       <div class="status">
-          <i class="fa fa-check" aria-hidden="true"></i>
-          <div class="txt"><%= question.solved ? '已解决' : '未解决' %></div>
+          <%if(question.solved){%>
+            <i class="fa fa-check" aria-hidden="true"></i>
+            <div class="txt">已解决</div>
+          <%}else{%>
+            <i class="fa fa-question" aria-hidden="true"></i>
+            <div class="txt">未解决</div>
+          <%}%>
       </div>
     </div>
     <div class="main">
