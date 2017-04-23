@@ -1,0 +1,25 @@
+<tr class="list-users">
+	<td style="display:none;"><%= topic._id %></td>
+	<td><%= topic.author.loginname %></td>
+	<td><%= topic.tab %></td>
+	<td><%- topic.title %></td>
+	<td><%= topic.friendly_update_at %></td>
+	<td><%= topic.friendly_create_at %></td>
+	<td><%= topic.collect_count %></td>
+	<td><%= topic.visit_count %></td>
+	<td><%= topic.reply_count %></td>
+	<td id="good"><%= topic.good %></td>
+	<td><%= topic.top %></td>
+	<td>
+		<div class="btn-group">
+			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">操作 <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a class="edit-topic-btn"><i class="icon-pencil"></i> 编辑</a></li>
+				<li><a class="delete-topic-btn"><i class="icon-trash"></i> 删除</a></li>
+				<li><a class="good-topic-btn"><i class="icon-star"></i> 加精</a></li>
+				<li><a class="top-topic-btn"><i class="icon-thumbs-up"></i> 置顶</a></li>
+				<li><a class="reply-topic-btn"><i class="icon-comment"></i> 查看评论</a></li>
+			</ul>
+		</div>
+	</td>
+</tr>

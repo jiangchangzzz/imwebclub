@@ -1,0 +1,98 @@
+<link href="../../public/libs/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<script src='/public/libs/webuploader/webuploader.withoutimage.js'></script>
+
+<script>
+    window.imweb = window.imweb || {};
+    imweb._csrf = '<%- csrf %>';
+    <% if (typeof(current_user) !== 'undefined') { %>
+        imweb.user = {
+            id: '<%= current_user._id %>',
+            loginname: '<%= current_user.loginname %>',
+            is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+        };
+    <% } else { %>
+        imweb.user = null;
+    <% } %>
+</script>
+
+<div class="container-fluid activity-edit-ctn">
+ 	<div class="row-fluid">
+ 		<%- partial('../sidebar') %>
+ 		<div class="span10">
+ 			<div class="row-fluid">
+ 				<div class="page-header">
+ 					<h1><%= isNew ? '新增' : '修改' %> <small>导航图片</small></h1>
+ 				</div>
+ 				<% if(typeof(error) !== 'undefined' && error){ %>
+ 				<div class="alert alert-error">
+ 					<%= error %>
+ 				</div>
+ 				<% } %>
+ 				<form class="form-horizontal" action="/admin/activity/save?_csrf=<%= csrf %>" method="post">
+ 					<fieldset>
+ 						<input type="hidden" name="acid" value="<%= isNew ? '' : activity._id %>" />
+ 						<div class="control-group">
+ 							<label class="control-label" for="title">标题</label>
+ 							<div class="controls">
+ 								<input type="text" class="input-xlarge" id="background" name="title"  value="<%= isNew ? '' : activity.title %>"/>
+ 							</div>
+ 						</div>
+                        <div class="control-group">
+                            <label class="control-label" for="background">描述</label>
+                            <div class="controls">
+                                <input type="text" class="input-xlarge" id="desc" name="desc"  value="<%= isNew ? '' : activity.desc%>"/>
+                            </div>
+                        </div>
+ 						<div class="control-group">
+ 							<label class="control-label" for="image">图片</label>
+ 							<div class="controls">
+ 								<input type="text" class="input-xlarge" id="b_image" name="image" value="<%= isNew ? '' : activity.image %>"/>
+ 								<div id="upload-btn" class="btn btn-info">上传图片</div>
+ 								<div class="img-preview">
+	 								<img id="image-preview" src="" alt="">
+ 								</div>
+ 							</div>
+ 						</div>
+ 						<div class="control-group">
+ 							<label class="control-label" for="link">链接</label>
+ 							<div class="controls">
+ 								<input type="text" class="input-xlarge" id="link" name="link" value="<%= isNew ? '' : activity.link %>"/>
+ 							</div>
+ 						</div>
+ 						<div class="control-group">
+ 							<label class="control-label" for="pptlink">ppt链接</label>
+ 							<div class="controls">
+ 								<input type="text" class="input-xlarge" id="pptlink" name="pptlink" value="<%= isNew || !activity.pptlink ? '' : activity.pptlink%>"/>
+ 							</div>
+ 						</div>
+ 						<div class="form-actions">
+ 							<button type="submit" class="btn btn-success">保存</button>
+ 							<a class="btn" href="/admin/activity/all">取消</a>
+ 						</div>
+ 					</fieldset>
+ 				</form>
+ 			</div>
+ 		</div>
+ 	</div>
+ 	<div id="upload-mask" class="upload-mask hidden" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true">
+ 		<div class="modal" style="margin-top: -300px; margin-left: -200px">
+ 			<div class="modal-header">
+ 				<span type="button" class="close" data-dismiss="modal" aria-hidden="true">×</span>
+ 				<span id="editorToolImageTitle" class="title">上传图片</span>
+ 			</div>
+ 			<div class="modal-body">
+ 				<span><img src="//7tszky.com1.z0.glb.clouddn.com/Fg_TNzhl6fYOsiCKbJ8P_euBhXz0" width="80" height="80"></span>'
+ 				<div class="upload-img">
+ 					<div class="button button-upload">上传图片</div>
+ 					<div class="button button-cancel">取消</div>
+ 					<span class="tip"></span>
+ 					<div class="alert alert-error hide"></div>
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+
+ <script src='../../public/js/admin.js'></script>
+ <script src="../../public/libs/bootstrap/js/jquery.js"></script>
+ <script src="../../public/libs/bootstrap/js/bootstrap.min.js"></script>

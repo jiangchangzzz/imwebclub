@@ -27,6 +27,7 @@ var github = require('./controllers/github');
 var search = require('./controllers/search');
 var passport = require('passport');
 var weibo = require('./controllers/weibo');
+var admin = require('./controllers/admin');
 var WeiboStrategy = require('passport-weibo').Strategy;
 var configMiddleware = require('./middlewares/conf');
 var config = require('./config');
@@ -142,6 +143,27 @@ router.get('/draft/countmy', auth.userRequired, draft.countmy);
 router.get('/draft/listmy', auth.userRequired, draft.listmy);
 router.post('/draft/delete/:id', auth.userRequired, draft.delete);
 router.get('/draft/get/:id', auth.userRequired, draft.get);
+
+
+//admin
+router.get('/admin/topic/all', auth.adminRequired, admin.topic);  //  话题管理
+router.get('/admin/user/all', auth.adminRequired, admin.user);  //  用户管理
+router.get('/admin/reply/all', auth.adminRequired, admin.reply);  //  评论管理
+router.get('/admin/topic/:tab', auth.adminRequired, admin.topic);  //  话题分类
+router.get('/admin/:name/edit', auth.adminRequired, admin.editUser);  //  编辑用户信息
+router.post('/admin/user/save', auth.adminRequired, admin.saveUser);  //  保存用户信息
+router.get('/admin/reply/:tid', auth.adminRequired, admin.replyForTopic);  //  某个话题下的评论
+router.get('/admin/banner/all', auth.adminRequired, admin.banner); // 获取banner
+router.get('/admin/banner/add', auth.adminRequired, admin.addBanner); // 增加banner
+router.post('/admin/banner/save', auth.adminRequired, admin.saveBanner); // 保存banner
+router.post('/admin/banner/delete', auth.adminRequired, admin.removeBanner); // 删除banner
+router.get('/admin/edit/:bid', auth.adminRequired, admin.editBanner); // 编辑banner
+
+router.get('/admin/activity/all', auth.adminRequired, admin.activity);
+router.get('/admin/activity/add', auth.adminRequired, admin.addActivity);
+router.post('/admin/activity/save', auth.adminRequired, admin.saveActivity); 
+router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity); 
+router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
 // static
 router.get('/about', staticController.about);
