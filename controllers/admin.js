@@ -5,7 +5,7 @@ var Banner = require('../proxy').Banner;
 var Activity = require('../proxy').Activity;
 var _ = require('lodash'); 
 var tools = require('../common/tools');
-var eventproxy = require('eventproxy');
+var EventProxy = require('EventProxy');
 var config = require('../config'); 
 var cache = require('../common/cache');
 var validator = require('validator');
@@ -46,7 +46,7 @@ function html_encode(str) {
 
 exports.editUser = function(req, res, next){
         var user_name = req.params.name;
-        var ep = new eventproxy();
+        var ep = new EventProxy();
         ep.fail(next);
         User.getUserByLoginName(user_name, function(err, user) {
             if (err) {
@@ -91,7 +91,7 @@ exports.saveUser = function(req, res, next) {
     );
     var oldPass = req.body.old_pass || '';
     var requirePassCheck = updated.pass !== undefined;
-    var ep = new eventproxy();
+    var ep = new EventProxy();
 
     ep.fail(next);
     ep.on('fail', function(ret, msg) {
@@ -179,6 +179,7 @@ exports.topic = function(req, res, next){
   }));
   // END 取分页数据
 
+//   var tabs = [['all', '全部']].concat(config.tabs);
   var tabName = renderHelper.tabName(tab);
 
   proxy.all('topics', 'pages',
@@ -188,6 +189,7 @@ exports.topic = function(req, res, next){
         current_page: page,
         list_topic_count: limit,
         pages: pages,
+        // tabs: tabs,
         tab: tab,
         sort: sort,
         base: '/admin/topic/all',
@@ -196,6 +198,25 @@ exports.topic = function(req, res, next){
       });
     });
 };
+
+//topic类型过滤器
+var _topicFormat = function (topics) {
+  var arr = [];
+  for (var i = 0, len = topics.length; i < len; i++) {
+    if (topics[i].type && topics[i].type == 1) {
+      var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
+      if (proArr.length >= 3) {
+        topics[i].proName = proArr[2];
+        topics[i].proAuthor = proArr[1];
+        arr.push(topics[i]);
+      }
+    } else {
+      arr.push(topics[i]);
+    }
+  }
+  return topics;
+}
+
 exports.user = function(req, res, next){
 	//查询所有用户
 
@@ -234,7 +255,7 @@ exports.addBanner = function(req, res, next) {
 exports.saveBanner = function(req, res, next) {
     var updated = {};
     var bid = req.body.bid;
-    var ep = eventproxy.create();
+    var ep = EventProxy.create();
     _.each(
         ['image', 'link', 'background', 'index', 'status'],
         function(item) {
@@ -272,7 +293,7 @@ exports.saveBanner = function(req, res, next) {
 
 exports.removeBanner = function(req, res, next) {
     var bid = req.body.id;
-    var ep = eventproxy.create();
+    var ep = EventProxy.create();
     ep.on('fail', function(ret, msg) {
         ep.unbind();
         res.send({ret: ret || 400, msg: msg || ''});
@@ -297,7 +318,7 @@ exports.removeBanner = function(req, res, next) {
 
 exports.editBanner = function(req, res, next) {
     var bid = req.params.bid;
-    var ep = eventproxy.create();
+    var ep = EventProxy.create();
     Banner.getBannerById(bid, function(banner) {
         if (!banner) {
             return ep.emit('fail', 401, 'no banner');
@@ -321,7 +342,7 @@ exports.addActivity = function(req, res, next) {
 exports.saveActivity = function(req, res, next) {
     var updated = {};
     var acid = req.body.acid;
-    var ep = eventproxy.create();
+    var ep = EventProxy.create();
     _.each(
         ['image', 'link', 'title', 'desc', 'pptlink'],
         function(item) {
@@ -359,7 +380,7 @@ exports.saveActivity = function(req, res, next) {
 
 exports.editActivity = function(req, res, next) {
     var acid = req.params.acid;
-    var ep = eventproxy.create();
+    var ep = EventProxy.create();
     Activity.getActivityById(acid, function(activity) {
         if (!activity) {
             return ep.emit('fail', 401, 'no activity');
@@ -373,7 +394,7 @@ exports.editActivity = function(req, res, next) {
 
 exports.removeActivity = function(req, res, next) {
     var acid = req.body.id;
-    var ep = eventproxy.create();
+    var ep = EventProxy.create();
     ep.on('fail', function(ret, msg) {
         ep.unbind();
         res.send({ret: ret || 400, msg: msg || ''});

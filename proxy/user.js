@@ -171,6 +171,21 @@ exports.getFollowUser = function(followUser, callback) {
   })
 }
 
+
+/**
+ * admin查询所有用户
+ * Callback:
+ * - err, 数据库异常
+ * - users, 用户列表
+ * @param {Function} callback 回调函数
+ */
+exports.getAllUsers = function(callback) {
+    User.find({}, function(err, results){
+        callback && callback(results);
+    });
+};
+
+
 exports.listOrderByTeam = function(start, limit, callback) {
     start = start || 0;
     limit = limit || 0xfffffff;

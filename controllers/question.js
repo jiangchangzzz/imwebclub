@@ -31,7 +31,18 @@ function saveQuestion(req, next, callback) {
 
   Question.newAndSave(title, tab, content, user._id, ep.done('question'));
 
-  ep.all('question', function (question, user) {
+  ep.all('question', function (question) {
+     User.getUserById(user._id, ep.done(function (user) {
+      user.score += 1;
+      user.question_count += 1;
+      user.save();
+      req.session.user = user;
+      ep.emit('score_saved', user);
+    }));
+    // callback(null, question);
+  });
+
+  ep.all('question', 'score_saved', function(question, user){
     callback(null, question);
   });
 };

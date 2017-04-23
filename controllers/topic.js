@@ -360,22 +360,14 @@ function saveTopic(req, next, callback) {
     reprint = "";
   }
 
-  // 得到所有的 tab, e.g. ['ask', 'share', ..]
   var allTabs = config.tabs.map(function (tPair) {
     return tPair[0];
   });
-  // if (!config.regExps.topicTitle.test(title)
-  //     || !config.regExps.topicContent.test(content)
-  //     || !_.contains(allTabs, tab)
-  // ) {
-  //     return callback('param error', null);
-  // }
 
   var user = req.session.user;
   var ep = new EventProxy();
   ep.fail(next);
 
-  // console.log(title+"is done !");
 
   Topic.newAndSave(title, type, content, tab, reprint, user._id, ep.done('topic'));
   ep.all('topic', function (topic) {
