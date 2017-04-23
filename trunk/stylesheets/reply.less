@@ -16,11 +16,28 @@
         font-size: 0;
     }
 }
-.reply-panel{
+.editor-wrap {
+    margin: 20px 0 10px 0;
+    border: 1px solid @ui-gray;
+    border-radius: 5px;
+    overflow: hidden;
+    background: @ui-white;
+    textarea.editor {
+      width: 98%;
+      line-height: 30px;
+      height: 200px;
+      resize: vertical;
+      font-size: 15px;
+      padding: 0;
+      border: none;
+    }
+    .CodeMirror {
+        height: 100px;
+        padding: 0 6px;
+    }
+}
+.newComment{
   position:relative;
-  .inner{
-    margin: 30px auto;
-  }
   #deckText {
     display: none;
     position: absolute;
@@ -29,6 +46,10 @@
     height: 100%;
     z-index: 10;
     background: rgba(230,230,230,0.9);
+    .inner{
+      padding: 10px;
+    }
+
     a{
       color: @ui-blue;
     }
@@ -41,37 +62,36 @@
       display: block;
     }
   }
-  .editor-wrap {
-      margin: 20px 0 10px 0;
-      border: 1px solid @ui-gray;
-      border-radius: 5px;
-      overflow: hidden;
-      background: @ui-white;
-      textarea.editor {
-        width: 98%;
-        line-height: 30px;
-        height: 200px;
-        resize: vertical;
-        font-size: 15px;
-        padding: 0;
-        border: none;
+}
+.reply-panel{
+  .panel-head{
+    border-bottom: solid 2px @ui-gray;
+    ul.sorts{
+      float: right;
+      list-style: none;
+      padding: 0;
+      font-size: 12px;
+      border: solid 1px @ui-gray;
+
+      li{
+        display: inline-block;
+        margin: 0;
+        padding: 0 3px;
+        cursor: pointer;
+
+        &:hover,&.active{
+          background-color: @ui-gray;
+        }
       }
-      .CodeMirror {
-          height: 100px;
-          padding: 0 6px;
-      }
+    }
   }
 }
 
 #reply-list {
     list-style: none;
-    padding: 0 10px;
+    padding: 0;
     .anchor {
         display: none;
-    }
-    .btn-ico{
-      font-size: 18px;
-      margin: 5px;
     }
     .act {
         display: inline-block;
@@ -95,10 +115,6 @@
           }
         }
     }
-    .create-at,
-    .edit-at {
-        color: @ui-black-light;
-    }
     .user-url {
         font-size: 14px;
         &,
@@ -109,69 +125,56 @@
             color: @ui-blue-light;
         }
     }
-    .user-avatar {
-        display: block;
-        width: 48px;
-        height: 48px;
-        border-radius: 2px;
-        overflow: hidden;
-        img {
-            display: block;
-        }
-    }
+
     .reply-item {
         display: block;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
         margin-top: 10px;
-        &:first-child {
-            margin-top: 0;
-        }
-        .user-area {
+
+        .left-area {
             float: left;
-            margin-left: 20px;
-            margin-top: 5px;
-            .user-avatar-wrap {
-                width: 48px;
-                margin: 0 auto;
-            }
-            .user-url-wrap {
-                line-height: 16px;
-                text-align: center;
-                margin-top: 5px;
-            }
+            width: 70px;
         }
         .main-area {
-            margin-left: 75px;
-            padding-right: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
+            margin-left: 70px;
+            min-height: 100px;
+
             & > .content-wrap {
+                min-height: 70px;
+                background-color: #f6f6f6;
                 color: @ui-black;
-                margin-top: 7px;
+                padding: 5px;
             }
-            .create-at {}
-            .user-url-wrap {
-                position: relative;
+            .foot-wrap{
+              margin-top: 5px;
+              font-size: 14px;
+              color: @ui-black-light;
+              .reply-btn-area {
+                .item{
+                  margin-right:15px;
+                }
+              }
+              .user-wrap {
+                  float: right;
+                  img.avatar {
+                    display: inline-block;
+                    *display: inline;
+                    *zoom: 1;
+                    width: 30px;
+                    height: 30px;
+                    line-height: 30px;
+                    border-radius: 30px;
+                    overflow: hidden;
+                    text-align: center;
+                  }
+              }
             }
+
             .actions {
                 position: absolute;
                 top: 0;
                 right: 0;
-            }
-        }
-        .info-area {
-            .clearfix();
-            .actions {
-                float: left;
-                width: 250px;
-            }
-            .create-at,
-            .edit-at {
-                float: right;
-            }
-        }
-        .reply-btn-area {
-            span {
-                margin-right: 5px;
             }
         }
         .reply-edit-area {

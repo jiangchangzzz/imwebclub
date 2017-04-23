@@ -154,7 +154,7 @@ exports.getFullTopic = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByParentId(topic._id, proxy.done('replies'));
+    Reply.getRepliesByParentId(topic._id, {score:-1}, proxy.done('replies'));
   }));
 };
 

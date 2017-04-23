@@ -192,6 +192,7 @@ exports.outQuestion = function(question){
     reply_count: question.reply_count,
     visit_count: question.visit_count,
     collect_count: question.collect_count,
+    ups: question.ups,
     solved: question.solved,
     last_reply: question.last_reply,
     last_reply_at: question.last_reply_at,

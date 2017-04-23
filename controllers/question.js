@@ -5,6 +5,7 @@ var Question = require('../proxy').Question;
 var Reply = require('../proxy').Reply;
 var QuestionAnswer = require('../proxy').QuestionAnswer;
 var UserCollect = require('../proxy').UserCollect;
+var UserFollow = require('../proxy').UserFollow;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var store = require('../common/store');
@@ -43,13 +44,6 @@ function saveQuestion(req, next, callback) {
  * @param  {Function} next
  */
 exports.index = function (req, res, next) {
-  function isUped(user, reply) {
-    if (!reply.ups) {
-      return false;
-    }
-    return reply.ups.indexOf(user._id) !== -1;
-  }
-
   var question_id = req.params.qid;
   var currentUser = req.session.user;
   var tabs = [['all', '全部']].concat(config.tabs);
@@ -57,17 +51,18 @@ exports.index = function (req, res, next) {
   if (question_id.length !== 24) {
     return res.render404('此话题不存在或已被删除。');
   }
-  var events = ['question', 'tops', 'is_collect', 'answer'];
+  var events = ['question', 'tops', 'is_collect', 'is_follow', 'answer'];
   var ep = EventProxy.create(events,
-    function (question, tops, is_collect, answer) {
+    function (question, tops, is_collect, is_follow, answer) {
       res.render('question/index', {
         active: 'question',
         question: dataAdapter.outQuestion(question),
         answer: dataAdapter.outReply(answer),
         tabs: tabs,
         tops: tops,
-        is_uped: isUped,
-        is_collect: is_collect
+        is_uped: currentUser && question.ups.indexOf(currentUser.id) > -1,
+        is_collect: is_collect,
+        is_follow: is_follow
       });
     });
 
@@ -122,8 +117,10 @@ exports.index = function (req, res, next) {
 
   if (!currentUser) {
     ep.emit('is_collect', null);
+    ep.emit('is_follow', null);
   } else {
     UserCollect.getUserCollect(currentUser._id, question_id, ep.done('is_collect'));
+    UserFollow.getUserFollow(currentUser._id, question_id, ep.done('is_follow'));
   }
   QuestionAnswer.getQuestionAnswer(question_id, null, ep.done(function(item) {
       if (!item) {
@@ -175,6 +172,10 @@ exports.list = function (req, res, next) {
   var tab = req.params.tab || 'all';
   var solved = req.query.solved || 'all';
   var sort = req.query.sort || 'hot';
+  var subtab = sort;
+  if(req.query.solved === 'false'){
+    subtab = 'unsolved';
+  }
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
     'latest': '-create_at',
@@ -255,7 +256,7 @@ exports.list = function (req, res, next) {
         pages: pages,
         tabs: tabs,
         tab: tab,
-        sort: sort,
+        subtab: subtab,
         solved: solved,
         base: '/question/tab/' + tab,
         pageTitle: tabName && (tabName + '活动'),
@@ -445,7 +446,7 @@ exports.answer = function (req, res, next) {
           question.save();
           reply.top = true;
           reply.save();
-          return ep.emit('done');
+          return ep.emit('done',{ data:{answer:true}});
         });
       });
     } else if(action === 'clear'){
@@ -455,7 +456,7 @@ exports.answer = function (req, res, next) {
         }
         question.solved = false;
         question.save();
-        return ep.emit('done');
+        return ep.emit('done',{ data:{answer:false}});
       });
     }else{
       return ep.emit('fail', 403, '参数不合法。');

@@ -113,17 +113,19 @@ router.get('/activity/:tid', activity.index);  // 显示某个话题
 router.get('/activity/tab/:tab', activity.list);
 
 // 通用操作
-router.post('/operate/top', auth.adminRequired, operate.top);  // 将某主题置顶
-router.post('/operate/good', auth.adminRequired, operate.good); // 将某主题加精
-router.post('/operate/lock', auth.adminRequired, operate.lock); // 锁定主题，不能再回复
-router.post('/operate/collect', auth.userRequired, operate.collect); // （取消）收藏某个主题
+router.post('/operate/top', auth.adminRequired, operate.top);  // 将某目标置顶
+router.post('/operate/good', auth.adminRequired, operate.good); // 将某目标加精
+router.post('/operate/lock', auth.adminRequired, operate.lock); // 锁定目标，不能再回复
+router.post('/operate/collect', auth.userRequired, operate.collect); // （取消）收藏某个目标
+router.post('/operate/follow', auth.userRequired, operate.follow); // （取消）关注某个目标
+router.post('/operate/up', auth.userRequired, operate.up); // 为目标点赞
 
 // 回复
+router.get('/reply/:parent_id/query', reply.query);//排序获取评论列表
 router.post('/:kind/:parent_id/reply', auth.userRequired, limit.peruserperday('create_reply', config.create_reply_per_day, {showJson: false}), reply.add); // 提交一级回复
 router.get('/reply/:reply_id/edit', auth.userRequired, reply.showEdit); // 修改自己的评论页
 router.post('/reply/:reply_id/edit', auth.userRequired, reply.update); // 修改某评论
 router.post('/reply/:reply_id/delete', auth.userRequired, reply.delete); // 删除某评论
-router.post('/reply/:reply_id/up', auth.userRequired, reply.up); // 为评论点赞
 router.post('/upload', auth.userRequired, topic.upload); //上传图片
 
 // 问答

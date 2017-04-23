@@ -16,12 +16,14 @@ var QuestionSchema = new Schema({
   reply_count: { type: Number, default: 0 },
   visit_count: { type: Number, default: 0 },
   collect_count: { type: Number, default: 0 },
+  follower_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   last_reply: { type: ObjectId },
   last_reply_at: { type: Date, default: Date.now },
   content_is_html: { type: Boolean },
   // reprint: { type: String, default: '' },
+  ups: [Schema.Types.ObjectId],
   top: { type: Boolean, default: false }, // 置顶
   good: { type: Boolean, default: false }, // 精华
   lock: {type: Boolean, default: false}, // 锁定

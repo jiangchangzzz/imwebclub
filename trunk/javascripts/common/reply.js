@@ -42,8 +42,6 @@ define([
                 return me.renderReplyItem(item, i + currLen);
             }).join('');
             list.append(html);
-            $('#reply-panel').removeClass('hide');
-
             me.changeImgSrc();
         },
         /**
@@ -69,7 +67,7 @@ define([
                 index: index,
                 user: user,
                 markdown: imweb.markdown,
-                isAdmin: user && user.loginname && user.is_admin,
+                isAdmin: user && user.is_admin,
                 isLogin: user && user.loginname,
                 isAuthor: user && user.id === item.author.id,
                 isParentAuthor: user && user.loginname === me.parentAuthor.loginname,
@@ -102,10 +100,8 @@ define([
                 markdown: imweb.markdown,
                 isAdmin: imweb.user && imweb.user.loginname && imweb.user.is_admin,
                 isLogin: imweb.user && imweb.user.loginname,
-                isAuthor: user
-                    && user.loginname === item.author.loginname,
-                isParentAuthor: user
-                    && user.loginname === me.parentAuthor.loginname,
+                isAuthor: user && user.loginname === item.author.loginname,
+                isParentAuthor: user && user.loginname === me.parentAuthor.loginname,
                 index: index
             });
         },
@@ -190,7 +186,7 @@ define([
          */
         replySubmit: function(e) {
             var me = this;
-            var editor = $('.reply-panel .editor').data('editor');
+            var editor = $('.editor-wrap .editor').data('editor');console.log(editor);
             var content = editor.codemirror.getValue();
             if (!content) {
                 alert('回复不可为空');
@@ -202,7 +198,6 @@ define([
                 }
             }).done(function(data) {
                 if (data.ret === 0 && data.data) {
-                    $(".reply-panel").removeClass("hide");
                     me.replyListAppend(data.data.reply);
                     editor.codemirror.setValue('');
                     $('.reply-count').html(data.data.reply_count);
@@ -276,31 +271,30 @@ define([
          */
         upReply: function(e) {
             var me = this;
-            var $ele = $(e.target).closest('.up-reply');console.log($ele);
-            if($ele.data('mine').toString() === 'true'){
+            var $ele = $(e.target);
+            if (!(imweb.user && imweb.user.loginname)) {
+                alert('请登陆。');
+                return;
+            }
+            if($ele.closest('.updown').data('mine').toString() === 'true'){
               alert('您无法对自己的评论点赞。');
               return;
             }
             var $reply = me._getReplyItem($ele);
             var replyId = $reply.data('reply-id');
-            var cancelVal = $ele.data('cancel');
-            var cancel = cancelVal.toString() === 'true';
-            if (!(imweb.user && imweb.user.loginname)) {
-                return;
-            }
-            imweb.ajax.post('/reply/' + replyId + '/up', {
+            var cancel = $ele.hasClass('fa-caret-down');
+
+            imweb.ajax.post('/operate/up', {
                 data: {
-                    reply_id: replyId,
+                    kind: 'reply',
+                    object_id: replyId,
                     cancel: cancel
                 }
             }).done(function(data) {
                 if (data.ret === 0) {
-                    data = data.data;
-                    cancel = !cancel;
-                    $ele.data('cancel', cancel);
-                    $ele.html(cancel ? '取消赞' : '赞');
-                    $ele.closest('.reply-item')
-                        .find('.up-count').html(data.reply.ups.length);
+                    $ele.toggleClass('hidden');
+                    $ele.siblings('.fa').toggleClass('hidden');
+                    $ele.closest('.reply-item').find('.updown .count').text(data.data.count);
                 } else if (data.msg) {
                     alert(data.msg);
                 }
@@ -328,11 +322,9 @@ define([
                 $editor.data('editor').codemirror.focus();
                 $editor.closest(".editor-wrap").find(".editor-toolbar").hide();
                 $ele.html('收起');
-                $subReply.removeClass("hide");
             } else {
                 $editArea.hide();
                 $ele.html('回复');
-                $subReply.addClass("hide");
             }
             // 隐藏其它的编辑器
             var $otherEditorAreas = $reply.closest('#reply-list')

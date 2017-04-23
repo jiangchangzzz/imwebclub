@@ -2,7 +2,7 @@ var models = require('../models');
 var Reply = models.Reply;
 var QuestionAnswer = require('./question_answer');
 var EventProxy = require('eventproxy');
-
+var _ = require('lodash');
 var tools = require('../common/tools');
 var renderHelper = require('../common/render_helper');
 var User = require('./user');
@@ -73,8 +73,14 @@ exports.getLastReplyByParentId = function (parentId, callback) {
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getRepliesByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId, deleted: false}, '', {sort: {top: -1, create_at : 1}}, function (err, replies) {
+exports.getRepliesByParentId = function (parentId, sorts, callback) {
+  var sort = {
+    top: -1
+  };
+  if(sorts){
+    sort = _.extend(sort, sorts);
+  }
+  Reply.find({parent_id: parentId, deleted: false}, '', {sort: sort}, function (err, replies) {
     //console.log(replies);
     if (err) {
       return callback(err);

@@ -11,17 +11,21 @@
     overflow: hidden;
 
     .ico{
+      display: inline-block;
+      font-weight: bolder;
       color:@ui-blue;
+      margin: 3px;
     }
 
     .side {
         float: right;
         width: 250px;
         ul.other-info{
+          margin-top: 10px;
           font-size: 12px;
           li{
             display: inline-block;
-            width: 50px;
+            margin-right: 10px;
           }
         }
     }
@@ -65,92 +69,22 @@
   }
 }
 
-.detail-info {
-    position: relative;
-    background: #fff;
-    padding: 20px 20px 30px 20px;
-    border-bottom: 1px solid #ddd;
-    .ui-avatar {
-        float: left;
-    }
-    .user-wrap {
-        padding-left: 65px;
-    }
-    .user-name {
-        font-size: 16px;
-        max-width: 160px;
-    }
-    .other-info {
-        position: absolute;
-        right: 10px;
-        top: 20px;
-        li {
-            float: left;
-            text-align: center;
-            margin-left: 30px;
-            padding-right: 30px;
-            border-right: 1px solid #ddd;
-            &:last-child {
-                padding-right: 20px;
-                border-right: none;
-            }
-            p {
-                font-size: 16px;
-                color: #333;
-            }
-            span {
-                color: #999;
-            }
-        }
-    }
-}
-
-.detail-header {
-    padding-left: 0px;
-    background-color: white;
-    border-bottom: 1px solid @ui-gray;
-    .detail-title {
-        font-weight: normal;
-        margin-top: 20px;
-        font-size: 24px;
-        border-left: 5px solid @ui-blue;
-        padding-left: 30px;
-    }
-    .cell-from {
-        color: #999;
-        line-height: 14px;
-        margin-top: 20px;
-        padding-left: 35px;
-        .cell-reprint {
-            border: 1px solid #fff;
-            border-radius: 100px;
-            font-weight: normal;
-            padding: 0 5px;
-            margin-left: 5px;
-            &:hover {
-                border: 1px solid @ui-blue;
-            }
-        }
-    }
-    .title-wrap {
-        padding: 0 30px;
-        margin-top: 20px;
-    }
-    .btn-wrap{
-      float: right;
-      .ico{
-        cursor: pointer;
-        margin: 3px;
-        &:hover{
-          color: @ui-blue;
-        }
+.detail-content{
+  font-size: 14px;
+  .main{
+    margin-left: 70px;
+    .main-foot{
+      color:#888;
+      font-size: 14px;
+      .item{
+        margin-right: 15px;
       }
     }
-}
-
-.detail-content{
-  padding: 10px;
-  font-size: 14px;
+  }
+  .left{
+    float:left;
+    width:70px;
+  }
 }
 
 .reply-item{

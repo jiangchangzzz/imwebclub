@@ -5,10 +5,16 @@ import '../../stylesheets/reply.less';
 import "../../javascripts/libs/editor/editor.css";
 import '../../javascripts/common/reply.js';
 
+function initReplies(replies){
+  var me = window.replyAction;
+  $('#reply-list').empty();
+  me.initReplyList('topic', imweb.topic.id, imweb.topic.author, replies);
+}
+
 $(document).ready(function(){
     var me = window.replyAction;
-    me.initReplyList('topic', imweb.topic.id, imweb.topic.author, imweb.topic.replies);
-    me.initEditor('.reply-panel .editor');
+    initReplies(imweb.topic.replies);
+    me.initEditor('.editor-wrap .editor');
     $('.reply-submit').click(_.bind(me.replySubmit, me));
     $('#content').on(
         'click',
@@ -20,7 +26,7 @@ $(document).ready(function(){
         _.bind(me.deleteReply, me)
     ).on(
         'click',
-        '.up-reply',
+        '.updown .fa',
         _.bind(me.upReply, me)
     ).on(
         'click',

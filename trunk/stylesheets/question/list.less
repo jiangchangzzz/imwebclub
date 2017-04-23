@@ -45,11 +45,19 @@ ul.question-list {
             color: white;
             background-color: @card-highlight;
             border-radius: 56px;
+            .fa{
+              font-size: 25px;
+            }
+            .txt{
+              font-size: 12px;
+              line-height: 12px;
+            }
           }
         }
         >.main{
           margin-left: 65px;
           .item-header{
+            height: 65px;
             >.fr{
               text-align: right;
               width: 230px;
@@ -61,12 +69,17 @@ ul.question-list {
             .main{
               margin-right: 230px;
               .relative{
-                font-size: 12px;
+                font-size: 14px;
+                line-height: 20px;
+                .item{
+                  margin-right: 10px;
+                }
               }
             }
           }
           .item-body{
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 20px;
             color: @card-gray;
             p{
               height: 60px;

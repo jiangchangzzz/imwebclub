@@ -16,9 +16,9 @@
   }) %>
   <div id="content" class="topic_list">
     <div class="query-list">
-      <a href="?sort=hot" class="question-query <%= sort==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
-      <a href="?sort=latest" class="question-query <%= sort==='latest' ? 'current-query' : '' %>">最新</a>&nbsp;|&nbsp;
-      <a href="?solved=false" class="question-query  <%= solved==='false' ? 'current-query' : '' %>">未解决</a>
+      <a href="?sort=hot" class="question-query <%= subtab==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
+      <a href="?sort=latest" class="question-query <%= subtab==='latest' ? 'current-query' : '' %>">最新</a>&nbsp;|&nbsp;
+      <a href="?solved=false" class="question-query  <%= subtab==='unsolved' ? 'current-query' : '' %>">未解决</a>
     </div>
     <ul class="question-list">
     <%- partial("../question/abstract", {collection:questions, as:"question"})%>

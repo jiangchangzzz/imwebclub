@@ -22,6 +22,7 @@ var ActivitySchema = new Schema({
   reply_count: { type: Number, default: 0 },
   visit_count: { type: Number, default: 0 },
   collect_count: { type: Number, default: 0 },
+  follower_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   last_reply: { type: ObjectId },
