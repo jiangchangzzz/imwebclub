@@ -67,9 +67,8 @@
           <span class='col_fade'>热门问答</span>
         </div>
         <div class='box-body'>
-          <% if (typeof(tops) === 'undefined' || tops.length > 0) { %>
           <ul class='unstyled question-list'>
-            <%for(var i=0;i<tops.length;i++){var item=tops[i];%>
+            <%if (typeof(topquestions) === 'undefined' || topquestions.length > 0) {for(var i=0;i<topquestions.length;i++){var item=topquestions[i];%>
               <li>
                 <a href="/question/<%=item._id%>"><%= item.title %></a>
                 <div class="status">
@@ -77,11 +76,8 @@
                   <%= item.solved ? '|已解决':'' %>
                 </div>
               </li>
-            <%}%>
+            <%}}%>
           </ul>
-          <% } else { %>
-          <p>无</p>
-          <% } %>
         </div>
       </div>
     </div>

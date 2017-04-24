@@ -62,15 +62,15 @@ exports.index = function (req, res, next) {
   if (question_id.length !== 24) {
     return res.render404('此话题不存在或已被删除。');
   }
-  var events = ['question', 'tops', 'is_collect', 'is_follow', 'answer'];
+  var events = ['question', 'topquestions', 'is_collect', 'is_follow', 'answer'];
   var ep = EventProxy.create(events,
-    function (question, tops, is_collect, is_follow, answer) {
+    function (question, topquestions, is_collect, is_follow, answer) {
       res.render('question/index', {
         active: 'question',
         question: dataAdapter.outQuestion(question),
         answer: dataAdapter.outReply(answer),
         tabs: tabs,
-        tops: tops,
+        topquestions: topquestions,
         is_uped: currentUser && question.ups.indexOf(currentUser.id) > -1,
         is_collect: is_collect,
         is_follow: is_follow
@@ -79,16 +79,16 @@ exports.index = function (req, res, next) {
 
   ep.fail(next);
 
-  cache.get('tops', ep.done(function (tops) {
-    if (tops) {
-      ep.emit('tops', tops);
+  cache.get('topquestions', ep.done(function (topquestions) {
+    if (topquestions) {
+      ep.emit('topquestions', topquestions);
     } else {
       Question.getQuestionsByQuery(
         { },
         { limit: 10, sort: '-reply_count' },
-        ep.done('tops', function (tops) {
-          cache.set('tops', tops, 60 * 1);
-          return tops;
+        ep.done('topquestions', function (topquestions) {
+          cache.set('topquestions', topquestions, 60 * 1);
+          return topquestions;
         })
       );
     }
