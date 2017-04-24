@@ -72,10 +72,6 @@ define([
                 isAuthor: user && user.id === item.author.id,
                 isParentAuthor: user && user.loginname === me.parentAuthor.loginname,
                 reply: $.extend({}, item, {
-                    author: {
-                      loginname: item.author.name || item.author.loginname || ' ',
-                      avatar: item.author.avatar || '../../images/avatarDefault.jpg'
-                    },
                     subReplies: item.subReplies || [],
                     subRepliesHTML: subRepliesHTML
                 }),

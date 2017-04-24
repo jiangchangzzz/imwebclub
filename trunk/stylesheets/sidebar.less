@@ -1,5 +1,5 @@
 @profile-bg: #f8f8f8;
-@box-highlight: #2fa0ef;
+@box-highlight: #6ACDF6;
 @box-light: #878787;
 @box-border: #dfdfdf;
 @box-active: #DDD;
@@ -37,10 +37,10 @@
 #sidebar{
   .box {
       display: block;
-      box-shadow: 0 4px 6px @shadow-color;
-      background-color: white;
       margin-bottom: 10px;
       padding: 10px;
+      box-shadow: 0 4px 6px @shadow-color;
+      background-color: white;
 
       .box-head {
           padding: 0 6px;
@@ -265,6 +265,36 @@
                   }
               }
           }
+      }
+
+      &.question{
+        box-shadow: none;
+        background-color:inherit;
+        .box-head{
+          border-left: none;
+        }
+        .box-body{
+          font-size: 14px;
+          text-align: left;
+          margin: 5px 10px;
+          .question-list{
+            li{
+              width: 100%;
+              margin: 0;
+              a{
+                display: block;
+                width: 100%;
+                padding: 0 5px;
+                margin: 0 -5px;
+                color: @box-highlight;
+              }
+              .status{
+                font-size: 12px;
+                color: @box-light;
+              }
+            }
+          }
+        }
       }
   }
 }

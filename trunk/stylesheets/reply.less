@@ -65,7 +65,11 @@
 }
 .reply-panel{
   .panel-head{
+    margin: 10px 0;
     border-bottom: solid 2px @ui-gray;
+    .panel-head-title{
+      font-size: 20px;
+    }
     ul.sorts{
       float: right;
       list-style: none;
@@ -74,9 +78,9 @@
       border: solid 1px @ui-gray;
 
       li{
-        display: inline-block;
+        float: left;
         margin: 0;
-        padding: 0 3px;
+        padding: 3px 5px;
         cursor: pointer;
 
         &:hover,&.active{
@@ -128,9 +132,8 @@
 
     .reply-item {
         display: block;
-        padding: 10px;
+        padding: 10px 0;
         border-bottom: 1px solid #ddd;
-        margin-top: 10px;
 
         .left-area {
             float: left;
@@ -141,32 +144,37 @@
             min-height: 100px;
 
             & > .content-wrap {
-                min-height: 70px;
                 background-color: #f6f6f6;
                 color: @ui-black;
                 padding: 5px;
             }
-            .foot-wrap{
-              margin-top: 5px;
+            .reply-btn-area {
+              height: 40px;
+              margin: 10px 0;
               font-size: 14px;
               color: @ui-black-light;
-              .reply-btn-area {
-                .item{
-                  margin-right:15px;
-                }
+              .item{
+                margin-right:15px;
               }
               .user-wrap {
+                  width: 120px;
+                  height: 40px;
+                  overflow: hidden;
+                  line-height: 20px;
                   float: right;
                   img.avatar {
-                    display: inline-block;
-                    *display: inline;
-                    *zoom: 1;
+                    float: left;
                     width: 30px;
                     height: 30px;
                     line-height: 30px;
                     border-radius: 30px;
                     overflow: hidden;
                     text-align: center;
+                  }
+                  .score{
+                    display: block;
+                    font-size: 12px;
+                    color: @ui-black-light;
                   }
               }
             }
@@ -210,31 +218,30 @@
     .sub-reply {
         background: #f6f6f6;
         margin-top: 10px;
-    }
-    .sub-reply-list {
-        list-style: none;
-    }
-    .sub-reply-item {
-        margin-top: 10px;
-        line-height: 16px;
-        padding: 5px 10px;
-        &:first-child {
-            margin-top: 0;
-        }
-        .content-wrap {
-            color: @ui-black;
-            line-height: 20px;
-        }
-        .minus {
-            margin: 0 8px;
-        }
-        .create-at {
-            margin-left: 5px;
-        }
-        .act {
-            margin-left: 3px;
+        margin-left: 50px;
+        .sub-reply-list {
+            list-style: none;
+            .sub-reply-item {
+                line-height: 16px;
+                padding: 5px 10px;
+                border-bottom: 1px solid white;
+                .content-wrap {
+                    color: @ui-black;
+                    line-height: 20px;
+                }
+                .minus {
+                    margin: 0 8px;
+                }
+                .create-at {
+                    margin-left: 5px;
+                }
+                .act {
+                    margin-left: 3px;
+                }
+            }
         }
     }
+
     .editor-wrap {
         .CodeMirror {
             height: 80px;

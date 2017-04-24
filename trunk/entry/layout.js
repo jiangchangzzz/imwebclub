@@ -51,6 +51,11 @@ $(document).ready(function(){
   // rich_name.attr("content","imweb前端社区文章：" + RICH_META.name);
   // rich_description.attr("content",RICH_META.author +":" +RICH_META.name);
   // rich_image.attr("content",RICH_META.img);
+  $('#sidebar .weixin').hover(function(){
+      $('#sidebar .q_code').removeClass('hidden');
+  },function(){
+      $('#sidebar .q_code').addClass('hidden');
+  });
 });
 
 // ajax common

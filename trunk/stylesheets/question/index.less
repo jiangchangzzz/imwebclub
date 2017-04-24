@@ -7,7 +7,7 @@
     width: 100%;
     height: 70px;
     padding: 5px;
-    border-bottom: solid 1px @ui-gray;
+    background-color: @gray-bg;
     overflow: hidden;
 
     .ico{
@@ -38,6 +38,9 @@
           font-weight: normal;
         }
         .about{
+          .user-name{
+            color: @ui-blue;
+          }
           .ui-tag{
             display: inline;
           }
@@ -92,10 +95,18 @@
     display: table-cell;
     text-align: center;
     vertical-align: middle;
-    width: 38px;
-    height: 38px;
+    width: 45px;
+    height: 45px;
     color: white;
-    background-color: #2fa0ef;
-    border-radius: 38px;
+    background-color: @ui-blue;
+    border-radius: 45px;
+    .fa{
+      display: block;
+      font-size: 20px;
+    }
+    .txt{
+      font-size: 12px;
+      line-height: 12px;
+    }
   }
 }

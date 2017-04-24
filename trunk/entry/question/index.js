@@ -16,7 +16,7 @@ function initReplies(replies){
     }
   }, function(reply){
     if(reply.answer){
-      return '<div class="status">答案</div>';
+      return '<div class="status"><i class="fa fa-check" aria-hidden="true"></i><div class="txt">已采纳</div></div>';
     }
   });
 }

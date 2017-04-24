@@ -95,7 +95,7 @@
     }
 }
 
-.set-background( @background:@ui-blue; ) {
+.set-background( @background:@ui-blue-light; ) {
     background: @background;
 
     &:hover,&:active {
@@ -157,16 +157,16 @@
     .inline-block();
     .set-text();
     .set-background();
-    .set-border();
+    border: none;
     overflow: hidden;
     line-height: 20px;
-    padding: 0 12px;
+    padding: 5px 12px;
     border-radius: 3px;
     vertical-align: baseline;
     font-size: 12px;
     cursor: pointer;
 
-    .ui-button-white{
+    &.ui-button-white{
       .inline-block();
       cursor: pointer;
       color: @ui-blue;
@@ -183,7 +183,7 @@
           color: @ui-white;
       }
     }
-    .ui-button-blue{
+    &.ui-button-blue{
       .inline-block();
       color: @ui-white;
       background: @ui-blue;
@@ -194,7 +194,7 @@
       }
     }
 
-    .ui-button-wide {
+    &.ui-button-wide {
         min-width: 150px;
         height: 34px;
         line-height: 34px;

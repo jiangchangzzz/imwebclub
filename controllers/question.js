@@ -79,14 +79,13 @@ exports.index = function (req, res, next) {
 
   ep.fail(next);
 
-  // 取排行榜上的用户
   cache.get('tops', ep.done(function (tops) {
     if (tops) {
       ep.emit('tops', tops);
     } else {
-      User.getUsersByQuery(
-        { is_block: false },
-        { limit: 10, sort: '-score' },
+      Question.getQuestionsByQuery(
+        { },
+        { limit: 10, sort: '-reply_count' },
         ep.done('tops', function (tops) {
           cache.set('tops', tops, 60 * 1);
           return tops;
@@ -94,7 +93,6 @@ exports.index = function (req, res, next) {
       );
     }
   }));
-  // END 取排行榜上的用户
 
   Question.getFullQuestion(question_id, ep.done(function (message, question, author, replies) {
     if (message) {
@@ -236,34 +234,15 @@ exports.list = function (req, res, next) {
   }));
   // END 取分页数据
 
-  // 取排行榜上的用户
-  cache.get('tops', proxy.done(function (tops) {
-    if (tops) {
-      proxy.emit('tops', tops);
-    } else {
-      User.getUsersByQuery(
-        { is_block: false },
-        { limit: 10, sort: '-score' },
-        proxy.done('tops', function (tops) {
-          // console.log(tops);
-          cache.set('tops', tops, 60 * 1);
-          return tops;
-        })
-      );
-    }
-  }));
-  // END 取排行榜上的用户
-
   var tabs = [['all', '全部']].concat(config.tabs);
   var tabName = renderHelper.tabName(tab);
 
-  proxy.all('questions', 'pages', 'tops', function (questions, pages, tops) {
+  proxy.all('questions', 'pages', function (questions, pages) {
       res.render('question/list', {
         active: 'question',
         questions: questions,
         current_page: page,
         list_question_count: limit,
-        tops: tops,
         pages: pages,
         tabs: tabs,
         tab: tab,

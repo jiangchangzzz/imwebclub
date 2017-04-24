@@ -31,8 +31,9 @@
 <div id="questionHeader">
   <div class="inner">
     <div class="side">
-      <button class="ui-button ui-button-blue collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button>
-      <button class="ui-button ui-button-blue follow-question-btn"><%= is_follow ? '取消关注' : '关注' %></button>
+      <button class="ui-button collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button>
+      &nbsp;&nbsp;
+      <button class="ui-button follow-question-btn"><%= is_follow ? '取消关注' : '关注' %></button>
       <ul class="other-info">
         <li>
           <span><%= question.visit_count %></span>浏览
@@ -50,19 +51,40 @@
       <div class="about">
         <%if(question.tabName){var link = "#";%>
           <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == question.tabName){link = "/tab/"+tabs[i][0];}}%>
-          <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= question.tabName %></a>
+          <a class="ui-tag ui-tag-blue-light" href="<%=link%>"><%= question.tabName %></a>
         <%}%>
         <a class="user-name" href="/user/<%= question.author.loginname %>/index"><%= question.author.name || question.author.loginname%></a>
-        <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= question.friendly_create_at %></span>
+        <span class="ui-time"><%= question.friendly_create_at %>的提问</span>
         <span class="origin hidden">原文出处:<a href="http://imweb.io/question/<%= question.id %>">imweb社区</a>(未经同意，禁止转载)</span>
       </div>
     </div>
   </div>
 </div>
 <div id="main" class="clearfix">
-    <%- partial('common/sidebar.html',{
-        tops: tops
-    }) %>
+    <div id='sidebar'>
+      <div class='box question'>
+        <div class='box-head'>
+          <span class='col_fade'>热门问答</span>
+        </div>
+        <div class='box-body'>
+          <% if (typeof(tops) === 'undefined' || tops.length > 0) { %>
+          <ul class='unstyled question-list'>
+            <%for(var i=0;i<tops.length;i++){var item=tops[i];%>
+              <li>
+                <a href="/question/<%=item._id%>"><%= item.title %></a>
+                <div class="status">
+                  <%= item.reply_count%>回答
+                  <%= item.solved ? '|已解决':'' %>
+                </div>
+              </li>
+            <%}%>
+          </ul>
+          <% } else { %>
+          <p>无</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
 
     <div id='content'>
       <div class='detail-content'>
@@ -108,7 +130,7 @@
 
       <div class="reply-panel <%if(question.reply_count == 0){%>hide<% } %>">
           <div class="panel-head">
-              <span class="panel-head-title"><span class="reply-count"><%= question.reply_count %></span>  条评论</span>
+              <span class="panel-head-title"><span class="reply-count"><%= question.reply_count %></span>个回答</span>
               <ul class="sorts">
                 <li class="active" data-sortby="ups">默认排序</li>
                 <li data-sortby="time">时间排序</li>

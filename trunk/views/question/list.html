@@ -11,9 +11,80 @@
 </div>
 
 <div id="main" class="clearfix">
-  <%- partial('common/sidebar.html',{
-      tops: tops
-  }) %>
+  <div id="sidebar">
+      <% if (current_user) { %>
+      <div class="box profile">
+          <a href="/user/<%= current_user.loginname %>/index">
+            <div class="avatar">
+                <% if (current_user.avatar) { %>
+                  <img src="<%= current_user.avatar %>">
+                <% } else { %>
+                  <img src="../../images/avatarDefault.jpg">
+                <% } %>
+            </div>
+          </a>
+          <div class="name"><%= current_user.name || current_user.loginname %></div>
+          <ul class="contribution-list">
+              <li>
+                  <b><%= current_user.topic_count || 0%></b>
+                  <span class="title">文章</span>
+              </li>
+              <li>
+                  <b><%= current_user.question_count || 0%></b>
+                  <span class="title">问答</span>
+              </li>
+          </ul>
+      </div>
+      <% } else { %>
+      <a class="box radius" href="/auth/weibo">
+        <img src="../../images/weiboColor.png" class="ico"/>使用微博登陆
+      </a>
+      <a class="box radius" href="javascript:void(0);">
+        <img src="../../images/weixinColor.png" class="ico"/>使用微信登陆
+      </a>
+      <a class="box radius" href="/auth/github">
+        <img src="../../images/githubColor.png" class="ico"/>使用Github登陆
+      </a>
+      <a class="box radius" href="javascript:void(0);">
+        <img src="../../images/qqColor.png" class="ico"/>使用QQ登陆
+      </a>
+      <% } %>
+      <div id="social" class="box border">
+          <div class="box-head">
+              <b>关注我们</b>
+          </div>
+          <hr class="solid-light">
+          <div class="box-body">
+              <ul class="ico-list">
+                  <li>
+                      <a target="_blank" href="http://weibo.com/u/5623195454?refer_flag=1001030201">
+                          <img src="../../images/weiboColor.png">
+                      </a>
+                  </li>
+                  <li class="weixin">
+                      <img src="../../images/weixinColor.png">
+                  </li>
+                  <li>
+                      <img src="../../images/zhihuColor.png">
+                  </li>
+              </ul>
+              <div class="q_code hidden">
+                  <img src="../../images/official-account-new.jpg">
+              </div>
+              <ul class="txt-list">
+                  <li>
+                      <a href="http://imweb.github.io/" target="_blank">关于我们</a>
+                  </li>
+                  <li>
+                      <a href="javascript:void(0);">加入我们</a>
+                  </li>
+              </ul>
+          </div>
+          <div class="box-footer">
+              2017 imweb
+          </div>
+      </div>
+  </div>
   <div id="content" class="topic_list">
     <div class="query-list">
       <a href="?sort=hot" class="question-query <%= subtab==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
@@ -23,44 +94,44 @@
     <ul class="question-list">
     <%- partial("../question/abstract", {collection:questions, as:"question"})%>
     </ul>
-  </div>
-  <div class="pagination" current_page="<%= current_page %>">
-    <ul>
-      <% var base_url = base + (base.indexOf("?") < 0 ? "?" : "&") + "page="; %>
-      <% if (current_page == 1) { %>
-      <li class="disabled btn-step"><i class="fa fa-backward"></i></li>
-      <% } else { %>
-      <li class="btn-step" title="首页"><a href="<%= base_url %>1"><i class="fa fa-step-backward"></i></a></li>
-      <li class="btn-step" title="前一页"><a href="<%= base_url %><%= (current_page-1) %>"><i class="fa fa-backward"></i></a></li>
-      <% } %>
+    <div class="pagination" current_page="<%= current_page %>">
+      <ul>
+        <% var base_url = base + (base.indexOf("?") < 0 ? "?" : "&") + "page="; %>
+        <% if (current_page == 1) { %>
+        <li class="disabled btn-step"><i class="fa fa-backward"></i></li>
+        <% } else { %>
+        <li class="btn-step" title="首页"><a href="<%= base_url %>1"><i class="fa fa-step-backward"></i></a></li>
+        <li class="btn-step" title="前一页"><a href="<%= base_url %><%= (current_page-1) %>"><i class="fa fa-backward"></i></a></li>
+        <% } %>
 
-      <%
-      var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
-      var page_end = page_start + 4 >= pages ? pages : page_start + 4;
-      %>
+        <%
+        var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
+        var page_end = page_start + 4 >= pages ? pages : page_start + 4;
+        %>
 
-      <% if (page_start > 1) { %>
-      <li><a>...</a></li>
-      <% } %>
+        <% if (page_start > 1) { %>
+        <li><a>...</a></li>
+        <% } %>
 
-      <% for(var i = page_start; i <= page_end; i++) { %>
-      <% if (i === current_page) { %>
-      <li class="disabled"><a><%= i %></a></li>
-      <% } else { %>
-      <li title="<%= i %>"><a href="<%= base_url + i %>"><%= i %></a></li>
-      <% } %>
-      <% } %>
+        <% for(var i = page_start; i <= page_end; i++) { %>
+        <% if (i === current_page) { %>
+        <li class="disabled"><a><%= i %></a></li>
+        <% } else { %>
+        <li title="<%= i %>"><a href="<%= base_url + i %>"><%= i %></a></li>
+        <% } %>
+        <% } %>
 
-      <% if (page_end < pages ) { %>
-      <li><a>...</a></li>
-      <% } %>
+        <% if (page_end < pages ) { %>
+        <li><a>...</a></li>
+        <% } %>
 
-      <% if (current_page == pages) { %>
-      <li class="disabled btn-step"><i class="fa fa-forward"></i></li>
-      <% } else { %>
-      <li class="btn-step" title="下一页"><a href="<%= base_url + (current_page+1) %>"><i class="fa fa-forward"></i></a></li>
-      <li class="btn-step" title="尾页"><a href="<%= base_url + pages %>"><i class="fa fa-step-forward"></i></a></li>
-      <% } %>
-    </ul>
+        <% if (current_page == pages) { %>
+        <li class="disabled btn-step"><i class="fa fa-forward"></i></li>
+        <% } else { %>
+        <li class="btn-step" title="下一页"><a href="<%= base_url + (current_page+1) %>"><i class="fa fa-forward"></i></a></li>
+        <li class="btn-step" title="尾页"><a href="<%= base_url + pages %>"><i class="fa fa-step-forward"></i></a></li>
+        <% } %>
+      </ul>
+    </div>
   </div>
 </div>

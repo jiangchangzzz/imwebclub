@@ -97,6 +97,7 @@ exports.outUser = function(user) {
         loginname: user.loginname,
         url: user.url,
         avatar: avatar,
+        score: user.score,
         company: user.company,
         team: user.team
     };
@@ -107,6 +108,7 @@ exports.outUserAll = function(user) {
         name: user.name,
         loginname: user.loginname,
         email: user.email,
+        score: user.score,
         url: user.url,
         location: user.location,
         signature: user.signature,
