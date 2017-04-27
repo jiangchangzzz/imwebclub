@@ -132,6 +132,18 @@
                         <%})%>
                     <%}%>
                 </ul>
+                <ul class="activity-list">
+                    <% if (typeof(activity_industry) !== 'undefined' && activity_industry.length > 0) { %>
+                        <% activity_industry.forEach(function (activity, index) { %>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <img src="../images/activity1.jpg">
+                                    <span class="one-line"><%=activity.title%></span>
+                                </a>
+                            </li>
+                        <%})%>
+                    <%}%>
+                </ul>
             </div>
         </div>
     </div>
