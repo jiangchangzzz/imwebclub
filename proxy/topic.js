@@ -98,6 +98,7 @@ exports.getTopicsByQuery = function (query, opt, callback) {
           topic.author = author;
           topic.reply = reply;
           topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+          topic.friendly_update_at = tools.formatDate(topic.update_at, true);
         } else {
           topics[i] = null;
         }

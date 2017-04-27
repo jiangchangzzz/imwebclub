@@ -68,7 +68,7 @@
             <div class="column-body">
                 <ul class="question-list">
                     <% if (typeof(questions) !== 'undefined' && questions.length > 0) { %>
-                        <% questions.slice(0,5).forEach(function (question, index) { %>
+                        <% questions.slice(0,3).forEach(function (question, index) { %>
                             <li class="question-item">
                                 <div class="item-header">
                                     <a href="/question/<%= question.id %>"><%= question.title %></a>
@@ -121,42 +121,16 @@
             <hr class="solid-light">
             <div class="column-body">
                 <ul class="activity-list">
-                    <li>
-                        <a href="javascript:void(0);">
-                            <img src="../images/activity1.jpg">
-                            <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式2亿QQ在线背后的web敏捷开发模式</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <img src="../images/activity2.jpg">
-                            <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <img src="../images/activity3.jpg">
-                            <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <img src="../images/activity4.jpg">
-                            <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <img src="../images/activity5.jpg">
-                            <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式2亿QQ在线背后的web敏捷开发模式</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <img src="../images/activity6.jpg">
-                            <span class="one-line">Velocity2014:2亿QQ在线背后的web敏捷开发模式</span>
-                        </a>
-                    </li>
+                    <% if (typeof(activity_imweb) !== 'undefined' && activity_imweb.length > 0) { %>
+                        <% activity_imweb.forEach(function (activity, index) { %>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <img src="../images/activity1.jpg">
+                                    <span class="one-line"><%=activity.title%></span>
+                                </a>
+                            </li>
+                        <%})%>
+                    <%}%>
                 </ul>
             </div>
         </div>

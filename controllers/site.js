@@ -41,6 +41,7 @@ exports.index = function (req, res, next) {
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
     return topics;
   }));
+
   Question.getQuestionsByQuery({}, options, proxy.done('questions', function (questions) {
     return questions.map(function(item){
       return dataAdapter.outQuestion(item);
@@ -64,48 +65,48 @@ exports.index = function (req, res, next) {
   }));
   // END 取排行榜上的用户
 
-  // 取0回复的主题
-  // cache.get('no_reply_topics', proxy.done(function (no_reply_topics) {
-  //   if (no_reply_topics) {
-  //     proxy.emit('no_reply_topics', no_reply_topics);
-  //   } else {
-  //     Topic.getTopicsByQuery(
-  //       { reply_count: 0, tab: { $ne: 'job' } },
-  //       { limit: 5, sort: '-create_at' },
-  //       proxy.done('no_reply_topics', function (no_reply_topics) {
-  //         cache.set('no_reply_topics', no_reply_topics, 60 * 1);
-  //         return no_reply_topics;
-  //       }));
-  //   }
-  // }));
-  // END 取0回复的主题
-
-  // 取分页数据
-  var pagesCacheKey = JSON.stringify(query) + 'pages';
-  cache.get(pagesCacheKey, proxy.done(function (pages) {
-    if (pages) {
-      proxy.emit('pages', pages);
+  //取活动
+  cache.get('activity_imweb', proxy.done(function(imwebs) {
+    if (imwebs) {
+      proxy.emit('activity_imweb', imwebs);
     } else {
-      Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
-        var pages = Math.ceil(all_topics_count / limit);
-        cache.set(pagesCacheKey, pages, 60 * 1);
-        proxy.emit('pages', pages);
-      }));
+      Activity.getActivitiesByQuery(
+        { tab: 'imweb' },
+        { limit: 6, sort: '-create_at' },
+        proxy.done('activity_imweb', function (imwebs) {
+          cache.set('activity_imweb', imwebs, 60 * 1);
+          return imwebs;
+        })
+      )
     }
   }));
-  // END 取分页数据
+
+  cache.get('activity_industry', proxy.done(function(industrys) {
+    if (industrys) {
+     proxy.emit('activity_industry', industrys); 
+    } else {
+      Activity.getActivitiesByQuery(
+        { tab: 'industry' },
+        { limit: 6, sort: '-create_at' },
+        proxy.done('activity_industry', function (industrys) {
+          cache.set('activity_industry', industrys, 60 * 1);
+          return industrys;
+        })
+      )
+    }
+  }))
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', /**'no_reply_topics',**/ 'pages',
-    function (topics, questions, tops,/**t no_reply_topics,**/ pages) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry',
+    function (topics, questions, tops, activity_imweb, activity_industry) {
       res.render('index', {
         topics: topics,
         questions: questions,
         current_page: page,
         list_topic_count: limit,
         tops: tops,
-        // no_reply_topics: no_reply_topics,
-        pages: pages,
+        activity_industry: activity_industry,
+        activity_imweb: activity_imweb,
         tabs: config.tabs,
         tab: tab,
         pageTitle: tabName && (tabName + '版块')
