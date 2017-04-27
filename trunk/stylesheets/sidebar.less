@@ -141,10 +141,21 @@
                           width: 50px;
                           .avatar(40px);
                       }
-                      
-                      .middle {
-                          margin-left: 50px;
-                          margin-right: 5px;
+                      .right {
+                          float: right;
+                          width: 50px;
+
+                          a.link {
+                              color: @box-highlight;
+                              font-weight: bold;
+
+                              &.middle {
+                                  line-height: 40px;
+                              }
+                          }
+                      }
+                      .center {
+                          margin: 0 50px;
                           text-align: left;
 
                           .middle{

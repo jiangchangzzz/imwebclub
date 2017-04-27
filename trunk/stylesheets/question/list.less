@@ -1,10 +1,13 @@
 @card-bg: #f3f3f3;
 @card-highlight: #2fa0ef;
-@card-gray: #666;
+@card-gray: #999;
+@card-orange: #F97440;
 @shadow-color: #ddd;
 
 .query-list {
+  margin-bottom: 10px;
   border-bottom: 1px solid @shadow-color;
+  font-size: 16px;
   a{
     display: inline-block;
     padding: 3px;
@@ -16,7 +19,6 @@
       }
       &.current-query {
         color: @card-highlight;
-        border-bottom: 3px solid @card-highlight;
       }
     }
   }
@@ -24,27 +26,34 @@
 
 ul.question-list {
     li {
+        padding-bottom: 10px;
         margin-top: 10px;
         height: 130px;
         overflow: hidden;
-        border-bottom: solid 1px @card-gray;
+        border-bottom: dashed 1px @shadow-color;
 
         >.fl{
           width: 65px;
-          .avatar img{
-            width: 56px;
-            height: 56px;
-            border-radius: 56px;
+          .avatar {
+            height: 60px;
+            img{
+              width: 50px;
+              height: 50px;
+              border-radius: 50px;
+            }
           }
           .status{
-            display: table-cell;
             text-align: center;
-            vertical-align: middle;
-            width: 56px;
-            height: 56px;
+            width: 50px;
+            height: 50px;
             color: white;
-            background-color: @card-highlight;
-            border-radius: 56px;
+            border-radius: 50px;
+            &.unsolved{
+              background-color: @card-orange;
+            }
+            &.solved{
+              background-color: @card-highlight;
+            }
             .fa{
               display: block;
               font-size: 25px;
@@ -58,19 +67,24 @@ ul.question-list {
         >.main{
           margin-left: 65px;
           .item-header{
-            height: 65px;
+            height: 60px;
             >.fr{
               text-align: right;
               width: 230px;
-              font-size: 12px;
+              font-size: 13px;
               .tag{
                 color: @card-highlight;
               }
             }
             .main{
               margin-right: 230px;
+              a{
+                font-size: 18px;
+                line-height: 25px;
+                font-weight: bold;
+              }
               .relative{
-                font-size: 14px;
+                font-size: 13px;
                 line-height: 20px;
                 .item{
                   margin-right: 10px;
@@ -82,6 +96,9 @@ ul.question-list {
             font-size: 12px;
             line-height: 20px;
             color: @card-gray;
+            .qa{
+              font-size: 15px;
+            }
             p{
               height: 60px;
               overflow: hidden;

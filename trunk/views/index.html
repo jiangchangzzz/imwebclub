@@ -36,7 +36,7 @@
         <div id="hotArticles" class="column">
             <div class="column-head">
                 <b>热文</b>
-                <a class="link" href="/topic/tab/all">更多</a>
+                <a class="fr" href="/topic/tab/all">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
@@ -62,7 +62,7 @@
         <div id="hotQuestions" class="column">
             <div class="column-head">
                 <b>热问</b>
-                <a class="link" href="/question/tab/all">更多</a>
+                <a class="fr" href="/question/tab/all">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
@@ -73,16 +73,12 @@
                                 <div class="item-header">
                                     <a href="/question/<%= question.id %>"><%= question.title %></a>
                                     <div class="fr">
-                                        <span class="commentCount" alt="<%= question.reply_count %>回复">
-                                             <%= question.reply_count %>
-                                            <i></i>
-                                        </span>
                                         <a class="tag" href="/question/tab/<%= question.tabName %>"><%= question.tabName %></a>
                                     </div>
                                 </div>
                                 <div class="item-body">
                                     <div class="avatar">
-                                        <img src="../images/avatarDefault.png">
+                                        <img src="<%= question.author.avatar %>">
                                     </div>
                                     <div class="content">
                                         <b><%= question.author.name || question.author.loginname %></b>
@@ -111,21 +107,24 @@
         <div id="hotActivtities" class="column">
             <div class="column-head">
                 <b>最新活动</b>
-                <span class="kind">
-                      <a href="javascript:void(0);">imweb</a>
-                      |
-                      <a href="javascript:void(0);">行业</a>
-                    </span>
-                <a class="link" href="javascript:void(0);">更多</a>
+                <span class="fr">
+                    <a href="/activity/tab/imweb">imweb</a>
+                    |
+                    <a href="/activity/tab/industry">行业</a>
+                </span>
             </div>
             <hr class="solid-light">
             <div class="column-body">
                 <ul class="activity-list">
                     <% if (typeof(activity_imweb) !== 'undefined' && activity_imweb.length > 0) { %>
-                        <% activity_imweb.forEach(function (activity, index) { %>
+                        <% activity_imweb.slice(0,6).forEach(function (activity, index) { %>
                             <li>
                                 <a href="javascript:void(0);">
-                                    <img src="../images/activity1.jpg">
+                                    <% if(activity.pic && activity.pic.length > 0){ %>
+                                      <img src="<%= activity.pic[0] %>">
+                                    <% }else{ %>
+                                      <img src="../images/activity1.jpg">
+                                    <% } %>
                                     <span class="one-line"><%=activity.title%></span>
                                 </a>
                             </li>

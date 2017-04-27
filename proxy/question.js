@@ -89,21 +89,18 @@ exports.getQuestionsByQuery = function (query, opt, callback) {
 
     questions.forEach(function (question, i) {
       var ep = new EventProxy();
-      ep.all('author', 'reply', function (author, reply) {
+      ep.all('author', 'last_reply', 'answer', function (author, last_reply, answer) {
         // 保证顺序
         // 作者可能已被删除
-        if (author) {
-          question.author = author;
-          question.reply = reply;
-        } else {
-          questions[i] = null;
-        }
+        question.author = author;
+        question.last_reply = last_reply.length>0 ? last_reply[0] : null;
+        question.answer = answer.length>0 ? answer[0] : null;
         proxy.emit('question_ready');
       });
 
       User.getUserById(question.author_id, ep.done('author'));
-      // 获取主题的最后回复
-      Reply.getReplyById(question.last_reply, ep.done('reply'));
+      Reply.getLastReplyByParentId(question._id, ep.done('last_reply'));
+      Reply.getTopReplyByParentId(question._id, ep.done('answer'));
     });
   });
 };
