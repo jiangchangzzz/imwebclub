@@ -51,7 +51,7 @@
                 <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
                     <% topics.slice(0,5).forEach(function (topic, index) { %>
                         <li <% if(index === 0) { %>class="active"<% } %>>
-                            <a href="/topic/<%= topic._id %>" class="one-line"><%= topic.title %></a>
+                            <a href="/topic/<%= topic.id %>" class="one-line"><%= topic.title %></a>
                             <p><%= topic.summary || topic.content %></p>
                         </li>
                     <%})%>
@@ -119,7 +119,7 @@
                     <% if (typeof(activity_imweb) !== 'undefined' && activity_imweb.length > 0) { %>
                         <% activity_imweb.slice(0,6).forEach(function (activity, index) { %>
                             <li>
-                                <a href="javascript:void(0);">
+                                <a href="/activity/<%= activity.id %>">
                                     <% if(activity.pic && activity.pic.length > 0){ %>
                                       <img src="<%= activity.pic[0] %>">
                                     <% }else{ %>

@@ -129,12 +129,11 @@ exports.getLimit5w = function (callback) {
  */
 exports.getFullActivity = function (id, callback) {
   var proxy = new EventProxy();
-  var events = ['activity', 'author', 'replies'];
-  proxy
-    .assign(events, function (activity, author, replies) {
-      callback(null, '', activity, author, replies);
-    })
-    .fail(callback);
+  var events = ['activity', 'author'];
+  
+  proxy.assign(events, function (activity, author) {
+      callback(null, '', activity, author);
+    }).fail(callback);
 
   Activity.findOne({ _id: id, deleted: false }, proxy.done(function (activity) {
     if (!activity) {
@@ -154,7 +153,7 @@ exports.getFullActivity = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByActivityId(activity._id, proxy.done('replies'));
+    //Reply.getRepliesByParentId(activity._id, {score:-1,create_at: 1}, proxy.done('replies'));
   }));
 };
 

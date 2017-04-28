@@ -2,6 +2,8 @@ var validator = require('validator');
 var at = require('../common/at');
 var User = require('../proxy').User;
 var Activity = require('../proxy').Activity;
+var UserCollect = require('../proxy').UserCollect;
+var UserFollow = require('../proxy').UserFollow;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var store = require('../common/store');
@@ -48,33 +50,27 @@ function saveActivity(req, next, callback) {
 };
 
 exports.index = function (req, res, next) {
-  function isUped(user, reply) {
-    if (!reply.ups) {
-      return false;
-    }
-    return reply.ups.indexOf(user._id) !== -1;
-  }
-
   var activity_id = req.params.tid;
   var currentUser = req.session.user;
 
   if (activity_id.length !== 24) {
     return res.render404('此话题不存在或已被删除。');
   }
-  var events = ['activity', 'is_collect'];
+  var events = ['activity', 'is_collect', 'is_follow'];
   var ep = EventProxy.create(events,
-    function (activity, is_collect) {
+    function (activity, is_collect, is_follow) {
       res.render('activity/index', {
         active: 'activity',
-        activity: activity,
-        is_uped: isUped,
+        activity: dataAdapter.outActivity(activity),
+        is_uped: currentUser && activity.ups.indexOf(currentUser.id) > -1,
         is_collect: is_collect,
+        is_follow: is_follow
       });
   });
 
   ep.fail(next);
 
-  Activity.getFullActivity(activity_id, ep.done(function (message, activity, author, replies) {
+  Activity.getFullActivity(activity_id, ep.done(function (message, activity, author) {
     if (message) {
       logger.error('getFullActivity error activity_id: ' + activity_id)
       return res.renderError(message);
@@ -84,7 +80,7 @@ exports.index = function (req, res, next) {
     activity.save();
 
     activity.author  = author;
-    activity.replies = replies;
+    /*activity.replies = replies;
 
     // 点赞数排名第三的回答，它的点赞数就是阈值
     activity.reply_up_threshold = (function () {
@@ -98,15 +94,17 @@ exports.index = function (req, res, next) {
         threshold = 3;
       }
       return threshold;
-    })();
+    })();*/
 
     ep.emit('activity', activity);
   }));
 
   if (!currentUser) {
     ep.emit('is_collect', null);
+    ep.emit('is_follow', null);
   } else {
-    ActivityCollect.getActivityCollect(currentUser._id, activity_id, ep.done('is_collect'))
+    UserCollect.getUserCollect(currentUser._id, activity_id, ep.done('is_collect'));
+    UserFollow.getUserFollow(currentUser._id, activity_id, ep.done('is_follow'));
   }
 };
 
@@ -228,23 +226,27 @@ exports.list = function (req, res, next) {
 exports.showEdit = function (req, res, next) {
   var activity_id = req.params.tid;
 
-  Activity.getActivityById(activity_id, function (err, activity, tags) {
+  Activity.getActivity(activity_id, function (err, activity) {
     if (!activity) {
-      res.render404('此话题不存在或已被删除。');
+      res.render404('此活动不存在或已被删除。');
       return;
     }
 
     if (String(activity.author_id) === String(req.session.user._id) || req.session.user.is_admin) {
       res.render('activity/edit', {
+        active: 'activity',
         action: 'edit',
         activity_id: activity._id,
         title: activity.title,
         content: activity.content,
-        tab: activity.tab,
-        tabs: config.tabs
+        begin_time: activity.begin_time,
+        end_time: activity.end_time,
+        location_str: activity.location_str,
+        tabValue: activity.tab,
+        tabs: config.activityTabs
       });
     } else {
-      res.renderError('对不起，你不能编辑此话题。', 403);
+      res.renderError('对不起，你不能编辑此活动。', 403);
     }
   });
 };
@@ -266,8 +268,7 @@ exports.update = function (req, res, next) {
                 data: dataAdapter.outActivity(activity)
             });
         } else {
-            //res.redirect('/activity/' + activity._id);
-            res.redirect('/');
+            res.redirect('/activity/' + activity._id);
         }
     });
     ep.on('fail', function(msg, activity) {
@@ -280,6 +281,7 @@ exports.update = function (req, res, next) {
             });
         } else {
             return res.render('activity/edit', {
+                active: 'activity',
                 action: 'edit',
                 edit_error: msg,
                 activity_id: activity._id || '',
@@ -291,7 +293,7 @@ exports.update = function (req, res, next) {
     var user = req.session.user;
     Activity.getActivityById(activity_id, ep.done(function(activity, tags) {
         if (!activity) {
-            return ep.emit('faile',  '此话题不存在或已被删除。');
+            return ep.emit('faile',  '此活动不存在或已被删除。');
         }
         if (!tools.idEqual(activity.author_id, user._id) && !user.is_admin) {
             return ep.emit('faile', '无操作权限。', activity);
@@ -300,15 +302,16 @@ exports.update = function (req, res, next) {
         var allTabs = config.tabs.map(function (tPair) {
             return tPair[0];
         });
-        if (!config.regExps.activityTitle.test(title)
-            || !config.regExps.activityContent.test(content)
-            || !_.contains(allTabs, tab)
-        ) {
-            return ep.emit('fail', 'param error', activity);
-        }
+        // if (!config.regExps.activityTitle.test(title)
+        //     || !config.regExps.activityContent.test(content)
+        //     || !_.contains(allTabs, tab)
+        // ) {
+        //     return ep.emit('fail', 'param error', activity);
+        // }
         activity.title = title;
         activity.content = content;
-        activity.summary = html_encode(tools.genActivitySummary(content, config.activity_summary_len));
+        question.pic = tools.genPicFromContent(content);
+        activity.summary = tools.genActivitySummary(content, config.topic_summary_len);
         activity.tab = tab;
         activity.update_at = new Date();
         activity.save(ep.done(function() {

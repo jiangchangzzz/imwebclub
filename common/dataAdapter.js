@@ -124,6 +124,7 @@ exports.outTopic = function(item, options) {
     var out = {
         id: item._id.toString(),
         title: item.title,
+        summary: item.summary,
         create_at: +item.create_at,
         friendly_create_at: tools.formatDate(item.create_at, true),
         update_at: +item.update_at,
@@ -161,6 +162,9 @@ exports.outDraft = function(item, options) {
 exports.outActivity = function(activity) {
   var out = {
     id: activity._id.toString(),
+    author: activity.author,
+    friendly_create_at: tools.formatDate(activity.create_at, true),
+    friendly_update_at: tools.formatDate(activity.update_at, true),
     title: activity.title,
     content: activity.content,
     begin_time: activity.begin_time,
@@ -168,7 +172,11 @@ exports.outActivity = function(activity) {
     end_time: activity.end_time,
     end_str: activity.end_str,
     location_str: activity.location_str,
-    pic: activity.pic
+    pic: activity.pic,
+    reply_count: activity.reply_count,
+    visit_count: activity.visit_count,
+    collect_count: activity.collect_count,
+    ups: activity.ups
   }
   var now_time = (new Date()).getTime();
   if(now_time < activity.begin_time){

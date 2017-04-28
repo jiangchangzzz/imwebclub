@@ -17,6 +17,7 @@ var ActivitySchema = new Schema({
   location_str: { type: String },
   pic: { type: Array },
   author_id: { type: ObjectId },
+  ups: [Schema.Types.ObjectId],
   top: { type: Boolean, default: false }, // 置顶帖
   good: { type: Boolean, default: false }, // 精华帖
   reply_count: { type: Number, default: 0 },
