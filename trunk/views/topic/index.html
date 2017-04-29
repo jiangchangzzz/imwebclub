@@ -122,10 +122,11 @@
         <div class='topic-content'>
             <div class="markdown-text">
                 <blockquote>
-                    <p><span style="margin-left: 10px;">本文作者：imweb <%= topic.author.name || topic.author.loginname %></span>
-                        <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/topic/<%= topic._id %>">imweb社区</a></span>
-                        <b style="margin-left: 10px;">未经同意，禁止转载</b>
-                        </p>
+                    <p>
+                      <span style="margin-left: 10px;">本文作者：imweb <%= topic.author.name || topic.author.loginname %></span>
+                      <span style="margin-left: 10px;">原文出处：<a href="http://imweb.io/topic/<%= topic._id %>">imweb社区</a></span>
+                      <b style="margin-left: 10px;">未经同意，禁止转载</b>
+                    </p>
                 </blockquote>
                 <%- markdownRender(topic.linkedContent) %>
             </div>

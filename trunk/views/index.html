@@ -107,18 +107,33 @@
         <div id="hotActivtities" class="column">
             <div class="column-head">
                 <b>最新活动</b>
-                <span class="fr">
-                    <a href="/activity/tab/imweb">imweb</a>
+                <span class="kind">
+                    <a href="javascript:;" class="imweb active">imweb</a>
                     |
-                    <a href="/activity/tab/industry">行业</a>
+                    <a href="javascript:;" class="industry">行业</a>
                 </span>
+                <a class="fr" href="/activity/tab/imweb">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
                 <ul class="activity-list">
                     <% if (typeof(activity_imweb) !== 'undefined' && activity_imweb.length > 0) { %>
                         <% activity_imweb.slice(0,6).forEach(function (activity, index) { %>
-                            <li>
+                            <li class="activity_imweb">
+                                <a href="/activity/<%= activity.id %>">
+                                    <% if(activity.pic && activity.pic.length > 0){ %>
+                                      <img src="<%= activity.pic[0] %>">
+                                    <% }else{ %>
+                                      <img src="../images/activity1.jpg">
+                                    <% } %>
+                                    <span class="one-line"><%=activity.title%></span>
+                                </a>
+                            </li>
+                        <%})%>
+                    <%}%>
+                    <% if (typeof(activity_industry) !== 'undefined' && activity_industry.length > 0) { %>
+                        <% activity_industry.slice(0,6).forEach(function (activity, index) { %>
+                            <li class="activity_industry">
                                 <a href="/activity/<%= activity.id %>">
                                     <% if(activity.pic && activity.pic.length > 0){ %>
                                       <img src="<%= activity.pic[0] %>">

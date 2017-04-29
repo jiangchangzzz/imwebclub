@@ -10,7 +10,12 @@
           <a href="<%= value ? '/activity/tab/' + value : '/' %>" class="activity-tab <%= value === tab ? 'current-tab' : '' %>"><%= text %></a>
           &nbsp;&nbsp;&nbsp;
       <% }) %>
-      <a class="fr" href="javascript:void(0);">活动合作</a>
+      <div class="fr">
+        <% if (current_user && current_user.is_admin) {%>
+          <a href="/activity/create">发布活动</a>|
+        <% } %>
+        <a href="javascript:void(0);">活动合作</a>
+      </div>
     </div>
     <ul class="activity-list">
     <%- partial("../activity/abstract", {collection:activities, as:"activity"})%>

@@ -26,29 +26,6 @@ const activityMock = [{
   title: '中国创客联赛南京站2017创客马拉松'
 }];
 
-function saveActivity(req, next, callback) {
-  var title = escapeHtml(validator.trim(req.body.title));
-  var tab = validator.escape(validator.trim(req.body.tab));
-  var content = validator.trim(req.body.content || req.body.t_content);
-  var begin_time = req.body.begin_time;
-  var begin_str = req.body.begin_str;
-  var end_time = req.body.end_time;
-  var end_str = req.body.end_str;
-  var location_str = req.body.location_str;
-
-  var user = req.session.user;
-  var ep = new EventProxy();
-  ep.fail(next);
-
-  // console.log(title+"is done !");
-
-  Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, user._id, ep.done('activity'));
-
-  ep.all('activity', function (activity, user) {
-    callback(null, activity);
-  });
-};
-
 exports.index = function (req, res, next) {
   var activity_id = req.params.tid;
   var currentUser = req.session.user;
@@ -117,22 +94,29 @@ exports.create = function (req, res, next) {
 };
 
 exports.put = function (req, res, next) {
-  console.log(req.body);
-  //for marktang
   if (!req.body.title || !req.body.content || !req.body.tab) {
-    res.render('/activity/edit', {
-      content_from_marktang: req.body.content || ''
-    });
+    res.render('/activity/edit', req.body);
     return;
   }
-  saveActivity(req, next, function (err, activity) {
-      if (err || !activity) {
-        res.send({
-          ret: 400
-        });
-      } else {
-        res.redirect('/activity/tab/'+activity.tab);
-      }
+  var title = escapeHtml(validator.trim(req.body.title));
+  var tab = validator.escape(validator.trim(req.body.tab));
+  var content = validator.trim(req.body.content || req.body.t_content);
+  var begin_time = req.body.begin_time;
+  var begin_str = req.body.begin_str;
+  var end_time = req.body.end_time;
+  var end_str = req.body.end_str;
+  var location_str = req.body.location_str;
+
+  var user = req.session.user;
+
+  // console.log(title+"is done !");
+
+  Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, user._id, function(err,activity){
+    if(err || !activity){
+      res.render('/activity/edit', req.body);
+      return;
+    }
+    res.redirect('/activity/'+activity._id);
   });
 };
 
@@ -239,8 +223,8 @@ exports.showEdit = function (req, res, next) {
         activity_id: activity._id,
         title: activity.title,
         content: activity.content,
-        begin_time: activity.begin_time,
-        end_time: activity.end_time,
+        begin_time: activity.begin_time.toISOString(),
+        end_time: activity.end_time.toISOString(),
         location_str: activity.location_str,
         tabValue: activity.tab,
         tabs: config.activityTabs
@@ -256,6 +240,11 @@ exports.update = function (req, res, next) {
     var activity_id = req.params.tid;
     var title = escapeHtml(validator.trim(req.body.title));
     var tab = validator.escape(validator.trim(req.body.tab));
+    var begin_time = req.body.begin_time;
+    var begin_str = req.body.begin_str;
+    var end_time = req.body.end_time;
+    var end_str = req.body.end_str;
+    var location_str = req.body.location_str;
     var content = validator.trim(req.body.content || req.body.t_content);
 
     var ep = new EventProxy();
@@ -310,9 +299,14 @@ exports.update = function (req, res, next) {
         // }
         activity.title = title;
         activity.content = content;
-        question.pic = tools.genPicFromContent(content);
-        activity.summary = tools.genActivitySummary(content, config.topic_summary_len);
+        activity.pic = tools.genPicFromContent(content);
+        activity.summary = tools.genSummaryFromContent(content, config.topic_summary_len);
         activity.tab = tab;
+        activity.begin_time = begin_time;
+        activity.begin_str = begin_str;
+        activity.end_time = end_time;
+        activity.end_str = end_str;
+        activity.location_str = location_str;
         activity.update_at = new Date();
         activity.save(ep.done(function() {
             at.sendMessageToMentionUsers(content, activity._id, user._id);
