@@ -30,6 +30,7 @@ var ActivitySchema = new Schema({
   last_reply_at: { type: Date, default: Date.now },
   content_is_html: { type: Boolean },
   reprint: { type: String, default: '' },
+  external_link: { type: String, default: '' },
   lock: {type: Boolean, default: false}, // 被锁定主题
   deleted: {type: Boolean, default: false},
 });

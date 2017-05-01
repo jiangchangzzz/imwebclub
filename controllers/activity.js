@@ -16,16 +16,6 @@ var mail = require('../common/mail');
 var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 
-const activityMock = [{
-  title: 'ArchSummit 深圳 2017'
-},{
-  title: 'GMTC 全球移动技术大会'
-},{
-  title: '世界云计算日'
-},{
-  title: '中国创客联赛南京站2017创客马拉松'
-}];
-
 exports.index = function (req, res, next) {
   var activity_id = req.params.tid;
   var currentUser = req.session.user;
@@ -36,13 +26,17 @@ exports.index = function (req, res, next) {
   var events = ['activity', 'is_collect', 'is_follow'];
   var ep = EventProxy.create(events,
     function (activity, is_collect, is_follow) {
-      res.render('activity/index', {
-        active: 'activity',
-        activity: dataAdapter.outActivity(activity),
-        is_uped: currentUser && activity.ups.indexOf(currentUser.id) > -1,
-        is_collect: is_collect,
-        is_follow: is_follow
-      });
+      if(activity.external_link){
+        res.redirect(activity.external_link);
+      }else{
+        res.render('activity/index', {
+          active: 'activity',
+          activity: dataAdapter.outActivity(activity),
+          is_uped: currentUser && activity.ups.indexOf(currentUser.id) > -1,
+          is_collect: is_collect,
+          is_follow: is_follow
+        });
+      }
   });
 
   ep.fail(next);
@@ -106,12 +100,12 @@ exports.put = function (req, res, next) {
   var end_time = req.body.end_time;
   var end_str = req.body.end_str;
   var location_str = req.body.location_str;
-
+  var external_link = req.body.external_link;
   var user = req.session.user;
 
   // console.log(title+"is done !");
 
-  Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, user._id, function(err,activity){
+  Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, user._id, function(err,activity){
     if(err || !activity){
       res.render('/activity/edit', req.body);
       return;
@@ -152,7 +146,7 @@ exports.list = function (req, res, next) {
     //console.log(activities);
     return activities.map(function(activity){
       return dataAdapter.outActivity(activity);
-    });//activityMock;
+    });
   }));
 
   // 取分页数据
@@ -223,9 +217,12 @@ exports.showEdit = function (req, res, next) {
         activity_id: activity._id,
         title: activity.title,
         content: activity.content,
-        begin_time: activity.begin_time.toISOString(),
-        end_time: activity.end_time.toISOString(),
+        begin_time: activity.begin_time,
+        begin_str: activity.begin_time.toISOString(),
+        end_time: activity.end_time,
+        end_str: activity.end_time.toISOString(),
         location_str: activity.location_str,
+        external_link: activity.external_link,
         tabValue: activity.tab,
         tabs: config.activityTabs
       });
@@ -245,6 +242,7 @@ exports.update = function (req, res, next) {
     var end_time = req.body.end_time;
     var end_str = req.body.end_str;
     var location_str = req.body.location_str;
+    var external_link = req.body.external_link;
     var content = validator.trim(req.body.content || req.body.t_content);
 
     var ep = new EventProxy();
@@ -273,19 +271,27 @@ exports.update = function (req, res, next) {
                 active: 'activity',
                 action: 'edit',
                 edit_error: msg,
-                activity_id: activity._id || '',
-                content: activity.content || '',
-                tabs: config.tabs
+                activity_id: activity._id,
+                title: activity.title,
+                content: activity.content,
+                begin_time: activity.begin_time,
+                begin_str: activity.begin_time.toISOString(),
+                end_time: activity.end_time,
+                end_str: activity.end_time.toISOString(),
+                location_str: activity.location_str,
+                external_link: activity.external_link,
+                tabValue: activity.tab,
+                tabs: config.activityTabs
             });
         }
     });
     var user = req.session.user;
     Activity.getActivityById(activity_id, ep.done(function(activity, tags) {
         if (!activity) {
-            return ep.emit('faile',  '此活动不存在或已被删除。');
+            return ep.emit('fail',  '此活动不存在或已被删除。');
         }
         if (!tools.idEqual(activity.author_id, user._id) && !user.is_admin) {
-            return ep.emit('faile', '无操作权限。', activity);
+            return ep.emit('fail', '无操作权限。', activity);
         }
         // 得到所有的 tab, e.g. ['ask', 'share', ..]
         var allTabs = config.tabs.map(function (tPair) {
@@ -307,6 +313,7 @@ exports.update = function (req, res, next) {
         activity.end_time = end_time;
         activity.end_str = end_str;
         activity.location_str = location_str;
+        activity.external_link = external_link;
         activity.update_at = new Date();
         activity.save(ep.done(function() {
             at.sendMessageToMentionUsers(content, activity._id, user._id);
