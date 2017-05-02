@@ -1,12 +1,76 @@
 .user-panel {
-	display: flex;
 	&__content {
-		flex-grow: 1;
 		&__detail {
 			display: flex;
-			
 			padding: 10px;
 			margin: 20px;
+		}
+	}
+	&__header {
+		height: 273px;
+		border-top: 1px solid #dedee1;
+		background-color: #e7e8eb;
+		&__content {
+			max-width: 1200px;
+			margin: 0 auto;
+			position: relative;
+			height: 100%;
+			display: flex;
+			.left {
+				flex: 1;
+				padding-top: 28px;
+				.user-icon {
+					float: left;
+					width: 214px;
+					height: 211px;
+					img {
+						display: block;
+						width: 100%;
+						border-radius: 1000px;
+					}
+				}
+				.user-info {
+					height: 211px;
+					margin-left: 45px;
+					font-size: 18px;
+					font-family: "microsoft yahei";
+					float: left;
+					box-sizing: border-box;
+					.username {
+						font-size: 28px;
+						line-height: 28px;
+					}
+					.score {
+						margin-top: 55px;
+						.icon-score {
+							width: 11px;
+							height: 11px;
+							display: inline-block;
+						}
+						.score-type {
+							margin-right: 20p;
+						}
+					}
+					.social {
+						margin-top: 55px;
+						.social-icon {
+							display: inline-block;
+							width: 32px;
+							height: 32px;
+							margin-right: 16px;
+							&.weibo {
+								background-image: url(../../images/social-weibo.png);
+							}
+							&.github {
+								background-image: url(../../images/social-github.png);
+							}
+						}
+					}
+				}
+			}
+			.right {
+				flex: 1.4;
+			}
 		}
 	}
 	#sidebar {

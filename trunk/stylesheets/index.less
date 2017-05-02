@@ -79,7 +79,10 @@
         }
 
         a {
-            color: @column-highlight;
+            cursor: pointer;
+            &.active {
+                color: @column-highlight;
+            }
             font-size: 14px;
 
             &.link {

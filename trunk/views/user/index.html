@@ -1,7 +1,41 @@
 <div class='user-panel'>
   <!-- 个人主页头部 -->
   <div class="user-panel__header">
-    
+    <div class="user-panel__header__content">
+      <div class="left">
+        <div class="user-icon">
+          <img src="<%= user.avatar %>"  alt="<%= user.loginname %>">
+        </div>
+        <div class="user-info">
+          <span class="username">
+            <%= user.loginname %>
+          </span>
+          <div class="score">
+            <span class="score-type">
+              <i class="icon-score icon-articles"></i>
+              <span>100</span>
+            </span>
+            <span class="score-type">
+              <i class="icon-score icon-answers"></i>
+              <span>100</span>
+            </span>
+            <span class="score-type">
+              <i class="icon-score icon-fans"></i>
+              <span>100</span>
+            </span>
+          </div>
+          <div class="social">
+            <a class="social-icon github"></a>
+            <a class="social-icon weibo"></a>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="info-detail">
+
+        </div>
+      </div>
+    </div> 
   </div>
   <!-- 个人主页头部end -->
   <div class='user-panel__content'>

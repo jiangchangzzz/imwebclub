@@ -66,7 +66,7 @@ exports.outUser = function(user) {
     //如果没有gravatar头像，则用默认
     var avatar = user.avatar;
     if(!avatar){
-      avatar = '//gravatar.com/avatar/' + utility.md5(user.email.toLowerCase()) + '?size=48';
+      avatar = '//gravatar.com/avatar/' + utility.md5(user.email.toLowerCase()) + '?size=200';
 
       // www.gravatar.com 被墙
       //url = url.replace('//www.gravatar.com', '//gravatar.com');

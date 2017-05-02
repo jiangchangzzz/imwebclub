@@ -10,22 +10,12 @@ $(document).ready(function(){
         $this.html('<a href="javascript:void(0);">已关注</a>');
       })
     })
+
+    $('.activity-tab').on('click', function (e) {
+        var $this = $(this),
+            index = $this.index();
+        $(this).addClass('active').siblings('a').removeClass('active');
+        $('.column-body .activity-list').addClass('hide').eq(index).removeClass('hide');
+    });
 })
 
-
-
-//首页入口逻辑
-/*
-define(['../common/sign.js','../common/ui.js'], function(sign) {
-    
-    //菜单悬浮效果
-    $(document).on({
-        mouseenter: function() {
-            $(this).addClass('active');
-        },
-        mouseleave: function() {
-            $(this).removeClass('active');
-        }
-    }, '.menu-list li');
-});
-*/

@@ -112,9 +112,9 @@
             <div class="column-head">
                 <b>最新活动</b>
                 <span class="kind">
-                      <a href="javascript:void(0);">imweb</a>
+                      <a class="activity-tab active">imweb</a>
                       |
-                      <a href="javascript:void(0);">行业</a>
+                      <a class="activity-tab">行业</a>
                     </span>
                 <a class="link" href="javascript:void(0);">更多</a>
             </div>
@@ -132,7 +132,7 @@
                         <%})%>
                     <%}%>
                 </ul>
-                <ul class="activity-list">
+                <ul class="activity-list hide">
                     <% if (typeof(activity_industry) !== 'undefined' && activity_industry.length > 0) { %>
                         <% activity_industry.forEach(function (activity, index) { %>
                             <li>
