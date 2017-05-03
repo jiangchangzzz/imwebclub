@@ -10,23 +10,29 @@
           <span class="username">
             <%= user.loginname %>
           </span>
-          <div class="score">
-            <span class="score-type">
-              <i class="icon-score icon-articles"></i>
+          <span class="register-time">注册时间: <%=user.create_at_ago() %></span>
+          <span class="score">积分: <%=user.score%></span>
+          <div class="achieve">
+            <span class="achieve-type">
+              <i class="icon-achieve icon-articles fa fa-file-text-o"></i>
+              <span><%=user.topic_count%></span>
+            </span>
+            <span class="achieve-type">
+              <i class="icon-achieve icon-answers fa fa-question-circle-o"></i>
               <span>100</span>
             </span>
-            <span class="score-type">
-              <i class="icon-score icon-answers"></i>
-              <span>100</span>
-            </span>
-            <span class="score-type">
-              <i class="icon-score icon-fans"></i>
+            <span class="achieve-type">
+              <i class="icon-achieve icon-fans fa fa-star-o"></i>
               <span>100</span>
             </span>
           </div>
           <div class="social">
-            <a class="social-icon github"></a>
-            <a class="social-icon weibo"></a>
+            <% if (user.githubUsername) { %>
+              <a class="social-icon github"></a>
+            <%}%>
+            <% if (user.weibo) { %>
+              <a class="social-icon weibo"></a>
+            <% } %>
           </div>
         </div>
       </div>
@@ -43,7 +49,7 @@
       <%- partial('./nav') %>
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
-          <%- partial('./userInfo') %>
+          <!--<%- partial('./userInfo') %>-->
         <div class='panel'>
         <div class='header'>
           <span class='col_fade'>最近创建的话题</span>

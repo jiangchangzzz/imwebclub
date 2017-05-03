@@ -22,9 +22,11 @@
                         <li>
                             <a href="/question/create">发布问题</a>
                         </li>
-                        <li>
-                            <a href="/activity/create">发布活动</a>
-                        </li>
+                        <% if(current_user.is_admin){%>
+                          <li>
+                              <a href="/activity/create">发布活动</a>
+                          </li>
+                        <%}%>
                     </ol>
                   </div>
                   <div class="menu-btn">
@@ -41,9 +43,6 @@
                             <a href="/admin/topic/all">后台管理</a>
                         </li>
                         <% } %>
-                        <li>
-                            <a href="/user/<%= current_user.loginname %>/setting">设置</a>
-                        </li>
                         <li>
                             <a href="/signout">退出登录</a>
                         </li>

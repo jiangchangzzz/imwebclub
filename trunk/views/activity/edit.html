@@ -34,7 +34,7 @@
             <div id="activity_create_warn"></div>
             <div class="control-group">
               <label class="control-label">活动标题：</label>
-              <input type="text" name="title">
+              <input type="text" name="title" value="<%= typeof(title) !== 'undefined' && title || '' %>">
             </div>
             <div class="control-group">
                 <label class="control-label" for="tab-value">选择版块：</label>
@@ -46,32 +46,36 @@
                       &nbsp;&nbsp;&nbsp;
                   <% }) %>
                 </select>
-              </div>
-              <div class="control-group">
-                <label class="control-label">开始时间：</label>
-                <input type="number" name="begin_time" class="hide">
-                <input type="text" name="begin_str" class="datetime">
-              </div>
-              <div class="control-group">
-                <label class="control-label">结束时间：</label>
-                <input type="number" name="end_time" class="hide">
-                <input type="text" name="end_str" class="datetime">
-              </div>
-              <div class="control-group">
-                <label class="control-label">活动地点：</label>
-                <input type="text" name="location_str">
-              </div>
-              <div class="control-group">
-                  <div class='markdown_editor in_editor'>
-                      <div class='markdown_in_editor'>
-                          <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= typeof(content_from_marktang) !== 'undefined' && content_from_marktang || '' %></textarea>
-                      </div>
-                  </div>
-              </div>
-              <div class="form-actions">
-                  <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
-                  <button class="ui-button" type="submit">提交</button>
-              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">活动外链：</label>
+              <input type="text" name="external_link" value="<%= typeof(external_link) !== 'undefined' && external_link || '' %>">
+            </div>
+            <div class="control-group">
+              <label class="control-label">开始时间：</label>
+              <input type="number" name="begin_time" class="hide" value="<%= typeof(begin_time) !== 'undefined' && begin_time || '' %>">
+              <input type="text" name="begin_str" class="datetime" value="<%= typeof(begin_str) !== 'undefined' && begin_str || '' %>">
+            </div>
+            <div class="control-group">
+              <label class="control-label">结束时间：</label>
+              <input type="number" name="end_time" class="hide" value="<%= typeof(end_time) !== 'undefined' && end_time || '' %>">
+              <input type="text" name="end_str" class="datetime" value="<%= typeof(end_str) !== 'undefined' && end_str || '' %>">
+            </div>
+            <div class="control-group">
+              <label class="control-label">活动地点：</label>
+              <input type="text" name="location_str" value="<%= typeof(location_str) !== 'undefined' && location_str || '' %>">
+            </div>
+            <div class="control-group">
+                <div class='markdown_editor in_editor'>
+                    <div class='markdown_in_editor'>
+                        <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= typeof(content) !== 'undefined' && content || '' %></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
+                <button class="ui-button" type="submit">提交</button>
+            </div>
           </form>
         </div>
     </div>

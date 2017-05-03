@@ -18,35 +18,12 @@ var renderHelper = require('../common/render_helper');
 var _ = require('lodash');
 
 exports.index = function (req, res, next) {
-  var page = parseInt(req.query.page, 10) || 1;
-  page = page > 0 ? page : 1;
   var tab = req.query.tab || 'all';
-
   var proxy = new eventproxy();
   proxy.fail(next);
 
-  // 取主题
-  var query = {};
-  if (tab && tab !== 'all') {
-    if (tab === 'good') {
-      query.good = true;
-    } else {
-      query.tab = tab;
-    }
-  }
-
-  var limit = config.list_hot_topic_count;
-  var options = { skip: (page - 1) * limit, limit: limit, sort: '-top -reply_count -create_at' };
-
-  Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
-    return topics;
-  }));
-
-  Question.getQuestionsByQuery({}, options, proxy.done('questions', function (questions) {
-    return questions.map(function(item){
-      return dataAdapter.outQuestion(item);
-    });
-  }));
+  // var limit = config.list_hot_topic_count;
+  var options = { limit: 10, sort: '-top -reply_count -create_at' };
 
   // 取排行榜上的用户
   cache.get('tops', proxy.done(function (tops) {
@@ -65,6 +42,36 @@ exports.index = function (req, res, next) {
   }));
   // END 取排行榜上的用户
 
+  //取文章
+  cache.get('topics', proxy.done(function(topics) {
+    if (topics) {
+      proxy.emit('topics', topics);
+    } else {
+      Topic.getTopicsByQuery({}, options, proxy.done('topics', function (topics) {
+        var result = topics.map(function(item){
+          return dataAdapter.outTopic(item);
+        });
+        cache.set('topics', result, 60 * 1);
+        return result;
+      }));
+    }
+  }));
+
+  //取问答
+  cache.get('questions', proxy.done(function(questions) {
+    if (questions) {
+      proxy.emit('questions', questions);
+    } else {
+      Question.getQuestionsByQuery({}, options, proxy.done('questions', function (questions) {
+          var result = questions.map(function(item){
+            return dataAdapter.outQuestion(item);
+          });
+          cache.set('questions', result, 60 * 1);
+          return result;
+      }));
+    }
+  }));
+
   //取活动
   cache.get('activity_imweb', proxy.done(function(imwebs) {
     if (imwebs) {
@@ -74,23 +81,28 @@ exports.index = function (req, res, next) {
         { tab: 'imweb' },
         { limit: 6, sort: '-create_at' },
         proxy.done('activity_imweb', function (imwebs) {
-          cache.set('activity_imweb', imwebs, 60 * 1);
-          return imwebs;
+          var result = imwebs.map(function(item){
+            return dataAdapter.outActivity(item);
+          });
+          cache.set('activity_imweb', result, 60 * 1);
+          return result;
         })
       )
     }
   }));
-
   cache.get('activity_industry', proxy.done(function(industrys) {
     if (industrys) {
-     proxy.emit('activity_industry', industrys); 
+      proxy.emit('activity_industry', industrys);
     } else {
       Activity.getActivitiesByQuery(
         { tab: 'industry' },
         { limit: 6, sort: '-create_at' },
         proxy.done('activity_industry', function (industrys) {
-          cache.set('activity_industry', industrys, 60 * 1);
-          return industrys;
+          var result = industrys.map(function(item){
+            return dataAdapter.outActivity(item);
+          });
+          cache.set('activity_industry', result, 60 * 1);
+          return result;
         })
       )
     }
@@ -102,8 +114,7 @@ exports.index = function (req, res, next) {
       res.render('index', {
         topics: topics,
         questions: questions,
-        current_page: page,
-        list_topic_count: limit,
+        // list_topic_count: limit,
         tops: tops,
         activity_industry: activity_industry,
         activity_imweb: activity_imweb,

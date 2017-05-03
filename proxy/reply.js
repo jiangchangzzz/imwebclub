@@ -62,7 +62,11 @@ exports.getReplyById = function (id, callback) {
  * @param callback 回调函数
  */
 exports.getLastReplyByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId, deleted: false}, '_id', {sort: {create_at : -1}, limit : 1}, callback);
+  Reply.find({parent_id: parentId, deleted: false}, '', {sort: {create_at : -1}, limit : 1}, callback);
+};
+
+exports.getTopReplyByParentId = function (parentId, callback) {
+  Reply.find({parent_id: parentId, deleted: false, top: true}, '', {limit : 1}, callback);
 };
 
 /**

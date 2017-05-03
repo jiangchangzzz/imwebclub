@@ -1,10 +1,36 @@
 <ul class='breadcrumb'>
-	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/index'>我的主页</a></li>
-	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/topics'>我的文章</a></li>
-	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/question'>我的问题</a></li>
-	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/replies'>我的评论</a></li>
-	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/following'>我的关注</a></li>
-	<li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/follower'>我的粉丝</a></li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-home"></i>
+		<a href='/user/<%= user.loginname %>/index'>我的主页</a>
+	</li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-file-text"></i>
+		<a href='/user/<%= user.loginname %>/topics'>我的文章</a>
+	</li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-question-circle"></i>
+		<a href='/user/<%= user.loginname %>/question'>我的问题</a>
+	</li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-commenting"></i>	
+		<a href='/user/<%= user.loginname %>/replies'>我的评论</a>
+	</li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-heart"></i>	
+		<a href='#'>我的收藏</a>
+	</li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-link"></i>
+		<a href='/user/<%= user.loginname %>/following'>关系中心</a>
+	</li>
+	<li class='breadcrumb__link'>
+		<i class="nav-icon fa fa-cog"></i>
+		<a href='/user/<%= user.loginname %>/setting'>个人设置</a>
+	</li>
+	<!--<li class='breadcrumb__link'>	
+		<i class="nav-icon fa fa-question-circle-o"></i>
+		<a href='/user/<%= user.loginname %>/follower'>我的粉丝</a>
+	</li>-->
 </ul>
 
 <script>

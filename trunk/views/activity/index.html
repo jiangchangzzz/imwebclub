@@ -1,0 +1,170 @@
+<script>
+    imweb.activity = {
+        id: '<%= activity.id %>',
+        author: {
+            name: '<%= activity.author.name %>',
+            loginname: '<%= activity.author.loginname %>'
+        },
+    };
+
+    var RICH_META = {
+        name :'<%= activity.title %>',
+        author :'<%= activity.author.name %>',
+        img : '<%= activity.pic && activity.pic[0] %>'||'http://imweb.io/public/images/logo-white.png'
+    }
+
+</script>
+
+<div id="main" class="clearfix">
+    <div id="sidebar">
+        <% if (current_user) { %>
+        <div class="box profile">
+            <a href="/user/<%= current_user.loginname %>/index">
+              <div class="avatar">
+                  <% if (current_user.avatar) { %>
+                    <img src="<%= current_user.avatar %>">
+                  <% } else { %>
+                    <img src="../../images/avatarDefault.jpg">
+                  <% } %>
+              </div>
+            </a>
+            <div class="name"><%= current_user.name || current_user.loginname %></div>
+            <ul class="contribution-list">
+                <li>
+                    <b><%= current_user.topic_count || 0%></b>
+                    <span class="title">文章</span>
+                </li>
+                <li>
+                    <b><%= current_user.question_count || 0%></b>
+                    <span class="title">问答</span>
+                </li>
+            </ul>
+        </div>
+        <% } else { %>
+        <a class="box radius" href="/auth/weibo">
+          <img src="../../images/weiboColor.png" class="ico"/>使用微博登陆
+        </a>
+        <a class="box radius" href="javascript:void(0);">
+          <img src="../../images/weixinColor.png" class="ico"/>使用微信登陆
+        </a>
+        <a class="box radius" href="/auth/github">
+          <img src="../../images/githubColor.png" class="ico"/>使用Github登陆
+        </a>
+        <a class="box radius" href="javascript:void(0);">
+          <img src="../../images/qqColor.png" class="ico"/>使用QQ登陆
+        </a>
+        <% } %>
+        <div id="social" class="box border">
+            <div class="box-head">
+                <b>关注我们</b>
+            </div>
+            <hr class="solid-light">
+            <div class="box-body">
+                <ul class="ico-list">
+                    <li>
+                        <a target="_blank" href="http://weibo.com/u/5623195454?refer_flag=1001030201">
+                            <img src="../../images/weiboColor.png">
+                        </a>
+                    </li>
+                    <li class="weixin">
+                        <img src="../../images/weixinColor.png">
+                    </li>
+                    <li>
+                        <img src="../../images/zhihuColor.png">
+                    </li>
+                </ul>
+                <div class="q_code hidden">
+                    <img src="../../images/official-account-new.jpg">
+                </div>
+                <ul class="txt-list">
+                    <li>
+                        <a href="http://imweb.github.io/" target="_blank">关于我们</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);">加入我们</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="box-footer">
+                2017 imweb
+            </div>
+        </div>
+    </div>
+
+    <div id='content'>
+      <div class='panel'>
+        <div class="detail-info">
+          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= activity.author.avatar  %>"  data-name="<%= activity.author.loginname %>"/>
+          <div class="user-wrap">
+            <p class="user-name user-slider-btn" data-name="<%= activity.author.loginname %>"><%= activity.author.name || activity.author.loginname%></p>
+            <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= activity.friendly_create_at %></span>
+          </div>
+          <ul class="other-info">
+            <li>
+              <p><%= activity.visit_count %> </p>
+              <span>浏览</span>
+            </li>
+            <li>
+              <p class="reply-count"><%= activity.reply_count %> </p>
+              <span>评论</span>
+            </li>
+            <li>
+              <p class="collect-count"><%= activity.collect_count %></p>
+              <span>收藏</span>
+            </li>
+          </ul>
+        </div>
+        <div class='detail-header'>
+          <h1 class="detail-title"><%- activity.title %></h1>
+          <%if(activity.reprint){%>
+            <div class="cell-from">
+              <%
+              var host = activity.reprint;
+              var regex = /.*\:\/\/([^\/]*).*/;
+              var match = activity.reprint.match(regex);
+              if(typeof match != "undefined" && null != match) host = match[1];
+              %>
+              转载自<a href="<%=activity.reprint%>" class="cell-reprint ex-link" target="_blank"><%=host%></a>
+            </div>
+          <%}%>
+          <div class="title-wrap">
+            <span class="status"><%= activity.status %></span>
+            <%if(activity.tabName){var link = "#";%>
+              <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == activity.tabName){link = "/tab/"+tabs[i][0];}}%>
+              <a class="ui-tag ui-tag-blue" href="<%=link%>"><%= activity.tabName %></a>
+            <%}%>
+            <% if (current_user) { %>
+              <div class="btn-wrap">
+                  <% if (current_user._id.equals(activity.author.id)) { %>
+                  <a href='/activity/<%= activity.id %>/edit' class="btn-ico">
+                    <i class="ico fa fa-lg fa-pencil-square-o" title='编辑'></i>
+                  </a>
+                  <a href='javascript:;' class='delete-activity-btn btn-ico'>
+                     <i class="ico fa fa-lg fa-trash" title='删除'></i>
+                  </a>
+                  <% } %>
+                  <% if (!is_collect) { %>
+                  <span class='ico fa fa-heart-o collect-activity-btn' title='收藏'></span>
+                  <% } else { %>
+                  <span class='ico fa fa-heart collect-activity-btn' title='取消收藏'></span>
+                  <% } %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        <div class='activity-content'>
+            <div class="markdown-text">
+                <div>
+                  <span>活动时间：</span>
+                  <b><%= activity.begin_str %>-<%= activity.end_str %></b>
+                </div>
+                <div>
+                  <span>活动地点：</span>
+                  <b><%= activity.location_str %></b>
+                </div>
+                <%- markdownRender(activity.content) %>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

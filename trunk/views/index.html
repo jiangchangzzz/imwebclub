@@ -36,7 +36,7 @@
         <div id="hotArticles" class="column">
             <div class="column-head">
                 <b>热文</b>
-                <a class="link" href="/topic/tab/all">更多</a>
+                <a class="fr" href="/topic/tab/all">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
@@ -48,10 +48,12 @@
                   <% } %>
                 </div>
                 <ul class="article-list">
-                <% if (typeof(topics) !== 'undefined' && topics.length > 0) { %>
+                <% if (typeof(topics) !== 'undefined' && topics.length > 0) { 
+                    console.log(topics)
+                    %>
                     <% topics.slice(0,5).forEach(function (topic, index) { %>
                         <li <% if(index === 0) { %>class="active"<% } %>>
-                            <a href="/topic/<%= topic._id %>" class="one-line"><%= topic.title %></a>
+                            <a href="/topic/<%= topic.id %>" class="one-line"><%= topic.title %></a>
                             <p><%= topic.summary || topic.content %></p>
                         </li>
                     <%})%>
@@ -62,7 +64,7 @@
         <div id="hotQuestions" class="column">
             <div class="column-head">
                 <b>热问</b>
-                <a class="link" href="/question/tab/all">更多</a>
+                <a class="fr" href="/question/tab/all">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
@@ -73,16 +75,12 @@
                                 <div class="item-header">
                                     <a href="/question/<%= question.id %>"><%= question.title %></a>
                                     <div class="fr">
-                                        <span class="commentCount" alt="<%= question.reply_count %>回复">
-                                             <%= question.reply_count %>
-                                            <i></i>
-                                        </span>
                                         <a class="tag" href="/question/tab/<%= question.tabName %>"><%= question.tabName %></a>
                                     </div>
                                 </div>
                                 <div class="item-body">
                                     <div class="avatar">
-                                        <img src="../images/avatarDefault.png">
+                                        <img src="<%= question.author.avatar %>">
                                     </div>
                                     <div class="content">
                                         <b><%= question.author.name || question.author.loginname %></b>
@@ -112,20 +110,38 @@
             <div class="column-head">
                 <b>最新活动</b>
                 <span class="kind">
-                      <a class="activity-tab active">imweb</a>
-                      |
-                      <a class="activity-tab">行业</a>
-                    </span>
-                <a class="link" href="javascript:void(0);">更多</a>
+                    <a href="javascript:;" class="imweb active">imweb</a>
+                    |
+                    <a href="javascript:;" class="industry">行业</a>
+                </span>
+                <a class="fr link" href="/activity/tab/imweb">更多</a>
             </div>
             <hr class="solid-light">
             <div class="column-body">
                 <ul class="activity-list">
                     <% if (typeof(activity_imweb) !== 'undefined' && activity_imweb.length > 0) { %>
-                        <% activity_imweb.forEach(function (activity, index) { %>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <img src="../images/activity1.jpg">
+                        <% activity_imweb.slice(0,6).forEach(function (activity, index) { %>
+                            <li class="activity_imweb">
+                                <a href="/activity/<%= activity.id %>">
+                                    <% if(activity.pic && activity.pic.length > 0){ %>
+                                      <img src="<%= activity.pic[0] %>">
+                                    <% }else{ %>
+                                      <img src="../images/activity1.jpg">
+                                    <% } %>
+                                    <span class="one-line"><%=activity.title%></span>
+                                </a>
+                            </li>
+                        <%})%>
+                    <%}%>
+                    <% if (typeof(activity_industry) !== 'undefined' && activity_industry.length > 0) { %>
+                        <% activity_industry.slice(0,6).forEach(function (activity, index) { %>
+                            <li class="activity_industry">
+                                <a href="/activity/<%= activity.id %>">
+                                    <% if(activity.pic && activity.pic.length > 0){ %>
+                                      <img src="<%= activity.pic[0] %>">
+                                    <% }else{ %>
+                                      <img src="../images/activity1.jpg">
+                                    <% } %>
                                     <span class="one-line"><%=activity.title%></span>
                                 </a>
                             </li>

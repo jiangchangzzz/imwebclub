@@ -76,6 +76,9 @@
 
         .kind {
             margin: 0 20px;
+            a.active{
+              font-weight: bold;
+            }
         }
 
         a {
@@ -84,10 +87,6 @@
                 color: @column-highlight;
             }
             font-size: 14px;
-
-            &.link {
-                float: right;
-            }
         }
     }
 
@@ -152,20 +151,6 @@
                       }
                     }
 
-                    .commentCount {
-                        margin: 0 3px;
-                        color: @column-light;
-                        margin-right: 10px;
-
-                        i {
-                            background-image: url('../images/comment.png');
-                            display: inline-block;
-                            width: 15px;
-                            height: 16px;
-                            vertical-align: middle;
-                        }
-                    }
-
                     .tag {
                         font-weight: normal;
                         font-size: 13px;
@@ -179,6 +164,11 @@
                         float: left;
                         padding: 10px;
                         text-align: center;
+                        img{
+                          width: 50px;
+                          height: 50px;
+                          border-radius: 50px;
+                        }
                     }
 
                     .content {
@@ -216,8 +206,6 @@
         }
 
         ul.activity-list {
-            text-align: center;
-
             li {
                 display: inline-block;
                 width: 32%;
@@ -225,6 +213,9 @@
                     width: 100%;
                 }
 
+                &.activity_industry{
+                    display: none;
+                }
                 a {
                     display: block;
                     margin: 10px;
@@ -244,7 +235,7 @@
                     span {
                         display: block;
                         text-align: center;
-                        font-size: 10px;
+                        font-size: 13px;
                     }
                 }
             }

@@ -92,7 +92,7 @@ var config = {
   admins: {
     testjay: true,
     test: true,
-    'f1aecae2-dcad-4fc6-8bf6-888d7fb45025': true
+    '1c886c20-2857-46a8-ba74-167590109ce3': true
   },
 
   // github 登陆的配置

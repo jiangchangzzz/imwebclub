@@ -166,12 +166,11 @@ exports.list = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var tab = req.params.tab || 'all';
-  var sort = req.query.sort || 'default';  // 根据不同的参数决定文章排序方式
+  var sort = req.query.sort || 'hot';  // 根据不同的参数决定文章排序方式
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
     'latest': '-create_at',
-    'reply': '-reply_count',
-    'default': '-create_at'
+    'reply': '-reply_count'
   };
   var sortType = sortMap[sort] || sortMap['default'];
 

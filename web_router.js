@@ -106,9 +106,7 @@ router.get('/activity/create', auth.userRequired, activity.create); //新增某�
 router.post('/activity/create', auth.userRequired, activity.put);
 router.get('/activity/:tid/edit', auth.userRequired, activity.showEdit);  // 编辑某活动
 router.post('/activity/:tid/edit', auth.userRequired, activity.update);
-
 router.post('/activity/:tid/delete', auth.userRequired, activity.delete);
-
 router.get('/activity/:tid', activity.index);  // 显示某个话题
 router.get('/activity/tab/:tab', activity.list);
 
@@ -163,8 +161,8 @@ router.get('/admin/edit/:bid', auth.adminRequired, admin.editBanner); // 编辑b
 
 router.get('/admin/activity/all', auth.adminRequired, admin.activity);
 router.get('/admin/activity/add', auth.adminRequired, admin.addActivity);
-router.post('/admin/activity/save', auth.adminRequired, admin.saveActivity); 
-router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity); 
+router.post('/admin/activity/save', auth.adminRequired, admin.saveActivity);
+router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
 // static

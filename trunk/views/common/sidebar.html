@@ -163,28 +163,26 @@
         <div class="box-body">
             <ul class="author-list">
                 <% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
-                    <li>
-                        <div class="center" title="<%=user._id %>">
-                            <div class="left">
-                                <div class="avatar">
-                                    <img src="<%=user.avatar%>">
-                                </div>
+                    <li title="<%=user._id %>">
+                        <div class="left">
+                            <div class="avatar">
+                                <img src="<%=user.avatar%>">
                             </div>
-                            <div class="middle">
-                                <div class="one-line">
-                                  <img src="../../images/T.png">
-                                  <b><%=user.name || user.loginname || ' ' %></b>
-                                （<%=user.topic_count %>）
-                                </div>
-                                <div class="one-line" style="padding-left:3px;">
-                                  <% if(current_user && current_user.following.indexOf(user._id) == -1) {%>
-                                    <a href="javascript:void(0);" class="link focus-add">+关注</a>
-                                  <% } else {%>
-                                    <a href="javascript:void(0);">已关注</a>
-                                  <%  } %>
-                                </div>
+                        </div>
+                        <div class="right">
+                          <% if(current_user && current_user.following.indexOf(user._id) == -1) {%>
+                            <a href="javascript:void(0);" class="link focus-add">+关注</a>
+                          <% } else {%>
+                            <a href="javascript:void(0);">已关注</a>
+                          <%  } %>
+                        </div>
+                        <div class="center">
+                            <div class="one-line">
+                              <img src="../../images/T.png">
+                              <a href="/user/<%=user.id%>/index"><%=user.name || user.loginname || ' ' %></a>
+                            （<%=user.topic_count %>）
                             </div>
-
+                            <span>&nbsp;<%= user.topic_count %>编文章 | <%= user.following.length %>人关注</span>
                         </div>
                     </li>
                 <% })}%>

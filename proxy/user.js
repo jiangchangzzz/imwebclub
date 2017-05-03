@@ -136,7 +136,7 @@ exports.newAndSaveWithAll = function (userInfo, callback) {
 };
 
 var makeGravatar = function (email) {
-  return 'http://gravatar.com/avatar/' + utility.md5(email.toLowerCase()) + '?size=48';
+  return 'http://gravatar.com/avatar/' + utility.md5(email.toLowerCase());
 };
 exports.makeGravatar = makeGravatar;
 

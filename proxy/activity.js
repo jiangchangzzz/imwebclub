@@ -129,12 +129,11 @@ exports.getLimit5w = function (callback) {
  */
 exports.getFullActivity = function (id, callback) {
   var proxy = new EventProxy();
-  var events = ['activity', 'author', 'replies'];
-  proxy
-    .assign(events, function (activity, author, replies) {
-      callback(null, '', activity, author, replies);
-    })
-    .fail(callback);
+  var events = ['activity', 'author'];
+
+  proxy.assign(events, function (activity, author) {
+      callback(null, '', activity, author);
+    }).fail(callback);
 
   Activity.findOne({ _id: id, deleted: false }, proxy.done(function (activity) {
     if (!activity) {
@@ -154,7 +153,7 @@ exports.getFullActivity = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    Reply.getRepliesByActivityId(activity._id, proxy.done('replies'));
+    //Reply.getRepliesByParentId(activity._id, {score:-1,create_at: 1}, proxy.done('replies'));
   }));
 };
 
@@ -218,7 +217,7 @@ exports.reduceCount = function (id, callback) {
   });
 };
 
-exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_time, end_str, location_str, authorId, callback) {
+exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, authorId, callback) {
   var activity = new Activity();
   activity.title = title;
   activity.tab = tab;
@@ -229,6 +228,7 @@ exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_t
   activity.end_time = end_time;
   activity.end_str = end_str;
   activity.location_str = location_str;
+  activity.external_link = external_link;
   activity.author_id = authorId;
   activity.save(callback);
 };

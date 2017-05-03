@@ -154,7 +154,6 @@ exports.create = function (req, res, next) {
 };
 
 exports.put = function (req, res, next) {
-  console.log(req.body);
   //for marktang
   if (!req.body.title || !req.body.content || !req.body.tab) {
     res.render('/question/edit', {
@@ -309,6 +308,7 @@ exports.update = function (req, res, next) {
             });
         } else {
             return res.render('question/edit', {
+                active: 'question',
                 action: 'edit',
                 edit_error: msg,
                 question_id: question._id || '',
@@ -320,7 +320,7 @@ exports.update = function (req, res, next) {
     var user = req.session.user;
     Question.getQuestionById(question_id, ep.done(function(question, tags) {
         if (!question) {
-            return ep.emit('faile',  '此话题不存在或已被删除。');
+            return ep.emit('faile',  '此问题不存在或已被删除。');
         }
         if (!tools.idEqual(question.author_id, user._id) && !user.is_admin) {
             return ep.emit('faile', '无操作权限。', question);
@@ -338,7 +338,7 @@ exports.update = function (req, res, next) {
         question.title = title;
         question.content = content;
         question.pic = tools.genPicFromContent(content);
-        question.summary = tools.genSummaryFromContent(content, config.question_summary_len);
+        question.summary = tools.genSummaryFromContent(content, config.topic_summary_len);
         question.tab = tab;
         question.update_at = new Date();
         question.save(ep.done(function() {

@@ -2,8 +2,7 @@
   <div class='user-panel__content'>
     <div class='user-panel__content__detail'>
       <ul class='breadcrumb'>
-        <li class='breadcrumb__link active'><a href='/user/<%= user.loginname %>/setting'>个人设置</a></li>
-        <li class='breadcrumb__link'><a href='/user/<%= user.loginname %>/password'>密码</a></li>
+        <%- partial('./nav') %>
       </ul>
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
@@ -93,6 +92,39 @@
             </div>
           </div>
 
+          </div>           
+        </div>
+        <div class='breadcrumb--content__section section--show'>
+          <div id='content'>
+            <div class='panel'>
+            <div class='header'>
+              <span class='col_fade'>更改密码</span>
+            </div>
+            <div class='inner'>
+              <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
+                <div class='control-group'>
+                  <label class='control-label' for='old_pass'>当前密码</label>
+
+                  <div class='controls'>
+                    <input class='input-xlarge' type='password' id='old_pass' name='old_pass' size='30'/>
+                  </div>
+                </div>
+                <div class='control-group'>
+                  <label class='control-label' for='new_pass'>新密码</label>
+
+                  <div class='controls'>
+                    <input class='input-xlarge' type='password' id='new_pass' name='new_pass' size='30'/>
+                  </div>
+                </div>
+                <input type='hidden' id='action' name='action' value='change_password'/>
+                <input type='hidden' name='_csrf' value='<%= user.csrf %>'/>
+
+                <div class='form-actions'>
+                  <input type='submit' class='span-primary submit_btn' data-loading-text="更改中.." value='更改密码'/>
+                </div>
+              </form>
+            </div>
+          </div>
           </div>           
         </div>
       </div>
