@@ -1,10 +1,11 @@
 var mailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
 var util = require('util');
 var _ = require('lodash');
 var async = require('async');
 var config = require('../config');
-
-var transport = mailer.createTransport('SMTP', config.mail_opts);
+var transporter = mailer.createTransport(smtpTransport(config.mail_opts));
+// var transport = mailer.createTransport('SMTP', config.mail_opts);
 var SITE_ROOT_URL = 'http://' + config.host;
 var MAIL_FOOT = '<p>' + config.name + '社区 谨上。</p>';
 var MAIL_FROM = util.format('%s <%s>', config.name, config.mail_opts.auth.user);
