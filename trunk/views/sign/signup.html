@@ -1,6 +1,5 @@
-<%- partial('../sign/sidebar') %>
-
-<div id='content'>
+<div id='content' class="inner">
+    <%- partial('../sign/sidebar') %>
     <div class="panel">
         <div class="panel-head">
             <span class="panel-head-title">注册</span>
@@ -23,7 +22,7 @@
           <label class='control-label' for='loginname'>用户名</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='loginname' name='loginname' size='30' type='text' 
+            <input class='input-xlarge' id='loginname' name='loginname' size='30' type='text'
                 value='<%= typeof(loginname) !== 'undefined' ? loginname : '' %>'/>
           </div>
         </div>
@@ -31,7 +30,7 @@
           <label class='control-label' for='name'>真是姓名</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='name' name='name' size='30' type='text' 
+            <input class='input-xlarge' id='name' name='name' size='30' type='text'
                 value='<%= typeof(name) !== 'undefined' ? name : '' %>'/>
           </div>
         </div> -->
@@ -53,7 +52,7 @@
           <label class='control-label' for='email'>邮箱</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='email' name='email' size='30' type='text' 
+            <input class='input-xlarge' id='email' name='email' size='30' type='text'
                 value='<%= typeof(email) !== 'undefined' ? email : '' %>'/>
           </div>
         </div>
@@ -61,7 +60,7 @@
           <label class='control-label' for='comp'>公司</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='comp' name='comp' size='30' type='text' 
+            <input class='input-xlarge' id='comp' name='comp' size='30' type='text'
                 value='<%= typeof(comp) !== 'undefined' ? comp : '' %>'/>
           </div>
         </div>
@@ -69,7 +68,7 @@
           <label class='control-label' for='comp_mail'>公司邮箱</label>
 
           <div class='controls'>
-            <input class='input-xlarge' id='comp_mail' name='comp_mail' size='30' type='text' 
+            <input class='input-xlarge' id='comp_mail' name='comp_mail' size='30' type='text'
                 value='<%= typeof(comp_mail) !== 'undefined' ? comp_mail : '' %>'/>
           </div>
         </div>
