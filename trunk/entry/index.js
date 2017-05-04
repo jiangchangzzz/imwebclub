@@ -55,7 +55,7 @@ $(document).ready(function(){
   // rich_name.attr("content","imweb前端社区文章：" + RICH_META.name);
   // rich_description.attr("content",RICH_META.author +":" +RICH_META.name);
   // rich_image.attr("content",RICH_META.img);
-  
+
 //   $('#sidebar .weixin').hover(function(){
 //       $('#sidebar .q_code').removeClass('hidden');
 //   },function(){
@@ -106,7 +106,7 @@ $('#hotActivtities .imweb').click(function(e){
     }
     $('#hotActivtities .imweb').addClass('active');
     $('#hotActivtities .industry').removeClass('active');
-    $('#hotActivtities .activity_imweb').show();
+    $('#hotActivtities .activity_imweb').css('display','inline-block');
     $('#hotActivtities .activity_industry').hide();
 });
 $('#hotActivtities .industry').click(function(e){
@@ -115,6 +115,6 @@ $('#hotActivtities .industry').click(function(e){
     }
     $('#hotActivtities .industry').addClass('active');
     $('#hotActivtities .imweb').removeClass('active');
-    $('#hotActivtities .activity_industry').show();
+    $('#hotActivtities .activity_industry').css('display','inline-block');
     $('#hotActivtities .activity_imweb').hide();
 });

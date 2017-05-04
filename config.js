@@ -212,7 +212,7 @@ if (process.env.NODE_ENV === 'test') {
   //     clientSecret: '52410f54674964564a475afc64511e5d',
   //     callbackURL: `http://test.imweb.io:${config.port}/auth/weibo/callback`
   // };
-  config.host = 'imweb.io';
+  config.host = 'test.imweb.io';
   config.port = 80;
 }
 
