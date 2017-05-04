@@ -112,6 +112,7 @@ exports.index = function (req, res, next) {
   proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry',
     function (topics, questions, tops, activity_imweb, activity_industry) {
       res.render('index', {
+        _layoutFile: false,
         topics: topics,
         questions: questions,
         // list_topic_count: limit,
