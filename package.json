@@ -49,7 +49,7 @@
     "multiline": "1.0.2",
     "newrelic": "1.12.2",
     "node-schedule": "0.2.3",
-    "node-uuid": "1.4.7",
+    "uuid": "*",
     "node-xss": "^0.0.1",
     "nodemailer": "2.3.0",
     "nodemailer-smtp-transport": "2.4.0",
