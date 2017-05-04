@@ -76,11 +76,11 @@ exports.signup = function(req, res, next) {
         })
     );
     ep.on('saved', function(user) {
-        /*mail.sendActiveMail(
+        mail.sendActiveMail(
             email,
             utility.md5(email + user.pass + config.session_secret),
             loginname
-        );*/
+        );
         res.render('sign/signup', {
             success: true,
             appName: config.name,
