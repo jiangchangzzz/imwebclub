@@ -71,8 +71,11 @@
                 <li class="<%= typeof(active) !== 'undefined' && active === 'activity' ? 'active' : '' %>">
                   <a href="/activity/tab/imweb">活动</a>
                 </li>
-                <li class="<%= typeof(active) !== 'undefined' && active === 'celebrity' ? 'active' : '' %>">
+                <!--<li class="<%= typeof(active) !== 'undefined' && active === 'celebrity' ? 'active' : '' %>">
                   <a href="javascript:void(0);">名人堂</a>
+                </li>-->
+                <li>
+                    <a target=="_blank" href="http://iconfont.imweb.io/">iconfont</a>
                 </li>
                 <li class="<%= typeof(active) !== 'undefined' && active === 'team' ? 'active' : '' %>">
                   <a id="nav-team-menu" href="javascript:void(0);">Imweb团队</a>
@@ -84,12 +87,12 @@
 
 <ol id="nav-team-menu-layer" class="ui-dropdown-layer">
     <li>
-        <a href="javascript:void(0);">开源组件</a>
+        <a target="_blank" href="//github.com/imweb">开源组件</a>
     </li>
     <li>
-        <a href="http://imweb.github.io/hire">招聘</a>
+        <a target="_blank" href="http://imweb.github.io/hire">招聘</a>
     </li>
     <li>
-        <a href="http://imweb.github.io">关于我们</a>
+        <a target="_blank" href="http://imweb.github.io">关于我们</a>
     </li>
 </ol>
