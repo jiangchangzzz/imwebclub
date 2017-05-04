@@ -113,7 +113,7 @@ var config = {
   allow_sign_up: true,
 
   // oneapm 是个用来监控网站性能的服务
-  oneapm_key: '',
+  // oneapm_key: '',
 
   // 下面两个配置都是文件上传的配置
 

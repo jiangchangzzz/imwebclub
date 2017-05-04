@@ -8,9 +8,9 @@
 
 var config = require('./config');
 
-if (!config.debug && config.oneapm_key) {
-  require('oneapm');
-}
+// if (!config.debug && config.oneapm_key) {
+//   require('oneapm');
+// }
 
 require('colors');
 var path = require('path');
