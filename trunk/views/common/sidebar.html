@@ -121,7 +121,7 @@
         </div>
     </div>
 
-<% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
+<% if(typeof tops !== 'undefined'){ %>
     <div id="hotAuthors" class="box border">
         <div class="box-head">
             <b>作者列表</b>
@@ -130,6 +130,7 @@
         <hr class="solid-light">
         <div class="box-body">
             <ul class="author-list">
+                <% tops.slice(0,5).forEach(function(user){ %>
                 <li title="<%=user._id %>">
                     <div class="left">
                         <div class="avatar">
@@ -155,9 +156,9 @@
                         <span>&nbsp;<%= user.topic_count %>编文章 | <%= user.following.length %>人关注</span>
                     </div>
                 </li>
+                <%})%>
             </ul>
         </div>
     </div>
-    </div>
-<% })}%>
-
+<% }%>
+</div>
