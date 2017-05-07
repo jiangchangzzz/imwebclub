@@ -46,46 +46,7 @@
 </div>
 
 <div id="main" class="clearfix">
-  <div id="sidebar">
-      <% if (current_user) { %>
-      <div class="box profile">
-          <a href="/user/<%= current_user.loginname %>/index">
-            <div class="avatar">
-                <% if (current_user.avatar) { %>
-                  <img src="<%= current_user.avatar %>">
-                <% } else { %>
-                  <img src="../../images/avatarDefault.jpg">
-                <% } %>
-            </div>
-          </a>
-          <div class="name"><%= current_user.name || current_user.loginname %></div>
-          <ul class="contribution-list">
-              <li>
-                  <b><%= current_user.topic_count || 0%></b>
-                  <span class="title">文章</span>
-              </li>
-              <li>
-                  <b><%= current_user.question_count || 0%></b>
-                  <span class="title">问答</span>
-              </li>
-          </ul>
-      </div>
-      <% } else { %>
-      <a class="box radius" href="/auth/weibo">
-        <img src="../../images/weiboColor.png" class="ico"/>使用微博登陆
-      </a>
-      <a class="box radius" href="javascript:void(0);">
-        <img src="../../images/weixinColor.png" class="ico"/>使用微信登陆
-      </a>
-      <a class="box radius" href="/auth/github">
-        <img src="../../images/githubColor.png" class="ico"/>使用Github登陆
-      </a>
-      <a class="box radius" href="javascript:void(0);">
-        <img src="../../images/qqColor.png" class="ico"/>使用QQ登陆
-      </a>
-      <% } %>
-      <%- partial('common/social.html') %>
-  </div>
+  <%- partial('common/sidebar.html') %> 
   <div id="content" class="topic_list">
     <div class="query-list">
       <a href="?sort=hot" class="question-query <%= subtab==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;

@@ -192,7 +192,7 @@ exports.list = function (req, res, next) {
         activities: activities,
         current_page: page,
         list_activity_count: limit,
-        tops: tops,
+        // tops: tops,
         pages: pages,
         tabs: config.activityTabs,
         tab: tab,

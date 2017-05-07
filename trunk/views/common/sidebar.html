@@ -126,9 +126,10 @@
             <!--<a href="javascript:void(0);" class="link">更多</a>-->
         </div>
         <hr class="solid-light">
-        <div class="box-body">
+
+        <% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
+          <div class="box-body">
             <ul class="author-list">
-                <% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
                     <li title="<%=user._id %>">
                         <div class="left">
                             <div class="avatar">
@@ -151,8 +152,8 @@
                             <span>&nbsp;<%= user.topic_count %>编文章 | <%= user.following.length %>人关注</span>
                         </div>
                     </li>
-                <% })}%>
-            </ul>
-        </div>
+             </ul>
+            </div>
+       <% })}%>
     </div>
 </div>
