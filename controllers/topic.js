@@ -168,7 +168,7 @@ exports.list = function (req, res, next) {
   var tab = req.params.tab || 'all';
   var sort = req.query.sort || 'hot';  // 根据不同的参数决定文章排序方式
   var sortMap = {
-    'hot': '-visit_count -collect_count -reply_count -create_at',
+    'hot': '-visit_count',
     'latest': '-create_at',
     'reply': '-reply_count'
   };
@@ -185,6 +185,13 @@ exports.list = function (req, res, next) {
       query.tab = tab;
     }
   }
+
+  if (sort === 'hot') {
+    query['create_at'] =  {
+      $gte: new Date(new Date().getTime() - 60*60*24*90*1000).toISOString()
+    } 
+  }
+
   var limit = config.list_topic_count;
   var options = {
     skip: (page - 1) * limit,
@@ -194,7 +201,6 @@ exports.list = function (req, res, next) {
   // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
   // console.log(optionsStr);
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
-    //console.log(topics);
     return topics;
   }));
 
@@ -237,6 +243,7 @@ exports.list = function (req, res, next) {
   proxy.all('topics', 'pages', 'tops',
     function (topics, pages, tops) {
       res.render('topic/list', {
+        _layoutFile: false,
         active: 'topic',
         topics: _topicFormat(topics),
         current_page: page,

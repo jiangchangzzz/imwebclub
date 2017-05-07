@@ -136,10 +136,10 @@
                             </div>
                         </div>
                         <div class="right">
-                          <% if(current_user && current_user.following.indexOf(user._id) == -1) {%>
-                            <a href="javascript:void(0);" class="link focus-add">+关注</a>
-                          <% } else {%>
+                          <% if(current_user && current_user.following && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
                             <a href="javascript:void(0);">已关注</a>
+                          <% } else {%>
+                            <a href="javascript:void(0);" class="link focus-add">+关注</a>
                           <%  } %>
                         </div>
                         <div class="center">

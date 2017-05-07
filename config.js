@@ -10,13 +10,14 @@ var config = {
 
   get mini_assets() { return !this.debug; }, // 是否启用静态文件的合并压缩，详见视图中的Loader
 
-  name: 'imweb', // 社区名字
-  description: 'imweb前端社区', // 社区的描述
-  keywords: 'nodejs, node, express, connect, socket.io',
+  name: '腾讯Web前端 IMWeb 团队社区 | blog | 团队博客', // 社区名字
+  description: 'Web前端 腾讯IMWeb 团队社区', // 社区的描述
+  keywords: '前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io',
 
   // 添加到 html head 中的信息
   site_headers: [
-    '<meta name="author" content="EDP@TAOBAO" />'
+     '<meta name="author" content="imwebteam@tencent" />',
+     '<meta property="wb:webmaster" content="f823bb51f1b4e265" />'
   ],
   site_logo: '/public/images/cnodejs_light.svg', // default is `name`
   site_icon: '/public/images/cnode_icon_32.png', // 默认没有 favicon, 这里填写网址
@@ -28,11 +29,10 @@ var config = {
   // cdn host，如 http://cnodejs.qiniudn.com
   site_static_host: '', // 静态文件存储域名
   // 社区的域名
-  host: 'localhost',
+  host: 'imweb.io',
   // 默认的Google tracker ID，自有站点请修改，申请地址：http://www.google.com/analytics/
-  google_tracker_id: '',
-  // 默认的cnzz tracker ID，自有站点请修改
-  cnzz_tracker_id: '',
+  google_tracker_id: 'UA-7317009-5',
+
 
   // mongodb 配置
   db: 'mongodb://127.0.0.1/node_club_dev',
@@ -50,7 +50,7 @@ var config = {
   port: 3001,
 
   // 话题列表显示的话题数量
-  list_topic_count: 20,
+  list_topic_count: 12,
 
   // 首页热文显示话题数量
   list_hot_topic_count: 5,
@@ -62,17 +62,17 @@ var config = {
   post_interval: 2000,
 
   // 活动列表显示的活动数量
-  list_activity_count: 20,
+  list_activity_count: 15,
 
   // 活动列表显示的活动数量
-  list_question_count: 20,
+  list_question_count:15,
 
   // RSS配置
   rss: {
-    title: 'CNode：Node.js专业中文社区',
-    link: 'http://cnodejs.org',
+    title: 'IMWeb：web牛人社区',
+    link: 'http://imweb.io',
     language: 'zh-cn',
-    description: 'CNode：Node.js专业中文社区',
+    description: 'IMWeb：web牛人社区',
     //最多获取的RSS Item数量
     max_rss_items: 50
   },
@@ -90,9 +90,16 @@ var config = {
 
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
   admins: {
-    testjay: true,
-    test: true,
-    '1c886c20-2857-46a8-ba74-167590109ce3': true
+       "webryan": true,
+        "ouven": true,
+        "ouvenzhang": true,
+        "henryguo": true,
+        "coverguo": true, 
+        "邝伟科": true,
+        // "aaa": true,  // 测试账号 发布删掉
+        "张颖": true,
+        "devinran": true,
+	"jaychen": true,
   },
 
   // github 登陆的配置

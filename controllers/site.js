@@ -23,7 +23,7 @@ exports.index = function (req, res, next) {
   proxy.fail(next);
 
   // var limit = config.list_hot_topic_count;
-  var options = { limit: 10, sort: '-top -reply_count -create_at' };
+  var options = { limit: 10, sort: '-top -visit_count -create_at' };
 
   // 取排行榜上的用户
   cache.get('tops', proxy.done(function (tops) {
@@ -31,8 +31,16 @@ exports.index = function (req, res, next) {
       proxy.emit('tops', tops);
     } else {
       User.getUsersByQuery(
-        { is_block: false },
-        { limit: 10, sort: '-score' },
+        {
+          '$or': [{
+            is_block: {
+              '$exists': false
+            }
+          }, {
+            is_block: false
+          }]
+        },
+        { limit: 10, sort: '-topic_count' },
         proxy.done('tops', function (tops) {
           cache.set('tops', tops, 60 * 1);
           return tops;
@@ -47,7 +55,11 @@ exports.index = function (req, res, next) {
     if (topics) {
       proxy.emit('topics', topics);
     } else {
-      Topic.getTopicsByQuery({}, options, proxy.done('topics', function (topics) {
+      Topic.getTopicsByQuery({
+        'create_at': {
+          $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 60 * 1000).toISOString()
+        } 
+      }, options, proxy.done('topics', function (topics) {
         var result = topics.map(function(item){
           return dataAdapter.outTopic(item);
         });
