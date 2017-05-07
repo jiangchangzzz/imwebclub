@@ -90,16 +90,16 @@ var config = {
 
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
   admins: {
-       "webryan": true,
-        "ouven": true,
-        "ouvenzhang": true,
-        "henryguo": true,
-        "coverguo": true, 
-        "邝伟科": true,
-        // "aaa": true,  // 测试账号 发布删掉
-        "张颖": true,
-        "devinran": true,
-	"jaychen": true,
+    "webryan": true,
+    "ouven": true,
+    "ouvenzhang": true,
+    "henryguo": true,
+    "coverguo": true,
+    "邝伟科": true,
+    // "aaa": true,  // 测试账号 发布删掉
+    "张颖": true,
+    "devinran": true,
+    "jaychen": true,
   },
 
   // github 登陆的配置
@@ -134,6 +134,7 @@ var config = {
   //   // 如果在国内，此项请留空
   //   uploadURL: 'http://xxxxxxxx',
   // },
+
   //7牛的access信息，用于文件上传
   qn_access: {
     accessKey: '1VQoqeNeV4kDaOHO7ajqYZNm-2lgQ093BUBQKC1U',
@@ -153,9 +154,6 @@ var config = {
 
   // 版块
   tabs: [
-    // ['share', '分享'],
-    // ['ask', '问答'],
-    // ['job', '招聘'],
     ['html', 'HTML'],
     ['rebuild', 'CSS'],
     ['js', 'javascript技术'],
@@ -170,9 +168,7 @@ var config = {
     ['node', 'nodeJS全栈'],
     ['mobile', '移动开发'],
     ['tools', '工具建设'],
-    ['op', '运维'],
-    // ['image', '封面图片'],
-    // ['intro', '简介']
+    ['op', '运维']
   ],
 
   // 活动类型

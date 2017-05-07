@@ -187,6 +187,7 @@ exports.list = function (req, res, next) {
   proxy.all('activities', 'pages', 'tops',
     function (activities, pages, tops) {
       res.render('activity/list', {
+        _layoutFile: false,
         active: 'activity',
         activities: activities,
         current_page: page,

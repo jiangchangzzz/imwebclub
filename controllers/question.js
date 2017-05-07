@@ -238,6 +238,7 @@ exports.list = function (req, res, next) {
 
   proxy.all('questions', 'pages', function (questions, pages) {
       res.render('question/list', {
+        _layoutFile: false,
         active: 'question',
         questions: questions,
         current_page: page,

@@ -3,6 +3,7 @@ import '../../stylesheets/sidebar.less';
 import '../../stylesheets/topic/index.less';
 import '../../stylesheets/reply.less';
 import "../../javascripts/libs/editor/editor.css";
+import '../../javascripts/layout';
 import '../../javascripts/common/reply.js';
 
 function initReplies(replies){
