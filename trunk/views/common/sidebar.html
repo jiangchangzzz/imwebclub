@@ -120,40 +120,44 @@
             </ul>
         </div>
     </div>
+
+<% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
     <div id="hotAuthors" class="box border">
         <div class="box-head">
             <b>作者列表</b>
             <!--<a href="javascript:void(0);" class="link">更多</a>-->
         </div>
         <hr class="solid-light">
-
-        <% if(typeof tops !== 'undefined'){tops.slice(0,5).forEach(function(user){ %>
-          <div class="box-body">
+        <div class="box-body">
             <ul class="author-list">
-                    <li title="<%=user._id %>">
-                        <div class="left">
-                            <div class="avatar">
-                                <img src="<%=user.avatar%>">
-                            </div>
+                <li title="<%=user._id %>">
+                    <div class="left">
+                        <div class="avatar">
+                            <img src="<%=user.avatar%>">
                         </div>
-                        <div class="right">
-                          <% if(current_user && current_user.following && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
+                    </div>
+                    <div class="right">
+                        <% if(current_user && current_user.following && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
                             <a href="javascript:void(0);">已关注</a>
-                          <% } else {%>
-                            <a href="javascript:void(0);" class="link focus-add">+关注</a>
-                          <%  } %>
+                            <% } else {%>
+                                <a href="javascript:void(0);" class="link focus-add">+关注</a>
+                                <%  } %>
+                    </div>
+                    <div class="center">
+                        <div class="one-line">
+                            <img src="../../images/T.png">
+                            <a href="/user/<%=user.id%>/index">
+                                <%=user.name || user.loginname || ' ' %>
+                            </a>
+                            （
+                            <%=user.topic_count %>）
                         </div>
-                        <div class="center">
-                            <div class="one-line">
-                              <img src="../../images/T.png">
-                              <a href="/user/<%=user.id%>/index"><%=user.name || user.loginname || ' ' %></a>
-                            （<%=user.topic_count %>）
-                            </div>
-                            <span>&nbsp;<%= user.topic_count %>编文章 | <%= user.following.length %>人关注</span>
-                        </div>
-                    </li>
-             </ul>
-            </div>
-       <% })}%>
+                        <span>&nbsp;<%= user.topic_count %>编文章 | <%= user.following.length %>人关注</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
+    </div>
+<% })}%>
+
