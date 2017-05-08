@@ -1,5 +1,4 @@
 import '../../stylesheets/topic/list.less';
-
 import '../../javascripts/layout';
 /**
  * 删除文章
