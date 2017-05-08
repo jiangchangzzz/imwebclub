@@ -100,6 +100,7 @@ var config = {
     "张颖": true,
     "devinran": true,
     "jaychen": true,
+    "terrance": true
   },
 
   // github 登陆的配置

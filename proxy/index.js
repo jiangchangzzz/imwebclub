@@ -2,7 +2,6 @@ exports.User         = require('./user');
 exports.Message      = require('./message');
 exports.Topic        = require('./topic');
 exports.Reply        = require('./reply');
-exports.Comment        = require('./comment');
 exports.Draft        = require('./draft');
 exports.TopicCollect = require('./topic_collect');
 exports.UserCollect = require('./user_collect');

@@ -24,13 +24,18 @@
 ul.activity-list {
     li {
         display: inline-block;
+        position: relative;
         width: 49%;
 
         @media screen and (max-width: 768px) {
             width: 100%;
         }
-
-        a {
+        .edit{
+          position: absolute;
+          top:0;
+          right: 0;
+        }
+        >a {
             display: block;
             margin: 10px;
             height: 100px;

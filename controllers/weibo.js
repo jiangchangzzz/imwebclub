@@ -45,7 +45,7 @@ exports.callback = function (req, res, next) {
 };
 
 exports.new = function (req, res, next) {
-  res.render('sign/new_oauth', {actionPath: '/auth/weibo/create'});
+  res.render('sign/new_oauth', {company: '新浪微博',actionPath: '/auth/weibo/create'});
 };
 
 exports.create = function (req, res, next) {
@@ -75,13 +75,6 @@ exports.create = function (req, res, next) {
     });
     user.save(function (err) {
       if (err) {
-        // 根据 err.err 的错误信息决定如何回应用户，这个地方写得很难看
-        if (err.message.indexOf('duplicate key error') !== -1) {
-          if (err.message.indexOf('email') !== -1) {
-            return res.status(500)
-              .render('sign/no_github_email');
-          }
-        }
         return next(err);
         // END 根据 err.err 的错误信息决定如何回应用户，这个地方写得很难看
       }

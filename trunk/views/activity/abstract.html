@@ -9,7 +9,10 @@
             <h5 class="one-line" title="<%= activity.title %>"><%= activity.title %></h5>
             <p class="one-line"><b>时间：</b><span><%= activity.begin_str %></span></p>
             <p class="one-line"><b>城市：</b><span><%= activity.location_str %></span></p>
-            <span class="status fr"><%= activity.status %></span>
+            <span class="fr status"><%= activity.status %></span>
         </div>
     </a>
+    <% if (current_user && current_user._id.equals(activity.author.id)) { %>
+      <a class="edit" href='/activity/<%= activity.id %>/edit'><i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
+    <%}%>
 </li>

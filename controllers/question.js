@@ -2,7 +2,7 @@ var validator = require('validator');
 var at = require('../common/at');
 var User = require('../proxy').User;
 var Question = require('../proxy').Question;
-var Comment = require('../proxy').Comment;
+var Reply = require('../proxy').Reply;
 var QuestionAnswer = require('../proxy').QuestionAnswer;
 var UserCollect = require('../proxy').UserCollect;
 var UserFollow = require('../proxy').UserFollow;
@@ -135,7 +135,7 @@ exports.index = function (req, res, next) {
       if (!item) {
           return ep.emit('answer', null);
       }else{
-        Comment.getCommentById(item.answer_id, ep.done(function(reply) {
+        Reply.getReplyById(item.answer_id, ep.done(function(reply) {
             //console.log(reply);
             if (!reply) {
                 return ep.emit('answer', null);
@@ -390,7 +390,7 @@ exports.answer = function (req, res, next) {
   if(action ==='set' && !reply_id){
     return ep.emit('fail', 403, '参数不合法。');
   }
-  Comment.getComment(reply_id,function(err, reply){
+  Reply.getReply(reply_id,function(err, reply){
     if (err) {
       return ep.emit('fail', 403, err.message);
     }
@@ -419,7 +419,7 @@ exports.answer = function (req, res, next) {
         }
         if(item){
           //console.log(item);
-          Comment.getComment(item.answer_id,function(err, ansewer){
+          Reply.getReply(item.answer_id,function(err, ansewer){
             if (err) {
               return ep.emit('fail', 403, err.message);
             }
