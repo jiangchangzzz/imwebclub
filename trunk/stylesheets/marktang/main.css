@@ -4910,6 +4910,7 @@ textarea.editor {
   font-size: 14px;
   position: relative;
   color: rgba(0, 0, 0, 0.6);
+  min-height: 350px;
 }
 .markdown-text img {
   max-width: 100%;
