@@ -10,7 +10,7 @@ var validator = require('validator');
 var at = require('../common/at');
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
-var UserCollect = require('../proxy').UserCollect;
+var TopicCollect = require('../proxy').TopicCollect;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var store = require('../common/store');
@@ -132,7 +132,7 @@ exports.index = function (req, res, next) {
   if (!currentUser) {
     ep.emit('is_collect', null);
   } else {
-    UserCollect.getUserCollect(currentUser._id, topic_id, ep.done('is_collect'));
+    TopicCollect.getTopicCollect(currentUser._id, topic_id, ep.done('is_collect'));
   }
 };
 
@@ -543,6 +543,75 @@ exports.delete = function (req, res, next) {
       return ep.emit('done');
     });
   });
+};
+
+// 收藏
+exports.collect = function (req, res, next) {
+    var topic_id = req.params.tid;
+    var ep = EventProxy.create();
+    ep.fail(next);
+    ep.on('fail', function() {
+        res.send({
+            ret: 1
+        });
+    });
+
+    Topic.getTopic(topic_id, ep.done(function(topic) {
+        if (!topic) {
+            return ep.emit('fail');
+        }
+        return ep.emit('topic', topic);
+    }));
+
+    User.getUserById(req.session.user._id, ep.done(function(user) {
+        if (!user) {
+            return ep.emit('fail');
+        }
+        return ep.emit('user', user);
+    }));
+    ep.all('topic', 'user', function(topic, user) {
+        TopicCollect.getTopicCollect(user._id, topic._id, ep.done(function(item) {
+            if (item) {
+              item.remove(function(){
+                ep.emit('collect', false)
+              });
+            } else {
+                TopicCollect
+                    .newAndSave(user._id, topic._id,  function(){
+                      ep.emit('collect', true);
+                    });
+            }
+        }));
+    });
+
+    ep.all('topic', 'user', 'collect', function(topic, user) {
+        TopicCollect.getTopicCollectCount(topic._id, ep.done(function(count) {
+            topic.collect_count = count;
+            topic.save(function(){
+              ep.emit('object_updated', count);
+            });
+        }));
+        TopicCollect.getUserCollectCount(user._id, ep.done(function(count) {
+            user.collect_topic_count = count;
+            user.save(function(){
+              ep.emit('user_updated', count);
+            });
+        }));
+    });
+
+    ep.all(
+        'collect', 'object_updated', 'user_updated',
+        function(if_collect, collect_count, user_collect_count) {
+            res.send({
+                ret: 0,
+                data: {
+                  ifCollect: if_collect,
+                  objectCollectCount: collect_count,
+                  userCollectCount: user_collect_count
+                }
+            });
+        }
+    );
 };
 
 // 设为置顶

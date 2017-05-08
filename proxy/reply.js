@@ -83,8 +83,7 @@ exports.getRepliesByParentId = function (parentId, sorts, callback) {
   if(sorts){
     sort = _.extend(sort, sorts);
   }
-  Reply.find({topic_id: parentId, deleted: {$in:[false,null]}}, '', {sort: sort}, function (err, replies) {
-    //console.log(replies);
+  Reply.find({topic_id: parentId, deleted: {$in:[null,false]}}, '', {sort: sort}, function (err, replies) {
     if (err) {
       return callback(err);
     }

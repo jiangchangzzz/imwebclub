@@ -23,11 +23,6 @@ var ObjectDict = {
     'comment': Comment.getComment
 };
 
-var CollectDict = {
-    'topic': TopicCollect,
-    'other': UserCollect
-};
-
 //点赞
 exports.up = function (req, res, next) {
     var objectId = req.body.object_id;
@@ -202,7 +197,6 @@ exports.lock = function(req, res, next) {
 exports.collect = function(req, res, next) {
     var object_id = req.body.object_id;
     var kind = req.body.kind.toLowerCase();
-
     var proxy = EventProxy.create();
     proxy.fail(next);
     proxy.on('fail', function() {

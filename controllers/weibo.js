@@ -51,7 +51,7 @@ exports.new = function (req, res, next) {
 exports.create = function (req, res, next) {
   var profile = req.session.profile;
 
-  console.log(profile);
+  //console.log(profile);
   var isnew = req.body.isnew;
   var loginname = validator.trim(req.body.name || '').toLowerCase();
   var password = validator.trim(req.body.pass || '');

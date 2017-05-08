@@ -98,7 +98,8 @@ router.post('/topic/create', auth.userRequired, limit.peruserperday('create_topi
 router.get('/topic/:tid/edit', auth.userRequired, topic.showEdit);  // 编辑某话题
 router.post('/topic/:tid/edit', auth.userRequired, topic.update);
 router.post('/topic/:tid/delete', auth.userRequired, topic.delete);
-router.get('/topic/:tid', topic.index);  // 显示某个话题
+router.post('/topic/:tid/collect', auth.userRequired, topic.collect);
+router.get('/topic/:tid', topic.index);  // 显示某个话
 router.get('/topic/tab/:tab', topic.list);
 
 // 活动
