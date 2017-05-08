@@ -3,8 +3,8 @@
   <div class="user-panel__header">
     <div class="user-panel__header__content">
       <div class="left">
-        <div class="user-icon">
-          <img src="<%= user.avatar %>"  alt="<%= user.loginname %>">
+        <div class="user-icon user_big_avatar">
+          <img src="<%= user.avatar.replace('?size=48', '') %>"  alt="<%= user.loginname %>">
         </div>
         <div class="user-info">
           <span class="username">
