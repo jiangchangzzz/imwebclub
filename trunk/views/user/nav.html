@@ -23,10 +23,12 @@
 		<i class="nav-icon fa fa-link"></i>
 		<a href='/user/<%= user.loginname %>/following'>关系中心</a>
 	</li>
+	<%if(currentUser.loginname === user.loginname) {%>
 	<li class='breadcrumb__link'>
 		<i class="nav-icon fa fa-cog"></i>
 		<a href='/user/<%= user.loginname %>/setting'>个人设置</a>
 	</li>
+	<%}%>
 	<!--<li class='breadcrumb__link'>	
 		<i class="nav-icon fa fa-question-circle-o"></i>
 		<a href='/user/<%= user.loginname %>/follower'>我的粉丝</a>

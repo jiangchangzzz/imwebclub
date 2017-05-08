@@ -38,6 +38,7 @@ exports.index = function (req, res, next) {
       }
       res.render('user/index', {
         user: user,
+        currentUser: req.session.user,
         recent_topics: recent_topics,
         recent_replies: recent_replies,
         token: token,
@@ -78,7 +79,7 @@ exports.listStars = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.render('user/stars', {stars: stars});
+    res.render('user/stars', {stars: stars, currentUser: req.session.user});
   });
 };
 
@@ -91,7 +92,7 @@ exports.showSetting = function (req, res, next) {
       user.success = '保存成功。';
     }
     user.error = null;
-    return res.render('user/setting', {user: user});
+    return res.render('user/setting', {user: user, currentUser: req.session.user});
   });
 };
 
@@ -104,12 +105,14 @@ exports.showPassword = function (req, res, next) {
       user.success = '保存成功。';
     }
     user.error = null;
-    return res.render('user/password', {user: user});
+    return res.render('user/password', {user: user, currentUser: req.session.user});
   });
 };
 
 exports.showFollowing = function (req, res, next) {
-  User.getUserById(req.session.user._id, function (err, user) {
+  var user_name = req.params.name;
+  User.getUserByLoginName(user_name, function (err, user) {
+  // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);
     }
@@ -119,7 +122,7 @@ exports.showFollowing = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('following', function(followUser) {
-      return res.render('user/follow', { user: user, followUser: followUser });
+      return res.render('user/follow', { user: user, followUser: followUser, currentUser: req.session.user});
     })
     User.getFollowUser(user.following , ep.done('following'));
   });
@@ -134,7 +137,7 @@ exports.showFollower = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('follower', function(follower) {
-      return res.render('user/followers', { user: user, follower: follower});
+      return res.render('user/followers', { user: user, follower: follower, currentUser: req.session.user});
     })
     User.getFollowUser(user.follower , ep.done('follower'));
   });
@@ -161,7 +164,7 @@ exports.setting = function (req, res, next) {
     } else {
       data2.error = msg;
     }
-    res.render('user/setting', {user: data2});
+    res.render('user/setting', {user: data2, currentUser: req.session.user});
   }
 
   // post
@@ -182,7 +185,7 @@ exports.setting = function (req, res, next) {
           return next(err);
         }
         req.session.user = user.toObject({virtual: true});
-        return res.render('user/setting', {user: user});
+        return res.render('user/setting', {user: user, currentUser: req.session.user});
       });
     }));
   }
@@ -298,7 +301,8 @@ exports.listCollectedTopics = function (req, res, next) {
         topics: topics,
         current_page: page,
         pages: pages,
-        user: user
+        user: user,
+        currentUser: req.session.user
       });
     };
 
@@ -339,6 +343,7 @@ exports.top100 = function (req, res, next) {
     res.render('user/top100', {
       users: tops,
       pageTitle: 'top100',
+      currentUser: req.session.user
     });
   });
 };
@@ -359,7 +364,8 @@ exports.listTopics = function (req, res, next) {
         user: user,
         recent_topics: topics,
         current_page: page,
-        pages: pages
+        pages: pages,
+        currentUser: req.session.user
       });
     };
 
@@ -394,7 +400,8 @@ exports.listQuestions = function(req, res, next) {
         user: user,
         questions: questions,
         current_page: page,
-        pages: pages
+        pages: pages,
+        currentUser: req.session.user
       });
     };
 
@@ -429,7 +436,8 @@ exports.listReplies = function (req, res, next) {
         user: user,
         recent_replies: topics,
         current_page: page,
-        pages: pages
+        pages: pages,
+        currentUser: req.session.user
       });
     };
 
