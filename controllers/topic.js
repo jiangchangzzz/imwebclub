@@ -167,8 +167,9 @@ exports.list = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var tab = req.params.tab || 'all';
-  var sort = req.query.sort || 'hot';  // 根据不同的参数决定文章排序方式
+  var sort = req.query.sort;  // 根据不同的参数决定文章排序方式
   var sortMap = {
+    'default': '-create_at',
     'hot': '-visit_count',
     'latest': '-create_at',
     'reply': '-reply_count'
@@ -254,7 +255,7 @@ exports.list = function (req, res, next) {
         tabs: tabs,
         tab: tab,
         sort: sort,
-        base: '/topic/tab/' + tab,
+        base: '/topic/tab/' + tab + (sort && sort !== 'undefined' ? '?sort=' + sort : ''),
         pageTitle: tabName && (tabName + '版块'),
       });
     });
