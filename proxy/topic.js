@@ -7,7 +7,6 @@ var tools = require('../common/tools');
 var at = require('../common/at');
 var _ = require('lodash');
 var config = require('../config');
-var tools = require('../common/tools');
 
 
 /**
