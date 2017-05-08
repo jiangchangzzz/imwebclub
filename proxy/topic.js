@@ -73,7 +73,7 @@ exports.getCountByQuery = function (query, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getTopicsByQuery = function (query, opt, callback) {
-  query.deleted = false;
+  query.deleted = {$in:[null,false]};
   Topic.find(query, {}, opt, function (err, topics) {
     if (err) {
       return callback(err);
@@ -136,7 +136,7 @@ exports.getFullTopic = function (id, callback) {
     })
     .fail(callback);
 
-  Topic.findOne({ _id: id, deleted: false }, proxy.done(function (topic) {
+  Topic.findOne({ _id: id, deleted: {$in:[false,null]} }, proxy.done(function (topic) {
     if (!topic) {
       proxy.unbind();
       return callback(null, '此话题不存在或已被删除。');

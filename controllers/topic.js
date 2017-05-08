@@ -190,7 +190,7 @@ exports.list = function (req, res, next) {
   if (sort === 'hot') {
     query['create_at'] =  {
       $gte: new Date(new Date().getTime() - 60*60*24*90*1000).toISOString()
-    } 
+    }
   }
 
   var limit = config.list_topic_count;
@@ -200,7 +200,6 @@ exports.list = function (req, res, next) {
     sort: sortType
   };
   // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
-  // console.log(optionsStr);
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
     return topics;
   }));

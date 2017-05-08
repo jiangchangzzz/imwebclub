@@ -3,7 +3,9 @@ var Topic = require('../proxy').Topic;
 var Question = require('../proxy').Question;
 var Activity = require('../proxy').Activity;
 var Reply = require('../proxy').Reply;
+var Comment = require('../proxy').Comment;
 var UserCollect = require('../proxy').UserCollect;
+var TopicCollect = require('../proxy').TopicCollect;
 var UserFollow = require('../proxy').UserFollow;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
@@ -17,7 +19,13 @@ var ObjectDict = {
     'topic': Topic.getTopicById,
     'question': Question.getQuestionById,
     'activity': Activity.getActivityById,
-    'reply': Reply.getReply
+    'reply': Reply.getReply,
+    'comment': Comment.getComment
+};
+
+var CollectDict = {
+    'topic': TopicCollect,
+    'other': UserCollect
 };
 
 //点赞

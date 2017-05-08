@@ -15,6 +15,8 @@ mongoose.connect(config.db, {
 require('./user');
 require('./topic');
 require('./reply');
+require('./comment');
+require('./topic_collect');
 require('./user_collect');
 require('./user_follow');
 require('./message');
@@ -27,6 +29,8 @@ require('./question_answer');
 exports.User            = mongoose.model('User');
 exports.Topic           = mongoose.model('Topic');
 exports.Reply           = mongoose.model('Reply');
+exports.Comment         = mongoose.model('Comment');
+exports.TopicCollect    = mongoose.model('TopicCollect');
 exports.UserCollect     = mongoose.model('UserCollect');
 exports.UserFollow      = mongoose.model('UserFollow');
 exports.Message         = mongoose.model('Message');

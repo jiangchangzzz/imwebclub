@@ -203,19 +203,20 @@ var config = {
 
 if (process.env.NODE_ENV === 'test') {
   config.db = 'mongodb://127.0.0.1/node_club_dev';
-  // 本地测试github
-  // config.GITHUB_OAUTH = {
-  //     clientID: 'cb1872e84af2cb965cc8',
-  //     clientSecret: '097d8c85ac8a246abf7dafa94a0c4d78f95db506',
-  //     callbackURL: `http://localhost:${config.port}/auth/github/callback`
-  // };
-  // 本地测试weibo
-  // config.WEIBO_OAUTH = {
-  //     clientID: '3489481381',
-  //     clientSecret: '52410f54674964564a475afc64511e5d',
-  //     callbackURL: `http://test.imweb.io:${config.port}/auth/weibo/callback`
-  // };
-  config.host = 'test.imweb.io';
+  // github 登陆的配置
+  config.GITHUB_OAUTH = {
+    clientID: 'a32d122e769fae39b898',
+    clientSecret: '9cd819a15a6e886077b5a937aa0e1b8aac55f859',
+    callbackURL: 'http://imweb.io/auth/github/callback'
+  };
+
+  //weibo app key
+  config.WEIBO_OAUTH = {
+    clientID: '3489481381',
+    clientSecret: '52410f54674964564a475afc64511e5d',
+    callbackURL: "http://imweb.io/auth/weibo/callback"
+  };
+  config.host = 'imweb.io';
   config.port = 80;
 }
 

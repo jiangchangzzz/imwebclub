@@ -2,7 +2,7 @@ var EventProxy = require('eventproxy');
 var models = require('../models');
 var Activity = models.Activity;
 var User = require('./user');
-var Reply = require('./reply');
+var Comment = require('./comment');
 var tools = require('../common/tools');
 var at = require('../common/at');
 var _ = require('lodash');
@@ -42,7 +42,7 @@ exports.getActivityById = function (id, callback) {
     User.getUserById(activity.author_id, proxy.done('author'));
 
     if (activity.last_reply) {
-      Reply.getReplyById(activity.last_reply, proxy.done(function (last_reply) {
+      Comment.getCommentById(activity.last_reply, proxy.done(function (last_reply) {
         proxy.emit('last_reply', last_reply);
       }));
     } else {
@@ -106,7 +106,7 @@ exports.getActivitiesByQuery = function (query, opt, callback) {
 
       User.getUserById(activity.author_id, ep.done('author'));
       // 获取主题的最后回复
-      Reply.getReplyById(activity.last_reply, ep.done('reply'));
+      Comment.getCommentById(activity.last_reply, ep.done('reply'));
     });
   });
 };
@@ -153,7 +153,7 @@ exports.getFullActivity = function (id, callback) {
       proxy.emit('author', author);
     }));
 
-    //Reply.getRepliesByParentId(activity._id, {score:-1,create_at: 1}, proxy.done('replies'));
+    //Comment.getCommentsByParentId(activity._id, {score:-1,create_at: 1}, proxy.done('replies'));
   }));
 };
 
@@ -200,7 +200,7 @@ exports.reduceCount = function (id, callback) {
     }
     activity.reply_count -= 1;
 
-    Reply.getLastReplyByParentId(id, function (err, reply) {
+    Comment.getLastCommentByParentId(id, function (err, reply) {
       if (err) {
         return callback(err);
       }

@@ -1,6 +1,5 @@
 var models = require('../models');
 var Reply = models.Reply;
-var QuestionAnswer = require('./question_answer');
 var EventProxy = require('eventproxy');
 var _ = require('lodash');
 var tools = require('../common/tools');
@@ -62,11 +61,11 @@ exports.getReplyById = function (id, callback) {
  * @param callback 回调函数
  */
 exports.getLastReplyByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId, deleted: false}, '', {sort: {create_at : -1}, limit : 1}, callback);
+  Reply.find({topic_id: parentId, deleted: false}, '', {sort: {create_at : -1}, limit : 1}, callback);
 };
 
 exports.getTopReplyByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId, deleted: false, top: true}, '', {limit : 1}, callback);
+  Reply.find({topic_id: parentId, deleted: false, top: true}, '', {limit : 1}, callback);
 };
 
 /**
@@ -84,7 +83,7 @@ exports.getRepliesByParentId = function (parentId, sorts, callback) {
   if(sorts){
     sort = _.extend(sort, sorts);
   }
-  Reply.find({parent_id: parentId, deleted: false}, '', {sort: sort}, function (err, replies) {
+  Reply.find({topic_id: parentId, deleted: {$in:[false,null]}}, '', {sort: sort}, function (err, replies) {
     //console.log(replies);
     if (err) {
       return callback(err);
@@ -101,7 +100,7 @@ exports.getRepliesByParentId = function (parentId, sorts, callback) {
       var ep = new EventProxy();
       var author_id = reply.author_id;
       var reply_id = reply._id;
-      ep.all('reply_find', 'answer', function () {
+      ep.all('reply_find', function () {
         proxy.emit('reply_ready');
       });
       User.getUserById(author_id, function (err, author) {
@@ -122,19 +121,11 @@ exports.getRepliesByParentId = function (parentId, sorts, callback) {
           ep.emit('reply_find');
         });
       });
-      QuestionAnswer.getQuestionAnswer(parentId, reply_id, function (err, question_answer) {
-        if (err || !question_answer) {
-          reply.answer = false;
-        } else {
-          reply.answer = true;
-        }
-        return ep.emit('answer');
-      });
     });
   });
 };
 exports.getParentReplyCount = function(parentId, callback) {
-    Reply.count({parent_id: parentId}, callback);
+    Reply.count({topic_id: parentId}, callback);
 };
 /**
  * 创建并保存一条回复信息
@@ -144,17 +135,16 @@ exports.getParentReplyCount = function(parentId, callback) {
  * @param {String} [replyId] 回复ID，当二级回复时设定该值
  * @param {Function} callback 回调函数
  */
-exports.newAndSave = function (kind ,raw, parentId, authorId, replyId, callback) {
+exports.newAndSave = function (kind, raw, parentId, authorId, replyId, callback) {
     if (typeof replyId === 'function') {
         callback = replyId;
         replyId = null;
     }
     var reply = new Reply();
-    reply.kind = kind;
     reply.raw = raw;
     reply.content = renderHelper.markdownRender(raw);
     reply.text = tools.genReplyText(reply.content);
-    reply.parent_id = parentId;
+    reply.topic_id = parentId;
     reply.author_id = authorId;
     if (replyId) {
         reply.reply_id = replyId;

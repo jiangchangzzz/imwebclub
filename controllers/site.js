@@ -58,7 +58,7 @@ exports.index = function (req, res, next) {
       Topic.getTopicsByQuery({
         'create_at': {
           $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 60 * 1000).toISOString()
-        } 
+        }
       }, options, proxy.done('topics', function (topics) {
         var result = topics.map(function(item){
           return dataAdapter.outTopic(item);
