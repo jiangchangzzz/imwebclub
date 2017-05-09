@@ -465,7 +465,7 @@ exports.listReplies = function (req, res, next) {
       proxy.done(function (replies) {
 
         var topic_ids = replies.map(function (reply) {
-          return reply.parent_id.toString()
+          return reply.parent_id ? reply.parent_id.toString() : reply.topic_id.toString()
         })
         topic_ids = _.uniq(topic_ids); 
 
