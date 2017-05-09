@@ -73,7 +73,7 @@
         <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>   
           <% recent_replies.map(function(reply){ %>
             <div>评论了文章 <%= reply.title %> </div>
-            <div> <%= reply.reply.content %> </div>
+            <div> <%= reply.content %> </div>
           <%  }) %>
         <div class='cell more'>
           <a class='dark' href="/user/<%= user.loginname %>/replies">查看更多»</a>
