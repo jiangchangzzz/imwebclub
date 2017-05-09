@@ -209,7 +209,7 @@ define([
             var $reply = $ele.closest('.reply-item');
             var $subReplyList = $reply.find('.sub-reply-list');
             var $subCount = $reply.find('.sub-count');
-            var replyId = $reply.data('replyId');
+            var replyId = $reply.data('reply-id');
             var $editor = $reply.find('.editor');
             var content = $editor.data('editor').codemirror.getValue() || $editor.val();
             if (!content) {
@@ -237,7 +237,7 @@ define([
             var me = this;
             var $ele = $(e.target);
             var $reply = me._getReplyItem($ele);
-            var replyId = $reply.data('replyId');
+            var replyId = $reply.data('reply-id');
             if (!confirm('确定要删除此回复吗？')) {
                 return;
             }

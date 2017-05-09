@@ -51,7 +51,7 @@ $(document).ready(function(){
             var me = this;
             var $ele = $(e.target).closest('.answer');
             var $reply = me._getReplyItem($ele);
-            var replyId = $reply.data('replyId');
+            var replyId = $reply.attr('id');
             if (!confirm('确定要将此回复设置为回答吗？')) {
                 return;
             }

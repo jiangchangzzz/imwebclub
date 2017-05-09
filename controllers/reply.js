@@ -353,7 +353,7 @@ exports.update = function (req, res, next) {
   var raw = (req.body.t_content || req.body.r_content || req.body.content || '').trim();
 
   Reply.getReplyById(reply_id, function (err, reply) {
-    if (!reply) {
+    if (err || !reply) {
       res.render('notify/notify', {error: '此回复不存在或已被删除。'});
       return;
     }
@@ -364,7 +364,8 @@ exports.update = function (req, res, next) {
               if (err) {
                 return next(err);
               }
-              res.redirect('/topic/' + reply.parent_id + '#' + reply._id);
+              var kind = reply.kind || 'topic';
+              res.redirect('/'+kind+'/' + reply.topic_id + '#' + reply._id);
           });
       } else {
         res.render('notify/notify', {error: '回复的字数太少。'});
