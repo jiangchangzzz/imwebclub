@@ -44,8 +44,8 @@ exports.outReply = function(reply) {
     }
     var out = {
         id: reply._id,
-        answer: reply.answer,
-        reply_id: reply.reply_id || null,
+        answer: reply.answer || null,
+        reply_id: reply.reply_id || reply.comment_id || null,
         content: reply.content,
         text: reply.text || '',
         create_at: +reply.create_at,

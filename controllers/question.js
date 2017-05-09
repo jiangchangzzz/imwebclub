@@ -418,7 +418,7 @@ exports.answer = function (req, res, next) {
           return res.send({ success: false, message: err.message });
         }
         if(item){
-          console.log(item);
+          //console.log(item);
           Reply.getReply(item.answer_id,function(err, ansewer){
             if (err) {
               return ep.emit('fail', 403, err.message);

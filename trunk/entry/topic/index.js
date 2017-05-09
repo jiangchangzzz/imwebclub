@@ -43,12 +43,7 @@ $(document).ready(function(){
 $(document).on('click', '.collect-topic-btn', function(e) {
   var $ele = $(e.target);
   var topicId = imweb.topic.id;
-  imweb.ajax.post('/operate/collect', {
-      data: {
-          kind: 'topic',
-          object_id: topicId
-      }
-  }).done(function(data) {
+  imweb.ajax.post('/topic/'+topicId+'/collect').done(function(data) {
       if (data.ret === 0) {
         $ele.toggleClass('fa-heart').toggleClass('fa-heart-o');
         $ele.attr('title', $ele.hasClass('fa-heart') ? '取消收藏' : '收藏');

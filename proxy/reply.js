@@ -1,11 +1,11 @@
 var models = require('../models');
 var Reply = models.Reply;
-var QuestionAnswer = require('./question_answer');
 var EventProxy = require('eventproxy');
 var _ = require('lodash');
 var tools = require('../common/tools');
 var renderHelper = require('../common/render_helper');
 var User = require('./user');
+var QuestionAnswer = require('./question_answer');
 var at = require('../common/at');
 
 /**
@@ -62,11 +62,11 @@ exports.getReplyById = function (id, callback) {
  * @param callback 回调函数
  */
 exports.getLastReplyByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId, deleted: false}, '', {sort: {create_at : -1}, limit : 1}, callback);
+  Reply.find({topic_id: parentId, deleted: {$in:[null,false]}}, '', {sort: {create_at : -1}, limit : 1}, callback);
 };
 
 exports.getTopReplyByParentId = function (parentId, callback) {
-  Reply.find({parent_id: parentId, deleted: false, top: true}, '', {limit : 1}, callback);
+  Reply.find({topic_id: parentId, deleted: {$in:[null,false]}, top: true}, '', {limit : 1}, callback);
 };
 
 /**
@@ -84,8 +84,7 @@ exports.getRepliesByParentId = function (parentId, sorts, callback) {
   if(sorts){
     sort = _.extend(sort, sorts);
   }
-  Reply.find({parent_id: parentId, deleted: false}, '', {sort: sort}, function (err, replies) {
-    //console.log(replies);
+  Reply.find({topic_id: parentId, deleted: {$in:[null,false]}}, '', {sort: sort}, function (err, replies) {
     if (err) {
       return callback(err);
     }
@@ -134,7 +133,7 @@ exports.getRepliesByParentId = function (parentId, sorts, callback) {
   });
 };
 exports.getParentReplyCount = function(parentId, callback) {
-    Reply.count({parent_id: parentId}, callback);
+    Reply.count({topic_id: parentId}, callback);
 };
 /**
  * 创建并保存一条回复信息
@@ -144,7 +143,7 @@ exports.getParentReplyCount = function(parentId, callback) {
  * @param {String} [replyId] 回复ID，当二级回复时设定该值
  * @param {Function} callback 回调函数
  */
-exports.newAndSave = function (kind ,raw, parentId, authorId, replyId, callback) {
+exports.newAndSave = function (kind, raw, parentId, authorId, replyId, callback) {
     if (typeof replyId === 'function') {
         callback = replyId;
         replyId = null;
@@ -154,7 +153,7 @@ exports.newAndSave = function (kind ,raw, parentId, authorId, replyId, callback)
     reply.raw = raw;
     reply.content = renderHelper.markdownRender(raw);
     reply.text = tools.genReplyText(reply.content);
-    reply.parent_id = parentId;
+    reply.topic_id = parentId;
     reply.author_id = authorId;
     if (replyId) {
         reply.reply_id = replyId;
@@ -180,19 +179,23 @@ exports.getRepliesByAuthorId = function (authorId, kind, opt, callback) {
     callback = opt;
     opt = null;
   }
-  if(kind && kind !== 'all'){
-    Reply.find({author_id: authorId, kind: kind}, {}, opt, callback);
+  if(kind === 'topic'){
+    Reply.find({author_id: authorId, kind: {$in:[null,'topic']}, deleted: {$in:[null,false]}}, {}, opt, callback);
+  }else if(kind && kind !== 'all'){
+    Reply.find({author_id: authorId, kind: kind, deleted: {$in:[null,false]}}, {}, opt, callback);
   }else{
-    Reply.find({author_id: authorId}, {}, opt, callback);
+    Reply.find({author_id: authorId, deleted: {$in:[null,false]}}, {}, opt, callback);
   }
 };
 
 // 通过 author_id 获取回复总数
 exports.getCountByAuthorId = function (authorId, kind, callback) {
-  if(kind && kind !== 'all'){
-    Reply.count({author_id: authorId, kind: kind, deleted: false}, callback);
+  if(kind === 'topic'){
+    Reply.count({author_id: authorId, kind: {$in:[null,'topic']}, deleted: {$in:[null,false]}}, callback);
+  }else if(kind && kind !== 'all'){
+    Reply.count({author_id: authorId, kind: kind, deleted: {$in:[null,false]}}, callback);
   } else {
-    Reply.count({author_id: authorId, deleted: false}, callback);
+    Reply.count({author_id: authorId, deleted: {$in:[null,false]}}, callback);
   }
 };
 
@@ -209,16 +212,18 @@ exports.removeByCondition = function (query, callback) {
 exports.queryAuthorReply = function(authorId, kind, beforeTime, limit, callback) {
     var query = {
         author_id: authorId,
-        deleted: false,
+        deleted: {$in:[null,false]},
         create_at: {
             $lt: beforeTime
         }
     };
-    if(kind && kind !== 'all'){
+    if(kind === 'topic'){
+      query.kind = {$in:[null,'topic']};
+    }else if(kind && kind !== 'all'){
       query.kind = kind;
     }
     Reply.find(query)
-    .populate('parent_id')
+    .populate('topic_id')
     .sort('-create_at')
     .limit(limit)
     .exec(callback);

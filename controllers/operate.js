@@ -4,6 +4,7 @@ var Question = require('../proxy').Question;
 var Activity = require('../proxy').Activity;
 var Reply = require('../proxy').Reply;
 var UserCollect = require('../proxy').UserCollect;
+var TopicCollect = require('../proxy').TopicCollect;
 var UserFollow = require('../proxy').UserFollow;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
@@ -194,7 +195,6 @@ exports.lock = function(req, res, next) {
 exports.collect = function(req, res, next) {
     var object_id = req.body.object_id;
     var kind = req.body.kind.toLowerCase();
-
     var proxy = EventProxy.create();
     proxy.fail(next);
     proxy.on('fail', function() {

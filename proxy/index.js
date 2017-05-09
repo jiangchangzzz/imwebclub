@@ -3,6 +3,7 @@ exports.Message      = require('./message');
 exports.Topic        = require('./topic');
 exports.Reply        = require('./reply');
 exports.Draft        = require('./draft');
+exports.TopicCollect = require('./topic_collect');
 exports.UserCollect = require('./user_collect');
 exports.UserFollow = require('./user_follow');
 exports.Marktang = require('./marktang');
