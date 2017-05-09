@@ -1,4 +1,4 @@
-<% var isCurrentUser =  user & user.loginname && currentUser.loginname === user.loginname %>
+<% var isCurrentUser =  user && user.loginname && currentUser.loginname === user.loginname;console.log(isCurrentUser) %>
 <ul class='breadcrumb'>
 	<li class='breadcrumb__link'>
 		<i class="nav-icon fa fa-home"></i>

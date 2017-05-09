@@ -10,15 +10,19 @@
               <% } %>
           </div>
         </a>
-        <div class="name"><%= current_user.name || current_user.loginname %></div>
+        <div class="name"><a href="/user/<%= current_user.loginname %>/index"><%= current_user.name || current_user.loginname %></a></div>
         <ul class="contribution-list">
             <li>
-                <b><%= current_user.topic_count || 0%></b>
-                <span class="title">文章</span>
+                <a href="/user/<%= current_user.loginname %>/topics">
+                    <b><%= current_user.topic_count || 0%></b>
+                    <span class="title">文章</span>
+                </a>
             </li>
             <li>
-                <b><%= current_user.question_count || 0%></b>
-                <span class="title">问答</span>
+                <a href="/user/<%= current_user.loginname %>/question">
+                    <b><%= current_user.question_count || 0%></b>
+                    <span class="title">问答</span>
+                </a>
             </li>
         </ul>
     </div>
@@ -141,8 +145,8 @@
                         <% if(current_user && current_user.following && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
                             <a href="javascript:void(0);">已关注</a>
                             <% } else {%>
-                                <a href="javascript:void(0);" class="link focus-add">+关注</a>
-                                <%  } %>
+                                <a href="javascript:void(0);" class="link <%=!current_user ? 'nav-login' : 'focus-add' %>">+关注</a>
+                            <% } %>
                     </div>
                     <div class="center">
                         <div class="one-line">

@@ -75,9 +75,9 @@
             <div class="column-body">
                 <div class="slider">
                   <% if (typeof(topics) !== 'undefined' && topics.length > 0 && topics[0].pic && topics[0].pic[0]) { %>
-                     <img src="<%=topics[0].pic[0] %>">
+                     <a href="/topic/<%= topics[0].id %>"><img src="<%=topics[0].pic[0] %>"></a>
                   <% }else {%>
-                     <img src="../images/sliderCover.png">
+                     <a href="/topic/<%= topics[0].id %>"><img src="../images/sliderCover.png"></a>
                   <% } %>
                 </div>
                 <ul class="article-list">
