@@ -43,6 +43,7 @@ exports.index = function (req, res, next) {
         recent_replies: recent_replies,
         token: token,
         pageTitle: util.format('@%s 的个人主页', user.loginname),
+        tab: 'index'
       });
     };
 
@@ -58,10 +59,9 @@ exports.index = function (req, res, next) {
       proxy.done(function (replies) {
 
         var topic_ids = replies.map(function (reply) {
-          return (reply.parent_id ? reply.parent_id.toString() : reply.topic_id.toString())
+          return reply.topic_id.toString();
         })
         topic_ids = _.uniq(topic_ids).slice(0, 5); //  只显示最近5条
-
         var query = {_id: {'$in': topic_ids}};
         var opt = {};
         Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
@@ -92,7 +92,7 @@ exports.showSetting = function (req, res, next) {
       user.success = '保存成功。';
     }
     user.error = null;
-    return res.render('user/setting', {user: user, currentUser: req.session.user});
+    return res.render('user/setting', {user: user, currentUser: req.session.user, tab: 'seeting'});
   });
 };
 
@@ -122,14 +122,16 @@ exports.showFollowing = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('following', function(followUser) {
-      return res.render('user/follow', { user: user, followUser: followUser, currentUser: req.session.user});
+      return res.render('user/follow', { user: user, followUser: followUser, currentUser: req.session.user, tab: 'follwing'});
     })
     User.getFollowUser(user.following , ep.done('following'));
   });
 };
 
 exports.showFollower = function (req, res, next) {
-  User.getUserById(req.session.user._id, function (err, user) {
+  var user_name = req.params.name;
+  User.getUserByLoginName(user_name, function (err, user) {
+  // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);
     }
@@ -137,7 +139,7 @@ exports.showFollower = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('follower', function(follower) {
-      return res.render('user/followers', { user: user, follower: follower, currentUser: req.session.user});
+      return res.render('user/follow', { user: user, follower: follower, currentUser: req.session.user, tab: 'follwer'});
     })
     User.getFollowUser(user.follower , ep.done('follower'));
   });
@@ -164,7 +166,7 @@ exports.setting = function (req, res, next) {
     } else {
       data2.error = msg;
     }
-    res.render('user/setting', {user: data2, currentUser: req.session.user});
+    res.render('user/setting', {user: data2, currentUser: req.session.user, tab: 'setting'});
   }
 
   // post
@@ -185,7 +187,7 @@ exports.setting = function (req, res, next) {
           return next(err);
         }
         req.session.user = user.toObject({virtual: true});
-        return res.render('user/setting', {user: user, currentUser: req.session.user});
+        return res.render('user/setting', {user: user, currentUser: req.session.user,  tab: 'setting'});
       });
     }));
   }
@@ -365,7 +367,8 @@ exports.listTopics = function (req, res, next) {
         recent_topics: topics,
         current_page: page,
         pages: pages,
-        currentUser: req.session.user
+        currentUser: req.session.user,
+        tab: 'topics'
       });
     };
 
@@ -401,7 +404,8 @@ exports.listQuestions = function(req, res, next) {
         questions: questions,
         current_page: page,
         pages: pages,
-        currentUser: req.session.user
+        currentUser: req.session.user,
+        tab: 'questions'
       });
     };
 
@@ -431,13 +435,14 @@ exports.listReplies = function (req, res, next) {
       return;
     }
 
-    var render = function (topics, pages) {
+    var render = function (recent_replies, pages) {
       res.render('user/replies', {
         user: user,
-        recent_replies: topics,
+        recent_replies: recent_replies,
         current_page: page,
         pages: pages,
-        currentUser: req.session.user
+        currentUser: req.session.user,
+        tab: 'replies'
       });
     };
 
@@ -446,21 +451,21 @@ exports.listReplies = function (req, res, next) {
     proxy.fail(next);
 
     var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
-    // Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
-    //   // 获取所有有评论的主题
-    //   var topic_ids = replies.map(function (reply) {
-    //     return reply.topic_id.toString();
-    //   });
-    //   topic_ids = _.uniq(topic_ids);
+    Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
+      // 获取所有有评论的主题
+      var topic_ids = replies.map(function (reply) {
+        return reply.topic_id.toString();
+      });
+      topic_ids = _.uniq(topic_ids);
 
-    //   var query = {'_id': {'$in': topic_ids}};
-    //   Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
-    //     topics = _.sortBy(topics, function (topic) {
-    //       return topic_ids.indexOf(topic._id.toString())
-    //     })
-    //     return topics;
-    //   }));
-    // }));
+      var query = {'_id': {'$in': topic_ids}};
+      Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
+        topics = _.sortBy(topics, function (topic) {
+          return topic_ids.indexOf(topic._id.toString())
+        })
+        return topics;
+      }));
+    }));
     Reply.getRepliesByAuthorId(user._id, 'topic', opt,
       proxy.done(function (replies) {
 

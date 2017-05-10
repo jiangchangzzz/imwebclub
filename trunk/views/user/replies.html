@@ -8,7 +8,6 @@
           <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>   
           <% recent_replies.map(function(reply){ %>
             <div>评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a></div>
-            <div> <%= reply.content %> </div>
           <%  }) %>
           <% } else { %>
           <div class='inner'>

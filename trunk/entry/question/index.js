@@ -3,6 +3,7 @@ import '../../stylesheets/reply.less';
 import '../../stylesheets/marktang/markdowntext.css';
 import "../../javascripts/libs/editor/editor.css";
 import '../../javascripts/common/reply.js';
+import '../../javascripts/layout';
 
 function initReplies(replies){
   var me = window.replyAction;

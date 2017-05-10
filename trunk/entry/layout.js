@@ -6,6 +6,8 @@ import '../stylesheets/base.less';
 import '../stylesheets/common.less';
 import '../stylesheets/header.less';
 import '../stylesheets/footer.less';
+import '../stylesheets/banner.less';
+import '../stylesheets/sidebar.less';
 
 var sign = require('../javascripts/common/sign.js');
 require('../javascripts/common/ui.js');

@@ -66,13 +66,13 @@ router.post('/reset_pass', sign.updatePass);  // 更新密码
 // user controller
 router.get('/user/:name/index', user.index); // 用户个人主页
 router.get('/user/:name/setting', auth.userRequired, user.showSetting); // 用户个人设置页
-router.get('/user/:name/following', auth.userRequired, user.showFollowing); // 用户个人关注
-router.get('/user/:name/follower', auth.userRequired, user.showFollower); // 用户粉丝
-router.get('/user/:name/question', auth.userRequired, user.listQuestions); // 用户的we
+router.get('/user/:name/following', user.showFollowing); // 用户个人关注
+router.get('/user/:name/follower', user.showFollower); // 用户粉丝
+router.get('/user/:name/question', user.listQuestions); // 用户的we
 router.get('/user/:name/collections', user.listCollectedTopics);  // 用户收藏的所有话题页
 router.get('/user/:name/topics', user.listTopics);  // 用户发布的所有话题页
 router.get('/user/:name/replies', user.listReplies);  // 用户参与的所有回复页
-router.get('/user/:name/password', user.showPassword);  // 用户密码更改
+router.get('/user/:name/password', auth.userRequired, user.showPassword);  // 用户密码更改
 router.post('/setting', auth.userRequired, user.setting); // 提交个人信息设置
 
 router.get('/stars', user.listStars); // 显示所有达人列表页

@@ -4,14 +4,14 @@
     <div class="user-panel__header__content">
       <div class="left">
         <div class="user-icon user_big_avatar">
-          <img src="<%= user.avatar.replace('?size=48', '') %>"  alt="<%= user.loginname %>">
+          <img src="<%= user.avatar.replace('?size=48', '') %>" alt="<%= user.loginname %>">
         </div>
         <div class="user-info">
           <span class="username">
             <%= user.loginname %>
           </span>
           <span class="register-time">注册时间: <%=user.create_at_ago() %></span>
-          <span class="score">积分: <%=user.score%></span>
+          <span class="score">声望: <%=user.score%></span>
           <div class="achieve">
             <span class="achieve-type">
               <i class="icon-achieve icon-articles fa fa-file-text-o"></i>
@@ -29,10 +29,10 @@
           <div class="social">
             <% if (user.githubUsername) { %>
               <a class="social-icon github"></a>
-            <%}%>
-            <% if (user.weibo) { %>
-              <a class="social-icon weibo"></a>
-            <% } %>
+              <%}%>
+                <% if (user.weibo) { %>
+                  <a class="social-icon weibo"></a>
+                  <% } %>
           </div>
         </div>
       </div>
@@ -41,117 +41,123 @@
 
         </div>
       </div>
-    </div> 
+    </div>
   </div>
   <!-- 个人主页头部end -->
   <div class='user-panel__content'>
     <div class='user-panel__content__detail'>
       <%- partial('./nav') %>
-      <div class='breadcrumb--content'>
-        <div class='breadcrumb--content__section section--show'>
-          <!--<%- partial('./userInfo') %>-->
-        <div class='panel'>
-        <div class='header'>
-          <span class='col_fade'>最近创建的话题</span>
-        </div>
-        <% if (typeof(recent_topics) !== 'undefined' && recent_topics.length > 0) { %>
-        <%- partial('../topic/abstract', { collection: recent_topics, as: 'topic' }) %>
-        <div class='cell more'>
-          <a class='dark' href="/user/<%= user.loginname %>/topics">查看更多»</a>
-        </div>
-        <% } else { %>
-        <div class='inner'>
-          <p>无话题</p>
-        </div>
-        <% } %>
-      </div>
+        <div class='breadcrumb--content'>
+          <div class='breadcrumb--content__section section--show'>
+            <!--<%- partial('./userInfo') %>-->
+            <div class='panel'>
+              <div class='header'>
+                <span class='col_fade'>最近创建的文章</span>
+              </div>
+              <% if (typeof(recent_topics) !== 'undefined' && recent_topics.length > 0) { %>
+                <%- partial('../topic/abstract', { collection: recent_topics, as: 'topic' }) %>
+                  <div class='cell more'>
+                    <a class='dark' href="/user/<%= user.loginname %>/topics">查看更多»</a>
+                  </div>
+                  <% } else { %>
+                    <div class='inner'>
+                      <p>无话题</p>
+                    </div>
+                    <% } %>
+            </div>
+          </div>
+          <div class='breadcrumb--content__section section--show'>
+            <div class='panel'>
+              <div class='header'>
+                <span class='col_fade'>最近评论</span>
+              </div>
+              <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>
+                <% recent_replies.map(function(reply){ %>
+                  <div>评论了文章
+                    <%- reply.title %>
+                  </div>
+                  <div>
+                    <%- reply.reply.content %>
+                  </div>
+                  <%  }) %>
+                    <div class='cell more'>
+                      <a class='dark' href="/user/<%= user.loginname %>/replies">查看更多»</a>
+                    </div>
+                    <% } else { %>
+                      <div class='inner'>
+                        <p>无话题</p>
+                      </div>
+                      <% } %>
+            </div>
 
-      <div class='panel'>
-        <div class='header'>
-          <span class='col_fade'>最近参与的话题</span>
-        </div>
-        <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>   
-          <% recent_replies.map(function(reply){ %>
-            <div>评论了文章 <%= reply.title %> </div>
-            <div> <%= reply.content %> </div>
-          <%  }) %>
-        <div class='cell more'>
-          <a class='dark' href="/user/<%= user.loginname %>/replies">查看更多»</a>
-        </div>
-        <% } else { %>
-        <div class='inner'>
-          <p>无话题</p>
-        </div>
-        <% } %>
-      </div> 
-       
-        </div>
+          </div>
 
-      </div>
+        </div>
     </div>
   </div>
 </div>
 
 <% if (current_user) { %>
-<script>
-  $(document).ready(function () {
-    $('#set_star_btn').click(function () {
-      var $me = $(this);
-      var action = $me.attr('action');
-      var params = {
-        user_id: '<%= user._id %>',
-        _csrf: '<%- csrf %>'
-      };
-      $.post('/user/' + action, params, function (data) {
-        if (data.status === 'success') {
-          if (action === 'set_star') {
-            $me.html('取消达人');
-            $me.attr('action', 'cancel_star');
-          } else {
-            $me.html('设为达人');
-            $me.attr('action', 'set_star');
+  <script>
+    $(document).ready(function () {
+      $('#set_star_btn').click(function () {
+        var $me = $(this);
+        var action = $me.attr('action');
+        var params = {
+          user_id: '<%= user._id %>',
+          _csrf: '<%- csrf %>'
+        };
+        $.post('/user/' + action, params, function (data) {
+          if (data.status === 'success') {
+            if (action === 'set_star') {
+              $me.html('取消达人');
+              $me.attr('action', 'cancel_star');
+            } else {
+              $me.html('设为达人');
+              $me.attr('action', 'set_star');
+            }
           }
+        }, 'json');
+      });
+
+      $('#set_block_btn').click(function () {
+        var $me = $(this);
+        var action = $me.attr('action');
+        var params = {
+          _csrf: '<%- csrf %>',
+          action: action
+        };
+        if (action === 'set_block' && !confirm('确定要屏蔽该用户吗？')) {
+          return;
         }
-      }, 'json');
+        $.post('/user/<%- user.loginname %>/block', params, function (data) {
+          if (data.status === 'success') {
+            if (action === 'set_block') {
+              $me.html('取消屏蔽用户');
+              $me.attr('action', 'cancel_block');
+            } else if (action === 'cancel_block') {
+              $me.html('屏蔽用户');
+              $me.attr('action', 'set_block');
+            }
+          }
+        }, 'json');
+      })
+
+      $('#delete_all').click(function () {
+        var $me = $(this);
+        var params = {
+          _csrf: '<%- csrf %>',
+        };
+        if (!confirm('确定要删除吗？（不会永久删除，只做标记位）')) {
+          return;
+        }
+        $.post('/user/<%- user.loginname %>/delete_all', params, function (data) {
+          if (data.status === 'success') {
+            alert('操作成功');
+          }
+        }, 'json');
+      })
     });
 
-    $('#set_block_btn').click(function () {
-      var $me = $(this);
-      var action = $me.attr('action');
-      var params = {
-        _csrf: '<%- csrf %>',
-        action: action
-      };
-      if (action === 'set_block' && !confirm('确定要屏蔽该用户吗？')) {
-        return;
-      }
-      $.post('/user/<%- user.loginname %>/block', params, function (data) {
-        if (data.status === 'success') {
-          if (action === 'set_block') {
-            $me.html('取消屏蔽用户');
-            $me.attr('action', 'cancel_block');
-          } else if (action === 'cancel_block') {
-            $me.html('屏蔽用户');
-            $me.attr('action', 'set_block');
-          }
-        }
-      }, 'json');
-    })
-
-    $('#delete_all').click(function () {
-      var $me = $(this);
-      var params = {
-        _csrf: '<%- csrf %>',
-      };
-      if (!confirm('确定要删除吗？（不会永久删除，只做标记位）')) {
-        return;
-      }
-      $.post('/user/<%- user.loginname %>/delete_all', params, function (data) {
-        if (data.status === 'success') {
-          alert('操作成功');
-        }
-      }, 'json');
-    })
-  });
-</script>
-<% } %>
+  </script>
+  <% } %>

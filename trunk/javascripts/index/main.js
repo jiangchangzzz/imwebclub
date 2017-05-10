@@ -7,7 +7,7 @@ $(document).ready(function(){
           followUser_id
         }
       }).done(function(){
-        $this.html('<a href="javascript:void(0);">已关注</a>');
+        $this.removeClass('focus-add').html('<a href="javascript:void(0);">已关注</a>');
       })
     })
 

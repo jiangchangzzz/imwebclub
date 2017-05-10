@@ -107,7 +107,7 @@ exports.saveUser = function(req, res, next) {
 
 
     if (!validator.isNumeric(updated.score)) {
-        return ep.emit('prop_err', '积分必须为数字。');
+        return ep.emit('prop_err', '声望必须为数字。');
     }
 
     console.log('---')
