@@ -71,23 +71,18 @@
               <div class='header'>
                 <span class='col_fade'>最近评论</span>
               </div>
-              <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>
+               <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>   
                 <% recent_replies.map(function(reply){ %>
-                  <div>评论了文章
-                    <%- reply.title %>
-                  </div>
-                  <div>
-                    <%- reply.reply.content %>
-                  </div>
-                  <%  }) %>
-                    <div class='cell more'>
+                  <div>评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a></div>
+                <%  }) %>
+                  <div class='cell more'>
                       <a class='dark' href="/user/<%= user.loginname %>/replies">查看更多»</a>
                     </div>
-                    <% } else { %>
-                      <div class='inner'>
-                        <p>无话题</p>
-                      </div>
-                      <% } %>
+                <% } else { %>
+                <div class='inner'>
+                  <p>没有评论</p>
+                </div>
+                <% } %>
             </div>
 
           </div>

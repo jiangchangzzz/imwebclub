@@ -62,7 +62,34 @@ exports.getReplyById = function (id, callback) {
  * @param callback 回调函数
  */
 exports.getLastReplyByParentId = function (parentId, callback) {
-  Reply.find({topic_id: parentId, deleted: {$in:[null,false]}}, '', {sort: {create_at : -1}, limit : 1}, callback);
+  Reply.find({topic_id: parentId, deleted: {$in:[null,false]}}, '', {sort: {create_at : -1}, limit : 1}, function(err, reply){
+     if (err) {
+      return callback(err);
+    }
+    if (!reply) {
+      return callback(err, null);
+    }
+
+    var author_id = reply.author_id;
+    User.getUserById(author_id, function (err, author) {
+      if (err) {
+        return callback(err);
+      }
+      reply.author = author;
+      reply.friendly_create_at = tools.formatDate(reply.create_at, true);
+      // TODO: 添加更新方法，有些旧帖子可以转换为markdown格式的内容
+      if (reply.content_is_html) {
+        return callback(null, reply);
+      }
+      at.linkUsers(reply.content, function (err, str) {
+        if (err) {
+          return callback(err);
+        }
+        reply.content = str;
+        return callback(err, reply);
+      });
+    });
+  });
 };
 
 exports.getTopReplyByParentId = function (parentId, callback) {

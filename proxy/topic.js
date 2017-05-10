@@ -105,7 +105,11 @@ exports.getTopicsByQuery = function (query, opt, callback) {
 
       User.getUserById(topic.author_id, ep.done('author'));
       // 获取主题的最后回复
-      Reply.getReplyById(topic.last_reply, ep.done('reply'));
+      if(topic.last_reply) {
+        Reply.getReplyById(topic.last_reply, ep.done('reply'));
+      } else {
+        Reply.getLastReplyByParentId(topic._id, ep.done('reply'));
+      }
     });
   });
 };
