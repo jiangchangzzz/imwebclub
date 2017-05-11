@@ -2,8 +2,8 @@
   <%if(users && users.length >0 ) {%>
   <% users.forEach(function(user) { %>
     <div class='panel' id='<%= user.id %>'>
-     <div class="avatar">
-      <img src="<%=user.avatar%>">
+     <div class="avatar ui-avatar-48">
+      <img style="width: 100%;" src="<%=user.avatar%>">
     </div>
       <div><%= user.loginname %></div>
       <div>声望:<%= user.score %></div>

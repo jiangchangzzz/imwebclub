@@ -26,10 +26,10 @@ exports.index = function (req, res, next) {
   var options = { limit: 10, sort: '-top -visit_count -create_at' };
 
   // 取排行榜上的用户
-  cache.get('tops', proxy.done(function (tops) {
-    if (tops) {
-      proxy.emit('tops', tops);
-    } else {
+  // cache.get('tops', proxy.done(function (tops) {
+  //   if (tops) {
+  //     proxy.emit('tops', tops);
+  //   } else {
       User.getUsersByQuery(
         {
           '$or': [{
@@ -46,8 +46,8 @@ exports.index = function (req, res, next) {
           return tops;
         })
       );
-    }
-  }));
+  //   }
+  // }));
   // END 取排行榜上的用户
 
   //取文章
