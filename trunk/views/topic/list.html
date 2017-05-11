@@ -47,13 +47,15 @@
 <div id="main" class="clearfix">
 <%- partial('common/sidebar.html') %>
 <div id="content" class="topic_list">
-<div class="query-list">
-    <a href="?sort=hot" class="question-query <%= sort==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
-    <a href="?sort=latest" class="question-query <%= sort==='latest' ? 'current-query' : '' %>">最新</a>
-    <% if(current_user){ %>
-        <a class="fr active" href="/marktang/index?autoOpenInfo=true">发布文章</a>
-    <% } %>
-</div>
+    <%if(sort !== null) {%>
+        <div class="query-list">
+            <a href="?sort=hot" class="question-query <%= sort==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
+            <a href="?sort=latest" class="question-query <%= sort==='latest' ? 'current-query' : '' %>">最新</a>
+            <% if(current_user){ %>
+                <a class="fr active" href="/marktang/index?autoOpenInfo=true">发布文章</a>
+            <% } %>
+        </div>
+    <%}%>
   <%- partial("../topic/abstract", {collection:topics, as:"topic"})%>
 </div>
 <div class="pagination" current_page="<%= current_page %>">

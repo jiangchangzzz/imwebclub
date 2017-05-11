@@ -82,10 +82,10 @@ exports.index = function (req, res, next) {
     }
 
     var tabName = renderHelper.tabName(tab);
-    // if (!tabName) {
     proxy.all('topics', 'pages'/**'tops', 'no_reply_topics', 'pages', 'topic_caculate','issues'**/,
         function (topics, pages /**tops, no_reply_topics, pages, topic_caculate, issues**/) {
             res.render('topic/list', {
+                _layoutFile: false,
                 topics: topicFormat(topics),
                 current_page: page,
                 base: '/search/' + search,
@@ -96,30 +96,10 @@ exports.index = function (req, res, next) {
                 pages: pages,
                 tabs: config.tabs,
                 tab: tab,
+                sort: null,
                 // issues: issues,
                 // topic_caculate: topic_caculate,
                 pageTitle: tabName && (tabName + '版块')
             });
         });
-    // } else {
-    // proxy.all('topics',  'pages',/**'tops', 'no_reply_topics', 'pages', 'topic_caculate', 'issues'**/,
-    //     function(topics, pages/**tops, no_reply_topics, pages, topic_caculate, issues**/) {
-
-    //         res.render('topic/list', {
-    //             topics: topicFormat(topics),
-    //             current_page: page,
-    //             base: '/',
-    //             list_topic_count: limit,
-    //             // tops: tops,
-    //             showSignIn: true,
-    //             // no_reply_topics: no_reply_topics,
-    //             pages: pages,
-    //             tabs: config.tabs,
-    //             tab: tab,
-    //             // issues: issues,
-    //             // topic_caculate: topic_caculate,
-    //             pageTitle: tabName && (tabName + '版块')
-    //         });
-    //     });
-    // }
 }
