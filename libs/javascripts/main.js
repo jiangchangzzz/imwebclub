@@ -1,8 +1,3 @@
-import * as config from '../config';
-import '../ui';
-import './draft-autosave';
-
-
 (function() {
     var imweb = window.imweb = window.imweb || {};
 

@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8">
     <title>IMweb前端社区-发表文章</title>
+    <link rel="stylesheet" href='/libs/marktang/lib/codemirror/lib/codemirror.css'>
+    <link rel="stylesheet" href='/libs/marktang/lib/highlight/styles/monokai_sublime.css'>
+    <link rel="stylesheet" href='/libs/marktang/lib/codemirror/theme/ryan-dark.css'>
+
+    <link rel="stylesheet" href='/libs/stylesheets/main.css'>
+    <link rel="stylesheet" href='/libs/stylesheets/flymarkdown.css'>
+
   <script>
     window.imweb = window.imweb || {};
     imweb._csrf = '<%- csrf %>';
@@ -24,7 +31,7 @@
     <script src='/libs/lodash.compat.min.js'></script>
     <script src='/libs/remarkable.js'></script>
 
-    <script src='/libs/webuploader/webuploader.withoutimage.js'></script>
+    <script src='/libs/webuploader/webuploader.withoutimage.min.js'></script>
     <script src='/libs/marktang/lib/codemirror/lib/codemirror.js'></script>
     <script src='/libs/marktang/lib/marked.js'></script>
     <script src='/libs/marktang/lib//highlight/highlight.js'></script>
@@ -34,9 +41,13 @@
     <script src='/libs/marktang/lib/codemirror/mode/markdown/markdown.js'></script>
     <script src='/libs/marktang/lib/codemirror/mode/gfm/gfm.js'></script>
     <script src='/libs/marktang/lib/codemirror/mode/javascript/javascript.js'></script>
-    <script src='/libs/utils.js'></script>
+    <script src='/libs/javascripts/config.js'></script>
+    <script src='/libs/javascripts/utils.js'></script>
     <script src='/libs/marktang/js/flymarkdown.js?v=1.1'></script>
-
+    <script src='/libs/javascripts/ui.js'></script>
+    <script src='/libs/javascripts/main.js'></script>
+    <script src='/libs/javascripts/draft-autosave.js'></script>
+    
     <!--[if lte IE 8]>
     <script src='/libs/marktang/lib/es5-shim.min.js'></script>
     <![endif]-->

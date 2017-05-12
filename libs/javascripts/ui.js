@@ -1,3 +1,4 @@
+(function() {
     var ui = {};
     // more icon 点击切换方向
     $(document).on('click', '.ui-more-down', function() {
@@ -222,3 +223,4 @@
         }
     }
     window.ui = ui;
+})();

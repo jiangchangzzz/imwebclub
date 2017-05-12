@@ -1,6 +1,6 @@
 import '../../stylesheets/sidebar.less';
 import '../../stylesheets/activity/index.less';
-import '../../stylesheets/marktang/markdowntext.css';
+import '../../stylesheets/markdowntext.css';
 
 /**
  * 收藏活动

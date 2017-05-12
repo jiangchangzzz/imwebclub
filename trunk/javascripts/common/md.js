@@ -1,5 +1,5 @@
 define([
-	'./remarkable.js'
+	'../libs/remarkable.js'
 ], function(Remarkable){
 	
 	var md = new Remarkable();

@@ -2,7 +2,7 @@ import '../../stylesheets/banner.less';
 import '../../stylesheets/sidebar.less';
 import '../../stylesheets/topic/index.less';
 import '../../stylesheets/reply.less';
-import '../../stylesheets/marktang/markdowntext.css';
+import '../../stylesheets/markdowntext.css';
 import "../../javascripts/libs/editor/editor.css";
 import '../../javascripts/layout';
 import '../../javascripts/common/reply.js';

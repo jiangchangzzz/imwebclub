@@ -1,14 +1,14 @@
 define([
     'lodash',
-    '../../../common/render_helper',
+    '../../../server/common/render_helper',
     '../template/tplReplyItem.js',
     '../template/tplReplySubItem.js',
     '../libs/editor/editor.js',
     '../libs/editor/ext.js',
     '../libs/remarkable.js',
-    '../libs/webuploader/webuploader.withoutimage.js',
-    './jquery.caret.js',
-    './jquery.atwho.js',
+    '../libs/webuploader/webuploader.withoutimage.min.js',
+    '../libs/jquery.caret.js',
+    '../libs/jquery.atwho.js',
     './md.js'
 ], function(_, render_helper, tplReplyItem, tplReplySubItem, editor, ext, Remarkable, webuploader){
     window.Editor = editor.Editor;

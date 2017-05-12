@@ -1,38 +1,43 @@
 <script>
-    imweb.question = {
-        id: '<%= question.id %>',
-        reply_up_threshold: <%= question.reply_up_threshold %>,
-        author: {
-            name: '<%= question.author.name %>',
-            loginname: '<%= question.author.loginname %>'
-        },
-        replies: <%- inlineScript(JSON.stringify(question.replies)) %>
+  imweb.question = {
+    id: '<%= question.id %>',
+    reply_up_threshold: <%= question.reply_up_threshold %>,
+    author: {
+      name: '<%= question.author.name %>',
+      loginname: '<%= question.author.loginname %>'
+    },
+    replies: <%- inlineScript(JSON.stringify(question.replies)) %>
     };
-    imweb.answer = <%- inlineScript(JSON.stringify(answer)) %>;
+  imweb.answer = <%- inlineScript(JSON.stringify(answer)) %>;
 
-    var RICH_META = {
-        name :'<%= question.title %>',
-        author :'<%= question.author.name %>',
-        img : '<%= question.pic && question.pic[0] %>'||'http://imweb.io/public/images/logo-white.png'
-    }
+  var RICH_META = {
+    name: '<%= question.title %>',
+    author: '<%= question.author.name %>',
+    img: '<%= question.pic && question.pic[0] %>' || 'http://imweb.io/public/images/logo-white.png'
+  }
+
 </script>
 
 <div id="banner">
-    <div class="inner">
-        <ul class="tab-list">
-            <% tabs.forEach(function (pair) {
+  <div class="inner">
+    <ul class="tab-list">
+      <% tabs.forEach(function (pair) {
                 var value = pair[0];
                 var text = pair[1]; %>
-                <li class="topic-tab"><a href="<%= value ? '/question/tab/' + value : '/' %>"><%= text %></a></li>
-            <% }) %>
-        </ul>
-    </div>
+        <li class="topic-tab">
+          <a href="<%= value ? '/question/tab/' + value : '/' %>">
+            <%= text %>
+          </a>
+        </li>
+        <% }) %>
+    </ul>
+  </div>
 </div>
+
 <div id="questionHeader">
   <div class="inner">
     <div class="side">
-      <button class="ui-button collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button>
-      &nbsp;&nbsp;
+      <button class="ui-button collect-question-btn"><%= is_collect ? '取消收藏' : '收藏' %></button> &nbsp;&nbsp;
       <button class="ui-button follow-question-btn"><%= is_follow ? '取消关注' : '关注' %></button>
       <ul class="other-info">
         <li>
@@ -47,94 +52,107 @@
       </ul>
     </div>
     <div class="main">
-      <h1 class="detail-title"><i class="ico fa fa-question-circle-o" aria-hidden="true"></i><%- question.title %></h1>
+      <h1 class="detail-title"><i class="ico fa fa-question-circle-o" aria-hidden="true"></i>
+        <%- question.title %>
+      </h1>
       <div class="about">
         <%if(question.tabName){var link = "#";%>
           <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == question.tabName){link = "/tab/"+tabs[i][0];}}%>
-          <a class="ui-tag ui-tag-blue-light" href="<%=link%>"><%= question.tabName %></a>
-        <%}%>
-        <a class="user-name" href="/user/<%= question.author.loginname %>/index"><%= question.author.name || question.author.loginname%></a>
-        <span class="ui-time"><%= question.friendly_create_at %>的提问</span>
-        <span class="origin hidden">原文出处:<a href="http://imweb.io/question/<%= question.id %>">imweb社区</a>(未经同意，禁止转载)</span>
+            <a class="ui-tag ui-tag-blue-light" href="<%=link%>">
+              <%= question.tabName %>
+            </a>
+            <%}%>
+              <a class="user-name" href="/user/<%= question.author.loginname %>/index">
+                <%= question.author.name || question.author.loginname%>
+              </a>
+              <span class="ui-time"><%= question.friendly_create_at %>的提问</span>
+              <span class="origin hidden">原文出处:<a href="http://imweb.io/question/<%= question.id %>">imweb社区</a>(未经同意，禁止转载)</span>
       </div>
     </div>
   </div>
 </div>
+
 <div id="main" class="clearfix">
-    <div id='sidebar'>
-      <div class='box question'>
-        <div class='box-head'>
-          <span class='col_fade'>热门问答</span>
-        </div>
-        <div class='box-body'>
-          <ul class='unstyled question-list'>
-            <%if (typeof(topquestions) === 'undefined' || topquestions.length > 0) {for(var i=0;i<topquestions.length;i++){var item=topquestions[i];%>
-              <li>
-                <a href="/question/<%=item._id%>"><%= item.title %></a>
-                <div class="status">
-                  <%= item.reply_count%>回答
+  <div id='sidebar'>
+    <div class='box question'>
+      <div class='box-head'>
+        <span class='col_fade'>热门问答</span>
+      </div>
+      <div class='box-body'>
+        <ul class='unstyled question-list'>
+          <%if (typeof(topquestions) === 'undefined' || topquestions.length > 0) {for(var i=0;i<topquestions.length;i++){var item=topquestions[i];%>
+            <li>
+              <a href="/question/<%=item._id%>">
+                <%= item.title %>
+              </a>
+              <div class="status">
+                <%= item.reply_count%>回答
                   <%= item.solved ? '|已解决':'' %>
-                </div>
-              </li>
+              </div>
+            </li>
             <%}}%>
-          </ul>
-        </div>
+        </ul>
       </div>
     </div>
+  </div>
 
-    <div id='content'>
-      <div class='detail-content'>
-          <div class="left">
-            <div class="updown">
-              <i class="fa fa-caret-up <%if(is_uped){%>hidden <%}%>" aria-hidden="true"></i>
-              <div class="count"><%= question.ups.length %></div>
-              <i class="fa fa-caret-down <%if(!is_uped){%>hidden <%}%>" aria-hidden="true"></i>
-            </div>
+  <div id='content'>
+    <div class='detail-content'>
+      <div class="left">
+        <div class="updown">
+          <i class="fa fa-caret-up <%if(is_uped){%>hidden <%}%>" aria-hidden="true"></i>
+          <div class="count">
+            <%= question.ups.length %>
           </div>
-          <div class="main">
-            <div class="markdown-text">
-                <%- markdownRender(question.content) %>
-            </div>
-            <div class="main-foot">
-              <span class="item"><%= question.friendly_create_at %>的提问</span>
-              <a href="javascript:;" class="item hide">邀请回答</a>
-              <% if (current_user && (current_user._id.equals(question.author.id) || current_user.is_admin)) { %>
-                <a href='/question/<%= question.id %>/edit' class="item">编辑</a>
-                <a href='javascript:;' class=item' delete-question-btn'>删除</a>
-              <% } %>
-            </div>
-            <div class='newComment'>
-                <div class="editor-wrap">
-                    <textarea class="editor"></textarea>
-                </div>
-                <div class="editor-actions">
-                    <button class="ui-button reply-submit fr" type="button">评论一下</button>
-                </div>
-                <% if(!current_user) {%>
-                  <div id="deckText">
-                    <div class="inner">
-                      <p>
-                        您需要 <a class="nav-sign" href="javascript:void(0);">注册</a> 一个imweb账号或者
-                        <a class="nav-login" href="javascript:void(0);">登录</a> 才能进行评论。
-                      </p>
-                    </div>
-                  </div>
-                <%}%>
-            </div>
-          </div>
+          <i class="fa fa-caret-down <%if(!is_uped){%>hidden <%}%>" aria-hidden="true"></i>
+        </div>
       </div>
+      <div class="main">
+        <div class="markdown-text">
+          <%- markdownRender(question.content) %>
+        </div>
+        <div class="main-foot">
+          <span class="item"><%= question.friendly_create_at %>的提问</span>
+          <a href="javascript:;" class="item hide">邀请回答</a>
+          <% if (current_user && (current_user._id.equals(question.author.id) || current_user.is_admin)) { %>
+            <a href='/question/<%= question.id %>/edit' class="item">编辑</a>
+            <a href='javascript:;' class=item ' delete-question-btn'>删除</a>
+            <% } %>
+        </div>
 
-      <div class="reply-panel <%if(question.reply_count == 0){%>hide<% } %>">
+        <div class="reply-panel <%if(question.reply_count == 0){%>hide<% } %>">
           <div class="panel-head">
-              <span class="panel-head-title"><span class="reply-count"><%= question.reply_count %></span>个回答</span>
-              <ul class="sorts">
-                <li class="active" data-sortby="ups">默认排序</li>
-                <li data-sortby="time">时间排序</li>
-              </div>
+            <span class="panel-head-title"><span class="reply-count"><%= question.reply_count %></span>个回答</span>
+            <ul class="sorts">
+              <li class="active" data-sortby="ups">默认排序</li>
+              <li data-sortby="time">时间排序</li>
+            </ul>
           </div>
           <div class='panel-body'>
-              <ul id="reply-list"></ul>
+            <ul id="reply-list"></ul>
           </div>
+        </div>
+        <div class='newComment'>
+          <div class="editor-wrap">
+            <textarea class="editor"></textarea>
+          </div>
+          <div class="editor-actions">
+            <button class="ui-button reply-submit fr" type="button">评论一下</button>
+          </div>
+          <% if(!current_user) {%>
+            <div id="deckText">
+              <div class="inner">
+                <p>
+                  您需要 <a class="nav-sign" href="javascript:void(0);">注册</a> 一个imweb账号或者
+                  <a class="nav-login" href="javascript:void(0);">登录</a> 才能进行评论。
+                </p>
+              </div>
+            </div>
+            <%}%>
+        </div>
       </div>
     </div>
+
+
+  </div>
 </div>

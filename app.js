@@ -6,7 +6,7 @@
  * Module dependencies.
  */
 
-var config = require('./config');
+var config = require('./server/config');
 
 // if (!config.debug && config.oneapm_key) {
 //   require('oneapm');
@@ -19,15 +19,15 @@ var LoaderConnect = require('loader-connect')
 var express = require('express');
 var session = require('express-session');
 var passport = require('passport');
-require('./middlewares/mongoose_log'); // 打印 mongodb 查询日志
-require('./models');
+require('./server/middlewares/mongoose_log'); // 打印 mongodb 查询日志
+require('./server/models');
 var GitHubStrategy = require('passport-github').Strategy;
-var githubStrategyMiddleware = require('./middlewares/github_strategy');
-var webRouter = require('./web_router');
-var apiRouterV1 = require('./api_router_v1');
-var auth = require('./middlewares/auth');
-var errorPageMiddleware = require('./middlewares/error_page');
-var proxyMiddleware = require('./middlewares/proxy');
+var githubStrategyMiddleware = require('./server/middlewares/github_strategy');
+var webRouter = require('./server/web_router');
+var apiRouterV1 = require('./server/api_router_v1');
+var auth = require('./server/middlewares/auth');
+var errorPageMiddleware = require('./server/middlewares/error_page');
+var proxyMiddleware = require('./server/middlewares/proxy');
 var RedisStore = require('connect-redis')(session);
 var _ = require('lodash');
 var csurf = require('csurf');
@@ -36,9 +36,9 @@ var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
 var errorhandler = require('errorhandler');
 var cors = require('cors');
-var requestLog = require('./middlewares/request_log');
-var renderMiddleware = require('./middlewares/render');
-var logger = require('./common/logger');
+var requestLog = require('./server/middlewares/request_log');
+var renderMiddleware = require('./server/middlewares/render');
+var logger = require('./server/common/logger');
 var helmet = require('helmet');
 var bytes = require('bytes')
 
@@ -53,7 +53,7 @@ var assets = {};
 
 if (config.mini_assets) {
   try {
-    assets = require('./assets.json');
+    assets = require('./server/assets.json');
   } catch (e) {
     logger.error('You must execute `make build` before start app when mini_assets is true.');
     throw e;
@@ -84,8 +84,12 @@ if (config.debug) {
 if (config.debug) {
   app.use(LoaderConnect.less(__dirname)); // 测试环境用，编译 .less on the fly
 }
-app.use('/public', express.static(staticDir));
-app.use('/libs', express.static(libsDir));
+app.use('/public', express.static(staticDir, {
+   maxAge: 864000  // one day
+}));
+app.use('/libs', express.static(libsDir, {
+   maxAge: 864000  // one day
+}));
 app.use('/agent', proxyMiddleware.proxy);
 
 // 通用的中间件
@@ -148,7 +152,7 @@ _.extend(app.locals, {
 });
 
 app.use(errorPageMiddleware.errorPage);
-_.extend(app.locals, require('./common/render_helper'));
+_.extend(app.locals, require('./server/common/render_helper'));
 app.use(function (req, res, next) {
   res.locals.csrf = req.csrfToken ? req.csrfToken() : '';
   next();

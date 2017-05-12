@@ -1,6 +1,6 @@
 define([
-	'./jquery.validate.min.js',
-	'./jquery.mailtip.js'
+	'../libs/jquery.validate.min.js',
+	'../libs/jquery.mailtip.js'
 ], function(){
 
 	/*去除chrome自动填表单功能*/

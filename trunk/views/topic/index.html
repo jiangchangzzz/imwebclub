@@ -167,6 +167,16 @@
             </div>
         </div>
       </div>
+      
+      <div class="panel reply-panel <%if(topic.reply_count == 0){%>hide<% } %>">
+          <div class="panel-head">
+              <span class="panel-head-title"><span class="reply-count"><%= topic.reply_count %></span>条评论</span>
+          </div>
+          <div class='panel-body'>
+              <ul id="reply-list"></ul>
+          </div>
+      </div>
+      
       <% if (typeof(topic) !== 'undefined') { %>
       <div class='reply-panel newComment'>
           <div class="editor-wrap">
@@ -188,14 +198,6 @@
       </div>
       <% } %>
 
-      <div class="panel reply-panel <%if(topic.reply_count == 0){%>hide<% } %>">
-          <div class="panel-head">
-              <span class="panel-head-title"><span class="reply-count"><%= topic.reply_count %></span>条评论</span>
-          </div>
-          <div class='panel-body'>
-              <ul id="reply-list"></ul>
-          </div>
-      </div>
     </div>
 </div>
     <%- partial('common/footer.html') %>
