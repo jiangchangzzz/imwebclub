@@ -144,3 +144,123 @@
 .markdown-text figure table tbody tr:hover {
   background: none;
 }
+
+
+.markdown-text .highlight,
+.markdown-text pre {
+  background: #272822;
+  color: #fff;
+  line-height: 22px;
+  margin: 10px 0;
+  overflow: auto;
+  padding: 15px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.markdown-text .gist .gist-file .gist-data .line-numbers,
+.markdown-text .highlight .gutter pre {
+  color: #666;
+  font-size: .85em;
+}
+.markdown-text code,
+.markdown-text pre {
+  font-family: Source Code Pro,Consolas,Monaco,Menlo,Consolas,monospace;
+}
+.markdown-text code {
+  background: #eee;
+  padding: 0 .3em;
+  text-shadow: 0 1px #fff;
+}
+.markdown-text pre code {
+  background: 0;
+  padding: 0;
+  text-shadow: 0 1px #222;
+}
+.markdown-text .highlight pre {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.markdown-text .highlight table {
+  margin: 0;
+  width: auto;
+}
+.markdown-text .highlight td {
+  border: 0;
+  padding: 0;
+}
+.markdown-text .highlight figcaption {
+  color: #a6e22e;
+  font-size: .85em;
+  line-height: 1em;
+  margin-bottom: 1em;
+}
+.markdown-text .highlight figcaption:after,
+.markdown-text .highlight figcaption:before {
+  content: "";
+  display: table;
+}
+.markdown-text .highlight figcaption:after {
+  clear: both;
+}
+.markdown-text .highlight figcaption a {
+  float: right;
+}
+.markdown-text .highlight .gutter pre {
+  padding-right: 20px;
+  text-align: right;
+}
+.markdown-text .highlight .line {
+  font-size: 14px;
+  height: 22.400000000000002px;
+}
+.markdown-text .gist {
+  background: #272822;
+  border-color: #ddd;
+  border-style: solid;
+  border-width: 1px 0;
+  margin: 0 -20px;
+  padding: 15px 20px 15px 0;
+}
+.markdown-text .gist .gist-file {
+  border: 0;
+  font-family: Source Code Pro,Consolas,Monaco,Menlo,Consolas,monospace;
+  margin: 0;
+}
+.markdown-text .gist .gist-file .gist-data {
+  background: 0;
+  border: 0;
+}
+.markdown-text .gist .gist-file .gist-data .line-numbers {
+  background: 0;
+  border: 0;
+  padding: 0 20px 0 0;
+}
+.markdown-text .gist .gist-file .gist-data .line-data {
+  padding: 0!important;
+}
+.markdown-text .gist .gist-file .highlight {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.markdown-text .gist .gist-file .gist-meta {
+  background: #272822;
+  color: #a6e22e;
+  font: 0.85em "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-left: 20px;
+  margin-top: 1em;
+  padding: 0;
+  text-shadow: 0 0;
+}
+.markdown-text .gist .gist-file .gist-meta a {
+  color: #258fb8;
+  font-weight: normal;
+}
+.markdown-text .gist .gist-file .gist-meta a:hover {
+  text-decoration: underline;
+}
+
+  #content .markdown-text {
+    padding: 0 0 30px 0;
+  }

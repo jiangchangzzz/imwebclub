@@ -3,6 +3,8 @@ import '../../stylesheets/sidebar.less';
 import '../../stylesheets/topic/index.less';
 import '../../stylesheets/reply.less';
 import '../../stylesheets/markdowntext.css';
+import '../../stylesheets/monokai_sublime.css';
+// import '../../stylesheets/ryan-dark.css';
 import "../../javascripts/libs/editor/editor.css";
 import '../../javascripts/layout';
 import '../../javascripts/common/reply.js';
