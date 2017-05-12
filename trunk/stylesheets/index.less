@@ -123,8 +123,14 @@
                 margin: 10px 0;
 
                 a {
-                  font-weight: bold;
+                //   font-weight: bold;
                   display: block;
+                  cursor: pointer;
+  
+                    &:hover {
+                       color: #2fa0ef;
+                    
+                    }
                 }
                 p {
                     display: none;
@@ -134,12 +140,15 @@
                 }
 
                 &.active {
+                    color: #999;
                     p {
                         display: block;
                     }
-                }
-                &:hover {
-                    color: #2fa0ef;
+                    a {
+                        color: #fc7e03;
+                        font-size: 18px;
+                    }
+                    
                 }
             }
         }
@@ -152,7 +161,9 @@
 
                 .item-header {
                     a{
-                      font-weight: bold;
+                    //   font-weight: bold;
+                    font-size: 16px;
+                    cursor: pointer;
                       &:hover{
                         color: @column-highlight;
                       }
@@ -182,7 +193,8 @@
                         margin-left: 60px;
                         padding: 0 10px;
 
-                        b {
+                        b, .name {
+                            color: #000;
                             font-size: 13px;
                             margin-right: 10px;
                         }

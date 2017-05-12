@@ -135,7 +135,7 @@
         <div class="box-body">
             <ul class="author-list">
                 <% tops.slice(0,5).forEach(function(user){ %>
-                <li title="<%=user._id %>">
+                <li>
                     <div class="left">
                         <div class="avatar">
                             <img src="<%=user.avatar%>">
@@ -151,7 +151,7 @@
                     <div class="center">
                         <div class="one-line">
                             <img src="../../images/T.png">
-                            <a href="/user/<%=user.loginname%>/index">
+                            <a href="/user/<%=user.loginname%>/index" title="<%=user.name || user.loginname %>">
                                 <%=user.name || user.loginname || ' ' %>
                             </a>
                             （

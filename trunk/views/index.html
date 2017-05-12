@@ -107,7 +107,7 @@
                                 <div class="item-header">
                                     <a href="/question/<%= question.id %>"><%= question.title %></a>
                                     <div class="fr">
-                                        <a class="tag" href="/question/tab/<%= question.tabName %>"><%= question.tabName %></a>
+                                        <a class="tag" href="/question/tab/<%= question.tab %>"><%= question.tabName %></a>
                                     </div>
                                 </div>
                                 <div class="item-body">
@@ -115,7 +115,7 @@
                                         <img src="<%= question.author.avatar %>">
                                     </div>
                                     <div class="content">
-                                        <b><%= question.author.name || question.author.loginname %></b>
+                                        <span class="name"><%= question.author.name || question.author.loginname %></span>
                                         <span><%= question.friendly_last_reply_at %></span>
                                         <p class="one-line"><%= question.summary || question.content %></p>
                                         <div class="footer">
