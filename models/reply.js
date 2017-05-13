@@ -10,7 +10,7 @@ var ReplySchema = new Schema({
     text            : { type: String }, // markdown中提取的文本,换行为 \n
     topic_id        : { type: ObjectId}, // parent_id
     author_id       : { type: ObjectId },
-    reply_id        : { type: ObjectId },
+    reply_id        : { type: ObjectId }, //子回复才有的字段，上一级reply的id
     create_at       : { type: Date, default: Date.now },
     update_at       : { type: Date, default: Date.now },
     content_is_html : { type: Boolean },

@@ -172,6 +172,7 @@ exports.outActivity = function(activity) {
     end_time: activity.end_time,
     end_str: activity.end_str,
     location_str: activity.location_str,
+    cover: activity.cover,
     pic: activity.pic,
     reply_count: activity.reply_count,
     visit_count: activity.visit_count,

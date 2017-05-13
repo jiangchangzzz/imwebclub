@@ -1,6 +1,8 @@
 <li>
     <a href="/activity/<%=activity.id%>">
-        <% if(activity.pic && activity.pic.length > 0){ %>
+        <% if(activity.cover){ %>
+          <img src="<%= activity.cover %>">
+        <% } else if(activity.pic && activity.pic.length > 0){ %>
           <img src="<%= activity.pic[0] %>">
         <% }else{ %>
           <img src="../../images/activity1.jpg">

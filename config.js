@@ -4,6 +4,8 @@
 
 var path = require('path');
 
+var domain = 'test.imweb.io';
+
 var config = {
   // debug 为 true 时，用于本地调试
   debug: true,
@@ -29,7 +31,7 @@ var config = {
   // cdn host，如 http://cnodejs.qiniudn.com
   site_static_host: '', // 静态文件存储域名
   // 社区的域名
-  host: 'imweb.io',
+  host: domain,
   // 默认的Google tracker ID，自有站点请修改，申请地址：http://www.google.com/analytics/
   google_tracker_id: 'UA-7317009-5',
 
@@ -70,7 +72,7 @@ var config = {
   // RSS配置
   rss: {
     title: 'IMWeb：web牛人社区',
-    link: 'http://imweb.io',
+    link: 'http://'+domain,
     language: 'zh-cn',
     description: 'IMWeb：web牛人社区',
     //最多获取的RSS Item数量
@@ -107,14 +109,14 @@ var config = {
   GITHUB_OAUTH: {
     clientID: 'a32d122e769fae39b898',
     clientSecret: '9cd819a15a6e886077b5a937aa0e1b8aac55f859',
-    callbackURL: 'http://imweb.io/auth/github/callback'
+    callbackURL: 'http://'+domain+'/auth/github/callback'
   },
 
   //weibo app key
   WEIBO_OAUTH: {
     clientID: '3489481381',
     clientSecret: '52410f54674964564a475afc64511e5d',
-    callbackURL: "http://imweb.io/auth/weibo/callback"
+    callbackURL: 'http://'+domain+'/auth/weibo/callback'
   },
 
   // 是否允许直接注册（否则只能走 github 的方式）

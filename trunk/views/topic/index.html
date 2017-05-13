@@ -51,7 +51,7 @@
 
 <body>
     <%- partial('common/header.html') %>
-    
+
 <div id="main" class="clearfix">
     <div id='sidebar'>
       <div class='box topic' style="display:none">
@@ -119,17 +119,6 @@
         </div>
         <div class='detail-header'>
           <h1 class="detail-title"><%- topic.title %></h1>
-          <%if(topic.reprint){%>
-            <div class="cell-from">
-              <%
-              var host = topic.reprint;
-              var regex = /.*\:\/\/([^\/]*).*/;
-              var match = topic.reprint.match(regex);
-              if(typeof match != "undefined" && null != match) host = match[1];
-              %>
-              转载自<a href="<%=topic.reprint%>" class="cell-reprint ex-link" target="_blank"><%=host%></a>
-            </div>
-          <%}%>
           <div class="title-wrap">
             <%if(topic.tabName){var link = "#";%>
               <%for(var i=0,len=tabs.length;i<len;i++){if(tabs[i][1] == topic.tabName){link = "/tab/"+tabs[i][0];}}%>
@@ -153,6 +142,17 @@
               </div>
             <% } %>
           </div>
+          <%if(topic.reprint){%>
+            <div class="cell-from">
+              <%
+              var host = topic.reprint;
+              var regex = /.*\:\/\/([^\/]*).*/;
+              var match = topic.reprint.match(regex);
+              if(typeof match != "undefined" && null != match) host = match[1];
+              %>
+              转载自<a href="<%=topic.reprint%>" class="cell-reprint ex-link" target="_blank"><%=host%></a>
+            </div>
+          <%}%>
         </div>
         <div class='topic-content'>
             <div class="markdown-text">
@@ -274,4 +274,3 @@
         </div>
     </div>
 </body>
-

@@ -16,6 +16,11 @@ var QuestionAnswer = require('../proxy').QuestionAnswer;
 var Reply = require('../proxy').Reply;
 var config = require('../config');
 
+var ObjectDict = {
+    'topic': Topic.getTopicById,
+    'question': Question.getQuestionById
+};
+
 exports.query = function (req, res, next){
   var parent_id = req.params.parent_id;
   var sortby = req.query.sortby;
@@ -51,7 +56,7 @@ exports.add = function (req, res, next) {
     var raw = (req.body.r_content || req.body.content || '').trim();
     var kind = req.params.kind.toLowerCase();
     var parent_id = req.params.parent_id;
-    var reply_id = req.body.reply_id || null;
+    var reply_id = req.body.reply_id || null;//是否为子回复
 
     var ep = EventProxy.create();
     ep.fail(next);
@@ -67,39 +72,23 @@ exports.add = function (req, res, next) {
         return ep.emit('fail', 401, '回复内容不能为空！');
     }
 
-    switch(kind){
-      case 'topic':
-        Topic.getTopic(parent_id, ep.doneLater(function (topic) {
-            if (!topic) {
-                return ep.emit('fail', 402);
-            } else{
-              User.getUserById(topic.author_id, ep.done(function(author) {
-                  topic.author = author;
-                  ep.emit('parent', topic);
-              }));
-            }
-        }));
-        break;
-      case 'question':
-        Question.getQuestion(parent_id, ep.doneLater(function (question) {
-            if (!question) {
-                return ep.emit('fail', 402);
-            } else{
-              User.getUserById(question.author_id, ep.done(function(author) {
-                  question.author = author;
-                  ep.emit('parent', question);
-              }));
-            }
-        }));
-        break;
-      case 'activity':
-        break;
-      default:
-        ep.emit('fail', 402);
-        break;
+    if (!ObjectDict.hasOwnProperty(kind) || !parent_id) {
+        return ep.emit('fail',1,'参数不合法。');
     }
 
+    //获取回复主体
+    ObjectDict[kind](parent_id, ep.doneLater(function (object) {
+        if (!object) {
+            return ep.emit('fail', 402);
+        } else{
+          User.getUserById(object.author_id, ep.done(function(author) {
+              object.author = author;
+              ep.emit('parent', object);
+          }));
+        }
+    }));
 
+    //如果是子回复
     if (reply_id) {
         Reply.getReplyById(reply_id, ep.doneLater(function(parentReply) {
             if (!parentReply) {
@@ -111,6 +100,7 @@ exports.add = function (req, res, next) {
         ep.emitLater('parent_reply', null);
     }
 
+    // 获取登录用户
     User.getUserById(req.session.user._id, ep.done(function (user) {
         if (!user) {
             return ep.emit('fail');
@@ -118,25 +108,23 @@ exports.add = function (req, res, next) {
         ep.emit('user', user);
     }));
 
-    ep.all(
-        'parent', 'user', 'parent_reply',
-        function (parent, user, pReply) {
+    // 参数合法则新建reply
+    ep.all('parent', 'user', 'parent_reply', function (parent, user) {
             Reply.newAndSave(kind, raw, parent_id, user._id, reply_id, ep.done('reply_saved'));
         }
     );
 
+    // 更新相关字段，推送消息
     ep.all('parent', 'user', 'parent_reply', 'reply_saved', function(parent, user, pReply, reply) {
-        Reply.getParentReplyCount(parent._id, ep.done(function(count) {
-            parent.last_reply = reply._id;
-            parent.last_reply_at = Date.now();
-            parent.reply_count = count;
-            parent.save(ep.done('parent_updated'));
-        }));
-        Reply.getCountByAuthorId(user._id, kind, ep.done(function(count) {
-            user.score += 5;
-            user.reply_count = count;
-            user.save(ep.done('user_updated'));
-        }));
+        parent.last_reply = reply._id;
+        parent.last_reply_at = Date.now();
+        parent.reply_count++;
+        parent.save(ep.done('parent_updated'));
+
+        user.score += 1;
+        user.reply_count++;
+        user.save(ep.done('user_updated'));
+
         //console.log(reply);
         // 发送at消息，并防止重复 at 作者
         var newContent = reply.content.replace('@' + parent.author.loginname + ' ', '');
@@ -214,13 +202,17 @@ exports.delete = function (req, res, next) {
       reply_count: topic.reply_count
     });
   });
+
+  // 获取被删除回复
   Reply.getReplyById(reply_id, ep.done(function(reply) {
     if (!reply) {
         return ep.emit('fail', 401, 'no reply');
     }
+    kind = reply.kind || 'topic';
     ep.emit('reply', reply);
   }));
 
+  // 如有上级回复
   ep.all('reply', function(reply) {
     if (reply.reply_id) {
       Reply.getReplyById(reply.reply_id, ep.done(function(parent_reply) {
@@ -229,28 +221,24 @@ exports.delete = function (req, res, next) {
     } else {
         ep.emitLater('parent_reply', null);
     }
-    kind = reply.kind;
-    switch(kind){
-      case 'topic':
-        Topic.getTopicById(reply.parent_id, ep.done(function(topic, author) {
-           ep.emit('parent_author', author);
-        }));
-        break;
-      case 'question':
-        Question.getQuestionById(reply.parent_id, ep.doneLater(function (question, author) {
-            ep.emit('parent_author', author);
-        }));
-        break;
-      case 'activity':
-        break;
-      default:
-        ep.emit('fail', 402);
-        break;
-    }
+  });
+  // 获取回复主题作者
+  ep.all('reply', function(reply) {
+    ObjectDict[kind](reply.topic_id, ep.done(function(parent, author) {
+        parent.author = author;
+        ep.emit('parent', parent);
+    }));
+  });
+  ep.all('reply', function(reply) {
+    QuestionAnswer.getQuestionAnswer(reply.topic_id, reply._id, ep.done(function(question_answer) {
+      if (question_answer) {
+          return ep.emit('fail', 401, 'please cancel the answer');
+      }
+    }));
   });
   ep.all(
-    'reply', 'parent_reply', 'parent_author',
-    function(reply, parent_reply, parent_author) {
+    'reply', 'parent_reply', 'parent',
+    function(reply, parent_reply, parent) {
         var user = req.session.user;
         var hasPermission = user.is_admin
             // 评论者
@@ -265,59 +253,20 @@ exports.delete = function (req, res, next) {
         reply.deleted = true;
         reply.top = false;
         reply.save();
-        if (!parent_reply) {
-          reply.author.score -= 5;
-          reply.author.reply_count -= 1;
-          reply.author.save();
-          // 删除所有子评论
-          Reply.removeByCondition({reply_id: reply_id});
-        }
-        switch(kind){
-          case 'topic':
-            Topic.reduceCount(reply.parent_id, function(){
-              ep.emit('delete');
-            });
-            break;
-          case 'question':
-            Question.reduceCount(reply.parent_id, function(){
-              QuestionAnswer.remove(reply.parent_id, reply.reply_id, function(){
-                ep.emit('delete');
-              });
-            });
-            break;
-          case 'activity':
-            break;
-          default:
-            ep.emit('fail', 402);
-            break;
-        }
-    }
-  );
-  ep.all('delete',function(){
-    switch(kind){
-      case 'topic':
-        Topic.getTopic(parent_id, ep.doneLater(function (topic) {
-            if (!topic) {
-                return ep.emit('fail', 402);
-            }
-            ep.emit('done', topic);
-        }));
-        break;
-      case 'question':
-        Question.getQuestion(parent_id, ep.doneLater(function (question) {
-            if (!question) {
-                return ep.emit('fail', 402);
-            }
-            ep.emit('done', question);
-        }));
-        break;
-      case 'activity':
-        break;
-      default:
-        ep.emit('fail', 402);
-        break;
-    }
-
+        //更新评论人
+        reply.author.score -= 1;
+        reply.author.reply_count--;
+        reply.author.save(ep.done('user_updated'));
+        // 删除所有子评论
+        Reply.removeByCondition({reply_id: reply_id});
+        // 更新评论主体
+        parent.last_reply = reply._id;
+        parent.last_reply_at = Date.now();
+        parent.reply_count++;
+        parent.save(ep.done('parent_updated'));
+  });
+  ep.all(['parent', 'user_updated', 'parent_updated'],function(parent){
+    ep.emit('done', parent);
   });
 };
 

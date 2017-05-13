@@ -135,6 +135,7 @@ exports.getFullTopic = function (id, callback) {
   var events = ['topic', 'author', 'replies'];
   proxy
     .assign(events, function (topic, author, replies) {
+      topic.reply_count = replies.length;//校正回复计数
       callback(null, '', topic, author, replies);
     })
     .fail(callback);
@@ -227,7 +228,6 @@ exports.newAndSave = function (title, type, content, tab, reprint, authorId, cal
   topic.type = type;
   topic.title = title;
   topic.content = content;
-  // todo topic pic
   topic.pic = tools.genPicFromContent(content);
   topic.summary = tools.genSummaryFromContent(content, config.topic_summary_len);
   topic.tab = tab;

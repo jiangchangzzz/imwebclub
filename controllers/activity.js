@@ -101,11 +101,12 @@ exports.put = function (req, res, next) {
   var end_str = req.body.end_str;
   var location_str = req.body.location_str;
   var external_link = req.body.external_link;
+  var cover = req.body.cover;
   var user = req.session.user;
 
   // console.log(title+"is done !");
 
-  Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, user._id, function(err,activity){
+  Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, cover, user._id, function(err,activity){
     if(err || !activity){
       res.render('/activity/edit', req.body);
       return;
@@ -224,6 +225,7 @@ exports.showEdit = function (req, res, next) {
         end_str: activity.end_str,
         location_str: activity.location_str,
         external_link: activity.external_link,
+        cover: activity.cover,
         tabValue: activity.tab,
         tabs: config.activityTabs
       });
@@ -244,6 +246,7 @@ exports.update = function (req, res, next) {
     var end_str = req.body.end_str;
     var location_str = req.body.location_str;
     var external_link = req.body.external_link;
+    var cover = req.body.cover;
     var content = validator.trim(req.body.content || req.body.t_content);
 
     var ep = new EventProxy();
@@ -281,6 +284,7 @@ exports.update = function (req, res, next) {
                 end_str: activity.end_time.toISOString(),
                 location_str: activity.location_str,
                 external_link: activity.external_link,
+                cover: activity.cover,
                 tabValue: activity.tab,
                 tabs: config.activityTabs
             });
@@ -315,6 +319,7 @@ exports.update = function (req, res, next) {
         activity.end_str = end_str;
         activity.location_str = location_str;
         activity.external_link = external_link;
+        activity.cover = cover;
         activity.update_at = new Date();
         activity.save(ep.done(function() {
             at.sendMessageToMentionUsers(content, activity._id, user._id);
