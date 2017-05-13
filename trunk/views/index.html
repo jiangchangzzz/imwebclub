@@ -105,10 +105,10 @@
                         <% questions.slice(0,3).forEach(function (question, index) { %>
                             <li class="question-item">
                                 <div class="item-header">
-                                    <a href="/question/<%= question.id %>"><%= question.title %></a>
                                     <div class="fr">
                                         <a class="tag" href="/question/tab/<%= question.tab %>"><%= question.tabName %></a>
                                     </div>
+                                    <a href="/question/<%= question.id %>" class="one-line"><%= question.title %></a>
                                 </div>
                                 <div class="item-body">
                                     <div class="avatar">

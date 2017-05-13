@@ -217,11 +217,12 @@ exports.reduceCount = function (id, callback) {
   });
 };
 
-exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, authorId, callback) {
+exports.newAndSave = function (title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, cover, authorId, callback) {
   var activity = new Activity();
   activity.title = title;
   activity.tab = tab;
   activity.content = content;
+  activity.cover = cover;
   activity.pic = tools.genPicFromContent(content);
   activity.begin_time = begin_time;
   activity.begin_str = begin_str;

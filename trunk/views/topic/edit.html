@@ -33,6 +33,11 @@
             $topic_id = '';
           }
       %>
+      <div class="upload-cover" style="<%= typeof(cover) !== 'undefined' ? 'background-image:url(\''+cover+'\')' : '' %>">
+          <div class="button">上传封面图片</div>
+          <span class="tip"></span>
+          <div class="alert alert-error hide"></div>
+      </div>
       <form id='create_topic_form' action='<%= $post %>' method='post'>
           <div id="topic_create_warn"></div>
           <div class="control-group">
@@ -80,6 +85,7 @@
               </div>
             </div>
           </div>
+          <input name="cover" class="hide" value="<%= typeof(cover) !== 'undefined' && cover || '' %>">
           <div class="form-actions">
             <input type='hidden' id='topic_tags' name='topic_tags' value=''>
             <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>

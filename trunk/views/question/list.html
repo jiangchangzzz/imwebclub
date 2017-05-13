@@ -47,7 +47,7 @@
 
 <div id="main" class="clearfix">
   <%- partial('common/sidebar.html') %> 
-  <div id="content" class="topic_list">
+  <div id="content">
     <div class="query-list">
       <a href="?sort=hot" class="question-query <%= subtab==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
       <a href="?sort=latest" class="question-query <%= subtab==='latest' ? 'current-query' : '' %>">最新</a>&nbsp;|&nbsp;
@@ -57,7 +57,7 @@
       <%}%>
     </div>
     <ul class="question-list">
-    <%- partial("../question/abstract", {collection:questions, as:"question"})%>
+        <%- partial("../question/abstract", {collection:questions, as:"question"})%>
     </ul>
     <div class="pagination" current_page="<%= current_page %>">
       <ul>

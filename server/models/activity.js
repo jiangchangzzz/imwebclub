@@ -15,6 +15,7 @@ var ActivitySchema = new Schema({
   end_time: { type: Date },
   end_str: { type: String },
   location_str: { type: String },
+  cover: { type: String },
   pic: { type: Array },
   author_id: { type: ObjectId },
   ups: [Schema.Types.ObjectId],

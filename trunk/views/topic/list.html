@@ -46,7 +46,7 @@
 </div>
 <div id="main" class="clearfix">
 <%- partial('common/sidebar.html') %>
-<div id="content" class="topic_list">
+<div id="content">
     <%if(sort !== null) {%>
         <div class="query-list">
             <a href="?sort=hot" class="question-query <%= sort==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
@@ -56,7 +56,9 @@
             <% } %>
         </div>
     <%}%>
-  <%- partial("../topic/abstract", {collection:topics, as:"topic"})%>
+    <ul class="topic-list">
+        <%- partial("../topic/abstract", {collection:topics, as:"topic"})%>
+    </ul>
 </div>
 <div class="pagination" current_page="<%= current_page %>">
   <ul>

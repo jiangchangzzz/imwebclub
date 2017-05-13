@@ -28,7 +28,7 @@
             <span class="tag"><%= question.tabName %></span>
         </div>
         <div class="main">
-          <a href="/question/<%= question.id %>"><%= question.title %></a>
+          <a href="/question/<%= question.id %>" class="one-line"><%= question.title %></a>
           <div class="relative">
             <span class="item author"><%= question.author.name || question.author.loginname %></span>
             <span class="item viewCount"><%= question.visit_count %>浏览</span>

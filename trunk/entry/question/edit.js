@@ -2,6 +2,7 @@ require('../../stylesheets/reply.less');
 require('../../stylesheets/activity/edit.less');
 require('../../javascripts/libs/editor/editor.css');
 require('../../javascripts/common/reply.js');
+require('../../javascripts/common/uploader.js');
 
 // 版块选择的检查，必须选择
 $('#create_question_form').on('submit', function (e) {

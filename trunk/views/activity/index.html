@@ -119,6 +119,9 @@
           </div>
         </div>
         <div class='activity-content'>
+            <% if (activity.cover) { %>
+            <img src="<%= activity.cover %>">
+            <% } %>
             <div class="markdown-text">
                 <div>
                   <span>活动时间：</span>

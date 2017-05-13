@@ -116,7 +116,7 @@ define([], function() {
             height: 50,
             padding: '60px 0',
             textAlign: 'center',
-            border: '4px dashed#ddd'
+            border: '4px dashed #ddd'
         });
 
         this.$uploadBtn = this.$upload.find('.button').css({

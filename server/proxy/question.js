@@ -126,7 +126,7 @@ exports.getFullQuestion = function (id, callback) {
   var events = ['question', 'author', 'replies'];
   proxy
     .assign(events, function (question, author, replies) {
-
+      question.reply_count = replies.length;//校正回复计数
       callback(null, '', question, author, replies);
     })
     .fail(callback);

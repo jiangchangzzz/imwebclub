@@ -708,7 +708,7 @@ $(function(){
 
 // 图片上传
 $(function() {
-    var uploader = WebUploader.create({
+    var fileUploader = WebUploader.create({
         pick: '#file-picker',
         auto: true,
         server: '/upload?_csrf=' + imweb._csrf,
@@ -719,7 +719,22 @@ $(function() {
             mimeTypes: 'image/*'
         }
     });
-    uploader.on('uploadSuccess', function(file, response) {
+    fileUploader.on('uploadSuccess', function(file, response) {
         editorAction.insertImg(response.url);
+    });
+    var coverUploader = WebUploader.create({
+        pick: '#cover-picker',
+        auto: true,
+        multiple: false,
+        server: '/upload?_csrf=' + imweb._csrf,
+        fileVal: 'file',
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+    coverUploader.on('uploadSuccess', function(file, response) {
+        $('#top .cover').css('background-image','url("'+response.url+'")');
     });
 });

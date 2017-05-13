@@ -94,6 +94,7 @@
             </div>
         </div>
         <div class="top-r">
+            <div class="cover"></div>
             <div class="header topic_header">
                   <h1 class="topic-title out-title"><%if(topic && topic.title){%><%-topic.title%><%}else{%><span class="empty-title">请在左侧输入文章标题</span><%}%></h1>
                   <div class="title-wrap">
@@ -115,8 +116,14 @@
     </div>
     <div id="out"></div>
     <ul class="cmd-list cmd-list-normal">
-        <li title="插入图片">
+        <li>
             <a class="cmd fa fa-image" href="#"></a>
+            <span>选择封面图</span>
+            <div id="cover-picker"></div>
+        </li>
+        <li>
+            <a class="cmd fa fa-image" href="#"></a>
+            <span>插入内容图片</span>
             <div id="file-picker"></div>
         </li>
         <li>

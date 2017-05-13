@@ -5,8 +5,8 @@
 @shadow-color: #ddd;
 
 .query-list {
-  margin-bottom: 10px;
-  border-bottom: 1px solid @shadow-color;
+  // margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
   font-size: 16px;
   a{
     display: inline-block;
@@ -26,8 +26,10 @@
 
 ul.question-list {
     li {
-        padding-bottom: 10px;
-        margin-top: 10px;
+        // padding: 10px 5px 5px 0px;
+        margin-top: 20px;
+        // padding-bottom: 10px;
+        // margin-top: 10px;
         height: 130px;
         overflow: hidden;
         border-bottom: dashed 1px @shadow-color;
@@ -37,15 +39,15 @@ ul.question-list {
           .avatar {
             height: 60px;
             img{
-              width: 50px;
-              height: 50px;
+              width: 45px;
+              height: 45px;
               border-radius: 50px;
             }
           }
           .status{
             text-align: center;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             color: white;
             border-radius: 50px;
             &.unsolved{
@@ -82,6 +84,9 @@ ul.question-list {
                 font-size: 18px;
                 line-height: 25px;
                 font-weight: bold;
+                &:hover {
+                  color: @card-highlight;
+                }
               }
               .relative{
                 font-size: 13px;
