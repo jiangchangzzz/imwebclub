@@ -24,22 +24,22 @@ body {
 #top {
     position: fixed;
     width: 90%;
-    height: 120px;
+    height:120px;
     top: 0;
     left: 10%;
     .top-l {
         width: 45%;
+        height:120px;
         position: fixed;
         top: 0;
         left: 10%;
-        height: 120px;
         background: #36312c;
-        padding: 10px 0px 0px 20px;
+
         .input-xlarge {
             width: 452px;
         }
         &-item {
-            margin-bottom: 10px;
+            padding: 10px 0px 0px 20px;
         }
         &-name {
             margin-right: 10px;
@@ -65,11 +65,22 @@ body {
     }
     .top-r {
         position: fixed;
+        height:120px;
         top: 0;
         right: 0;
         left: 55%;
-        height: 120px;
         background: #fff;
+
+        .cover{
+          position: absolute;
+          background-size: cover;
+          opacity: 0.3;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: -1;
+        }
         .topic-title {
             font-weight: normal;
             font-size: 24px;
@@ -304,26 +315,23 @@ body {
     z-index: 2;
     top: 20px;
     right: 20px;
+    color: gray;
     list-style: none;
     li {
         float: left;
         margin-left: 12px;
         line-height: 1;
         position: relative;
+        text-align: center;
         &:hover {
-            .cmd {
-                opacity: 1.0;
-                color: #555;
-            }
+            opacity: 1.0;
+            color: #555;
         }
     }
     .cmd {
         position: relative;
         display: block;
-        width: 32px;
-        height: 32px;
         padding: 4px;
-        text-align: center;
         opacity: 0.8;
         cursor: pointer;
         &,
@@ -355,7 +363,7 @@ body {
     }
 }
 
-#file-picker {
+#file-picker,#cover-picker {
     width: 40px;
     height: 40px;
     position: absolute;
@@ -579,12 +587,6 @@ body {
     background: #eee;
     text-align: center;
     color: green;
-}
-
-#file-picker {
-    width: 40px;
-    height: 40px;
-    background: red;
 }
 
 #slide {

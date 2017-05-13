@@ -41,9 +41,9 @@
     <script src='/libs/marktang/lib/es5-shim.min.js'></script>
     <![endif]-->
 
-    <!--[if IE]>  
+    <!--[if IE]>
     <script src="/libs/marktang/js/base64.min.js"></script>
-    <![endif]--> 
+    <![endif]-->
 </head>
 <body>
 <script>
@@ -83,6 +83,7 @@
             </div>
         </div>
         <div class="top-r">
+            <div class="cover"></div>
             <div class="header topic_header">
                   <h1 class="topic-title out-title"><%if(topic && topic.title){%><%-topic.title%><%}else{%><span class="empty-title">请在左侧输入文章标题</span><%}%></h1>
                   <div class="title-wrap">
@@ -104,8 +105,14 @@
     </div>
     <div id="out"></div>
     <ul class="cmd-list cmd-list-normal">
-        <li title="插入图片">
+        <li>
             <a class="cmd fa fa-image" href="#"></a>
+            <span>选择封面图</span>
+            <div id="cover-picker"></div>
+        </li>
+        <li>
+            <a class="cmd fa fa-image" href="#"></a>
+            <span>插入内容图片</span>
             <div id="file-picker"></div>
         </li>
         <li>
@@ -177,7 +184,7 @@
     </ul>
 </div>
 <script id="topic-list-item" type="text/html">
-    <li class="sidebar-list-item {{= item.draft ? 'edit-draft' : 'edit-topic' }}" 
+    <li class="sidebar-list-item {{= item.draft ? 'edit-draft' : 'edit-topic' }}"
         data-id="{{= item.id }}"
         data-draft-id="{{= item.draft ? item.draft.id : '' }}">
         <i class="fa fa-edit icon icon-update" title="更新文章"></i>
@@ -191,7 +198,7 @@
     </ul>
 </div>
 <script id="draft-list-item" type="text/html">
-    <li class="sidebar-list-item edit-draft {{= item.topic_id ? 'update' : 'add' }}" 
+    <li class="sidebar-list-item edit-draft {{= item.topic_id ? 'update' : 'add' }}"
         data-draft-id="{{= item.id }}">
         <i class="fa fa-edit icon icon-update" title="更新文章"></i>
         <i class="fa fa-plus-square icon icon-add" title="新文章"></i>
@@ -211,5 +218,3 @@
 </div>
 </body>
 </html>
-
-

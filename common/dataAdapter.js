@@ -182,10 +182,13 @@ exports.outActivity = function(activity) {
   var now_time = (new Date()).getTime();
   if(now_time < activity.begin_time){
     out.status = '活动未开始';
+    out.phase = 0;
   }else if(now_time > activity.end_time){
     out.status = '活动已结束';
+    out.phase = 2;
   }else{
     out.status = '活动进行中';
+    out.phase = 1;
   }
   return out;
 }

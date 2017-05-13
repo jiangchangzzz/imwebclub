@@ -134,7 +134,7 @@ $(function() {
 
         dom.scrollTop = Math.floor(st * (sh2 - ch) / (sh - ch));
     });
-    
+
     // drop file to edit
     $(document).on('drop', function(e){
         e.preventDefault();
@@ -308,7 +308,7 @@ $(function() {
             html : context.html,
             id : context.id || '',
             guid : context.guid || '',
-            _csrf : imweb._csrf 
+            _csrf : imweb._csrf
         };
     }
     function postMarktang(url,info){
@@ -489,10 +489,10 @@ $(function() {
             case 'publish':
                 mainAction.publish();
                 break;
-            case 'mytopic': 
+            case 'mytopic':
                 exports.loadMyTopic();
                 break;
-            case 'draft': 
+            case 'draft':
                 exports.loadDraft();
                 break;
             case 'leave-sample':
@@ -502,7 +502,7 @@ $(function() {
         return false;
     });
     $('#mask').on('click', _.bind(exports.closeMask, exports));
-    window.sidebarAction = exports; 
+    window.sidebarAction = exports;
 });
 
 /**
@@ -524,7 +524,7 @@ $(function() {
             if (!options.noCheckTab) {
                 this._checkTab();
             }
-            callback 
+            callback
                 ? this.$main.find('.step-continue').show()
                 : this.$main.find('.step-continue').hide();
             this._continueCallback = callback;
@@ -553,17 +553,17 @@ $(function() {
     window.sidebarInfoAction = exports;
 });
 
-function html_decode(str){   
-  var s = "";   
-  if (str.length == 0) return "";   
-  s = str.replace(/&gt;/g, "&");   
-  s = s.replace(/&lt;/g, "<");   
-  s = s.replace(/&gt;/g, ">");   
-  s = s.replace(/&nbsp;/g, " ");   
-  s = s.replace(/&#39;/g, "\'");   
-  s = s.replace(/&quot;/g, "\"");   
-  s = s.replace(/<br>/g, "\n");   
-  return s;   
+function html_decode(str){
+  var s = "";
+  if (str.length == 0) return "";
+  s = str.replace(/&gt;/g, "&");
+  s = s.replace(/&lt;/g, "<");
+  s = s.replace(/&gt;/g, ">");
+  s = s.replace(/&nbsp;/g, " ");
+  s = s.replace(/&#39;/g, "\'");
+  s = s.replace(/&quot;/g, "\"");
+  s = s.replace(/<br>/g, "\n");
+  return s;
 }
 /**
  * 文章&草稿列表
@@ -585,7 +585,7 @@ $(function(){
         editTopic: function(e) {
             var me = this;
             var $ele = $(e.target);
-            var $item = $ele.hasClass('sidebar-list-item') 
+            var $item = $ele.hasClass('sidebar-list-item')
                 ? $ele : $ele.closest('.sidebar-list-item');
             var id = $item.data('id');
             var draftId = $item.data('draftId');
@@ -614,7 +614,7 @@ $(function(){
         editDraft: function(e) {
             var me = this;
             var $ele = $(e.target);
-            var $item = $ele.hasClass('sidebar-list-item') 
+            var $item = $ele.hasClass('sidebar-list-item')
                 ? $ele : $ele.closest('.sidebar-list-item');
             var id = $item.data('draftId');
             imweb.ajax.get('/draft/get/' + id).done(function(data) {
@@ -639,15 +639,15 @@ $(function(){
             }).animate(
                 {
                     opacity: 1
-                }, 
-                300, 
+                },
+                300,
                 function() {
                     setTimeout(function() {
                         $hint.animate(
                             {
                                 opacity: 0
-                            }, 
-                            300, 
+                            },
+                            300,
                             function() {
                                 $hint.css({
                                     display: 'none'
@@ -708,7 +708,7 @@ $(function(){
 
 // 图片上传
 $(function() {
-    var uploader = WebUploader.create({
+    var fileUploader = WebUploader.create({
         pick: '#file-picker',
         auto: true,
         server: '/upload?_csrf=' + imweb._csrf,
@@ -719,7 +719,22 @@ $(function() {
             mimeTypes: 'image/*'
         }
     });
-    uploader.on('uploadSuccess', function(file, response) {
+    fileUploader.on('uploadSuccess', function(file, response) {
         editorAction.insertImg(response.url);
+    });
+    var coverUploader = WebUploader.create({
+        pick: '#cover-picker',
+        auto: true,
+        multiple: false,
+        server: '/upload?_csrf=' + imweb._csrf,
+        fileVal: 'file',
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+    coverUploader.on('uploadSuccess', function(file, response) {
+        $('#top .cover').css('background-image','url("'+response.url+'")');
     });
 });

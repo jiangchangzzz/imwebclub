@@ -1,20 +1,24 @@
 <li>
     <a href="/activity/<%=activity.id%>">
-        <% if(activity.cover){ %>
-          <img src="<%= activity.cover %>">
-        <% } else if(activity.pic && activity.pic.length > 0){ %>
-          <img src="<%= activity.pic[0] %>">
-        <% }else{ %>
-          <img src="../../images/activity1.jpg">
-        <% } %>
+        <div class="cover">
+          <% if(activity.cover){ %>
+            <img src="<%= activity.cover %>">
+          <% } else if(activity.pic && activity.pic.length > 0){ %>
+            <img src="<%= activity.pic[0] %>">
+          <% }else{ %>
+            <img src="../../images/activity1.jpg">
+          <% } %>
+        </div>
         <div class="content">
-            <h5 class="one-line" title="<%= activity.title %>"><%= activity.title %></h5>
+            <h3 title="<%= activity.title %>"><%= activity.title %></h3>
             <p class="one-line"><b>时间：</b><span><%= activity.begin_str %></span></p>
             <p class="one-line"><b>城市：</b><span><%= activity.location_str %></span></p>
-            <span class="fr status"><%= activity.status %></span>
         </div>
     </a>
-    <% if (current_user && current_user._id.equals(activity.author.id)) { %>
-      <a class="edit" href='/activity/<%= activity.id %>/edit'><i class="fa fa-lg fa-pencil-square-o" title='编辑'></i></a>
-    <%}%>
+    <div class="footer">
+      <% if (current_user && current_user._id.equals(activity.author.id)) { %>
+        <a class="edit" href='/activity/<%= activity.id %>/edit'>编辑</a>
+      <%}%>
+      <span class="fr status <%= 'status-'+activity.phase %>"><%= activity.status %></span>
+    </div>
 </li>
