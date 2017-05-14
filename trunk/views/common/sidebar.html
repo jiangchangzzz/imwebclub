@@ -4,7 +4,7 @@
         <a href="/user/<%= current_user.loginname %>/index">
           <div class="avatar">
               <% if (current_user.avatar) { %>
-                <img src="<%= current_user.avatar %>">
+                <img src="<%= current_user.avatar%>?d=retro">
               <% } else { %>
                 <img src="../../images/avatarDefault.jpg">
               <% } %>

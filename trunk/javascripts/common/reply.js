@@ -182,7 +182,7 @@ define([
          */
         replySubmit: function(e) {
             var me = this;
-            var editor = $('.editor-wrap .editor').data('editor');console.log(editor);
+            var editor = $('.newComment .editor-wrap .editor').data('editor');console.log(editor);
             var content = editor.codemirror.getValue();
             if (!content) {
                 alert('回复不可为空');

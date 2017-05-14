@@ -12,7 +12,7 @@ var entries = getEntry('trunk/entry/**/*.js'
     , 'trunk/entry/');
 
 var chunks = Object.keys(entries);
-console.log(entries);
+// console.log(entries);
 var config = {
     entry: entries,
     output: {

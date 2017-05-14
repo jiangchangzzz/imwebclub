@@ -18,7 +18,7 @@ function initReplies(replies){
 $(document).ready(function(){
     var me = window.replyAction;
     initReplies(imweb.topic.replies);
-    me.initEditor('.editor-wrap .editor');
+    me.initEditor('.newComment .editor-wrap .editor');
     $('.reply-submit').click(_.bind(me.replySubmit, me));
     $('#content').on(
         'click',

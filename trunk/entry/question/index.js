@@ -29,7 +29,7 @@ $(document).ready(function(){
     //回复
     var me = window.replyAction;
     initReplies(imweb.question.replies);
-    me.initEditor('.editor-wrap .editor');
+    me.initEditor('.newComment .editor-wrap .editor');
     $('.reply-submit').click(_.bind(me.replySubmit, me));
     $('#reply-list').on(
         'click',

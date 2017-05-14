@@ -7,7 +7,7 @@ var tools = require('../common/tools');
 var at = require('../common/at');
 var _ = require('lodash');
 var config = require('../config');
-
+var dataAdapter = require('../common/dataAdapter');
 
 /**
  * 根据主题ID获取主题
@@ -93,7 +93,8 @@ exports.getTopicsByQuery = function (query, opt, callback) {
         // 保证顺序
         // 作者可能已被删除
         if (author) {
-          topic.author = author;
+          // topic.author = author;
+          topic.author = dataAdapter.outUser(author || {});
           topic.reply = reply;
           topic.friendly_create_at = tools.formatDate(topic.create_at, true);
           topic.friendly_update_at = tools.formatDate(topic.update_at, true);

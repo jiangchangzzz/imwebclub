@@ -87,7 +87,8 @@ exports.index = function (req, res, next) {
     topic.friendly_create_at = tools.formatDate(topic.create_at, true);
     topic.friendly_update_at = tools.formatDate(topic.update_at, true);
 
-    topic.author = author;
+    // topic.author = author;
+    topic.author = dataAdapter.outUser(author || {});
 
     var mainReplies = dataAdapter.appendSubRepliesToReplies(replies);
     topic.replies = dataAdapter.outReplies(mainReplies);

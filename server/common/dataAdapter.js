@@ -89,7 +89,7 @@ exports.outUser = function(user) {
         && avatar.indexOf("gravatar.com") >= 0
         && avatar.indexOf("d=retro") < 0
     ) {
-        avatar += "&d=retro";
+        avatar += avatar.indexOf('?') === -1 ? "?d=retro" : '&d=retro';
     }
     return {
         id: user._id,
