@@ -182,7 +182,7 @@ define([
          */
         replySubmit: function(e) {
             var me = this;
-            var editor = $('.newComment .editor-wrap .editor').data('editor');console.log(editor);
+            var editor = $('.newComment .editor-wrap .editor').data('editor');
             var content = editor.codemirror.getValue();
             if (!content) {
                 alert('回复不可为空');
@@ -194,6 +194,7 @@ define([
                 }
             }).done(function(data) {
                 if (data.ret === 0 && data.data) {
+                    $('.reply-panel').removeClass('hide');
                     me.replyListAppend(data.data.reply);
                     editor.codemirror.setValue('');
                     $('.reply-count').html(data.data.reply_count);

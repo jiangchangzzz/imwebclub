@@ -230,7 +230,7 @@ exports.getCountByAuthorId = function (authorId, kind, callback) {
  * 删除
  */
 exports.removeByCondition = function (query, callback) {
-    Reply.remove(query).exec();
+    Reply.remove(query).exec(callback);
 };
 
 /**

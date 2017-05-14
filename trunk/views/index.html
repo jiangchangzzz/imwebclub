@@ -157,11 +157,15 @@
                         <% activity_imweb.slice(0,6).forEach(function (activity, index) { %>
                             <li class="activity_imweb">
                                 <a href="/activity/<%= activity.id %>">
-                                    <% if(activity.pic && activity.pic.length > 0){ %>
-                                      <img src="<%= activity.pic[0] %>">
-                                    <% }else{ %>
-                                      <img src="../images/activity1.jpg">
-                                    <% } %>
+                                    <div class="cover">
+                                      <% if(activity.cover){ %>
+                                        <img src="<%= activity.cover %>">
+                                      <% }else if(activity.pic && activity.pic.length > 0){ %>
+                                        <img src="<%= activity.pic[0] %>">
+                                      <% }else{ %>
+                                        <img src="../images/activity1.jpg">
+                                      <% } %>
+                                    </div>
                                     <span class="one-line"><%=activity.title%></span>
                                 </a>
                             </li>
@@ -171,7 +175,9 @@
                         <% activity_industry.slice(0,6).forEach(function (activity, index) { %>
                             <li class="activity_industry">
                                 <a href="/activity/<%= activity.id %>">
-                                    <% if(activity.pic && activity.pic.length > 0){ %>
+                                  <% if(activity.cover){ %>
+                                    <img src="<%= activity.cover %>">
+                                  <% }else if(activity.pic && activity.pic.length > 0){ %>
                                       <img src="<%= activity.pic[0] %>">
                                     <% }else{ %>
                                       <img src="../images/activity1.jpg">
