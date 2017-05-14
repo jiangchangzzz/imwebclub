@@ -124,6 +124,7 @@
                                     <input class="input-xlarge js-pass" size="30" type="password" placeholder="密码" autocomplete="off" required minlength="6" maxlength="30" name="passw">
                                 </div>
                                 <div class="ui-button ui-button-white js-to-login">已有账号，立即登录</div>
+                                <input type='hidden' name='_csrf' value='<%= csrf %>'/>
                                 <input class="ui-button js-to-step2 fr" type="button" value="下一步">
                             </form>
                         </div>
@@ -133,6 +134,7 @@
                                 <input class="input-xlarge" name="name" size="30" type="text" value="" placeholder="姓名/邮箱" autocomplete="off">
                                 <input class="input-xlarge" name="pass" size="30" type="password" placeholder="密码" autocomplete="off">
                                 <div class="ui-button ui-button-white js-to-sign">用户注册</div>
+                                <input type='hidden' name='_csrf' value='<%= csrf %>'/>
                                 <input type="submit" class="ui-button fr" value="登录">
                                 <p class="forget"><a href="/search_pass" class="fr">忘记密码?</a></p>
                             </form>
@@ -169,6 +171,7 @@
                             </div>
                             <p class="forget hide">自由职业者，学生，或待业中?<a href="javascript:void(0)" class="js-jump">暂时跳过</a></p>
                             <div class="ui-button ui-button-white js-to-step1">返回上一步</div>
+                            <input type='hidden' name='_csrf' value='<%= csrf %>'/>
                             <input type="submit" class="ui-button js-submit fr" value="注册">
                         </form>
                     </div>

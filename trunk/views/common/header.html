@@ -10,6 +10,7 @@
                 <form class="search" name="searchForm" action="/search" method="post">
                     <input name="search" type="text" value="" placeholder="输入关键字搜索文章/问题" autocomplete="on">
                     <span class="search-btn" onclick="document.searchForm.submit.click();"></span>
+                     <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
                     <button type="submit" name="submit"></button>
                 </form>
                 <% if (current_user) {console.log(current_user)%>
