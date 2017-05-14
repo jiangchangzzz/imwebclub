@@ -32,16 +32,33 @@
                            value="<%= user.loginname %>"/>
                   </div>
                 </div>
+
+                <div id="user-avatar" class="control-group">
+                  <label class='control-label' for='avatar'>头像</label>
+                  <div class='controls'>
+                      <img class="user-avatar" src="<%= user.avatar || '' %>"/>
+                      <input id='avatar' name='avatar' type='hidden' readonly='true' value="<%= user.avatar || '' %>"/>
+
+                      <div id="uploader">
+                        <div id="thelist" class="uploader-list"></div>
+                        <div class="btns">
+                            <div id="picker">选择文件</div>
+                        </div>
+                        <span class="tip"></span>
+                        <div class="alert-error"></div>
+                    </div>
+                  </div>  
+               </div>
+
                 <div class='control-group'>
                   <label class='control-label' for='email'>电子邮件</label>
 
                   <div class='controls'>
                     <input class='input-xlarge readonly' id='email' name='email' size='30' type='text'
                            readonly='true' value="<%= user.email %>"/>
-
-                    <p>同时决定了 Gravatar 头像</p>
                   </div>
                 </div>
+
                 <div class='control-group'>
                   <label class='control-label' for='url'>个人网站</label>
 
@@ -49,6 +66,7 @@
                     <input class='input-xlarge' id='url' name='url' size='30' type='text' value="<%= typeof(user.url) !== 'undefined' ? user.url : '' %>"/>
                   </div>
                 </div>
+
                 <div class='control-group'>
                   <label class='control-label' for='location'>所在地点</label>
 
@@ -66,15 +84,17 @@
                            placeholder="e.g. http://weibo.com/cnodejs"/>
                   </div>
                 </div>
+
                 <div class='control-group'>
                   <label class='control-label' for='github'>GitHub</label>
 
                   <div class='controls'>
                     <input class='input-xlarge' id='github' name='github' size='30' type='text'
                            value="<%= typeof(user.githubUsername) !== 'undefined' ? '@' + user.githubUsername : '' %>" placeholder="@username" readonly="readonly" />
-                    <p>请通过 GitHub 登陆 CNode 来修改此处</p>
+                    <p>请通过 GitHub 登陆 IMWeb 来修改此处</p>
                   </div>
                 </div>
+
                 <div class='control-group'>
                   <label class='control-label' for='signature'>个性签名</label>
 
@@ -82,11 +102,12 @@
                     <textarea class='input-xlarge' id='signature' name='signature' size='30'><%= typeof(user.signature) !== 'undefined' ? user.signature : "" %></textarea>
                   </div>
                 </div>
+
                 <input type='hidden' id='action' name='action' value='change_setting'/>
                 <input type='hidden' name='_csrf' value='<%= csrf %>'/>
 
                 <div class='form-actions'>
-                  <input type='submit' class='span-primary submit_btn' data-loading-text="保存中.." value='保存设置'/>
+                  <input type='submit' class='span-primary submit_btn ui-button' data-loading-text="保存中.." value='保存设置'/>
                 </div>
               </form>
             </div>
@@ -94,6 +115,8 @@
 
           </div>           
         </div>
+
+
         <div class='breadcrumb--content__section section--show'>
           <div id='content'>
             <div class='panel'>
@@ -120,14 +143,35 @@
                 <input type='hidden' name='_csrf' value='<%= user.csrf %>'/>
 
                 <div class='form-actions'>
-                  <input type='submit' class='span-primary submit_btn' data-loading-text="更改中.." value='更改密码'/>
+                  <input type='submit' class='span-primary submit_btn ui-button' data-loading-text="更改中.." value='更改密码'/>
                 </div>
               </form>
             </div>
           </div>
           </div>           
         </div>
+
+
       </div>
+
+      <!--<div id="upload-mask" class="upload-mask hidden" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true">
+        <div class="upload-pop">
+            <div class="modal-header">
+                <span type="button" class="close" data-dismiss="modal" aria-hidden="true">×</span>
+                <span id="editorToolImageTitle" class="title">修改头像</span>
+            </div>
+            <div class="modal-body">
+                <span><img src="<%= user.avatar || '' %>" width="80" height="80"></span>
+                <div class="upload-img">
+                    <div class="button button-upload">上传图片</div>
+                    <div class="button button-cancel">取消</div>
+                    <span class="tip"></span>
+                    <div class="alert alert-error hide"></div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
     </div>
   </div>
 </div>
