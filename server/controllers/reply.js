@@ -258,12 +258,19 @@ exports.delete = function (req, res, next) {
         reply.author.reply_count--;
         reply.author.save(ep.done('user_updated'));
         // 删除所有子评论
-        Reply.removeByCondition({reply_id: reply_id});
-        // 更新评论主体
-        parent.last_reply = reply._id;
-        parent.last_reply_at = Date.now();
-        parent.reply_count++;
-        parent.save(ep.done('parent_updated'));
+        Reply.removeByCondition({reply_id: reply_id},function(err,commandResult){
+          if(err || !commandResult){
+            console.log(arguments);
+            return ep.emit('fail', 401, 'failed to delete sub reply');
+          }else{
+            // 更新评论主体
+            parent.last_reply = reply._id;
+            parent.last_reply_at = Date.now();
+            parent.reply_count -= (commandResult.result.n + 1);
+            parent.save(ep.done('parent_updated'));
+          }
+        });
+
   });
   ep.all(['parent', 'user_updated', 'parent_updated'],function(parent){
     ep.emit('done', parent);
