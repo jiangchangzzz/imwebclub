@@ -22,7 +22,6 @@ exports.index = function (req, res, next) {
   var proxy = new eventproxy();
   proxy.fail(next);
 
-  // var limit = config.list_hot_topic_count;
   var options = { limit: 10, sort: '-top -visit_count -create_at' };
 
   // 取排行榜上的用户

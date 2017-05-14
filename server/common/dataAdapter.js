@@ -130,7 +130,8 @@ exports.outTopic = function(item, options) {
         update_at: +item.update_at,
         friendly_update_at: tools.formatDate(item.update_at, true),
         tab: item.tab,
-        reply_count: item.reply_count
+        reply_count: item.reply_count,
+        author: !item.author ? {} : exports.outUser(item.author),
     };
     if (options.content) {
         out.content = item.content;
@@ -162,7 +163,7 @@ exports.outDraft = function(item, options) {
 exports.outActivity = function(activity) {
   var out = {
     id: activity._id.toString(),
-    author: activity.author,
+    author: !activity.author ? {} : exports.outUser(activity.author),
     friendly_create_at: tools.formatDate(activity.create_at, true),
     friendly_update_at: tools.formatDate(activity.update_at, true),
     title: activity.title,
@@ -198,7 +199,7 @@ exports.outQuestion = function(question){
     id: question._id.toString(),
     tab: question.tab,
     tabName: render_helper.tabName(question.tab),
-    author: question.author,
+    author: !question.author ? {} : exports.outUser(question.author),
     friendly_create_at: tools.formatDate(question.create_at, true),
     friendly_update_at: tools.formatDate(question.update_at, true),
     title: question.title,
