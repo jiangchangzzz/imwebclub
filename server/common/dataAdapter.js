@@ -130,6 +130,7 @@ exports.outTopic = function(item, options) {
         update_at: +item.update_at,
         friendly_update_at: tools.formatDate(item.update_at, true),
         tab: item.tab,
+        cover: item.cover,
         reply_count: item.reply_count,
         author: !item.author ? {} : exports.outUser(item.author),
     };

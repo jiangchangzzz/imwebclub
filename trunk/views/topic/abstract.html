@@ -67,8 +67,8 @@
             <% } %>
           </div>
           <div class="cell-brief-wrap">
-            <%if(topic.pic && topic.pic.length != 0){%>
-              <a href="<%=topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap "><img class="cell-brief-img" src="<%=topic.pic[0]%>"></a>
+            <%if(topic.pic && (topic.cover || topic.pic.length != 0)){%>
+              <a href="<%=topic.cover || topic.pic[0]%>" rel="gallery1" class="fancybox cell-img-wrap "><img class="cell-brief-img" src="<%=topic.cover || topic.pic[0]%>"></a>
             <%}%>
             <div class="cell-brief">
               <%= topic.summary ? topic.summary.replace(/<br>/g, ' ') : ''%>

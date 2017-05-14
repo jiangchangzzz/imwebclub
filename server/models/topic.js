@@ -11,6 +11,7 @@ var TopicSchema = new Schema({
   content: { type: String },
   summary: { type: String },
   pic: { type: Array },
+  cover: { type: String },
   type: { type: Number, default: 0 }, //0-文章; 1-github组件; 2-讨论
   author_id: { type: ObjectId },
   top: { type: Boolean, default: false }, // 置顶帖

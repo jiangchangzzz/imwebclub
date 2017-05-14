@@ -75,8 +75,10 @@
             <hr class="solid-light">
             <div class="column-body">
                 <div class="slider">
-                  <% if (typeof(topics) !== 'undefined' && topics.length > 0 && topics[0].pic && topics[0].pic[0]) { %>
-                     <a href="/topic/<%= topics[0].id %>"><img src="<%=topics[0].pic[0] %>"></a>
+                  <% if (typeof(topics) !== 'undefined' && topics.length > 0 && (topics[0].cover || (topics[0].pic && topics[0].pic[0])) ) { %>
+                     <a href="/topic/<%= topics[0].id %>">
+                        <div class="cover" style='background-image: url("<%=topics[0].cover || topics[0].pic[0] %>")'></div>
+                     </a>
                   <% }else {%>
                      <a href="/topic/<%= topics[0].id %>"><img src="../images/sliderCover.png"></a>
                   <% } %>

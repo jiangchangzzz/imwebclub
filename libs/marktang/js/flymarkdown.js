@@ -82,7 +82,10 @@ $(function() {
             //由于editor是由第三方组件生成，对象没有setTitle和setSort的接口，则自己定义
             this.setTitle(article.title);
             this.setSort(article.tab);
-
+            this.setCover(article.cover);
+        },
+        setCover: function(cover) {
+            $('#top .cover').css('background-image','url("'+cover+'")').attr('data-cover', cover);
         },
         setSort: function (sort) {
             var selector = '.in-tab[data-val="' + sort + '"]';
@@ -90,7 +93,7 @@ $(function() {
         },
         getContent: function() {
             return editor.getValue().replace(/^\s*(```)\s*(.*)/g, "$1 $2")
-            return editor.getValue().replace(/^\s*(#+)\s*(.*)/g, "$1 $2");
+            // return editor.getValue().replace(/^\s*(#+)\s*(.*)/g, "$1 $2");
             // return editor.getValue().replace(/^\s*#[^\r\n]*[\r\n]*/, '');
         },
         getHtml: function() {
@@ -162,13 +165,15 @@ $(function() {
                 title: $(".in-title").val(),
                 tab: $(".in-tab.current-tab").data("val"),
                 content: editorAction.getContent(),
-                html: editorAction.getHtml()
+                html: editorAction.getHtml(),
+                cover: $(".cover").attr('data-cover')
             });
         },
         setContext: function(context) {
             context = $.extend({}, context, {
                 title: context.title || '',
-                content: context.content || ''
+                content: context.content || '',
+                cover: context.cover || ''
             });
             this._context = context;
             // editorAction.setValue(context.content);
@@ -189,7 +194,8 @@ $(function() {
                     return {
                         tab: context.tab,
                         title: context.title,
-                        content: context.content
+                        content: context.content,
+                        cover: context.cover
                     };
                 }
             });
@@ -233,13 +239,18 @@ $(function() {
                 this.alert('请输入文章内容');
                 return;
             }
+            if (!context.cover) {
+                this.alert('请上传文章封面');
+                return;
+            }
 
             var url;
             var data = {
                 json: true,
                 tab: context.tab,
                 title: context.title,
-                content: context.content
+                content: context.content,
+                cover: context.cover
             };
             if (context.topicId) {
                 data.topic_id = context.topicId;
@@ -306,6 +317,7 @@ $(function() {
             title : context.title,
             context : context.content,
             html : context.html,
+            cover: context.cover,
             id : context.id || '',
             guid : context.guid || '',
             _csrf : imweb._csrf
@@ -388,7 +400,8 @@ $(function() {
                 topicId: topic.id,
                 tab: topic.tab,
                 title: topic.title,
-                content: html_decode(topic.content)
+                content: html_decode(topic.content),
+                cover: topic.cover || null
             });
         }
         exports.setContext(initedContext);
@@ -735,6 +748,6 @@ $(function() {
         }
     });
     coverUploader.on('uploadSuccess', function(file, response) {
-        $('#top .cover').css('background-image','url("'+response.url+'")');
+        $('#top .cover').css('background-image','url("'+response.url+'")').attr('data-cover', response.url);
     });
 });

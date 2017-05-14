@@ -360,6 +360,7 @@ function saveTopic(req, next, callback) {
   var tab = validator.escape(validator.trim(req.body.tab));
   var content = validator.trim(req.body.content || req.body.t_content);
   var type = escapeHtml(req.body.type || 0);
+  var cover =  escapeHtml(req.body.cover || 0);
   var reprint = req.body.reprint;
   if (reprint && reprint.length != 0 && reprint != "false") {
     reprint = req.body.link;
@@ -376,7 +377,7 @@ function saveTopic(req, next, callback) {
   ep.fail(next);
 
 
-  Topic.newAndSave(title, type, content, tab, reprint, user._id, ep.done('topic'));
+  Topic.newAndSave(title, type, content, tab, cover, reprint, user._id, ep.done('topic'));
   ep.all('topic', function (topic) {
     User.getUserById(user._id, ep.done(function (user) {
       user.score += 5;
@@ -450,6 +451,7 @@ exports.update = function (req, res, next) {
     var title = escapeHtml(validator.trim(req.body.title));
     var tab = validator.escape(validator.trim(req.body.tab));
     var content = validator.trim(req.body.content || req.body.t_content);
+    var cover = escapeHtml(validator.trim(req.body.cover));
 
     var ep = new EventProxy();
     ep.fail(next);
@@ -479,7 +481,8 @@ exports.update = function (req, res, next) {
                 edit_error: msg,
                 topic_id: topic._id || '',
                 content: topic.content || '',
-                tabs: config.tabs
+                tabs: config.tabs,
+                cover: cover
             });
         }
     });
@@ -505,6 +508,7 @@ exports.update = function (req, res, next) {
         topic.content = content;
         topic.summary = html_encode(tools.genSummaryFromContent(content, config.topic_summary_len));
         topic.tab = tab;
+        topic.cover = cover;
         topic.update_at = new Date();
         topic.save(ep.done(function() {
             at.sendMessageToMentionUsers(content, topic._id, user._id);

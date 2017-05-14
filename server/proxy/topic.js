@@ -222,7 +222,7 @@ exports.reduceCount = function (id, callback) {
   });
 };
 
-exports.newAndSave = function (title, type, content, tab, reprint, authorId, callback) {
+exports.newAndSave = function (title, type, content, tab, cover, reprint, authorId, callback) {
   type = type || 0;
   var topic = new Topic();
   topic.type = type;
@@ -231,6 +231,7 @@ exports.newAndSave = function (title, type, content, tab, reprint, authorId, cal
   topic.pic = tools.genPicFromContent(content);
   topic.summary = tools.genSummaryFromContent(content, config.topic_summary_len);
   topic.tab = tab;
+  topic.cover = cover;
   topic.reprint = reprint;
   topic.author_id = authorId;
   topic.save(callback);
