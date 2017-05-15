@@ -138,14 +138,16 @@
                 <li>
                     <div class="left">
                         <div class="avatar">
-                            <img src="<%=user.avatar%>">
+                            <a href="/user/<%=user.loginname%>/index" title="<%=user.name || user.loginname %>">
+                                <img src="<%=user.avatar%>">
+                            </a>
                         </div>
                     </div>
                     <div class="right">
                         <% if(current_user && current_user.following && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
                             <a href="javascript:void(0);">已关注</a>
                             <% } else {%>
-                                <a href="javascript:void(0);" class="link <%=!current_user ? 'nav-login' : 'focus-add' %>">+关注</a>
+                                <a href="javascript:void(0);" class="link <%=!current_user ? 'nav-login' : 'focus-add' %>" userid="<%=user.id%>">+关注</a>
                             <% } %>
                     </div>
                     <div class="center">

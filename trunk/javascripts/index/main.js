@@ -1,7 +1,7 @@
 $(document).ready(function(){
   $('.focus-add').on('click',function() {
       var $this = $(this);
-      var followUser_id = $this.parent().parent().attr('title');
+      var followUser_id = $this.attr('userid');
       var fllower_num = parseInt($this.parents('li').find('.flowers_num').html(), 10);
       imweb.ajax.post('/user/follow', {
         data: {

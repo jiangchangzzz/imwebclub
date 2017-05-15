@@ -134,6 +134,7 @@
                                 <input class="input-xlarge" name="pass" size="30" type="password" placeholder="密码" autocomplete="off">
                                 <div class="ui-button ui-button-white js-to-sign">用户注册</div>
                                 <input type="submit" class="ui-button fr" value="登录">
+                                <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
                                 <p class="forget"><a href="/search_pass" class="fr">忘记密码?</a></p>
                             </form>
                         </div>
