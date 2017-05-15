@@ -97,9 +97,13 @@
     <div id='content'>
       <div class='panel'>
         <div class="detail-info">
-          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar  %>"  data-name="<%= topic.author.loginname %>"/>
+          <a href="/user/<%=topic.author.loginname%>/index">
+            <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar  %>"  data-name="<%= topic.author.loginname %>"/>
+          </a>
           <div class="user-wrap">
-            <p class="user-name user-slider-btn" data-name="<%= topic.author.loginname %>"><%= topic.author.name || topic.author.loginname%></p>
+            <p class="user-name user-slider-btn" data-name="<%= topic.author.loginname %>">
+                <a href="/user/<%=topic.author.loginname%>/index"><%= topic.author.name || topic.author.loginname%></a>
+            </p>
             <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= topic.friendly_create_at %></span>
           </div>
           <ul class="other-info">

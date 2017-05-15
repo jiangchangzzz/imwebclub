@@ -1,4 +1,4 @@
-define(['../libs/webuploader/webuploader.withoutimage.min.js'], function(WebUploader){
+define(['../libs/webuploader/webuploader.withoutimage.js'], function(WebUploader){
   //图片上传工具
   var ToolImage = function(){
       var self = this;

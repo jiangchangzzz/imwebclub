@@ -20,7 +20,7 @@
 		<i class="nav-icon fa fa-heart"></i>	
 		<a href='#'>我的收藏</a>
 	</li>-->
-	<li class='breadcrumb__link <%if (tab === "follower") {%>active<%}%>'>
+	<li class='breadcrumb__link <% console.log(tab);if (tab === "follower") {%>active<%}%>'>
 		<i class="nav-icon fa fa-link"></i>
 		<a href='/user/<%= user.loginname %>/follower'><%=isCurrentUser ? '我' : '他' %>的粉丝</a>
 	</li>

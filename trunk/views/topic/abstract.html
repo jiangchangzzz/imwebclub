@@ -1,7 +1,7 @@
 <li>
   <div class="cell">
     <div class="cell-l">
-      <img class="ui-avatar-48 user-slider-btn js-identicon" data-name="<%= topic.author.loginname %>" src="<%= topic.author.avatar %>" />
+      <a href="/user/<%=topic.author.loginname%>/index"><img class="ui-avatar-48 user-slider-btn js-identicon" data-name="<%= topic.author.loginname %>" src="<%= topic.author.avatar %>" /></a>
     </div>
     <div class="cell-r">
       <div class="cell-wrap">
@@ -44,12 +44,14 @@
             <a href='/topic/<%= topic._id %>' class="ex-link" target="_blank"><%- topic.title %></a>
           </div>
           <div class="cell-other-info">
-            <span title="作者" class="cell-other-span">
+             <a href="/user/<%=topic.author.loginname%>/index">
+             <span title="作者" class="cell-other-span">
               <%= topic.author.name || topic.author.loginname %>
               <%if(topic.author.signature){%>
                 <span>,<%= topic.author.signature %> </span>
               <%}%>
               于 <%= topic.friendly_create_at %>发表</span>
+              </a>
 
             <span title="浏览" class="cell-other-span"><i class="fa fa-eye"></i><%= topic.visit_count %></span>
             <span title="评论" class="cell-other-span"><i class="fa fa-weixin"></i><%= topic.reply_count %></span>

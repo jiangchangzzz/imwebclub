@@ -1,7 +1,7 @@
 <li>
     <div class="fl">
       <div class="avatar">
-          <img src="<%= question.author.avatar %>">
+        <a href="/user/<%=question.author.loginname%>/index"><img src="<%= question.author.avatar %>"></a>
       </div>
       <%if(question.solved){%>
         <div class="status solved">
@@ -28,9 +28,11 @@
             <span class="tag"><%= question.tabName %></span>
         </div>
         <div class="main">
-          <a href="/question/<%= question.id %>" class="one-line"><%= question.title %></a>
+          <a href="/question/<%= question.id %>" class="one-line tit"><%= question.title %></a>
           <div class="relative">
+            <a href="/user/<%=question.author.loginname%>/index">
             <span class="item author"><%= question.author.name || question.author.loginname %></span>
+            </a>
             <span class="item viewCount"><%= question.visit_count %>浏览</span>
             <span class="item answerCount"><%= question.reply_count %>回答</span>
           </div>

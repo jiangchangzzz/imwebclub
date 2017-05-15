@@ -139,7 +139,7 @@ exports.showFollower = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('follower', function(follower) {
-      return res.render('user/follow', { user: user, follower: follower, currentUser: req.session.user, tab: 'follwer'});
+      return res.render('user/follow', { user: user, follower: follower, currentUser: req.session.user, tab: 'follower'});
     })
     User.getFollowUser(user.follower , ep.done('follower'));
   });
