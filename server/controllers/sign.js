@@ -14,12 +14,12 @@ exports.showSignup = function (req, res) {
 };
 
 exports.signup = function(req, res, next) {
-    var name = validator.trim(req.body.name);
+    var name = validator.trim(req.body.name || req.body.loginname);
     var loginname = validator.trim(req.body.loginname).toLowerCase();
     var email = validator.trim(req.body.email).toLowerCase();
     var pass = validator.trim(req.body.pass);
     var comp = validator.trim(req.body.comp);
-    var comp_mail = validator.trim(req.body.comp_mail) || '';
+    var comp_mail = validator.trim(req.body.comp_mail || '');
 
     var ep = new eventproxy();
     ep.fail(next);
