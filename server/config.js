@@ -21,8 +21,8 @@ var config = {
      '<meta name="author" content="imwebteam@tencent" />',
      '<meta property="wb:webmaster" content="f823bb51f1b4e265" />'
   ],
-  site_logo: '/public/images/cnodejs_light.svg', // default is `name`
-  site_icon: '/public/images/cnode_icon_32.png', // 默认没有 favicon, 这里填写网址
+  site_logo: '/public/images/icon.png', // default is `name`
+  site_icon: '/public/images/icon.png', // 默认没有 favicon, 这里填写网址
   // 右上角的导航区
   site_navs: [
     // 格式 [ path, title, [target=''] ]
@@ -34,7 +34,6 @@ var config = {
   host: domain,
   // 默认的Google tracker ID，自有站点请修改，申请地址：http://www.google.com/analytics/
   google_tracker_id: 'UA-7317009-5',
-
 
   // mongodb 配置
   db: 'mongodb://127.0.0.1/node_club_dev',
