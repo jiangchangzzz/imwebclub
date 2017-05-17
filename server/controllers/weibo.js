@@ -51,7 +51,7 @@ exports.new = function (req, res, next) {
 exports.create = function (req, res, next) {
   var profile = req.session.profile;
 
-  //console.log(profile);
+  console.log(profile);
   var isnew = req.body.isnew;
   var loginname = validator.trim(req.body.name || '').toLowerCase();
   var password = validator.trim(req.body.pass || '');
@@ -64,8 +64,10 @@ exports.create = function (req, res, next) {
   delete req.session.profile;
 
   if (isnew) { // 注册新账号
+    var newID = uuid.v4();
     var user = new User({
-      loginname: uuid.v4(),
+      loginname: newID,
+      email: newID,
       name: profile.name,
       avatar: profile.avatar_large,
       weiboId: profile.id,
