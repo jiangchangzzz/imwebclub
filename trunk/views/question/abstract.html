@@ -41,9 +41,9 @@
       <div class="item-body">
           <p>
             <%if(question.solved){%>
-              <b class="qa">A:</b><%= question.answer.content %>
+              <b class="qa">A:</b><%= question.answer.content ? question.answer.content.replace(/<br>/g, ' ') : '' %>
             <%} else {%>
-              <b class="qa">Q:</b><%= question.content %>
+              <b class="qa">Q:</b><%= question.content ? question.content.replace(/<br>/g, ' ') : ''%>
             <%}%>
           </p>
       </div>
