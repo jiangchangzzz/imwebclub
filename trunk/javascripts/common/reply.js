@@ -6,7 +6,7 @@ define([
     '../libs/editor/editor.js',
     '../libs/editor/ext.js',
     '../libs/remarkable.js',
-    '../libs/webuploader/webuploader.withoutimage.min.js',
+    '../libs/webuploader/webuploader.withoutimage.js',
     '../libs/jquery.caret.js',
     '../libs/jquery.atwho.js',
     './md.js'
