@@ -371,6 +371,7 @@ exports.listTopics = function (req, res, next) {
         current_page: page,
         pages: pages,
         currentUser: req.session.user,
+        base: '/user/' + user_name + '/topics',
         tab: 'topics'
       });
     };
@@ -408,6 +409,7 @@ exports.listQuestions = function(req, res, next) {
         current_page: page,
         pages: pages,
         currentUser: req.session.user,
+        base: '/user/' + user_name + '/questions',
         tab: 'questions'
       });
     };

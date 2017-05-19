@@ -209,13 +209,10 @@ exports.list = function (req, res, next) {
     limit: limit,
     sort: sortType
   };
-  // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
-  // console.log(optionsStr);
   Question.getQuestionsByQuery(query, options, proxy.done('questions', function (questions) {
-    //console.log(questions);
     return questions.map(function(question){
       return dataAdapter.outQuestion(question);
-    });//questionMock;
+    });
   }));
 
   // 取分页数据
