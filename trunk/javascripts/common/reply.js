@@ -1,6 +1,6 @@
 define([
     'lodash',
-    '../../../server/common/render_helper',
+    './markdownRender.js',
     '../template/tplReplyItem.js',
     '../template/tplReplySubItem.js',
     '../libs/editor/editor.js',
@@ -270,7 +270,7 @@ define([
             var me = this;
             var $ele = $(e.target);
             if (!(imweb.user && imweb.user.loginname)) {
-                alert('请登陆。');
+                alert('请登录。');
                 return;
             }
             if($ele.closest('.updown').data('mine').toString() === 'true'){

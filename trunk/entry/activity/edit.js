@@ -5,8 +5,8 @@ require('../../javascripts/common/reply.js');
 require('../../javascripts/common/uploader.js');
 
 var Flatpickr = require('flatpickr');
-var l10n = require('../../../node_modules/flatpickr/dist/l10n/zh.js');
-require('../../../node_modules/flatpickr/dist/flatpickr.min.css');
+var l10n = require('flatpickr/dist/l10n/zh.js');
+require('flatpickr/dist/flatpickr.min.css');
 Flatpickr.localize(l10n.zh);
 
 // 版块选择的检查，必须选择

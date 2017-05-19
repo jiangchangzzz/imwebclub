@@ -87,7 +87,7 @@ $.extend(imweb.ajax, {
     },
     fail: function(xhr) {
         if (xhr.status === 403) {
-            alert('请先登录，登陆后即可点赞。');
+            alert('请先登录，登录后即可点赞。');
         } else if(xhr.status >= 500) {
             alert('系统异常，请稍候重试。');
         } else {

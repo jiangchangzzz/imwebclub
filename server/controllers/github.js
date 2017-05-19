@@ -3,7 +3,7 @@ var User           = Models.User;
 var authMiddleWare = require('../middlewares/auth');
 var tools          = require('../common/tools');
 var eventproxy     = require('eventproxy');
-var uuid           = require('node-uuid');
+var uuid           = require('uuid');
 var validator      = require('validator');
 
 exports.callback = function (req, res, next) {
@@ -13,7 +13,7 @@ exports.callback = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    // 当用户已经是 cnode 用户时，通过 github 登陆将会更新他的资料
+    // 当用户已经是 cnode 用户时，通过 github 登录将会更新他的资料
     if (user) {
       user.githubUsername = profile.username;
       user.githubId = profile.id;

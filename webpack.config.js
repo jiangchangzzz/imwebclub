@@ -12,7 +12,6 @@ var entries = getEntry('trunk/entry/**/*.js'
     , 'trunk/entry/');
 
 var chunks = Object.keys(entries);
-// console.log(entries);
 var config = {
     entry: entries,
     output: {
@@ -25,7 +24,10 @@ var config = {
         loaders: [ //加载器
             {
                 test: /\.js?$/,
-                loaders: ['babel-loader?presets[]=es2015']
+                loaders: ['babel-loader?presets[]=es2015'],
+                // 只命中src目录里的js文件，加快webpack搜索速度
+                include: path.resolve(__dirname, 'trunk'),
+                exclude: [/node_modules/, /webuploader.withoutimage.min/],
             }, {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style', 'css')

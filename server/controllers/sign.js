@@ -6,7 +6,7 @@ var mail           = require('../common/mail');
 var tools          = require('../common/tools');
 var utility        = require('utility');
 var authMiddleWare = require('../middlewares/auth');
-var uuid           = require('node-uuid');
+var uuid           = require('uuid');
 
 //sign up
 exports.showSignup = function (req, res) {

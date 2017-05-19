@@ -108,7 +108,7 @@ $(document).on('click', '.detail-content .updown .fa', function(e) {
     var me = this;
     var $ele = $(e.target);
     if (!(imweb.user && imweb.user.loginname)) {
-        alert('请登陆。');
+        alert('请登录。');
         return;
     }
     if(imweb.user.loginname !== imweb.question.author.loginname){

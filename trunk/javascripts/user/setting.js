@@ -1,4 +1,4 @@
-import { Webuploader } from '../libs/webuploader/webuploader.withoutimage.js';
+import { Webuploader } from '../libs/webuploader/webuploader.withoutimage.min.js';
 
 let ToolImage = function(){
     var self = this;

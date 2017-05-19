@@ -1,7 +1,7 @@
 // 一次性脚本
 // 为所有老用户生成 accessToken
 
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 var mongoose = require('mongoose');
 var config = require('../config');
 var async = require('async');

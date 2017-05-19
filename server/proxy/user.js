@@ -1,7 +1,7 @@
 var models  = require('../models');
 var User    = models.User;
 var utility = require('utility');
-var uuid    = require('node-uuid');
+var uuid    = require('uuid');
 var EventProxy   = require('eventproxy');
 var _       = require('lodash');
 /**

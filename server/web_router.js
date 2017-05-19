@@ -19,7 +19,7 @@ var question = require('./controllers/question');
 var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
 var activity = require('./controllers/activity');
-var rss = require('./controllers/rss');
+// var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');
 var limit = require('./middlewares/limit');
@@ -39,7 +39,7 @@ var router = express.Router();
 // home page
 router.get('/', site.index);
 // sitemap
-router.get('/sitemap.xml', site.sitemap);
+// router.get('/sitemap.xml', site.sitemap);
 // mobile app download
 // router.get('/app/download', site.appDownload);
 
@@ -185,7 +185,7 @@ router.post('/marktang/evernote_save', auth.userRequired, marktang.evernote_save
 router.get('/marktang/evernote_getnote', auth.userRequired, marktang.evernote_getnote); //
 
 //rss
-router.get('/rss', rss.index);
+// router.get('/rss', rss.index);
 
 // github oauth
 router.get('/auth/github', passport.authenticate('github'));

@@ -106,9 +106,9 @@ exports.getQuestionsByQuery = function (query, opt, callback) {
 };
 
 // for sitemap
-exports.getLimit5w = function (callback) {
-  Question.find({deleted: false}, '_id', {limit: 50000, sort: '-create_at'}, callback);
-};
+// exports.getLimit5w = function (callback) {
+//   Question.find({deleted: false}, '_id', {limit: 50000, sort: '-create_at'}, callback);
+// };
 
 /**
  * 获取所有信息的主题
