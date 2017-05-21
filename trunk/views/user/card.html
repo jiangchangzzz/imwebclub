@@ -3,7 +3,7 @@
     <a class='user_avatar' href="/user/<%= user.loginname %>">
      
     </a>
-    <span class='user_name'><a class='dark' href="/user/<%= user.loginname %>"><%= user.loginname %></a></span>
+    <span class='user_name'><a class='dark' href="/user/<%= user.loginname %>"><%= user.name || user.loginname %></a></span>
 
     <div class='board clearfix'>
       <div class='floor'>

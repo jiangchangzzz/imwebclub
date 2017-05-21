@@ -1,9 +1,9 @@
 <div class='panel'>
   <div class='inner userinfo'>
     <div class='user_big_avatar'>
-      <img src="<%= user.avatar %>" class="user_avatar" title="<%= user.loginname %>"/>
+      <img src="<%= user.avatar %>" class="user_avatar" title="<%= user.name || user.loginname %>"/>
     </div>
-    <a class='dark'><%= user.loginname %></a>
+    <a class='dark'><%= user.name || user.loginname %></a>
 
     <div class='user_profile'>
       <ul class='unstyled'>

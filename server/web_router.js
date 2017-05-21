@@ -231,6 +231,8 @@ router.post('/search', search.index);
 router.get('/search/:key', search.index);
 // router.get('/search', search.index);
 
+router.get('/topics/latestTopics/sort/:sort', site.latestTopics);
+
 if (!config.debug) { // 这个兼容破坏了不少测试
 	router.get('/:name', function (req, res) {
 	  res.redirect('/user/' + req.params.name)

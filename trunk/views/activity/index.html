@@ -3,7 +3,7 @@
         id: '<%= activity.id %>',
         author: {
             name: '<%= activity.author.name %>',
-            loginname: '<%= activity.author.loginname %>'
+            name: '<%= activity.author.name %>'
         },
     };
 
@@ -28,7 +28,7 @@
                   <% } %>
               </div>
             </a>
-            <div class="name"><%= current_user.name || current_user.loginname %></div>
+            <div class="name"><%= current_user.name || current_user.name %></div>
             <ul class="contribution-list">
                 <li>
                     <b><%= current_user.topic_count || 0%></b>
@@ -60,9 +60,9 @@
     <div id='content'>
       <div class='panel'>
         <div class="detail-info">
-          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= activity.author.avatar  %>"  data-name="<%= activity.author.loginname %>"/>
+          <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= activity.author.avatar  %>"  data-name="<%= activity.author.name %>"/>
           <div class="user-wrap">
-            <p class="user-name user-slider-btn" data-name="<%= activity.author.loginname %>"><%= activity.author.name || activity.author.loginname%></p>
+            <p class="user-name user-slider-btn" data-name="<%= activity.author.name %>"><%= activity.author.name || activity.author.loginname%></p>
             <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= activity.friendly_create_at %></span>
           </div>
           <ul class="other-info">

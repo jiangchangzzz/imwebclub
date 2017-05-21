@@ -4,11 +4,11 @@
     <div class="user-panel__header__content">
       <div class="left">
         <div class="user-icon user_big_avatar">
-          <img src="<%= user.avatar.replace('?size=48', '') %>?d=retro" alt="<%= user.loginname %>">
+          <img src="<%= user.avatar.replace('?size=48', '') %>?d=retro" alt="<%= user.name || user.loginname %>">
         </div>
         <div class="user-info">
           <span class="username">
-            <%= user.loginname %>
+            <%= user.name || user.loginname %>
           </span>
           <span class="register-time">注册时间: <%=user.create_at_ago() %></span>
           <span class="score">声望: <%=user.score%></span>

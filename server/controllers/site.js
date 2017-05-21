@@ -137,6 +137,36 @@ exports.index = function (req, res, next) {
     });
 };
 
+exports.latestTopics = function (req, res, next) {
+  var proxy = new eventproxy();
+  proxy.fail(next);
+
+  var options = { limit: 10, sort: '-top -visit_count -create_at' };
+  
+  cache.get('topics', proxy.done(function(topics) {
+    if (topics) {
+      proxy.emit('topics', topics);
+    } else {
+      Topic.getTopicsByQuery({
+        'create_at': {
+          $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 60 * 1000).toISOString()
+        }
+      }, options, proxy.done('topics', function (topics) {
+        var result = topics.map(function(item){
+          return dataAdapter.outTopic(item);
+        });
+        cache.set('topics', result, 60 * 1);
+        return result;
+      }));
+    }
+  }));
+
+  proxy.all('topics', function(topics) {
+        res.end('callback(' + JSON.stringify(topics) +')');
+        return true;
+    });
+}
+
 // exports.sitemap = function (req, res, next) {
 //   var urlset = xmlbuilder.create('urlset',
 //     { version: '1.0', encoding: 'UTF-8' });

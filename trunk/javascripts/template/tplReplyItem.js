@@ -40,7 +40,7 @@
         }
 
         _$out_.push('<div class="user-wrap">');
-        _$out_.push('<a href="/user/',reply.author.loginname,'/index" data-name="', reply.author.loginname, '" class="user-url"> <img class="avatar js-identicon" src="', reply.author.avatar, '" title="', name, '" />');
+        _$out_.push('<a href="/user/',reply.author.loginname,'/index" data-name="', name, '" class="user-url"> <img class="avatar js-identicon" src="', reply.author.avatar, '" title="', name, '" />');
         _$out_.push(name,'<span class="score">', reply.author.score, '声望</span></a></div>');
         _$out_.push('</div><div class="reply-edit-area"> <div class="editor-wrap"> <textarea class="editor"></textarea> </div> <div class="editor-actions"> <button class="ui-button sub-reply-submit" type="button">回复</button> </div> </div>');
 

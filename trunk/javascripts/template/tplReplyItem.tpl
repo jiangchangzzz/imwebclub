@@ -1,3 +1,4 @@
+<% var name = reply.author.name || reply.author.loginname ;%>
 <li class='reply-item
     <%= reply.ups.length >= topic.reply_up_threshold ? 'reply-highlight' : ''  %>'
     data-reply-id="<%= reply.id %>">
@@ -6,16 +7,16 @@
 
     <div class="user-area">
         <div class="user-avatar-wrap">
-            <a href="javascript:void(0);" class="user-avatar user-slider-btn" data-name="<%= reply.author.loginname %>">
+            <a href="javascript:void(0);" class="user-avatar user-slider-btn" data-name="<%= name %>">
                 <img class="ui-avatar ui-avatar-38 js-identicon" src="<%= reply.author.avatar %>"
-                    title="<%= reply.author.loginname %>" />
+                    title="<%= name %>" />
             </a>
         </div>
     </div>
     <div class="main-area">
         <div class="user-url-wrap ">
-            <a href="javascript:void(0);" title="<%= reply.author.loginname %>"
-                class="user-url user-slider-btn" data-name="<%= reply.author.loginname %>"><%= reply.author.loginname %></a>
+            <a href="javascript:void(0);" title="<%= name %>"
+                class="user-url user-slider-btn" data-name="<%= name %>"><%= name %></a>
             <span class="create-at"><%= reply.friendly_create_at%></span>
             <div class="actions btn-wrap">
                 <% if(isAdmin || isAuthor) { %>

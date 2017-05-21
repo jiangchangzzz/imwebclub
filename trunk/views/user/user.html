@@ -5,7 +5,7 @@
      <div class="avatar ui-avatar-48">
       <img style="width: 100%;" src="<%=user.avatar%>">
     </div>
-      <div><%= user.loginname %></div>
+      <div><%= user.name || user.loginname %></div>
       <div>声望:<%= user.score %></div>
       <% if(follow) { %>
         <div class='follow-cancel'><button>取消关注</button></div>
