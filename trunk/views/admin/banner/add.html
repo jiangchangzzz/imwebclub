@@ -34,11 +34,18 @@
  						<div class="control-group">
  							<label class="control-label" for="b_image">图片</label>
  							<div class="controls">
- 								<input type="text" class="input-xlarge" id="b_image" name="image" value="<%= isNew ? '' : banner.image %>"/>
- 								<div id="upload-btn" class="btn btn-info">上传图片</div>
- 								<div class="img-preview">
-	 								<img id="image-preview" src="" alt="">
+                <div class="img-preview" style="height: 200px;">
+	 								<img id="image-preview" style="height: 100%;" src="<%= isNew ? '' : banner.image  %>" alt="">
  								</div>
+				        <input type="text" class="input-xlarge" id="b_image" name="image" value="<%= isNew ? '' : banner.image %>"/>
+                 <div id="uploader">
+                  <div id="thelist" class="uploader-list"></div>
+                  <div class="btns">
+                      <div id="picker">选择文件</div>
+                  </div>
+                  <span class="tip"></span>
+                  <div class="alert-error"></div>
+                </div>
  							</div>
  						</div>
  						<div class="control-group">
@@ -53,19 +60,19 @@
  								<input type="text" class="input-xlarge" id="b_background" name="background"  value="<%= isNew ? '' : banner.background %>"/>
  							</div>
  						</div>
-                        <div class="control-group">
-                            <label class="control-label" for="b_background">权重</label>
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="b_index" name="index"  value="<%= isNew ? '' : banner.index %>"/>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" >是否激活</label>
-                            <div class="controls">
-                                <input type="radio" name="status" value="1" <%= isNew ? 'checked' : ( banner.status == '1' ? "checked" : "" )%> > 是
-                                <input type="radio" name="status" value="0" <%= isNew ? '' : ( banner.status == '0' ? "checked" : "" )%> > 否
-                            </div>
-                        </div>
+            <div class="control-group">
+                <label class="control-label" for="b_background">权重</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="b_index" name="index"  value="<%= isNew ? '' : banner.index %>"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" >是否激活</label>
+                <div class="controls">
+                    <input type="radio" name="status" value="1" <%= isNew ? 'checked' : ( banner.status == '1' ? "checked" : "" )%> > 是
+                    <input type="radio" name="status" value="0" <%= isNew ? '' : ( banner.status == '0' ? "checked" : "" )%> > 否
+                </div>
+            </div>
  						<div class="form-actions">
  							<button type="submit" class="btn btn-success">保存</button>
  							<a class="btn" href="/admin/banner/all">取消</a>
@@ -75,25 +82,8 @@
  			</div>
  		</div>
  	</div>
- 	<div id="upload-mask" class="upload-mask hidden" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true">
- 		<div class="modal" style="margin-top: -300px; margin-left: -200px">
- 			<div class="modal-header">
- 				<span type="button" class="close" data-dismiss="modal" aria-hidden="true">×</span>
- 				<span id="editorToolImageTitle" class="title">上传图片</span>
- 			</div>
- 			<div class="modal-body">
- 				<span><img src="//7tszky.com1.z0.glb.clouddn.com/Fg_TNzhl6fYOsiCKbJ8P_euBhXz0" width="80" height="80"></span>'
- 				<div class="upload-img">
- 					<div class="button button-upload">上传图片</div>
- 					<div class="button button-cancel">取消</div>
- 					<span class="tip"></span>
- 					<div class="alert alert-error hide"></div>
- 				</div>
- 			</div>
- 		</div>
- 	</div>
  </div>
 
- <script src='../../public/js/admin.js'></script>
+ <!--<script src='../../public/js/admin.js'></script>-->
  <script src="../../libs/bootstrap/js/jquery.js"></script>
  <script src="../../libs/bootstrap/js/bootstrap.min.js"></script>

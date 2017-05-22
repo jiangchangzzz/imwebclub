@@ -3,45 +3,45 @@ var User = require('../proxy').User;
 var Reply = require('../proxy').Reply;
 var Banner = require('../proxy').Banner;
 var Activity = require('../proxy').Activity;
-var _ = require('lodash'); 
+var _ = require('lodash');
 var tools = require('../common/tools');
 var EventProxy = require('eventproxy');
-var config = require('../config'); 
+var config = require('../config');
 var cache = require('../common/cache');
 var validator = require('validator');
 var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 
 function formatAvatar(url) {
-        // www.gravatar.com 被墙
-        url = url.replace('//www.gravatar.com', '//gravatar.com');
-        // 让协议自适应 protocol
-        if (url.indexOf('http:') === 0) {
-                url = url.slice(5);
-        }
+  // www.gravatar.com 被墙
+  url = url.replace('//www.gravatar.com', '//gravatar.com');
+  // 让协议自适应 protocol
+  if (url.indexOf('http:') === 0) {
+          url = url.slice(5);
+  }
 
-        //如果没有gravatar头像，则用默认
-        if (url.indexOf("gravatar.com") >= 0 && url.indexOf("d=retro") < 0) {
-                url += "&d=retro";
-        }
-        // 如果是 github 的头像，则限制大小
-        if (url.indexOf('githubusercontent') !== -1) {
-                url += '&s=120';
-        }
-                return url;
+  //如果没有gravatar头像，则用默认
+  if (url.indexOf("gravatar.com") >= 0 && url.indexOf("d=retro") < 0) {
+          url += "&d=retro";
+  }
+  // 如果是 github 的头像，则限制大小
+  if (url.indexOf('githubusercontent') !== -1) {
+          url += '&s=120';
+  }
+  return url;
 }
 
 function html_encode(str) {
-        var s = "";
-        if (str.length == 0) return "";
-        s = str.replace(/&/g, "&gt;");
-        s = s.replace(/</g, "&lt;");
-        s = s.replace(/>/g, "&gt;");
-        s = s.replace(/ /g, "&nbsp;");
-        s = s.replace(/\'/g, "&#39;");
-        s = s.replace(/\"/g, "&quot;");
-        s = s.replace(/\n/g, "<br>");
-        return s;
+  var s = "";
+  if (str.length == 0) return "";
+  s = str.replace(/&/g, "&gt;");
+  s = s.replace(/</g, "&lt;");
+  s = s.replace(/>/g, "&gt;");
+  s = s.replace(/ /g, "&nbsp;");
+  s = s.replace(/\'/g, "&#39;");
+  s = s.replace(/\"/g, "&quot;");
+  s = s.replace(/\n/g, "<br>");
+  return s;
 }
 
 exports.editUser = function(req, res, next){
@@ -263,12 +263,12 @@ exports.saveBanner = function(req, res, next) {
                 updated[item] = validator.trim(req.body[item]);
             }
         }
-    ); 
+    );
     if (!bid) { // 新建
         Banner.newAndSave(updated, function (results) {
             res.redirect('all');
         });
-    } else { // 修改 
+    } else { // 修改
         ep.on('fail', function(ret, msg) {
             ep.unbind();
             res.send({ret: ret || 400, msg: msg || ''});
@@ -333,7 +333,7 @@ exports.editBanner = function(req, res, next) {
 exports.activity = function(req, res, next) {
     Activity.list(function(results) {
         res.render('admin/activity/index',{'layout':false, 'activities': results});
-    }); 
+    });
 }
 exports.addActivity = function(req, res, next) {
     res.render('admin/activity/add', {isNew: true});
@@ -350,12 +350,12 @@ exports.saveActivity = function(req, res, next) {
                 updated[item] = validator.trim(req.body[item]);
             }
         }
-    ); 
+    );
     if (!acid) { // 新建
         Activity.newAndSave(updated, function (results) {
             res.redirect('all');
         });
-    } else { // 修改 
+    } else { // 修改
         ep.on('fail', function(ret, msg) {
             ep.unbind();
             res.send({ret: ret || 400, msg: msg || ''});

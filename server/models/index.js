@@ -24,6 +24,7 @@ require('./draft');
 require('./question');
 require('./activity');
 require('./question_answer');
+require('./banner');
 
 exports.User            = mongoose.model('User');
 exports.Topic           = mongoose.model('Topic');
@@ -37,3 +38,4 @@ exports.Draft           = mongoose.model('Draft');
 exports.Question        = mongoose.model('Question');
 exports.Activity        = mongoose.model('Activity');
 exports.QuestionAnswer  = mongoose.model('QuestionAnswer');
+exports.Banner          = mongoose.model('Banner');

@@ -14,7 +14,7 @@
     <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
     <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
     <meta name="author" content="imwebteam@tencent">
-    <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+    <link rel="icon" href="../images/icon.png" type="image/x-icon">
     <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
     <script>
     window.imweb = window.imweb || {};
@@ -43,7 +43,30 @@
         </ul>
     </div>
 </div>
-
+<% if (banners && banners.length > 0) {%>
+    <div id="banner-container" class="banner-bg">
+      <div id="banner_wrap">
+        <ul id="sliderbox">
+            <% banners.forEach(function(banner) { %>
+            <li data-bgcolor="<%= banner.background %>"><a href="<%= banner.link %>" target="_blank"><img src="<%= banner.image %>"/></a></li>
+            <% }) %>
+        </ul>
+        <a id="prev-btn" class="banner-button">
+            <i class="banner-icon-arrow banner-icon-arrow-left"></i>
+        </a>
+        <a id="next-btn" class="banner-button">
+            <i class="banner-icon-arrow banner-icon-arrow-right"></i>
+        </a>
+        <div class="sliderNav">
+            <ul class="sliderNav-ul">
+                <% banners.forEach(function(banner) { %>
+                  <li></li>
+                <% }) %>
+            </ul>
+        </div>
+        </div>
+    </div>
+<% } %>
 <div id="main" class="clearfix">
     <%- partial('common/sidebar.html',{
         tops: tops

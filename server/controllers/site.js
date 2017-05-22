@@ -9,6 +9,7 @@ var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var Question = require('../proxy').Question;
 var Activity = require('../proxy').Activity;
+var Banner = require('../proxy').Banner;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
@@ -16,6 +17,7 @@ var cache = require('../common/cache');
 var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 var _ = require('lodash');
+// var bannerMiddlewares = require('./server/middlewares/banners')
 
 exports.index = function (req, res, next) {
   var tab = req.query.tab || 'all';
@@ -101,6 +103,7 @@ exports.index = function (req, res, next) {
       )
     }
   }));
+
   cache.get('activity_industry', proxy.done(function(industrys) {
     if (industrys) {
       proxy.emit('activity_industry', industrys);
@@ -117,11 +120,22 @@ exports.index = function (req, res, next) {
         })
       )
     }
-  }))
+  }));
+
+  cache.get('banners', proxy.done(function(banners) {
+    if (banners) {
+      proxy.emit('banners', banners);
+    } else {
+      Banner.activeBannersSortedByIndex(proxy.done('banners', function(banners) {
+          cache.set('banners', banners, 60 * 1);
+          return banners;
+      }));
+    }
+  }));
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry',
-    function (topics, questions, tops, activity_imweb, activity_industry) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners) {
       res.render('index', {
         _layoutFile: false,
         topics: topics,
@@ -132,6 +146,7 @@ exports.index = function (req, res, next) {
         activity_imweb: activity_imweb,
         tabs: config.tabs,
         tab: tab,
+        banners: banners,
         pageTitle: tabName && (tabName + '版块')
       });
     });
@@ -142,7 +157,7 @@ exports.latestTopics = function (req, res, next) {
   proxy.fail(next);
 
   var options = { limit: 10, sort: '-top -visit_count -create_at' };
-  
+
   cache.get('topics', proxy.done(function(topics) {
     if (topics) {
       proxy.emit('topics', topics);

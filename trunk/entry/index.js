@@ -2,6 +2,7 @@ import '../stylesheets/index.less';
 import '../stylesheets/banner.less';
 import '../stylesheets/sidebar.less';
 import '../javascripts/index/main.js';
+import '../javascripts/common/banner.js';
 import '../javascripts/layout';
 
 $('#hotActivtities .imweb').click(function(e){
