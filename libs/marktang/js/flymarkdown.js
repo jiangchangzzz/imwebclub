@@ -633,6 +633,7 @@ $(function(){
             imweb.ajax.get('/draft/get/' + id).done(function(data) {
                 if (data.ret === 0) {
                     var item = data.data;
+                    debugger;
                     mainAction.setContext({
                         draftId: item.id,
                         tab: item.tab,
