@@ -101,6 +101,8 @@ router.post('/topic/:tid/delete', auth.userRequired, topic.delete);
 router.post('/topic/:tid/collect', auth.userRequired, topic.collect);
 router.get('/topic/:tid', topic.index);  // 显示某个话
 router.get('/topic/tab/:tab', topic.list);
+router.post('/topic/:tid/top/:is_top?', auth.adminRequired, topic.top);  // 将某话题置顶
+router.post('/topic/:tid/good/:is_good?', auth.adminRequired, topic.good); // 将某话题加精
 
 // 活动
 router.get('/activity/create', auth.userRequired, activity.create); //新增某活动
