@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -97,17 +97,19 @@
     <div id='content'>
       <div class='panel'>
         <div class="detail-info">
-          <a href="/user/<%=topic.author.loginname%>/index">
-            <img class="ui-avatar ui-avatar-50 user-slider-btn js-identicon" src="<%= topic.author.avatar  %>"  data-name="<%= topic.author.loginname %>"/>
-          </a>
-          <div class="user-wrap">
-            <p class="user-name user-slider-btn" data-name="<%= topic.author.loginname %>">
-                <a href="/user/<%=topic.author.loginname%>/index"><%= topic.author.name || topic.author.loginname%></a>
+          <div class="user-avator">
+            <a href="/user/<%=topic.author.loginname%>/index">
+              <img class="" src="<%= topic.author.avatar  %>"  data-name="<%= topic.author.loginname %>"/>
+            </a>
+          </div>
+          <div class="user-name">
+            <p class="" data-name="<%= topic.author.loginname %>">
+              <a href="/user/<%=topic.author.loginname%>/index"><%= topic.author.name || topic.author.loginname%></a>
             </p>
             <span class="ui-time"><i class="icon iconfont">&#xe605;</i><%= topic.friendly_create_at %></span>
           </div>
-          <ul class="other-info">
-            <li>
+          <div class="user-info">
+           <li>
               <p><%= topic.visit_count %> </p>
               <span>浏览</span>
             </li>
@@ -119,7 +121,7 @@
               <p class="collect-count"><%= topic.collect_count %></p>
               <span>收藏</span>
             </li>
-          </ul>
+          </div>
         </div>
         <div class='detail-header'>
           <h1 class="detail-title"><%- topic.title %></h1>

@@ -7,43 +7,27 @@
 }
 
 .detail-info {
-    position: relative;
-    background: #fff;
-    padding: 20px 20px 30px 20px;
-    border-bottom: 1px solid #ddd;
-    .ui-avatar {
-        float: left;
+  display: flex;
+  .user-avator {
+    flex-grow:1;
+    text-align: center;
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
     }
-    .user-wrap {
-        padding-left: 65px;
+  }
+  .user-name {
+    flex-grow:6;
+  }
+  .user-info {
+    flex-grow:3;
+    display: flex;
+    text-align: center;
+    li {
+      flex-grow: 1;
     }
-    .user-name {
-        font-size: 16px;
-        max-width: 160px;
-    }
-    .other-info {
-        position: absolute;
-        right: 10px;
-        top: 20px;
-        li {
-            float: left;
-            text-align: center;
-            margin-left: 30px;
-            padding-right: 30px;
-            border-right: 1px solid #ddd;
-            &:last-child {
-                padding-right: 20px;
-                border-right: none;
-            }
-            p {
-                font-size: 16px;
-                color: #333;
-            }
-            span {
-                color: #999;
-            }
-        }
-    }
+  }
 }
 
 .detail-header {
