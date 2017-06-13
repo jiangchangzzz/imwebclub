@@ -110,7 +110,7 @@
                 <% if (typeof(topics) !== 'undefined' && topics.length > 0) {%>
                     <% topics.slice(0,5).forEach(function (topic, index) { %>
                         <li <% if(index === 0) { %>class="active"<% } %>>
-                            <a href="/topic/<%= topic.id %>" class="one-line"><%= topic.title %></a>
+                            <a href="/topic/<%= topic.id %>" class="one-line"><%- topic.title %></a>
                             <p><%= topic.summary ? topic.summary.replace(/<br>/g, ' ') : '' %></p>
                         </li>
                     <%})%>
