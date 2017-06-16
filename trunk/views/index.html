@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!--网站测速-->
+    <script type="text/javascript">
+        var _speedMark = new Date();
+    </script>
+    <!--网站测速-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,7 +53,10 @@
       <div id="banner_wrap">
         <ul id="sliderbox">
             <% banners.forEach(function(banner) { %>
-            <li data-bgcolor="<%= banner.background %>"><a href="<%= banner.link %>" target="_blank"><img src="<%= banner.image %>"/></a></li>
+            <li data-bgcolor="<%= banner.background %>">
+              <a href="<%= banner.link %>" target="_blank">
+              <img src="<%= banner.image %>"/>
+              </a></li>
             <% }) %>
         </ul>
         <a id="prev-btn" class="banner-button">

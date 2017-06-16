@@ -15,6 +15,11 @@
   a{
     display: inline-block;
     padding: 3px;
+    &.publish-btn{
+        @media screen and (max-width: 425px) {
+          display: none;
+        }
+    }
     &.current-query{
         color: @ui-blue;
         border-bottom: 3px solid @ui-blue;
@@ -52,6 +57,9 @@ ul.topic-list {
 			overflow: hidden;
 			margin-left: 20px;
 			border: 1px solid #efefef;
+      @media screen and (max-width: 425px) {
+        display: none;
+      }
 		}
 		.cell-l{
 			float: left;
@@ -60,6 +68,9 @@ ul.topic-list {
 			padding-left: 72px;
 			margin-top: -3px;
 			width: 83%;
+      @media screen and (max-width: 425px) {
+        width: 70%;
+      }
 			.cell-wrap{
 				padding-bottom: 20px;
 				// border-bottom: 1px dashed @ui-dash-border;
@@ -80,6 +91,19 @@ ul.topic-list {
 				font-size:20px;
 				font-weight: normal;
 				}
+        .put_top {
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .ex-link {
+          display: inline-block;
+          vertical-align: middle;
+          width:60%;
+          text-overflow:hidden;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
 
 			}
 			.cell-brief{
@@ -122,6 +146,10 @@ ul.topic-list {
 					font-size: 18px;
 					margin-right: 4px;
 				}
+        @media screen and (max-width: 425px) {
+          display: none;
+        }
+
 			}
 			.cell-other-span{
 				color: @ui-gray9;
