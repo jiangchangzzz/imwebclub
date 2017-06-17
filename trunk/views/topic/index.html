@@ -1,4 +1,4 @@
-f<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -173,7 +173,7 @@ f<!DOCTYPE html>
             </div>
         </div>
       </div>
-      
+
       <div class="panel reply-panel <%if(topic.reply_count == 0){%>hide<% } %>">
           <div class="panel-head">
               <span class="panel-head-title"><span class="reply-count"><%= topic.reply_count %></span>条评论</span>
@@ -182,7 +182,7 @@ f<!DOCTYPE html>
               <ul id="reply-list"></ul>
           </div>
       </div>
-      
+
       <% if (typeof(topic) !== 'undefined') { %>
       <div class='reply-panel newComment'>
           <div class="editor-wrap">
