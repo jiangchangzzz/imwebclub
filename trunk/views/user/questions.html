@@ -2,17 +2,20 @@
   <div class='user-panel__content'>
     <div class='user-panel__content__detail'>
       <%- partial('./nav') %>
-      <div class='breadcrumb--content'>
+      <div class='breadcrumb--content question'>
+        <div class="my-question">我的提问</div>
         <div class='breadcrumb--content__section section--show'>
         <%  if(questions && questions.length > 0 ){ %>
           <% questions.forEach(question => { %>
-              <div class="panel">
-                <div><a href='/question/<%= question._id %>' class="ex-link" target="_blank"><%- question.title %></a></div>
-                <% if(question.reply) { %>
-                  <div>最后回复:<span><%- question.reply.content %></span></div>
-                <% } else { %>
-                  <div>没有回复</div>
-                <% } %>
+               <% let time = new Date(question.create_at);
+                   time = time.getFullYear() + '年'+ time.getMonth() + '月' + time.getDay() + '日';
+               %>
+              <div class="question__panel">
+                <div class="circle">
+                  <div class="number">2票</div>
+                </div>
+                <div class="title"><a href='/question/<%= question._id %>' class="ex-link" target="_blank"><%- question.title %></a></div>
+                <div class="create-at"><%- time %></div>
               </div>
           <%  }) %>
            <div class="pagination" current_page="<%= current_page %>">
