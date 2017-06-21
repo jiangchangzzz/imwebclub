@@ -20,7 +20,7 @@ define([
         slidernav: $(".sliderNav"), //nav小点
         sliderbg : $("#banner-container"),
         sliderNum: 1, //每次滑动块数,默认为1
-        isAuto:false, //是否自己滚动，默认为false
+        isAuto:true, //是否自己滚动，默认为false
         sliderCb:function(cur, pre){} //切换回调，cur为当前页，pre为切换前页
     });
 });
