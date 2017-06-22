@@ -143,6 +143,39 @@ exports.outTopic = function(item, options) {
     return out;
 };
 
+exports.outColumn = function(item){
+    var out = {
+        id: item._id.toString(),
+        title: item.title,
+        description: item.description,
+        cover: item.cover,
+        follower_count: item.follower_count,
+        create_at: +item.create_at,
+        friendly_create_at: tools.formatDate(item.create_at, true),
+        update_at: +item.update_at,
+        friendly_update_at: tools.formatDate(item.update_at, true),
+    };
+    return out;
+}
+
+//topic类型过滤器
+exports.topicFormat = function (topics) {
+  var arr = [];
+  for (var i = 0, len = topics.length; i < len; i++) {
+    if (topics[i].type && topics[i].type == 1) {
+      var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
+      if (proArr.length >= 3) {
+        topics[i].proName = proArr[2];
+        topics[i].proAuthor = proArr[1];
+        arr.push(topics[i]);
+      }
+    } else {
+      arr.push(topics[i]);
+    }
+  }
+  return topics;
+}
+
 exports.outDraft = function(item, options) {
     options = options || {};
     var out = {

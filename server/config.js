@@ -204,6 +204,7 @@ var config = {
 };
 
 if (process.env.NODE_ENV === 'test') {
+  console.log('test mode!');
   config.db = 'mongodb://127.0.0.1/node_club_dev';
   // github 登陆的配置
   config.GITHUB_OAUTH = {

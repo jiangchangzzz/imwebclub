@@ -110,7 +110,7 @@
                      <a href="/topic/<%= topics[0].id %>">
                         <div class="cover" style='background-image: url("<%=topics[0].cover || topics[0].pic[0] %>")'></div>
                      </a>
-                  <% }else {%>
+                  <% }else if(topics[0]) {%>
                      <a href="/topic/<%= topics[0].id %>"><img src="../images/sliderCover.png"></a>
                   <% } %>
                 </div>

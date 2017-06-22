@@ -143,24 +143,6 @@ exports.create = function (req, res, next) {
   });
 };
 
-//topic类型过滤器
-var _topicFormat = function (topics) {
-  var arr = [];
-  for (var i = 0, len = topics.length; i < len; i++) {
-    if (topics[i].type && topics[i].type == 1) {
-      var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
-      if (proArr.length >= 3) {
-        topics[i].proName = proArr[2];
-        topics[i].proAuthor = proArr[1];
-        arr.push(topics[i]);
-      }
-    } else {
-      arr.push(topics[i]);
-    }
-  }
-  return topics;
-}
-
 /**
  * 文章列表
  */
@@ -246,7 +228,7 @@ exports.list = function (req, res, next) {
       res.render('topic/list', {
         _layoutFile: false,
         active: 'topic',
-        topics: _topicFormat(topics),
+        topics: dataAdapter.topicFormat(topics),
         current_page: page,
         list_topic_count: limit,
         tops: tops,
