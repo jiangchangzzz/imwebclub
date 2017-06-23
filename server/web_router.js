@@ -168,6 +168,14 @@ router.post('/admin/activity/save', auth.adminRequired, admin.saveActivity);
 router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
+// 专栏
+router.get('/column/create', auth.userRequired, column.create); //新增某专栏
+router.post('/column/create', auth.userRequired, column.put);
+router.get('/column/:cid/edit', auth.userRequired, column.showEdit);  // 编辑某专栏
+router.post('/column/:cid/edit', auth.userRequired, column.update);
+router.post('/column/:cid/delete', auth.userRequired, column.delete);
+router.get('/column/:cid', column.index);  // 显示某个专栏
+
 // static
 router.get('/about', staticController.about);
 router.get('/faq', staticController.faq);

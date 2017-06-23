@@ -45,7 +45,7 @@
   position: relative;
   margin: 0 auto;
   overflow: hidden;
-  height: 195px;
+  height: 330px;
   max-width:1200px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -55,6 +55,9 @@
     margin: 0;
     li {
       a {
+        @media screen and (min-width: 425px) {
+          height: 330px
+        }
         img {
           width: 100%;
           height: 100%;

@@ -25,6 +25,8 @@ require('./question');
 require('./activity');
 require('./question_answer');
 require('./banner');
+require('./column');
+require('./topic_column');
 
 exports.User            = mongoose.model('User');
 exports.Topic           = mongoose.model('Topic');
@@ -39,3 +41,5 @@ exports.Question        = mongoose.model('Question');
 exports.Activity        = mongoose.model('Activity');
 exports.QuestionAnswer  = mongoose.model('QuestionAnswer');
 exports.Banner          = mongoose.model('Banner');
+exports.Column          = mongoose.model('Column');
+exports.TopicColumn     = mongoose.model('TopicColumn');
