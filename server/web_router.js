@@ -19,6 +19,7 @@ var question = require('./controllers/question');
 var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
 var activity = require('./controllers/activity');
+var column = require('./controllers/column');
 // var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');

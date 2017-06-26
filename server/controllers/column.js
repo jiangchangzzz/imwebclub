@@ -24,6 +24,7 @@ var renderHelper = require('../common/render_helper');
  * 某一专栏的文章列表
  */
 exports.index = function (req, res, next) {
+  return res.render('column/index.html');
   var column_id = req.params.cid;
   var currentUser = req.session.user;
 
