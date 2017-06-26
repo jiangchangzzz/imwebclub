@@ -82,19 +82,16 @@
     <div id="content">
         <% if (!current_user) {%>
         <div id="welcome">
-          <b>注册IMWeb前端社区，你可以，</b>
-          <table>
-            <tbody>
-              <tr>
-                <td>第一时间获得最新、最火的技术干货</td>
-                <td>定期推送您所关注的专题文章</td>
-              </tr>
-              <tr>
-                <td>和大牛们一起讨论前端技术</td>
-                <td>获取IMWeb社区、前端相关的最新活动</td>
-              </tr>
-            </tbody>
-          </table>
+          <b>注册IMWeb前端社区,</b>
+          <b>你可以</b>
+          <div class="intro">
+            <div class="intro-item">第一时间获得最新、最火的技术干货</div>
+            <div class="intro-item">定期推送您所关注的专题文章</div>
+          </div>
+          <div class="intro intro--bottom">
+            <div class="intro-item">和大牛们一起讨论前端技术</div>
+            <div class="intro-item">获取IMWeb社区、前端相关的最新活动</div>
+          </div>
           <a href="javascript:void(0);" class="button nav-sign">立即注册</a>
         </div>
         <% } %>

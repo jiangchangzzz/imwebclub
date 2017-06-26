@@ -45,8 +45,15 @@
   opacity: 0.9;
   color: white;
   text-align: center;
+  @media screen and (max-width: 320px) {
+      padding-bottom: 20px;
+    }
   b{
     font-size: 24px;
+    @media screen and (max-width: 320px) {
+      padding: 0 10px;
+      display: inline-block;
+    }
   }
   table{
     text-align: left;
@@ -65,6 +72,32 @@
     }
   }
 }
+
+.intro {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    @media screen and (max-width: 768px) {
+      width: 80%;
+    }
+    @media screen and (max-width: 414px) {
+      display: block;
+    }
+
+    .intro-item {
+        width: 50%;
+        text-align: left;
+        @media screen and (max-width: 414px) {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}
+
+.intro--bottom {
+    margin-bottom: 10px;
+}
+
 
 .column {
     margin-bottom: 20px;

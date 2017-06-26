@@ -182,7 +182,7 @@ if (!module.parent) {
   app.listen(config.port, function () {
     logger.info('Imwebclub listening on port', config.port);
     logger.info('God bless love....');
-    logger.info('You can debug your app with http://' + config.hostname + ':' + config.port);
+    logger.info('You can debug your app with http://localhost:3001' + config.port);
     logger.info('');
   });
 }
