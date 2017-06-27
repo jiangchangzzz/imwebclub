@@ -31,25 +31,30 @@ exports.index = function (req, res, next) {
   if (column_id.length !== 24) {
     return res.render404('此专栏不存在。');
   }
-  var events = ['column', 'is_follow', 'topics'];
-  var ep = EventProxy.create(events,
+
+  //var events = ['column', 'is_follow', 'topics'];
+  var ep=new EventProxy();
+  ep.all('column', 'is_follow', 'topics',
+  //var ep = EventProxy.create(events,
     function (column, is_follow, topics) {
-      res.render('column/index', {
+      return res.render('column/index', {
         active: 'column',
+        column_id: column_id,
         column: dataAdapter.outColumn(column),
         topics: dataAdapter.topicFormat(topics),
-        is_follow: is_follow
+        is_follow: is_follow,
+        _layoutFile: false
       });
     });
 
   ep.fail(next);
-
-  Column.getColumnById(column_id, ep.done(function (column) {
-    if (!column) {
+  
+  Column.getColumnById(column_id, function (err, column) {
+    if (err || !column) {
       return res.renderError('此专栏不存在或已被删除: ' + column_id);
     }
     ep.emit('column', column);
-  }));
+  });
 
   if (!currentUser) {
     ep.emit('is_follow', null);
@@ -58,13 +63,20 @@ exports.index = function (req, res, next) {
   }
 
   TopicColumn.getTopicColumnsBycolumnId(column_id, {}, ep.done('items', function (items) {
-    for (var i = 0; i < items.length; i++) {
-      Topic.getTopicById(items[i].topic_id, function (topic) {
-        return ep.emit('topics', topic);
+    if(items && items.length > 0){   
+      ep.after('topic',items.length,function(topics){
+        ep.emit('topics',topics);
       });
+
+      for (var i = 0; i < items.length; i++) {
+        Topic.getTopicById(items[i].topic_id, function (err, topic) {
+          return ep.emit('topic', topic);
+        });
+      }
+    }else{
+      return ep.emit('topics', []);
     }
   }));
-
 };
 
 /**
@@ -112,7 +124,8 @@ exports.list = function (req, res, next) {
  */
 exports.create = function (req, res, next) {
   res.render('column/edit', {
-    active: 'column'
+    active: 'column',
+    _layoutFile: false
   });
 };
 
@@ -120,7 +133,7 @@ exports.create = function (req, res, next) {
  * 添加新专栏
  */
 exports.put = function (req, res, next) {
-  if (!req.body.title || !req.body.content || !req.body.tab) {
+  if (!req.body.title || !req.body.description || !req.body.cover) {
     res.render('/column/edit', req.body);
     return;
   }
@@ -143,6 +156,7 @@ exports.put = function (req, res, next) {
  */
 exports.showEdit = function (req, res, next) {
   var column_id = req.params.cid;
+  console.log(column_id);
 
   Column.getColumnById(column_id, function (err, column) {
     if (!column) {
@@ -153,11 +167,12 @@ exports.showEdit = function (req, res, next) {
     if (req.session.user.is_admin) {
       res.render('column/edit', {
         active: 'column',
-        action: 'edit',
+        isEdit: true,
         column_id: column._id,
         title: column.title,
         description: column.description,
-        cover: activity.cover
+        cover: column.cover,
+        _layoutFile: false
       });
     } else {
       res.renderError('对不起，你不能编辑此专栏。', 403);
@@ -204,7 +219,8 @@ exports.update = function (req, res, next) {
         column_id: column._id,
         title: column.title,
         description: column.description,
-        cover: column.cover
+        cover: column.cover,
+        _layoutFile: false
       });
     }
   });

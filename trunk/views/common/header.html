@@ -66,8 +66,8 @@
                 </li>
                 <li class="<%= typeof(active) !== 'undefined' && active === 'question' ? 'active' : '' %>">
                   <a href="/question/tab/all">问答</a></li>
-                <li class="hide <%= typeof(active) !== 'undefined' && active === 'column' ? 'active' : '' %>">
-                  <a href="javascript:void(0);">专题</a>
+                <li class="<%= typeof(active) !== 'undefined' && active === 'column' ? 'active' : '' %>">
+                  <a href="/column/list">专栏</a>
                 </li>
                 <li class="<%= typeof(active) !== 'undefined' && active === 'activity' ? 'active' : '' %>">
                   <a href="/activity/tab/imweb">活动</a>

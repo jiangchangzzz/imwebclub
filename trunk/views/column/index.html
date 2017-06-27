@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <% if (typeof(topic) !== 'undefined') { %>
+    <title>
+      <%= topic.title %> -
+        <%= config.name %>
+    </title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+      <title>
+        <%= pageTitle %> -
+          <%= config.name %>
+      </title>
+      <% } else { %>
+        <title>
+          <%= config.description %>
+        </title>
+        <% } %>
+          <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+          <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+          <meta name="author" content="imwebteam@tencent">
+          <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+          <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+          <script>
+            window.imweb = window.imweb || {};
+            imweb._csrf = '<%- csrf %>';
+            <% if (current_user) { %>
+            imweb.user = {
+              id: '<%= current_user._id %>',
+              loginname: '<%= current_user.loginname %>',
+              is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+            };
+            <% } else { %>
+            imweb.user = null;
+            <% } %>
+
+          </script>
+</head>
+
+<body>
+  <%- partial('common/header.html') %>
+    <div id="main" class="clearfix">
+      <%- partial('common/sidebar.html') %>
+        <div id="content">
+          <nav class="index-nav">
+            <a href="#">专栏列表</a>>
+            <a href="#"><%= column.title %>专栏</a>
+          </nav>
+          <div class="index-header clearfix">
+            <div class="header-img">
+              <img src="../../images/activity1.jpg">
+            </div>
+            <div class="header-text">
+              <h2>
+                <span class="title"><%= column.title %>专栏</span>
+                <span class="addon"><%= column.description %></span>
+              </h2>
+              <p>
+                <span class="article"><%= column.topic_count %>篇文章</span>
+                <span class="watch"><%= column.follower_count %>人已关注</span>
+              </p>
+            </div>
+            <div class="header-btn">
+              <button type="button" class="btn">关注</button>
+              <a href="/column/<%= column_id %>/edit" class="link-btn">修改专栏</a>
+            </div>
+          </div>
+          <ul>
+            <% topics.forEach(function(topic){ %>
+              <li class="article-item clearfix">
+              <div class="article-head">
+                <a href="#"><img src="../../images/activity1.jpg"></a>
+              </div>
+              <div class="article-content">
+                <div class="clearfix">
+                  <div class="article-title">
+                    <h3><a href=<%= topic.title %>><%= topic.title %></a></h3>
+                    <p>
+                      <span>于1个月前发表</span>
+                      <span class="title-icon"><i class="fa fa-eye"></i>575</span>
+                      <span class="title-icon"><i class="fa fa-weixin"></i>0</span>
+                      <span class="title-icon"><i class="fa fa-heart"></i>0</span>
+                    </p>
+                  </div>
+                  <div class="article-tag">
+                    <div><i></i>1个月前</div>
+                    <a href="#" class="tag">javascript技术</a>
+                  </div>
+                </div>
+                <p class="article-text">
+                  <%= topic.content %>
+                </p>
+              </div>
+            </li>
+            <% }) %> 
+          </ul>
+        </div>
+
+    </div>
+    <%- partial('common/loginpop.html') %>
+      <%- partial('common/footer.html') %>
+</body>

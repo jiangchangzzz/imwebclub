@@ -23,9 +23,9 @@ exports.getTopicById = function (id, callback) {
   var proxy = new EventProxy();
   var events = ['topic', 'author', 'last_reply'];
   proxy.assign(events, function (topic, author, last_reply) {
-    if (!author) {
+    /*if (!author) {
       return callback(null, null, null, null);
-    }
+    }*/   //TODO
     return callback(null, topic, author, last_reply);
   }).fail(callback);
 

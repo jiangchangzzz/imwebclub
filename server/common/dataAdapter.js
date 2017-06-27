@@ -159,10 +159,10 @@ exports.outColumn = function(item){
 }
 
 //topic类型过滤器
-exports.topicFormat = function (topics) {
+exports.topicFormat = function (topics) {   
   var arr = [];
   for (var i = 0, len = topics.length; i < len; i++) {
-    if (topics[i].type && topics[i].type == 1) {
+    if (topics[i] && topics[i].type == 1) {
       var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
       if (proArr.length >= 3) {
         topics[i].proName = proArr[2];
@@ -173,7 +173,7 @@ exports.topicFormat = function (topics) {
       arr.push(topics[i]);
     }
   }
-  return topics;
+  return arr;
 }
 
 exports.outDraft = function(item, options) {

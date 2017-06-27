@@ -172,6 +172,7 @@ router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity);
 // 专栏
 router.get('/column/create', auth.userRequired, column.create); //新增某专栏
 router.post('/column/create', auth.userRequired, column.put);
+router.get('/column/list',auth.userRequired,column.list);
 router.get('/column/:cid/edit', auth.userRequired, column.showEdit);  // 编辑某专栏
 router.post('/column/:cid/edit', auth.userRequired, column.update);
 router.post('/column/:cid/delete', auth.userRequired, column.delete);
