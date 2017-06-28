@@ -10,6 +10,7 @@ var Topic = require('../proxy').Topic;
 var Question = require('../proxy').Question;
 var Activity = require('../proxy').Activity;
 var Banner = require('../proxy').Banner;
+var Column=require('../proxy').Column;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
@@ -133,9 +134,26 @@ exports.index = function (req, res, next) {
     }
   }));
 
+  //获取主页专栏数据
+  cache.get('columns',proxy.done(function(columns){
+    if(columns){
+      proxy.emit('columns',columns);
+    }
+    else{
+      var options = {
+        limit: 5,
+        sort: '-follower_count -create_at'
+      };
+      Column.getColumnsByQuery({},options,proxy.done(function(columns){
+        cache.set('columns',columns,60*1);
+        proxy.emit('columns',columns);
+      }));
+    }
+  }));
+
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners',
-    function (topics, questions, tops, activity_imweb, activity_industry, banners) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners','columns',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners,columns) {
       res.render('index', {
         _layoutFile: false,
         topics: topics,
@@ -147,6 +165,7 @@ exports.index = function (req, res, next) {
         tabs: config.tabs,
         tab: tab,
         banners: banners,
+        columns: columns,
         pageTitle: tabName && (tabName + '版块')
       });
     });

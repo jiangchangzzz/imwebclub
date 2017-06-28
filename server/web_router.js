@@ -175,8 +175,9 @@ router.post('/column/create', auth.userRequired, column.put);
 router.get('/column/list',auth.userRequired,column.list);
 router.get('/column/:cid/edit', auth.userRequired, column.showEdit);  // 编辑某专栏
 router.post('/column/:cid/edit', auth.userRequired, column.update);
-router.post('/column/:cid/delete', auth.userRequired, column.delete);
-router.get('/column/:cid', column.index);  // 显示某个专栏
+router.post('/column/:cid/delete', auth.userRequired, column.delete);  // 删除某专栏
+router.get('/column/:cid', column.index);  // 显示专栏详情
+router.get('/column/list', column.list);  // 显示专栏列表
 router.post('/column/add_topic', auth.userRequired, column.addTopic);
 router.post('/column/remove_topic', auth.userRequired, column.removeTopic);
 

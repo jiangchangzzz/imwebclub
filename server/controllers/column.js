@@ -22,7 +22,7 @@ var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 
 /**
- * 某一专栏的文章列表
+ * 某一专栏的详情页
  */
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
@@ -41,9 +41,16 @@ exports.index = function (req, res, next) {
         active: 'column',
         column_id: column_id,
         column: dataAdapter.outColumn(column),
+<<<<<<< HEAD
         topics: dataAdapter.topicFormat(topics),
         is_follow: is_follow,
         _layoutFile: false
+=======
+        topics: topics.map(function(item){
+          return dataAdapter.outTopic(item);
+        }),
+        is_follow: is_follow
+>>>>>>> a25a4a300ce6ceeb7ac21804fc849de99e362140
       });
     });
 
@@ -103,7 +110,7 @@ exports.list = function (req, res, next) {
   };
   // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
   // console.log(optionsStr);
-  Column.getColumnsByQuery(query, options, proxy.done('column', function (columns) {
+  Column.getColumnsByQuery({}, options, proxy.done('column', function (columns) {
     //console.log(column);
     return columns.map(function (column) {
       return dataAdapter.outColumn(column);
@@ -114,6 +121,7 @@ exports.list = function (req, res, next) {
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
+      current_page: page,
       pageTitle: '专栏列表',
     });
   });
@@ -288,13 +296,20 @@ exports.addTopic = function (req, res, next) {
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-
-  TopicColumn.newAndSave(column_id, topic_id, function (err, item) {
-    if (err || !column) {
-      return ep.emit('fail', 403);
+  Column.getColumnById(column_id, ep.done(function (column) {
+    if (!column) {
+      return ep.emit('fail', '此活动不存在或已被删除。');
     }
-    return ep.emit('done');
-  });
+    TopicColumn.newAndSave(column_id, topic_id, function (err, item) {
+      if (err || !column) {
+        return ep.emit('fail', 403);
+      }
+      column.topic_count++;
+      column.save(ep.done(function () {
+        ep.emit('done');
+      }));
+    });
+  }));
 }
 
 /**
@@ -311,13 +326,20 @@ exports.removeTopic = function (req, res, next) {
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-
-  TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
-    if (err || !column) {
-      return ep.emit('fail', 403);
+  Column.getColumnById(column_id, ep.done(function (column) {
+    if (!column) {
+      return ep.emit('fail', '此活动不存在或已被删除。');
     }
-    item.remove(function(){
-      return ep.emit('done');
+    TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+      if (err || !column) {
+        return ep.emit('fail', 403);
+      }
+      item.remove(function () {
+        column.topic_count--;
+        column.save(ep.done(function () {
+          ep.emit('done');
+        }));
+      });
     });
-  })
+  }));
 }
