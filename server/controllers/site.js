@@ -137,7 +137,7 @@ exports.index = function (req, res, next) {
   //获取主页专栏数据
   cache.get('columns',proxy.done(function(columns){
     if(columns){
-      proxy.emit('columns',columns);
+      return proxy.emit('columns',columns);
     }
     else{
       var options = {
@@ -146,7 +146,6 @@ exports.index = function (req, res, next) {
       };
       Column.getColumnsByQuery({},options,proxy.done(function(columns){
         cache.set('columns',columns,60*1);
-        proxy.emit('columns',columns);
       }));
     }
   }));

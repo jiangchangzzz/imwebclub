@@ -47,12 +47,12 @@
       <%- partial('common/sidebar.html') %>
         <div id="content">
           <nav class="index-nav">
-            <a href="#">专栏列表</a>>
-            <a href="#"><%= column.title %>专栏</a>
+            <a href="/column/list">专栏列表</a>>
+            <span><%= column.title %>专栏</span>
           </nav>
           <div class="index-header clearfix">
             <div class="header-img">
-              <img src="../../images/activity1.jpg">
+              <img src="<%= column.cover %>">
             </div>
             <div class="header-text">
               <h2>
