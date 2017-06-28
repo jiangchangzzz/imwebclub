@@ -1,0 +1,119 @@
+@import './common.less';
+
+.index-nav{
+    margin-bottom: 20px;
+
+    a{
+        color: #2FA0F0;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+}
+
+.index-header{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+
+    .header-img{
+        float: left;
+        width: 100%;
+        max-width: 120px;
+        height: 80px;
+
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .header-text{
+        float: left;
+        margin-left: 10px;
+
+        h2{
+            .title{
+                color: #2FA0F0;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .addon{
+                margin-left: 20px; 
+                font-size: 15px;
+                font-weight: normal;
+                vertical-align: middle;
+            }
+        }
+
+        p{
+            .watch{
+                margin-left: 20px;
+            }
+        }
+    }
+
+    .header-btn{
+        float: right;
+
+        .btn{
+            margin-top: 30px;
+        }
+    }
+}
+
+.article-item{
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+
+    .article-head{
+        float: left;
+        width: 50px;
+        padding: 10px;
+
+         img{
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+    }
+
+    .article-content{
+        padding-left: 72px;
+
+        .article-title{
+            float: left;
+
+            h3{
+                font-size: 20px;
+                font-weight: normal;
+                color: #3372a2;
+            }
+            
+            p{
+                margin: 4px 0;
+                color: #999;
+            }
+
+            .title-icon{
+                margin-left: 10px;
+            }
+
+            .fa{
+                margin-right: 4px;
+            }
+        }
+
+        .article-tag{
+            float: right;
+            text-align: right;
+        }
+
+        .article-text{
+            height: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <% if (typeof(topic) !== 'undefined') { %>
+    <title>
+      <%= topic.title %> -
+        <%= config.name %>
+    </title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+      <title>
+        <%= pageTitle %> -
+          <%= config.name %>
+      </title>
+      <% } else { %>
+        <title>
+          <%= config.description %>
+        </title>
+        <% } %>
+          <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+          <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+          <meta name="author" content="imwebteam@tencent">
+          <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+          <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+          <script>
+            window.imweb = window.imweb || {};
+            imweb._csrf = '<%- csrf %>';
+            <% if (current_user) { %>
+            imweb.user = {
+              id: '<%= current_user._id %>',
+              loginname: '<%= current_user.loginname %>',
+              is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+            };
+            <% } else { %>
+            imweb.user = null;
+            <% } %>
+
+          </script>
+</head>
+
+<body>
+  <%- partial('common/header.html') %>
+    <div id="main" class="clearfix">
+      <%- partial('common/sidebar.html') %>
+        <div id="content">
+            <div class="container">
+                <div class='block'>
+                    <h2 class="block-title">添加专栏</h2>
+                    <form class="form" id="columnForm" action="<%= typeof isEdit!=='undefined'?'/column/'+column_id+'/edit':'/column/create' %>" method="post"> 
+                        <div class="form-group" id="titleGroup">
+                            <label for="title" class="control-label">专栏标题：</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="请输入专栏标题，2到32个字符" value="<%= typeof isEdit!=='undefined'?title:'' %>">
+                            <span class="alert">专栏标题是必须的</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cover" class="control-label">专栏封面：</label>
+                            <input type="file" class="form-control form-file" id="cover" name="testCover">
+                            <input type="hidden" name="cover" value="red">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="control-label">专栏简介：</label>
+                            <div class='markdown_editor in_editor'>
+                                <div class='markdown_in_editor'>
+                                    <textarea class='editor' id='description' name='description' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码' value="<%= typeof isEdit!=='undefined'?description:'' %>"></textarea>
+                                </div>
+                            </div> 
+                            <p><span class="alert">专栏简介是必须的</span></p>               
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="form-submit">提 交</button>
+                            <button type="reset" class="form-reset">重 置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

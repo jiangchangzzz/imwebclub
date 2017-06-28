@@ -9,8 +9,8 @@ var config = require('../config');
 var tools = require('../common/tools');
 
 exports.getColumnById = function (id, callback) {
-  Column.findOne({ _id: id, deleted: false }, function (column) {
-    return callback(activity);
+  Column.findOne({ _id: id, deleted: false }, function (err, column) {
+    return callback(err, column);
   });
 };
 

@@ -101,7 +101,8 @@ var config = {
     "张颖": true,
     "devinran": true,
     "jaychen": true,
-    "terrance": true
+    "terrance": true,
+    "blue": true
   },
 
   // github 登陆的配置

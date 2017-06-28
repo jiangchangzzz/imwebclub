@@ -38,24 +38,26 @@ exports.index = function (req, res, next) {
     function (column, is_follow, topics, pages) {
       res.render('column/index', {
         active: 'column',
+        column_id: column_id,
         column: dataAdapter.outColumn(column),
         topics: topics.map(function (item) {
           return dataAdapter.outTopic(item);
         }),
         current_page: page,
         pages: pages,
-        is_follow: is_follow
+        is_follow: is_follow,
+        _layoutFile: false
       });
     });
 
   proxy.fail(next);
 
-  Column.getColumnById(column_id, proxy.done(function (column) {
-    if (!column) {
+  Column.getColumnById(column_id, function (err, column) {
+    if (err || !column) {
       return res.renderError('此专栏不存在或已被删除: ' + column_id);
     }
-    proxy.emit('column', column);
-  }));
+    ep.emit('column', column);
+  });
 
   if (!currentUser) {
     proxy.emit('is_follow', null);
@@ -84,27 +86,33 @@ exports.index = function (req, res, next) {
   // END 取分页数据
 
   TopicColumn.getTopicColumnsBycolumnId(column_id, options, proxy.done('items', function (items) {
-    for (var i = 0; i < items.length; i++) {
-      Topic.getTopicById(items[i].topic_id, function (topic) {
-        var ep = new EventProxy();
-        User.getUserById(topic.author_id, ep.done('author'));
-        if(topic.last_reply) {
-          Reply.getReplyById(topic.last_reply, ep.done('reply'));
-        } else {
-          Reply.getLastReplyByParentId(topic._id, ep.done('reply'));
-        }
-
-        ep.all('author', 'reply', function (author, reply) {
-          topic.author = dataAdapter.outUser(author || {});
-          topic.reply = reply;
-          topic.friendly_create_at = tools.formatDate(topic.create_at, true);
-          topic.friendly_update_at = tools.formatDate(topic.update_at, true);
-          proxy.emit('topics', topic);
-        });
+    if (items && items.length > 0) {
+      ep.after('topic', items.length, function (topics) {
+        ep.emit('topics', topics);
       });
+      for (var i = 0; i < items.length; i++) {
+        Topic.getTopicById(items[i].topic_id, function (topic) {
+          var ep = new EventProxy();
+          User.getUserById(topic.author_id, ep.done('author'));
+          if (topic.last_reply) {
+            Reply.getReplyById(topic.last_reply, ep.done('reply'));
+          } else {
+            Reply.getLastReplyByParentId(topic._id, ep.done('reply'));
+          }
+
+          ep.all('author', 'reply', function (author, reply) {
+            topic.author = dataAdapter.outUser(author || {});
+            topic.reply = reply;
+            topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+            topic.friendly_update_at = tools.formatDate(topic.update_at, true);
+            proxy.emit('topic', topic);
+          });
+        });
+      }
+    } else {
+      return ep.emit('topics', []);
     }
   }));
-
 };
 
 /**
@@ -117,8 +125,8 @@ exports.list = function (req, res, next) {
     'hot': '-follower_count -create_at',
     'latest': '-create_at'
   };
-  if (!sortMap[req.params.sort]) {
-    req.params.sort = 'hot';
+  if (!sortMap[req.query.sort]) {
+    req.query.sort = 'hot';
   }
   var proxy = new EventProxy();
   proxy.fail(next);
@@ -127,7 +135,7 @@ exports.list = function (req, res, next) {
   var options = {
     skip: (page - 1) * limit,
     limit: limit,
-    sort: sortMap[req.params.sort]
+    sort: sortMap[req.query.sort]
   };
 
   // 取分页数据
@@ -147,18 +155,22 @@ exports.list = function (req, res, next) {
 
   Column.getColumnsByQuery({}, options, proxy.done('column', function (columns) {
     //console.log(column);
-    return columns.map(function (column) {
+    var res = columns.map(function (column) {
       return dataAdapter.outColumn(column);
     });
+    proxy.emit('columns', res);
   }));
 
   proxy.all('columns', 'pages', function (columns, pages) {
+    console.log(columns);
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
       current_page: page,
       pages: pages,
       pageTitle: '专栏列表',
+      sort: req.query.sort,
+      _layoutFile: false
     });
   });
 }
@@ -168,7 +180,8 @@ exports.list = function (req, res, next) {
  */
 exports.create = function (req, res, next) {
   res.render('column/edit', {
-    active: 'column'
+    active: 'column',
+    _layoutFile: false
   });
 };
 
@@ -176,7 +189,8 @@ exports.create = function (req, res, next) {
  * 添加新专栏
  */
 exports.put = function (req, res, next) {
-  if (!req.body.title || !req.body.content || !req.body.tab) {
+  if (!req.body.title || !req.body.description || !req.body.cover) {
+    req.body._layoutFile = false;
     res.render('/column/edit', req.body);
     return;
   }
@@ -187,6 +201,7 @@ exports.put = function (req, res, next) {
 
   Column.newAndSave(title, description, cover, user._id, function (err, column) {
     if (err || !column) {
+      req.body._layoutFile = false;
       res.render('/column/edit', req.body);
       return;
     }
@@ -199,6 +214,7 @@ exports.put = function (req, res, next) {
  */
 exports.showEdit = function (req, res, next) {
   var column_id = req.params.cid;
+  console.log(column_id);
 
   Column.getColumnById(column_id, function (err, column) {
     if (!column) {
@@ -209,11 +225,12 @@ exports.showEdit = function (req, res, next) {
     if (req.session.user.is_admin) {
       res.render('column/edit', {
         active: 'column',
-        action: 'edit',
+        isEdit: true,
         column_id: column._id,
         title: column.title,
         description: column.description,
-        cover: activity.cover
+        cover: column.cover,
+        _layoutFile: false
       });
     } else {
       res.renderError('对不起，你不能编辑此专栏。', 403);
@@ -260,7 +277,8 @@ exports.update = function (req, res, next) {
         column_id: column._id,
         title: column.title,
         description: column.description,
-        cover: column.cover
+        cover: column.cover,
+        _layoutFile: false
       });
     }
   });
