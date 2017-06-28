@@ -11,7 +11,7 @@ $(document).ready(function(){
 
     $('#columnForm').on('reset',function(e){
         $('#titleGroup').removeClass('has-error');
-    })
+    });
 });
 
 
