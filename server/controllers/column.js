@@ -37,20 +37,16 @@ exports.index = function (req, res, next) {
   ep.all('column', 'is_follow', 'topics',
   //var ep = EventProxy.create(events,
     function (column, is_follow, topics) {
+      console.log(topics);
       return res.render('column/index', {
         active: 'column',
         column_id: column_id,
         column: dataAdapter.outColumn(column),
-<<<<<<< HEAD
-        topics: dataAdapter.topicFormat(topics),
-        is_follow: is_follow,
-        _layoutFile: false
-=======
         topics: topics.map(function(item){
           return dataAdapter.outTopic(item);
         }),
-        is_follow: is_follow
->>>>>>> a25a4a300ce6ceeb7ac21804fc849de99e362140
+        is_follow: is_follow,
+        _layoutFile: false
       });
     });
 
@@ -96,8 +92,8 @@ exports.list = function (req, res, next) {
     'hot': '-follower_count -create_at',
     'latest': '-create_at'
   };
-  if (!sortMap[req.params.sort]) {
-    req.params.sort = 'hot';
+  if (!sortMap[req.query.sort]) {
+    req.query.sort = 'hot';
   }
   var proxy = new EventProxy();
   proxy.fail(next);
@@ -106,23 +102,27 @@ exports.list = function (req, res, next) {
   var options = {
     skip: (page - 1) * limit,
     limit: limit,
-    sort: sortMap[req.params.sort]
+    sort: sortMap[req.query.sort]
   };
   // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
   // console.log(optionsStr);
   Column.getColumnsByQuery({}, options, proxy.done('column', function (columns) {
     //console.log(column);
-    return columns.map(function (column) {
+    var res=columns.map(function (column) {
       return dataAdapter.outColumn(column);
     });
+    proxy.emit('columns',res);
   }));
 
   proxy.all('columns', function (columns) {
+    console.log(columns);
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
       current_page: page,
       pageTitle: '专栏列表',
+      sort: req.query.sort,
+      _layoutFile: false
     });
   });
 }
@@ -142,6 +142,7 @@ exports.create = function (req, res, next) {
  */
 exports.put = function (req, res, next) {
   if (!req.body.title || !req.body.description || !req.body.cover) {
+    req.body._layoutFile=false;
     res.render('/column/edit', req.body);
     return;
   }
@@ -152,6 +153,7 @@ exports.put = function (req, res, next) {
 
   Column.newAndSave(title, description, cover, user._id, function (err, column) {
     if (err || !column) {
+      req.body._layoutFile=false;
       res.render('/column/edit', req.body);
       return;
     }

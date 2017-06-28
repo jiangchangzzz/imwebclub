@@ -3,6 +3,7 @@ import '../../javascripts/libs/editor/editor.css';
 import '../../stylesheets/column/edit.less';
 import '../../javascripts/common/reply.js';
 import '../../javascripts/common/uploader.js';
+import '../../javascripts/column/edit.js';
 
 
 $(document).ready(function(){
