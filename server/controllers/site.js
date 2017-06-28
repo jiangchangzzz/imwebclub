@@ -145,7 +145,10 @@ exports.index = function (req, res, next) {
         sort: '-follower_count -create_at'
       };
       Column.getColumnsByQuery({},options,proxy.done(function(columns){
-        cache.set('columns',columns,60*1);
+        var res = columns.map(function (column) {
+          return dataAdapter.outColumn(column);
+        });
+        cache.set('columns',res,60*1);
       }));
     }
   }));

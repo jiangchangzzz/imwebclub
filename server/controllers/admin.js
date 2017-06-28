@@ -3,6 +3,8 @@ var User = require('../proxy').User;
 var Reply = require('../proxy').Reply;
 var Banner = require('../proxy').Banner;
 var Activity = require('../proxy').Activity;
+var Column=require('../proxy').Column;
+var TopicColumn=require('../proxy').TopicColumn;
 var _ = require('lodash');
 var tools = require('../common/tools');
 var EventProxy = require('eventproxy');
@@ -164,6 +166,11 @@ exports.topic = function(req, res, next){
     return topics;
   }));
 
+  Column.getColumnsByQuery({},{},proxy.done('columns',function(columns){
+    return columns;
+  }));
+
+
   // 取分页数据
   var pagesCacheKey = JSON.stringify(query) + 'pages';
   cache.get(pagesCacheKey, proxy.done(function (pages) {
@@ -182,8 +189,10 @@ exports.topic = function(req, res, next){
 //   var tabs = [['all', '全部']].concat(config.tabs);
   var tabName = renderHelper.tabName(tab);
 
-  proxy.all('topics', 'pages',
-    function (topics, pages, tops) {
+  var selectedColumnId=req.query.columnid;
+
+  proxy.all('topics', 'pages','columns',/*'topicColumns',*/
+    function (topics, pages, columns,topicColumns) {
       res.render('admin/topic/index', {
         topics: _topicFormat(topics),
         current_page: page,
@@ -192,11 +201,26 @@ exports.topic = function(req, res, next){
         // tabs: tabs,
         tab: tab,
         sort: sort,
+        columns: columns,
+        topicColumns: topicColumns,
+        selectedColumnId: selectedColumnId,
         base: '/admin/topic/all',
         pageTitle: tabName && (tabName + '版块'),
         layout: false
       });
     });
+
+  if(selectedColumnId){
+    TopicColumn.getTopicColumnsBycolumnId(selectedColumnId,{},proxy.done('topicColumns',function(topicColumns){
+        var res=topicColumns.map(function(item){
+            return item.topic_id;
+        });
+        return res;
+    }))
+  }
+  else{
+      proxy.emit('topicColumns',[]);
+  }
 };
 
 //topic类型过滤器

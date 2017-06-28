@@ -7,6 +7,7 @@ var at = require('../common/at');
 var User = require('../proxy').User;
 var Column = require('../proxy').Column;
 var Topic = require('../proxy').Topic;
+var Reply=require('../proxy').Reply;
 var UserFollow = require('../proxy').UserFollow;
 var TopicColumn = require('../proxy').TopicColumn;
 var EventProxy = require('eventproxy');
@@ -36,6 +37,8 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
+      console.log('ready');
+     console.log(column);
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
@@ -56,7 +59,7 @@ exports.index = function (req, res, next) {
     if (err || !column) {
       return res.renderError('此专栏不存在或已被删除: ' + column_id);
     }
-    ep.emit('column', column);
+    proxy.emit('column', column);
   });
 
   if (!currentUser) {
@@ -87,20 +90,19 @@ exports.index = function (req, res, next) {
 
   TopicColumn.getTopicColumnsBycolumnId(column_id, options, proxy.done('items', function (items) {
     if (items && items.length > 0) {
-      ep.after('topic', items.length, function (topics) {
-        ep.emit('topics', topics);
+      proxy.after('topic', items.length, function (topics) {
+        proxy.emit('topics', topics);
       });
       for (var i = 0; i < items.length; i++) {
-        Topic.getTopicById(items[i].topic_id, function (topic) {
-          var ep = new EventProxy();
-          User.getUserById(topic.author_id, ep.done('author'));
+        Topic.getTopicById(items[i].topic_id, function (err, topic) {
+          User.getUserById(topic.author_id, proxy.done('author'));
           if (topic.last_reply) {
-            Reply.getReplyById(topic.last_reply, ep.done('reply'));
+            Reply.getReplyById(topic.last_reply, proxy.done('reply'));
           } else {
-            Reply.getLastReplyByParentId(topic._id, ep.done('reply'));
+            Reply.getLastReplyByParentId(topic._id, proxy.done('reply'));
           }
 
-          ep.all('author', 'reply', function (author, reply) {
+          proxy.all('author', 'reply', function (author, reply) {
             topic.author = dataAdapter.outUser(author || {});
             topic.reply = reply;
             topic.friendly_create_at = tools.formatDate(topic.create_at, true);
@@ -110,7 +112,7 @@ exports.index = function (req, res, next) {
         });
       }
     } else {
-      return ep.emit('topics', []);
+      return proxy.emit('topics', []);
     }
   }));
 };

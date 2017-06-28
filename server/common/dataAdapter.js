@@ -7,6 +7,7 @@ var _ = require('lodash');
 var qrcode = require('yaqrcode');
 var tools = require('./tools');
 var render_helper = require('./render_helper');
+var utility = require('utility');
 
 /**
  * 将二级评论附件到一级评论上
@@ -65,7 +66,7 @@ exports.outReply = function(reply) {
 exports.outUser = function(user) {
     //如果没有gravatar头像，则用默认
     var avatar = user.avatar;
-    if(!avatar){
+    if(!avatar && user.email){
       avatar = '//gravatar.com/avatar/' + utility.md5(user.email.toLowerCase()) + '?size=200';
 
       // www.gravatar.com 被墙
@@ -150,6 +151,7 @@ exports.outColumn = function(item){
         description: item.description,
         cover: item.cover,
         follower_count: item.follower_count,
+        topic_count: item.topic_count,
         create_at: +item.create_at,
         friendly_create_at: tools.formatDate(item.create_at, true),
         update_at: +item.update_at,
