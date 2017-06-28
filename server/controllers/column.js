@@ -27,42 +27,80 @@ var renderHelper = require('../common/render_helper');
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
+  var page = parseInt(req.query.page, 10) || 1;
+  page = page > 0 ? page : 1;
 
   if (column_id.length !== 24) {
     return res.render404('此专栏不存在。');
   }
-  var events = ['column', 'is_follow', 'topics'];
-  var ep = EventProxy.create(events,
-    function (column, is_follow, topics) {
+  var events = ['column', 'is_follow', 'topics', 'pages'];
+  var proxy = EventProxy.create(events,
+    function (column, is_follow, topics, pages) {
       res.render('column/index', {
         active: 'column',
         column: dataAdapter.outColumn(column),
-        topics: topics.map(function(item){
+        topics: topics.map(function (item) {
           return dataAdapter.outTopic(item);
         }),
+        current_page: page,
+        pages: pages,
         is_follow: is_follow
       });
     });
 
-  ep.fail(next);
+  proxy.fail(next);
 
-  Column.getColumnById(column_id, ep.done(function (column) {
+  Column.getColumnById(column_id, proxy.done(function (column) {
     if (!column) {
       return res.renderError('此专栏不存在或已被删除: ' + column_id);
     }
-    ep.emit('column', column);
+    proxy.emit('column', column);
   }));
 
   if (!currentUser) {
-    ep.emit('is_follow', null);
+    proxy.emit('is_follow', null);
   } else {
-    UserFollow.getUserFollow(currentUser._id, column_id, ep.done('is_follow'));
+    UserFollow.getUserFollow(currentUser._id, column_id, proxy.done('is_follow'));
   }
 
-  TopicColumn.getTopicColumnsBycolumnId(column_id, {}, ep.done('items', function (items) {
+  var limit = config.list_activity_count;
+  var options = {
+    skip: (page - 1) * limit,
+    limit: limit
+  };
+  // 取分页数据
+  var pagesCacheKey = `column_${column_id}_pages`;
+  cache.get(pagesCacheKey, proxy.done(function (pages) {
+    if (pages) {
+      proxy.emit('pages', pages);
+    } else {
+      TopicColumn.getColumnTopicCount(column_id, proxy.done(function (topic_count) {
+        var pages = Math.ceil(topic_count / limit);
+        cache.set(pagesCacheKey, pages, 60 * 1);
+        proxy.emit('pages', pages);
+      }));
+    }
+  }));
+  // END 取分页数据
+
+  TopicColumn.getTopicColumnsBycolumnId(column_id, options, proxy.done('items', function (items) {
     for (var i = 0; i < items.length; i++) {
       Topic.getTopicById(items[i].topic_id, function (topic) {
-        return ep.emit('topics', topic);
+        var ep = new EventProxy();
+        User.getUserById(topic.author_id, ep.done('author'));
+        if(topic.last_reply) {
+          Reply.getReplyById(topic.last_reply, ep.done('reply'));
+        } else {
+          Reply.getLastReplyByParentId(topic._id, ep.done('reply'));
+        }
+
+        ep.all('author', 'reply', function (author, reply) {
+          topic.author = dataAdapter.outUser(author || {});
+          topic.reply = reply;
+          topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+          topic.friendly_update_at = tools.formatDate(topic.update_at, true);
+          proxy.emit('topics', topic);
+        });
       });
     }
   }));
@@ -91,8 +129,22 @@ exports.list = function (req, res, next) {
     limit: limit,
     sort: sortMap[req.params.sort]
   };
-  // var optionsStr = JSON.stringify(query) + JSON.stringify(options);
-  // console.log(optionsStr);
+
+  // 取分页数据
+  var pagesCacheKey = 'column_list_pages';
+  cache.get(pagesCacheKey, proxy.done(function (pages) {
+    if (pages) {
+      proxy.emit('pages', pages);
+    } else {
+      Column.getCountByQuery({}, proxy.done(function (all_columns_count) {
+        var pages = Math.ceil(all_columns_count / limit);
+        cache.set(pagesCacheKey, pages, 60 * 1);
+        proxy.emit('pages', pages);
+      }));
+    }
+  }));
+  // END 取分页数据
+
   Column.getColumnsByQuery({}, options, proxy.done('column', function (columns) {
     //console.log(column);
     return columns.map(function (column) {
@@ -100,11 +152,12 @@ exports.list = function (req, res, next) {
     });
   }));
 
-  proxy.all('columns', function (columns) {
+  proxy.all('columns', 'pages', function (columns, pages) {
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
       current_page: page,
+      pages: pages,
       pageTitle: '专栏列表',
     });
   });
