@@ -63,7 +63,8 @@
               </div>
               <div class="list-img">
                 <div class="follow">
-                  <button type="button" class="follow-btn" data-id=<%= column.id %>>关注</button>
+                  <button type="button" class="btn cancel-btn <%= column.is_follow?'':'hide' %>" data-id=<%= column.id %>>取消关注</button>
+                  <button type="button" class="btn follow-btn <%= column.is_follow?'hide':'' %>" data-id=<%= column.id %>>关注</button>
                 </div>
                 <div class="thumbnail">
                   <img src="<%= column.cover %>" alt="专栏图片">
@@ -72,7 +73,7 @@
               <div class="list-content">
                 <h3><a href="/column/<%= column.id %>"><%= column.title %>专栏</a></h3>
                 <p class="content-sub">
-                  <span><%= column.follower_count %>篇文章</span>
+                  <span><%= column.topic_count %>篇文章</span>
                   <span><%= column.follower_count %>人关注</span>
                 </p>
                 <p class="content-desc">

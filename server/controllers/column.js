@@ -37,7 +37,9 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
-      console.log(is_follow);
+      console.log(topics.map(function (item) {
+          return dataAdapter.outTopic(item);
+        }));
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
@@ -168,7 +170,7 @@ exports.list = function (req, res, next) {
         if (!currentUser) {
           proxy.emit('column', dataAdapter.outColumn(column));
         } else {
-          UserFollow.getUserFollow(currentUser._id, column_id, proxy.done(function (item){
+          UserFollow.getUserFollow(currentUser._id, column._id, proxy.done(function (item){
             column.is_follow = !!item;
             proxy.emit('column', dataAdapter.outColumn(column));
           }));
