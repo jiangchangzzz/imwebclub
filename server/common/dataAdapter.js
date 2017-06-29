@@ -153,6 +153,7 @@ exports.outColumn = function(item){
         follower_count: item.follower_count,
         topic_count: item.topic_count,
         create_at: +item.create_at,
+        is_follow: item.is_follow || false,
         friendly_create_at: tools.formatDate(item.create_at, true),
         update_at: +item.update_at,
         friendly_update_at: tools.formatDate(item.update_at, true),

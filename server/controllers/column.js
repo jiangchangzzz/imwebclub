@@ -47,7 +47,7 @@ exports.index = function (req, res, next) {
         }),
         current_page: page,
         pages: pages,
-        is_follow: is_follow,
+        is_follow: !!is_follow,
         _layoutFile: false
       });
     });
@@ -120,6 +120,7 @@ exports.index = function (req, res, next) {
  * 所有专栏列表
  */
 exports.list = function (req, res, next) {
+  var currentUser = req.session.user;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -158,10 +159,24 @@ exports.list = function (req, res, next) {
     if (err) {
       return proxy.emit('fail');
     }
-    var res = columns.map(function (column) {
-      return dataAdapter.outColumn(column);
-    });
-    proxy.emit('columns', res);
+    if(columns && columns.length > 0){
+      proxy.after('column', columns.length, function (objects) {
+        proxy.emit('columns', objects);
+      });
+
+      columns.map(function (column) {
+        if (!currentUser) {
+          proxy.emit('column', dataAdapter.outColumn(column));
+        } else {
+          UserFollow.getUserFollow(currentUser._id, column_id, proxy.done(function (item){
+            column.is_follow = !!item;
+            proxy.emit('column', dataAdapter.outColumn(column));
+          }));
+        }
+      });
+    } else {
+      proxy.emit('columns', []);
+    }
   });
 
   proxy.all('columns', 'pages', function (columns, pages) {
