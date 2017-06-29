@@ -694,10 +694,10 @@ exports.upload = function (req, res, next) {
       if (isFileLimit) {
         return;
       }
-      res.json({
+      res.json({ 
         success: true,
         url: result.url,
-      });
+      }); 
     });
 
   });

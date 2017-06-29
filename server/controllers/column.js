@@ -364,24 +364,26 @@ exports.addTopic = function (req, res, next) {
 
       for (var i = 0; i < topic_ids.length; i++) {
         var topic_id = topic_ids[i];
-        TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
-          if (err) {
-            return ep.emit('fail', 403);
-          }
-          if (item) { // 兼容重复添加
-            ep.emit('deal');
-          } else {
-            TopicColumn.newAndSave(column_id, topic_id, function (err) {
-              if (err) {
-                return ep.emit('fail', 403);
-              }
-              column.topic_count++;
-              column.save(ep.done(function () {
-                ep.emit('deal');
-              }));
-            });
-          }
-        });
+        (function(topic_id){
+          TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+            if (err) {
+              return ep.emit('fail', 403);
+            }
+            if (item) { // 兼容重复添加
+              ep.emit('deal');
+            } else {
+              TopicColumn.newAndSave(column_id, topic_id, function (err) {
+                if (err) {
+                  return ep.emit('fail', 403);
+                }
+                column.topic_count++;
+                column.save(ep.done(function () {
+                  ep.emit('deal');
+                }));
+              });
+            }
+          })
+        })(topic_id);
       }
     });
   } else {
@@ -417,24 +419,26 @@ exports.removeTopic = function (req, res, next) {
 
       for (var i = 0; i < topic_ids.length; i++) {
         var topic_id = topic_ids[i];
-        TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
-          if (err) {
-            return ep.emit('fail', 403);
-          }
-          if (!item) { // 兼容重复删除
-            ep.emit('deal');
-          } else {
-            item.remove(function (err) {
-              if (err) {
-                return ep.emit('fail', 403);
-              }
-              column.topic_count--;
-              column.save(ep.done(function () {
-                ep.emit('deal');
-              }));
-            });
-          }
-        });
+        (function(topic_id){
+          TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+            if (err) {
+              return ep.emit('fail', 403);
+            }
+            if (!item) { // 兼容重复删除
+              ep.emit('deal');
+            } else {
+              item.remove(function (err) {
+                if (err) {
+                  return ep.emit('fail', 403);
+                }
+                column.topic_count--;
+                column.save(ep.done(function () {
+                  ep.emit('deal');
+                }));
+              });
+            }
+          });
+        })(topic_id);
       }
     });
   } else {
