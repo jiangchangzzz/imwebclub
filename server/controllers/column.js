@@ -87,8 +87,8 @@ exports.index = function (req, res, next) {
 
   TopicColumn.getTopicColumnsBycolumnId(column_id, options, proxy.done('items', function (items) {
     if (items && items.length > 0) {
-      ep.after('topic', items.length, function (topics) {
-        ep.emit('topics', topics);
+      proxy.after('topic', items.length, function (topics) {
+        proxy.emit('topics', topics);
       });
       for (var i = 0; i < items.length; i++) {
         Topic.getTopicById(items[i].topic_id, function (topic) {
@@ -110,7 +110,7 @@ exports.index = function (req, res, next) {
         });
       }
     } else {
-      return ep.emit('topics', []);
+      return proxy.emit('topics', []);
     }
   }));
 };
@@ -333,33 +333,58 @@ exports.delete = function (req, res, next) {
 };
 
 /**
- * 向某专栏添加一篇文章
+ * 向某专栏添加文章
  */
 exports.addTopic = function (req, res, next) {
   var ep = tools.createJsonEventProxy(res, next);
-  if (!req.body.cid || !req.body.tid) {
-    return ep.emit('fail', 403, '参数错误！');
-  }
-  var column_id = req.body.cid;
+  var column_ids = req.body.cids;
   var topic_id = req.body.tid;
   var user = req.session.user;
+  if (!column_ids || !Array.isArray(column_ids) || !topic_id) {
+    return ep.emit('fail', 403, '参数错误！');
+  }
+
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-  Column.getColumnById(column_id, ep.done(function (column) {
-    if (!column) {
-      return ep.emit('fail', '此活动不存在或已被删除。');
-    }
-    TopicColumn.newAndSave(column_id, topic_id, function (err, item) {
-      if (err || !column) {
-        return ep.emit('fail', 403);
-      }
-      column.topic_count++;
-      column.save(ep.done(function () {
-        ep.emit('done');
-      }));
+  if (column_ids.length > 0) {
+    ep.after('deal', column_ids.length, function () {
+      ep.emit('done');
     });
-  }));
+    for (var i = 0; i < column_ids.length; i++) {
+      var column_id = column_ids[i];
+      var proxy = new EventProxy();
+      Column.getColumnById(column_id, function (err, column) {
+        if (err || !column) {
+          return ep.emit('fail', '此活动不存在或已被删除。');
+        }
+        proxy.emit('column', column);
+      });
+      TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+        if (err) {
+          return ep.emit('fail', 403);
+        }
+        proxy.emit('topic_column', item);
+      });
+      proxy.all('column', 'topic_column', function (column, item) {
+        if (item) {
+          ep.emit('deal');
+        } else {
+          TopicColumn.newAndSave(column_id, topic_id, function (err) {
+            if (err) {
+              return ep.emit('fail', 403);
+            }
+            column.topic_count++;
+            column.save(ep.done(function () {
+              ep.emit('deal');
+            }));
+          });
+        }
+      });
+    }
+  } else {
+    ep.emit('done');
+  }
 }
 
 /**
@@ -367,29 +392,52 @@ exports.addTopic = function (req, res, next) {
  */
 exports.removeTopic = function (req, res, next) {
   var ep = tools.createJsonEventProxy(res, next);
-  if (!req.body.cid || !req.body.tid) {
-    return ep.emit('fail', 403, '参数错误！');
-  }
-  var column_id = req.body.cid;
+  var column_ids = req.body.cids;
   var topic_id = req.body.tid;
   var user = req.session.user;
+  if (!column_ids || !Array.isArray(column_ids) || !topic_id) {
+    return ep.emit('fail', 403, '参数错误！');
+  }
+
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-  Column.getColumnById(column_id, ep.done(function (column) {
-    if (!column) {
-      return ep.emit('fail', '此活动不存在或已被删除。');
-    }
-    TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
-      if (err || !column) {
-        return ep.emit('fail', 403);
-      }
-      item.remove(function () {
-        column.topic_count--;
-        column.save(ep.done(function () {
-          ep.emit('done');
-        }));
-      });
+  if (column_ids.length > 0) {
+    ep.after('deal', column_ids.length, function () {
+      ep.emit('done');
     });
-  }));
+    for (var i = 0; i < column_ids.length; i++) {
+      var column_id = column_ids[i];
+      var proxy = new EventProxy();
+      Column.getColumnById(column_id, function (err, column) {
+        if (err || !column) {
+          return ep.emit('fail', '此活动不存在或已被删除。');
+        }
+        proxy.emit('column', column);
+      });
+      TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+        if (err) {
+          return ep.emit('fail', 403);
+        }
+        proxy.emit('topic_column', item);
+      });
+      proxy.all('column', 'topic_column', function (column, item) {
+        if (!item) {
+          ep.emit('deal');
+        } else {
+          item.remove(function (err) {
+            if (err) {
+              return ep.emit('fail', 403);
+            }
+            column.topic_count--;
+            column.save(ep.done(function () {
+              ep.emit('deal');
+            }));
+          });
+        }
+      });
+    }
+  } else {
+    ep.emit('done');
+  }
 }
