@@ -150,6 +150,7 @@ exports.outColumn = function(item){
         title: item.title,
         description: item.description,
         cover: item.cover,
+        owner: item.owner,
         follower_count: item.follower_count,
         topic_count: item.topic_count,
         create_at: +item.create_at,

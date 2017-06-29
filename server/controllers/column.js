@@ -393,6 +393,7 @@ exports.addTopic = function (req, res, next) {
                 }
                 column.topic_count++;
                 column.save(ep.done(function () {
+                  notificateSubscriber(user, column); // 给关注者发送邮件通知
                   ep.emit('deal');
                 }));
               });
@@ -404,6 +405,27 @@ exports.addTopic = function (req, res, next) {
   } else {
     ep.emit('done');
   }
+}
+
+function notificateSubscriber(fromUser, column){
+  UserFollow.getUserFollowsByObjectId(column._id,null,function(err, items){
+    if (err || !items || items.length === 0) {
+      return;
+    }
+    var ep = new EventProxy();
+    ep.after('user', topic_ids.length, function (users) {
+      mail.sendColumnTopicToFollowers({
+        followers: users,
+        user: fromUser,
+        column: column
+      });
+    });
+    items.map(function(item){
+      User.getUserById(item.user_id,function(err, user){
+        ep.emit('user', user);
+      });
+    });
+  });
 }
 
 /**
