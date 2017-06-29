@@ -84,6 +84,7 @@ router.post('/user/:name/block', auth.adminRequired, user.block);  // 禁言某�
 router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // 删除某用户所有发言
 router.post('/user/follow', user.addFollowUser); //添加关注
 router.delete('/user/follow', user.deleteFollowUser); //取消关注
+router.get('/user/followings', auth.userRequired, user.followings); // api:分页获取关注的对象
 
 // message controler
 router.get('/my/messages', auth.userRequired, message.index); // 用户个人的所有消息页

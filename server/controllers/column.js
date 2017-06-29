@@ -156,13 +156,15 @@ exports.list = function (req, res, next) {
   }));
   // END 取分页数据
 
-  Column.getColumnsByQuery({}, options, proxy.done('column', function (columns) {
-    //console.log(column);
+  Column.getColumnsByQuery({}, options, function (err, columns) {
+    if (err) {
+      return proxy.emit('fail');
+    }
     var res = columns.map(function (column) {
       return dataAdapter.outColumn(column);
     });
     proxy.emit('columns', res);
-  }));
+  });
 
   proxy.all('columns', 'pages', function (columns, pages) {
     console.log(columns);

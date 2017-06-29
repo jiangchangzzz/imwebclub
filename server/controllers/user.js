@@ -1,17 +1,36 @@
-var User         = require('../proxy').User;
-var Topic        = require('../proxy').Topic;
-var Reply        = require('../proxy').Reply;
-var Question     = require('../proxy').Question;
+var User = require('../proxy').User;
+var Topic = require('../proxy').Topic;
+var Reply = require('../proxy').Reply;
+var Question = require('../proxy').Question;
 var UserCollect = require('../proxy').UserCollect;
-var utility      = require('utility');
-var util         = require('util');
-var TopicModel   = require('../models').Topic;
-var ReplyModel   = require('../models').Reply;
-var tools        = require('../common/tools');
-var config       = require('../config');
-var EventProxy   = require('eventproxy');
-var validator    = require('validator');
-var _            = require('lodash');
+var Column = require('../PROXY').Column;
+var UserFollow = require('../proxy').UserFollow;
+var utility = require('utility');
+var util = require('util');
+var TopicModel = require('../models').Topic;
+var ReplyModel = require('../models').Reply;
+var tools = require('../common/tools');
+var config = require('../config');
+var EventProxy = require('eventproxy');
+var validator = require('validator');
+var _ = require('lodash');
+var dataAdapter = require('../common/dataAdapter');
+
+var ObjectDict = {
+  'topic': Topic.getTopicById,
+  'question': Question.getQuestionById,
+  'activity': Activity.getActivityById,
+  'reply': Reply.getReply,
+  'column': Column.getColumnById
+};
+
+var AdapterDict = {
+  'topic': dataAdapter.outTopic,
+  'question': dataAdapter.outQuestion,
+  'activity': dataAdapter.outActivity,
+  'reply': dataAdapter.outReply,
+  'column': dataAdapter.outColumn
+};
 
 exports.index = function (req, res, next) {
   var user_name = req.params.name;
@@ -51,18 +70,30 @@ exports.index = function (req, res, next) {
     proxy.assign('recent_topics', 'recent_replies', render);
     proxy.fail(next);
 
-    var query = {author_id: user._id};
-    var opt = {limit: 5, sort: '-create_at'};
+    var query = {
+      author_id: user._id
+    };
+    var opt = {
+      limit: 5,
+      sort: '-create_at'
+    };
     Topic.getTopicsByQuery(query, opt, proxy.done('recent_topics'));
 
-    Reply.getRepliesByAuthorId(user._id, 'topic', {limit: 20, sort: '-create_at'},
+    Reply.getRepliesByAuthorId(user._id, 'topic', {
+        limit: 20,
+        sort: '-create_at'
+      },
       proxy.done(function (replies) {
 
         var topic_ids = replies.map(function (reply) {
           return reply.topic_id.toString();
         })
         topic_ids = _.uniq(topic_ids).slice(0, 5); //  只显示最近5条
-        var query = {_id: {'$in': topic_ids}};
+        var query = {
+          _id: {
+            '$in': topic_ids
+          }
+        };
         var opt = {};
         Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
           recent_replies = _.sortBy(recent_replies, function (topic) {
@@ -75,11 +106,16 @@ exports.index = function (req, res, next) {
 };
 
 exports.listStars = function (req, res, next) {
-  User.getUsersByQuery({is_star: true}, {}, function (err, stars) {
+  User.getUsersByQuery({
+    is_star: true
+  }, {}, function (err, stars) {
     if (err) {
       return next(err);
     }
-    res.render('user/stars', {stars: stars, currentUser: req.session.user});
+    res.render('user/stars', {
+      stars: stars,
+      currentUser: req.session.user
+    });
   });
 };
 
@@ -92,7 +128,11 @@ exports.showSetting = function (req, res, next) {
       user.success = '保存成功。';
     }
     user.error = null;
-    return res.render('user/setting', {user: user, currentUser: req.session.user, tab: 'seeting'});
+    return res.render('user/setting', {
+      user: user,
+      currentUser: req.session.user,
+      tab: 'seeting'
+    });
   });
 };
 
@@ -105,14 +145,68 @@ exports.showPassword = function (req, res, next) {
       user.success = '保存成功。';
     }
     user.error = null;
-    return res.render('user/password', {user: user, currentUser: req.session.user});
+    return res.render('user/password', {
+      user: user,
+      currentUser: req.session.user
+    });
   });
 };
+
+// 获取关注的对象列表
+exports.followings = function (req, res, next) {
+  var user = req.session.user;
+  var page = parseInt(req.query.page, 10) || 1;
+  page = page > 0 ? page : 1;
+  var type = req.query.type || 'user';
+
+  var limit = config.list_activity_count;
+  var options = {
+    skip: (page - 1) * limit,
+    limit: limit
+  };
+
+  var proxy = tools.createJsonEventProxy(res, next);
+  proxy.fail(next);
+  // 取分页数据
+  UserFollow.getUserFollowCount(user._id, type, proxy.done(function (all_objects_count) {
+    var pages = Math.ceil(all_objects_count / limit);
+    proxy.emit('pages', pages);
+  }));
+  // END 取分页数据
+
+  UserFollow.getUserFollowsByUserId(user._id, type, options, function (err, items) {
+    if (err) {
+      return proxy.emit('fail', 403);
+    }
+    if (items && items.length > 0) {
+      proxy.after('object', items.length, function (objects) {
+        proxy.emit('objects', objects);
+      });
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        ObjectDict[type](item.object_id, function (object) {
+          proxy.emit('object', AdapterDict[type](object));
+        });
+      }
+    } else {
+      proxy.emit('objects', []);
+    }
+  });
+
+  proxy.all('objects', 'pages', function (objects, pages) {
+    res.sed({
+      objects: objects,
+      list_count: limit,
+      current_page: page,
+      pages: pages
+    });
+  });
+}
 
 exports.showFollowing = function (req, res, next) {
   var user_name = req.params.name;
   User.getUserByLoginName(user_name, function (err, user) {
-  // User.getUserById(req.session.user._id, function (err, user) {
+    // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);
     }
@@ -121,27 +215,37 @@ exports.showFollowing = function (req, res, next) {
     }
     user.error = null;
     var ep = new EventProxy();
-    ep.all('following', function(followUser) {
-      return res.render('user/follow', { user: user, followUser: followUser, currentUser: req.session.user, tab: 'follwing'});
+    ep.all('following', function (followUser) {
+      return res.render('user/follow', {
+        user: user,
+        followUser: followUser,
+        currentUser: req.session.user,
+        tab: 'follwing'
+      });
     })
-    User.getFollowUser(user.following , ep.done('following'));
+    User.getFollowUser(user.following, ep.done('following'));
   });
 };
 
 exports.showFollower = function (req, res, next) {
   var user_name = req.params.name;
   User.getUserByLoginName(user_name, function (err, user) {
-  // User.getUserById(req.session.user._id, function (err, user) {
+    // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);
     }
 
     user.error = null;
     var ep = new EventProxy();
-    ep.all('follower', function(follower) {
-      return res.render('user/follow', { user: user, follower: follower, currentUser: req.session.user, tab: 'follower'});
+    ep.all('follower', function (follower) {
+      return res.render('user/follow', {
+        user: user,
+        follower: follower,
+        currentUser: req.session.user,
+        tab: 'follower'
+      });
     })
-    User.getFollowUser(user.follower , ep.done('follower'));
+    User.getFollowUser(user.follower, ep.done('follower'));
   });
 };
 
@@ -167,7 +271,11 @@ exports.setting = function (req, res, next) {
     } else {
       data2.error = msg;
     }
-    res.render('user/setting', {user: data2, currentUser: req.session.user, tab: 'setting'});
+    res.render('user/setting', {
+      user: data2,
+      currentUser: req.session.user,
+      tab: 'setting'
+    });
   }
 
   // post
@@ -189,8 +297,14 @@ exports.setting = function (req, res, next) {
         if (err) {
           return next(err);
         }
-        req.session.user = user.toObject({virtual: true});
-        return res.render('user/setting', {user: user, currentUser: req.session.user,  tab: 'setting'});
+        req.session.user = user.toObject({
+          virtual: true
+        });
+        return res.render('user/setting', {
+          user: user,
+          currentUser: req.session.user,
+          tab: 'setting'
+        });
       });
     }));
   }
@@ -222,54 +336,60 @@ exports.setting = function (req, res, next) {
   }
 };
 
-exports.addFollowUser = function(req, res, next) {
+exports.addFollowUser = function (req, res, next) {
   var user_id = req.session.user.id;
   var followUser_id = req.body.followUser_id;
 
-  var proxy = EventProxy.create('following', 'follower', function(){
-      res.send({ status: 'success' });
+  var proxy = EventProxy.create('following', 'follower', function () {
+    res.send({
+      status: 'success'
+    });
   });
   proxy.fail(next);
-  function addUser(user_id, followUser_id, field){
-    User.getUserById(user_id, proxy.done(field, function(user) {
-      if(!user) {
+
+  function addUser(user_id, followUser_id, field) {
+    User.getUserById(user_id, proxy.done(field, function (user) {
+      if (!user) {
         return next(new Error('user is not exists'));
       }
       const index = user[field].findIndex((id) => (id === followUser_id));
-      if(index === -1) {
+      if (index === -1) {
         user[field].push(followUser_id);
-        user[field+'_count'] ++;
+        user[field + '_count']++;
       }
       user.save();
     }))
   }
-  addUser(user_id, followUser_id,'following');
-  addUser(followUser_id, user_id,'follower');
+  addUser(user_id, followUser_id, 'following');
+  addUser(followUser_id, user_id, 'follower');
 }
 
-exports.deleteFollowUser = function(req, res, next) {
+exports.deleteFollowUser = function (req, res, next) {
   var user_id = req.session.user.id;
   var followUser_id = req.body.followUser_id;
 
-  var proxy = EventProxy.create('following', 'follower', function(){
-      res.send({ status: 'success' });
+  var proxy = EventProxy.create('following', 'follower', function () {
+    res.send({
+      status: 'success'
+    });
   });
   proxy.fail(next);
-  function deleteUser(user_id, followUser_id, field){
-    User.getUserById(user_id, proxy.done(field, function(user) {
-      if(!user) {
+
+  function deleteUser(user_id, followUser_id, field) {
+    User.getUserById(user_id, proxy.done(field, function (user) {
+      if (!user) {
         return next(new Error('user is not exists'));
       }
       const index = user[field].findIndex((id) => (id === followUser_id));
-      if(index !== -1) {
+      if (index !== -1) {
         user[field].splice(index, 1);
-        user[field+'_count'] --;
+        user[field + '_count']--;
       }
       user.save();
     }))
   }
-  deleteUser(user_id, followUser_id,'following');
-  deleteUser(followUser_id, user_id,'follower');
+  deleteUser(user_id, followUser_id, 'following');
+  deleteUser(followUser_id, user_id, 'follower');
 }
 
 exports.toggleStar = function (req, res, next) {
@@ -286,7 +406,9 @@ exports.toggleStar = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.json({ status: 'success' });
+      res.json({
+        status: 'success'
+      });
     });
   });
 };
@@ -323,7 +445,11 @@ exports.listCollectedTopics = function (req, res, next) {
       var ids = docs.map(function (doc) {
         return String(doc.topic_id)
       })
-      var query = { _id: { '$in': ids } };
+      var query = {
+        _id: {
+          '$in': ids
+        }
+      };
 
       Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
         topics = _.sortBy(topics, function (topic) {
@@ -340,8 +466,13 @@ exports.listCollectedTopics = function (req, res, next) {
 };
 
 exports.top100 = function (req, res, next) {
-  var opt = {limit: 100, sort: '-score'};
-  User.getUsersByQuery({is_block: false}, opt, function (err, tops) {
+  var opt = {
+    limit: 100,
+    sort: '-score'
+  };
+  User.getUsersByQuery({
+    is_block: false
+  }, opt, function (err, tops) {
     if (err) {
       return next(err);
     }
@@ -380,8 +511,14 @@ exports.listTopics = function (req, res, next) {
     proxy.assign('topics', 'pages', render);
     proxy.fail(next);
 
-    var query = {'author_id': user._id};
-    var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
+    var query = {
+      'author_id': user._id
+    };
+    var opt = {
+      skip: (page - 1) * limit,
+      limit: limit,
+      sort: '-create_at'
+    };
     Topic.getTopicsByQuery(query, opt, proxy.done('topics'));
 
     Topic.getCountByQuery(query, proxy.done(function (all_topics_count) {
@@ -391,7 +528,7 @@ exports.listTopics = function (req, res, next) {
   });
 };
 
-exports.listQuestions = function(req, res, next) {
+exports.listQuestions = function (req, res, next) {
   var user_name = req.params.name;
   var page = Number(req.query.page) || 1;
   var limit = config.list_topic_count;
@@ -418,8 +555,14 @@ exports.listQuestions = function(req, res, next) {
     proxy.assign('questions', 'pages', render);
     proxy.fail(next);
 
-    var query = {'author_id': user._id};
-    var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
+    var query = {
+      'author_id': user._id
+    };
+    var opt = {
+      skip: (page - 1) * limit,
+      limit: limit,
+      sort: '-create_at'
+    };
     Question.getQuestionsByQuery(query, opt, proxy.done('questions'));
 
     Question.getCountByQuery(query, proxy.done(function (all_topics_count) {
@@ -455,7 +598,11 @@ exports.listReplies = function (req, res, next) {
     proxy.assign('recent_replies', 'pages', render);
     proxy.fail(next);
 
-    var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
+    var opt = {
+      skip: (page - 1) * limit,
+      limit: limit,
+      sort: '-create_at'
+    };
     Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
       // 获取所有有评论的主题
       var topic_ids = replies.map(function (reply) {
@@ -463,7 +610,11 @@ exports.listReplies = function (req, res, next) {
       });
       topic_ids = _.uniq(topic_ids);
 
-      var query = {'_id': {'$in': topic_ids}};
+      var query = {
+        '_id': {
+          '$in': topic_ids
+        }
+      };
       Topic.getTopicsByQuery(query, {}, proxy.done('topics', function (topics) {
         topics = _.sortBy(topics, function (topic) {
           return topic_ids.indexOf(topic._id.toString())
@@ -477,9 +628,13 @@ exports.listReplies = function (req, res, next) {
         var topic_ids = replies.map(function (reply) {
           return reply.parent_id ? reply.parent_id.toString() : reply.topic_id.toString()
         })
-        topic_ids = _.uniq(topic_ids); 
+        topic_ids = _.uniq(topic_ids);
 
-        var query = {_id: {'$in': topic_ids}};
+        var query = {
+          _id: {
+            '$in': topic_ids
+          }
+        };
         var opt = {};
         Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
           recent_replies = _.sortBy(recent_replies, function (topic) {
@@ -510,7 +665,9 @@ exports.block = function (req, res, next) {
     if (action === 'set_block') {
       ep.all('block_user',
         function (user) {
-          res.json({status: 'success'});
+          res.json({
+            status: 'success'
+          });
         });
       user.is_block = true;
       user.save(ep.done('block_user'));
@@ -519,7 +676,9 @@ exports.block = function (req, res, next) {
       user.is_block = false;
       user.save(ep.done(function () {
 
-        res.json({status: 'success'});
+        res.json({
+          status: 'success'
+        });
       }));
     }
   }));
@@ -537,13 +696,37 @@ exports.deleteAll = function (req, res, next) {
     }
     ep.all('del_topics', 'del_replys', 'del_ups',
       function () {
-        res.json({status: 'success'});
+        res.json({
+          status: 'success'
+        });
       });
     // 删除主题
-    TopicModel.update({author_id: user._id}, {$set: {deleted: true}}, {multi: true}, ep.done('del_topics'));
+    TopicModel.update({
+      author_id: user._id
+    }, {
+      $set: {
+        deleted: true
+      }
+    }, {
+      multi: true
+    }, ep.done('del_topics'));
     // 删除评论
-    ReplyModel.update({author_id: user._id}, {$set: {deleted: true}}, {multi: true}, ep.done('del_replys'));
+    ReplyModel.update({
+      author_id: user._id
+    }, {
+      $set: {
+        deleted: true
+      }
+    }, {
+      multi: true
+    }, ep.done('del_replys'));
     // 点赞数也全部干掉
-    ReplyModel.update({}, {$pull: {'ups': user._id}}, {multi: true}, ep.done('del_ups'));
+    ReplyModel.update({}, {
+      $pull: {
+        'ups': user._id
+      }
+    }, {
+      multi: true
+    }, ep.done('del_ups'));
   }));
 };
