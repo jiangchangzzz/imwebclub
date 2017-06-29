@@ -4,9 +4,18 @@ $(document).ready(function(){
     $('.follow-btn').click(function(e){
         var btn=$(e.target);
         var id=btn.data('id');
+        toggleFollow(id,btn);
+    });
 
-        $.ajax({
-            url: '',
+    $('.cancel-btn').click(function(e){
+        var btn=$(e.target);
+        var id=btn.data('id');
+        toggleFollow(id,btn);
+    });
+
+    function toggleFollow(id,btn){
+         $.ajax({
+            url: '/operate/follow',
             type: 'post',
             data: {
                 object_id: id,
@@ -14,7 +23,8 @@ $(document).ready(function(){
             },
             success: function(data){
                 if(data.ret===0){
-                    btn.text('关注');
+                    btn.siblings('button').removeClass('hide');
+                    btn.addClass('hide');
                 }
                 else if(data.msg){
                     console.log(data.msg);
@@ -24,5 +34,5 @@ $(document).ready(function(){
                 console.log(msg); 
             }
         })
-    })
+    }
 });

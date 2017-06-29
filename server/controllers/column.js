@@ -37,9 +37,7 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
-     console.log( topics.map(function (item) {
-          return dataAdapter.outTopic(item);
-        }));
+      console.log(is_follow);
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
