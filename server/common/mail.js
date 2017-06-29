@@ -247,6 +247,44 @@ exports.sendNewTopicToTeamMembers = function (data) {
 };
 
 /**
+ * 专栏添加了新文章，邮件通知关注该专栏的小伙伴
+ */
+exports.sendColumnTopicToFollowers = function (data) {
+    var users = [];
+    _.each(data.followers, function(item) {
+        if (item.email) {
+            users.push(item);
+        }
+    });
+    var subjectTpl = '[<%= column.title %>]专栏' 
+        + '发布了新文章<%=topic.title%>';
+    var htmlTpl = [
+        '<p><%= me.name || me.loginname %> 您好:</p>',
+        '<p>',
+            '[<%= column.title %>]专栏 发布了新文章：',
+            '<a href="<%=siteUrl%>/topic/<%=topic._id%>"><%=topic.title%></a>',
+        '</p>',
+        '<p>快去围观吧~~</p>',
+        MAIL_FOOT
+    ].join('');
+
+    async.eachLimit(users, 20, function(user, callback) {
+        var tplData = _.extend({}, data || {}, {
+            siteUrl: SITE_ROOT_URL,
+            me: user
+        });
+        var subject = _.template(subjectTpl)(tplData);
+        var html = _.template(htmlTpl)(tplData);
+        exports.sendMail({
+            from: MAIL_FROM,
+            to: user.email,
+            subject: subject,
+            html: html
+        }, callback);
+    });
+};
+
+/**
  * 每日推送
  */
 exports.sendDailyPush = function (data) {
