@@ -4,12 +4,7 @@ $(document).ready(function () {
 
   //ajax配置
   var ajaxOption = {
-    url: '',
     type: 'post',
-    data: {
-      columnid: columnid,
-      topicids: topicids
-    },
     success: function (data) {
       if (data.ret === 0) {
         location.href = '/admin/topic/all';
@@ -24,6 +19,9 @@ $(document).ready(function () {
 
   //添加文章到专栏
   $('#addTopic').click(function (e) {
+    var option=Object.assign({},ajaxOption,{
+      url: 
+    })
     var topicids = getChecked();
     var columnid = $('column-select').val();
     $.ajax(ajaxOption);
