@@ -2,36 +2,70 @@
 
 $(document).ready(function () {
 
-  //ajax配置
-  var ajaxOption = {
-    type: 'post',
-    success: function (data) {
-      if (data.ret === 0) {
-        location.href = '/admin/topic/all';
-      } else if (data.msg) {
-        alert(data.msg);
-      }
-    },
-    error: function (msg) {
-      console.log(msg);
-    }
-  };
-
   //添加文章到专栏
   $('#addTopic').click(function (e) {
-    var option=Object.assign({},ajaxOption,{
-      url: 
-    })
     var topicids = getChecked();
-    var columnid = $('column-select').val();
-    $.ajax(ajaxOption);
+    var columnid = $('#column-select').val();
+
+    if(topicids.length===0){
+      $('#topic-info').text('请选择至少一篇文章');
+      return;
+    }
+
+    $.ajax({
+      url: '/column/add_topic',
+      type: 'post',
+      data: {
+        cid: columnid,
+        tids: topicids
+      },
+      success: function(data){
+        if(data.ret===0){
+          $('#topic-info').text('向专栏中添加文章成功');
+        }
+        else{
+          $('#topic-info').text('向专栏中添加文章失败，请重试');
+          console.log(data);
+        }
+      },
+      error: function(msg){
+        $('#topic-info').text('网络错误，请检查');
+        console.log(msg);
+      }
+    });
   });
 
   //从专栏中移除文章
   $('#removeTopic').click(function (e) {
     var topicids = getChecked();
-    var columnid = $('column-select').val();
-    $.ajax(ajaxOption);
+    var columnid = $('#column-select').val();
+
+    if(topicids.length===0){
+      $('#topic-info').text('请选择至少一篇文章');
+      return;
+    }
+
+    $.ajax({
+      url: '/column/remove_topic',
+      type: 'post',
+      data: {
+        cid: columnid,
+        tids: topicids
+      },
+      success: function(data){
+        if(data.ret===0){
+          $('#topic-info').text('从专栏中移除文章成功');
+        }
+        else{
+          $('#topic-info').text('从专栏中移除文章失败，请重试');
+          console.log(data);
+        }
+      },
+      error: function(msg){
+        $('#topic-info').text('网络错误，请检查');
+        console.log(msg);
+      }
+    });
   });
 
   function getChecked() {

@@ -51,14 +51,15 @@
 			<%- partial('topic_list',{collection:topics, as:'topic',columns: columns}) %>
 				</tbody>
 			</table>
-			<div>
-				<select id="column-select">
+			<div class="form-group">
+				<select id="column-select" class="form-control column-select">
 					<% columns.forEach(function(column){ %>
 					<option value="<%= column._id %>"><%= column.title %></option>
 					<% }) %>
 				</select>
-				<button type="button" id="addTopic">添加</button>
-				<button type="button" id="removeTopic">移除</button>
+				<button type="button" class="btn btn-primary" id="addTopic">添加</button>
+				<button type="button" class="btn btn-default" id="removeTopic">移除</button>
+				<span id="topic-info"></span>
 			</div>
 			<div class='pagination' current_page='<%= current_page %>'>
 				  <ul>

@@ -1,28 +1,34 @@
 'use strict';
 
 $(document).ready(function(){
+    var validators={
+        title: validateTitle,
+        cover: validateCover,
+        description: validateDescription
+    }
+
+    $('#columnForm').change(function(e){
+        var id=e.target.id;
+        if(validators.hasOwnProperty(id)){
+            validators[id]();
+        }
+    });
+
     //提交表单
     $('#columnForm').on('submit',function(e){
         var res=true;
-
-        var title=$('#title').val().trim();
-        if(!title){
-            $('#titleGroup').addClass('has-error');
-            res=false;
+        for(var i in validators){
+            var v=validators[i]();
+            res=res && v;
         }
-        
-        var cover=$('cover').val();
-        if(!cover){
-            $('file-group').addClass('has-error');
-            res=false;
-        }
-
         return res;
     });
 
     //重置表单
     $('#columnForm').on('reset',function(e){
         $('#titleGroup').removeClass('has-error');
+        $('#file-group').removeClass('has-error');
+        $('#description-group').removeClass('has-error');
     });
 
     //图片上传
@@ -63,9 +69,47 @@ $(document).ready(function(){
             },
             error: function(msg){
                 $('#file-info').text('网络错误，请检查');
-                console.log(msg);
+                console.log(msg); 
             }
         })
+    }
+
+    //标题表单验证
+    function validateTitle(){
+        var title=$('#title').val().trim();
+        if(!title){
+            $('#titleGroup').addClass('has-error');
+            return false;
+        }else{
+            $('#titleGroup').removeClass('has-error');
+            return true;
+        }
+    }
+
+    //封面表单验证
+    function validateCover(){
+        var cover=$('#cover').val();
+        if(!cover){
+            $('#file-group').addClass('has-error');
+            return false;
+        }
+        else{
+            $('#file-group').removeClass('has-error');
+            return true;
+        }
+    }
+
+    //描述表单验证
+    function validateDescription(){
+        var description=$('#description').val();
+        if(!description){
+            $('#description-group').addClass('has-error');
+            return false;
+        }
+        else{
+            $('#description-group').removeClass('has-error');
+            return true;
+        }
     }
 });
 
