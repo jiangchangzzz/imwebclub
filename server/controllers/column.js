@@ -28,6 +28,7 @@ var renderHelper = require('../common/render_helper');
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
+  var isAdmin=currentUser.is_admin || false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
 
@@ -37,9 +38,7 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
-      console.log(topics.map(function (item) {
-          return dataAdapter.outTopic(item);
-        }));
+      console.log(currentUser);
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
@@ -50,6 +49,7 @@ exports.index = function (req, res, next) {
         current_page: page,
         pages: pages,
         is_follow: !!is_follow,
+        isAdmin: isAdmin,
         _layoutFile: false
       });
     });
@@ -123,6 +123,7 @@ exports.index = function (req, res, next) {
  */
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
+  var isAdmin=currentUser.is_admin || false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -189,7 +190,7 @@ exports.list = function (req, res, next) {
       pages: pages,
       pageTitle: '专栏列表',
       sort: req.query.sort,
-      is_admin: currentUser.is_admin,
+      isAdmin: isAdmin,
       _layoutFile: false
     });
   });

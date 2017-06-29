@@ -51,15 +51,17 @@
               <a href="?sort=hot" class="<%= sort==='hot'?'active':'' %>">热门</a> |
               <a href="?sort=latest" class="<%= sort==='latest'?'active':'' %>">最新</a>
             </div>
+            <% if(isAdmin){ %>
             <div class="list-right">
               <a href="/column/create">创建专栏</a>
             </div>
+            <% } %>
           </div>
           <ul class="column-list">
             <% columns.forEach(function(column){ %>
             <li class="column-item clearfix">
               <div class="list-head">
-                <a href="#"><img src="../../images/activity1.jpg" alt="用户头像"></a>
+                <a href="/user/<%= column.owner.loginname %>/index"><img src=<%= column.owner.avatar %> alt="用户头像"></a>
               </div>
               <div class="list-img">
                 <div class="follow">
