@@ -137,7 +137,7 @@ exports.index = function (req, res, next) {
   //获取主页专栏数据
   cache.get('columns',proxy.done(function(columns){
     if(columns){
-      proxy.emit('columns',columns);
+      return proxy.emit('columns',columns);
     }
     else{
       var options = {
@@ -145,8 +145,10 @@ exports.index = function (req, res, next) {
         sort: '-follower_count -create_at'
       };
       Column.getColumnsByQuery({},options,proxy.done(function(columns){
-        cache.set('columns',columns,60*1);
-        proxy.emit('columns',columns);
+        var res = columns.map(function (column) {
+          return dataAdapter.outColumn(column);
+        });
+        cache.set('columns',res,60*1);
       }));
     }
   }));

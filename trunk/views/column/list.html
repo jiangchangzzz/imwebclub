@@ -63,14 +63,14 @@
               </div>
               <div class="list-img">
                 <div class="follow">
-                  <button type="button">已关注</button>
+                  <button type="button" class="follow-btn" data-id=<%= column.id %>>关注</button>
                 </div>
                 <div class="thumbnail">
                   <img src="<%= column.cover %>" alt="专栏图片">
                 </div>
               </div>
               <div class="list-content">
-                <h3><a href="#"><%= column.title %>专栏</a></h3>
+                <h3><a href="/column/<%= column.id %>"><%= column.title %>专栏</a></h3>
                 <p class="content-sub">
                   <span><%= column.follower_count %>篇文章</span>
                   <span><%= column.follower_count %>人关注</span>
@@ -83,6 +83,47 @@
             <% }) %>
           </ul>
         </div>
+
+        <div class="pagination" current_page="<%= current_page %>">
+      <ul>
+        <% var base='/column/list' %>
+        <% var base_url = base + (base.indexOf("?") < 0 ? "?" : "&") + "page="; %>
+        <% if (current_page == 1) { %>
+        <li class="disabled btn-step"><i class="fa fa-backward"></i></li>
+        <% } else { %>
+        <li class="btn-step" title="首页"><a href="<%= base_url %>1"><i class="fa fa-step-backward"></i></a></li>
+        <li class="btn-step" title="前一页"><a href="<%= base_url %><%= (current_page-1) %>"><i class="fa fa-backward"></i></a></li>
+        <% } %>
+
+        <%
+        var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
+        var page_end = page_start + 4 >= pages ? pages : page_start + 4;
+        %>
+
+        <% if (page_start > 1) { %>
+        <li><a>...</a></li>
+        <% } %>
+
+        <% for(var i = page_start; i <= page_end; i++) { %>
+        <% if (i === current_page) { %>
+        <li class="disabled"><a><%= i %></a></li>
+        <% } else { %>
+        <li title="<%= i %>"><a href="<%= base_url + i %>"><%= i %></a></li>
+        <% } %>
+        <% } %>
+
+        <% if (page_end < pages ) { %>
+        <li><a>...</a></li>
+        <% } %>
+
+        <% if (current_page == pages) { %>
+        <li class="disabled btn-step"><i class="fa fa-forward"></i></li>
+        <% } else { %>
+        <li class="btn-step" title="下一页"><a href="<%= base_url + (current_page+1) %>"><i class="fa fa-forward"></i></a></li>
+        <li class="btn-step" title="尾页"><a href="<%= base_url + pages %>"><i class="fa fa-step-forward"></i></a></li>
+        <% } %>
+      </ul>
+    </div>
         
     </div>
     <%- partial('common/loginpop.html') %>
