@@ -335,33 +335,56 @@ exports.delete = function (req, res, next) {
 };
 
 /**
- * 向某专栏添加一篇文章
+ * 向某专栏添加文章
  */
 exports.addTopic = function (req, res, next) {
   var ep = tools.createJsonEventProxy(res, next);
-  if (!req.body.cid || !req.body.tid) {
+  var column_id = req.body.cid;
+  var topic_ids = req.body.tids;
+  var user = req.session.user;
+  if (!column_id || !topic_ids || !Array.isArray(topic_ids)) {
     return ep.emit('fail', 403, '参数错误！');
   }
-  var column_id = req.body.cid;
-  var topic_id = req.body.tid;
-  var user = req.session.user;
+
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-  Column.getColumnById(column_id, ep.done(function (column) {
-    if (!column) {
-      return ep.emit('fail', '此活动不存在或已被删除。');
-    }
-    TopicColumn.newAndSave(column_id, topic_id, function (err, item) {
-      if (err || !column) {
-        return ep.emit('fail', 403);
-      }
-      column.topic_count++;
-      column.save(ep.done(function () {
-        ep.emit('done');
-      }));
+  
+  if (topic_ids.length > 0) {
+    ep.after('deal', topic_ids.length, function () {
+      ep.emit('done');
     });
-  }));
+
+    Column.getColumnById(column_id, function (err, column) {
+      if (err || !column) {
+        return ep.emit('fail', '此活动不存在或已被删除。');
+      }
+
+      for (var i = 0; i < topic_ids.length; i++) {
+        var topic_id = topic_ids[i];
+        TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+          if (err) {
+            return ep.emit('fail', 403);
+          }
+          if (item) { // 兼容重复添加
+            ep.emit('deal');
+          } else {
+            TopicColumn.newAndSave(column_id, topic_id, function (err) {
+              if (err) {
+                return ep.emit('fail', 403);
+              }
+              column.topic_count++;
+              column.save(ep.done(function () {
+                ep.emit('deal');
+              }));
+            });
+          }
+        });
+      }
+    });
+  } else {
+    ep.emit('done');
+  }
 }
 
 /**
@@ -369,29 +392,50 @@ exports.addTopic = function (req, res, next) {
  */
 exports.removeTopic = function (req, res, next) {
   var ep = tools.createJsonEventProxy(res, next);
-  if (!req.body.cid || !req.body.tid) {
+  var column_id = req.body.cid;
+  var topic_ids = req.body.tids;
+  var user = req.session.user;
+  if (!column_id || !topic_ids || !Array.isArray(topic_ids)) {
     return ep.emit('fail', 403, '参数错误！');
   }
-  var column_id = req.body.cid;
-  var topic_id = req.body.tid;
-  var user = req.session.user;
+
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-  Column.getColumnById(column_id, ep.done(function (column) {
-    if (!column) {
-      return ep.emit('fail', '此活动不存在或已被删除。');
-    }
-    TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
-      if (err || !column) {
-        return ep.emit('fail', 403);
-      }
-      item.remove(function () {
-        column.topic_count--;
-        column.save(ep.done(function () {
-          ep.emit('done');
-        }));
-      });
+  
+  if (topic_ids.length > 0) {
+    ep.after('deal', topic_ids.length, function () {
+      ep.emit('done');
     });
-  }));
+
+    Column.getColumnById(column_id, function (err, column) {
+      if (err || !column) {
+        return ep.emit('fail', '此活动不存在或已被删除。');
+      }
+
+      for (var i = 0; i < topic_ids.length; i++) {
+        var topic_id = topic_ids[i];
+        TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
+          if (err) {
+            return ep.emit('fail', 403);
+          }
+          if (!item) { // 兼容重复删除
+            ep.emit('deal');
+          } else {
+            item.remove(function (err) {
+              if (err) {
+                return ep.emit('fail', 403);
+              }
+              column.topic_count--;
+              column.save(ep.done(function () {
+                ep.emit('deal');
+              }));
+            });
+          }
+        });
+      }
+    });
+  } else {
+    ep.emit('done');
+  }
 }
