@@ -46,7 +46,7 @@
     <div id="main" class="clearfix">
       <%- partial('common/sidebar.html') %>
         <div id="content">
-          <nav class="index-nav">
+          <nav class="bread-nav">
             <a href="/column/list">专栏列表</a>>
             <span><%= column.title %>专栏</span>
           </nav>
@@ -100,6 +100,7 @@
           </ul>
         </div>
 
+        <% if(column.topic_count>0){ %>
          <div class="pagination" current_page="<%= current_page %>">
       <ul>
         <% var base='/column/'+column.id %>
@@ -140,6 +141,9 @@
         <% } %>
       </ul>
     </div>
+    <% }else{ %>
+    <p class="no-topic">当前专栏还没有文章，请联系管理员速速添加吧^_^</p>
+    <% } %>
 
     </div>
     <%- partial('common/loginpop.html') %>

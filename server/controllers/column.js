@@ -78,7 +78,7 @@ exports.index = function (req, res, next) {
   var pagesCacheKey = `column_${column_id}_pages`;
   cache.get(pagesCacheKey, proxy.done(function (pages) {
     if (pages) {
-      proxy.emit('pages', pages);
+      proxy.emit('pages', pages); 
     } else {
       TopicColumn.getColumnTopicCount(column_id, proxy.done(function (topic_count) {
         var pages = Math.ceil(topic_count / limit);
@@ -182,7 +182,6 @@ exports.list = function (req, res, next) {
   });
 
   proxy.all('columns', 'pages', function (columns, pages) {
-    console.log(columns);
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
@@ -190,6 +189,7 @@ exports.list = function (req, res, next) {
       pages: pages,
       pageTitle: '专栏列表',
       sort: req.query.sort,
+      is_admin: currentUser.is_admin,
       _layoutFile: false
     });
   });

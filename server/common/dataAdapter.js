@@ -144,7 +144,7 @@ exports.outTopic = function(item, options) {
     return out;
 };
 
-exports.outColumn = function(item){
+exports.outColumn = function(item){ 
     var out = {
         id: item._id.toString(),
         title: item.title,

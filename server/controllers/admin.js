@@ -266,6 +266,34 @@ exports.reply = function(req, res, next){
 	});
 };
 
+exports.column=function(req,res,next){
+    var proxy = new EventProxy();
+
+    proxy.all('columns',function(columns){
+        res.render('admin/column/index',{
+            columns: columns,
+            layout: false
+        });
+    })
+
+    var page=req.query.page || 1;     
+    var limit = config.list_activity_count;
+    var options = {
+        skip: (page - 1) * limit,
+        limit: limit
+    };
+    Column.getColumnsByQuery({},options,proxy.done('columns',function(columns){
+        if(columns && columns.length>0){
+            return columns;
+        }
+        else{
+            return [];
+        }
+    }));
+
+
+};
+
 exports.banner = function(req, res, next){
     Banner.bannerList(function(results) {
         res.render('admin/banner/index',{'layout':false, 'banners': results});
