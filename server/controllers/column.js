@@ -37,8 +37,9 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
-      console.log('ready');
-     console.log(column);
+      console.log(topics.map(function (item) {
+          return dataAdapter.outTopic(item);
+        }));
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
@@ -169,7 +170,7 @@ exports.list = function (req, res, next) {
         if (!currentUser) {
           proxy.emit('column', dataAdapter.outColumn(column));
         } else {
-          UserFollow.getUserFollow(currentUser._id, column_id, proxy.done(function (item){
+          UserFollow.getUserFollow(currentUser._id, column._id, proxy.done(function (item){
             column.is_follow = !!item;
             proxy.emit('column', dataAdapter.outColumn(column));
           }));
@@ -199,6 +200,7 @@ exports.list = function (req, res, next) {
  */
 exports.create = function (req, res, next) {
   res.render('column/edit', {
+    isEdit: false,
     active: 'column',
     _layoutFile: false
   });
@@ -210,6 +212,7 @@ exports.create = function (req, res, next) {
 exports.put = function (req, res, next) {
   if (!req.body.title || !req.body.description || !req.body.cover) {
     req.body._layoutFile = false;
+    req.body.isEdit=false
     res.render('/column/edit', req.body);
     return;
   }
@@ -221,6 +224,7 @@ exports.put = function (req, res, next) {
   Column.newAndSave(title, description, cover, user._id, function (err, column) {
     if (err || !column) {
       req.body._layoutFile = false;
+      req.body.isEdit=false
       res.render('/column/edit', req.body);
       return;
     }
@@ -262,7 +266,7 @@ exports.showEdit = function (req, res, next) {
  */
 exports.update = function (req, res, next) {
   var json = req.body.json === 'true';
-  var column_id = req.params.tid;
+  var column_id = req.params.cid;
   var title = escapeHtml(validator.trim(req.body.title));
   var description = req.body.description;
   var cover = req.body.cover;
@@ -292,6 +296,7 @@ exports.update = function (req, res, next) {
       return res.render('column/edit', {
         active: 'column',
         action: 'edit',
+        isEdit: true,
         edit_error: msg,
         column_id: column._id,
         title: column.title,

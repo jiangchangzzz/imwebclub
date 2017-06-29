@@ -65,7 +65,8 @@
               </p>
             </div>
             <div class="header-btn">
-              <button type="button" class="btn follow-btn" data-id=<%= column.id %>>关注</button>
+              <button type="button" class="btn cancel-btn <%= is_follow?'':'hide' %>" data-id=<%= column.id %>>取消关注</button>
+              <button type="button" class="btn follow-btn <%= is_follow?'hide':'' %>" data-id=<%= column.id %>>关注</button>
               <a href="/column/<%= column_id %>/edit" class="link-btn">修改专栏</a>
             </div>
           </div>
@@ -73,12 +74,12 @@
             <% topics.forEach(function(topic){ %>
               <li class="article-item clearfix">
               <div class="article-head">
-                <a href="#"><img src="../../images/activity1.jpg"></a>
+                <a href="user/<%= topic.author.loginname %>/index"><img src=<%= topic.author.avatar %>></a>
               </div>
               <div class="article-content">
                 <div class="clearfix">
                   <div class="article-title">
-                    <h3><a href=<%= topic.title %>><%= topic.title %></a></h3>
+                    <h3><a href=<%= '/topic/'+topic.id %>><%= topic.title %></a></h3>
                     <p>
                       <span><%= topic.author.name %>于<%= topic.friendly_create_at %>发表</span>
                       <span class="title-icon"><i class="fa fa-eye"></i><%= topic.reply_count %></span>

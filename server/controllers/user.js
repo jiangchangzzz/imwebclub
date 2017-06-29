@@ -2,6 +2,7 @@ var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var Reply = require('../proxy').Reply;
 var Question = require('../proxy').Question;
+var Activity=require('../proxy').Activity;
 var UserCollect = require('../proxy').UserCollect;
 var Column = require('../PROXY').Column;
 var UserFollow = require('../proxy').UserFollow;
