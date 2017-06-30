@@ -22,6 +22,10 @@ exports.remove = function (columnId, topicId, callback) {
   TopicColumn.remove({column_id: columnId, topic_id: topicId}, callback);
 };
 
+exports.removeByColumnId = function (columnId, callback) {
+  TopicColumn.remove({column_id: columnId}, callback);
+};
+
 /**
  * 获取某文章被添加到专栏的次数
  */
