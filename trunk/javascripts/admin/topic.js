@@ -47,7 +47,7 @@ $(document).ready(function () {
 
     $.ajax({
       url: '/column/remove_topic',
-      type: 'post',
+      type: 'post', 
       data: {
         cid: columnid,
         tids: topicids

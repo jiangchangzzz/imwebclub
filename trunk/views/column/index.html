@@ -65,14 +65,15 @@
               </p>
             </div>
             <div class="header-btn">
-              <button type="button" class="btn cancel-btn <%= is_follow?'':'hide' %>" data-id=<%= column.id %>>取消关注</button>
+              <span id="column-id" class="hide"><%= column.id %></span>
+              <button type="button" class="btn btn-default cancel-btn <%= is_follow?'':'hide' %>" data-id=<%= column.id %>>取消关注</button>
               <button type="button" class="btn follow-btn <%= is_follow?'hide':'' %>" data-id=<%= column.id %>>关注</button>
               <% if(isAdmin){ %>
               <a href="/column/<%= column_id %>/edit" class="link-btn">修改专栏</a>
               <% } %>
             </div>
           </div>
-          <ul>
+          <ul id="topic-list">
             <% topics.forEach(function(topic){ %>
               <li class="article-item clearfix">
               <div class="article-head">
@@ -89,9 +90,12 @@
                       <span class="title-icon"><i class="fa fa-heart"></i>0</span>
                     </p>
                   </div>
+                  <% if(isAdmin){ %>
                   <div class="article-tag">
-                    <div><i></i><%= topic.friendly_create_at %></div>
+                    <button type="button" class="btn btn-default delete-btn" data-tid=<%= topic.id %>>移除文章</button>
+                    <p class="delete-info"></p>
                   </div>
+                  <% } %>
                 </div>
                 <p class="article-text">
                   <%= topic.summary %>

@@ -333,7 +333,7 @@ exports.delete = function (req, res, next) {
   var column_id = req.params.cid;
   var ep = tools.createJsonEventProxy(res, next);
 
-  Column.getColumnById(column_id, function (err, err_msg, column) {
+  Column.getColumnById(column_id, function (err, column) {
     if (err) {
       return ep.emit('fail', 403, err.message);
     }
