@@ -64,7 +64,7 @@ exports.index = function (req, res, next) {
     } else {
       Topic.getTopicsByQuery({
         'create_at': {
-          $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 60 * 1000).toISOString()
+          $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 14 * 1000).toISOString()
         }
       }, options, proxy.done('topics', function (topics) {
         var result = topics.map(function (item) {
@@ -161,8 +161,8 @@ exports.index = function (req, res, next) {
 
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners', 'columns', 'followColumns',
-    function (topics, questions, tops, activity_imweb, activity_industry, banners, columns, followColumns) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners','columns','followColumns',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners,columns,followColumns) {
       res.render('index', {
         _layoutFile: false,
         topics: topics,
