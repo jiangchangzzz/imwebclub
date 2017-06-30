@@ -7,10 +7,14 @@ var at = require('../common/at');
 var _ = require('lodash');
 var config = require('../config');
 var tools = require('../common/tools');
+var dataAdapter = require('../common/dataAdapter');
 
 exports.getColumnById = function (id, callback) {
-  Column.findOne({ _id: id, deleted: false }, function (column) {
-    return callback(activity);
+  Column.findOne({
+    _id: id,
+    deleted: false
+  }, function (err, column) {
+    return callback(err, column);
   });
 };
 
@@ -27,13 +31,22 @@ exports.getColumnsByQuery = function (query, opt, callback) {
     if (columns.length === 0) {
       return callback(null, []);
     }
-    // console.log(columns);
-    callback(null, columns);
+    var proxy = new EventProxy();
+    proxy.after('column_ready', columns.length, function (columns) {
+      return callback(null, columns);
+    });
+
+    columns.forEach(function (column, i) {
+      User.getUserById(column.owner_id, function (err, owner) {
+        column.owner = dataAdapter.outUser(owner || {});
+        proxy.emit('column_ready', column);
+      });
+    });
   });
 };
 
 exports.getFullColumn = function (id, callback) {
-  
+
 };
 
 exports.newAndSave = function (title, description, cover, ownerId, callback) {
@@ -47,7 +60,7 @@ exports.newAndSave = function (title, description, cover, ownerId, callback) {
 
 exports.queryAuthorActivity = function (ownerId, callback) {
   Column.find({
-    owner_id: ownerId
-  }).sort('-create_at')
+      owner_id: ownerId
+    }).sort('-create_at')
     .exec(callback);
 };

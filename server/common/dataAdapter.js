@@ -7,6 +7,7 @@ var _ = require('lodash');
 var qrcode = require('yaqrcode');
 var tools = require('./tools');
 var render_helper = require('./render_helper');
+var utility = require('utility');
 
 /**
  * 将二级评论附件到一级评论上
@@ -65,7 +66,7 @@ exports.outReply = function(reply) {
 exports.outUser = function(user) {
     //如果没有gravatar头像，则用默认
     var avatar = user.avatar;
-    if(!avatar){
+    if(!avatar && user.email){
       avatar = '//gravatar.com/avatar/' + utility.md5(user.email.toLowerCase()) + '?size=200';
 
       // www.gravatar.com 被墙
@@ -143,14 +144,17 @@ exports.outTopic = function(item, options) {
     return out;
 };
 
-exports.outColumn = function(item){
+exports.outColumn = function(item){ 
     var out = {
         id: item._id.toString(),
         title: item.title,
         description: item.description,
         cover: item.cover,
+        owner: item.owner,
         follower_count: item.follower_count,
+        topic_count: item.topic_count,
         create_at: +item.create_at,
+        is_follow: item.is_follow || false,
         friendly_create_at: tools.formatDate(item.create_at, true),
         update_at: +item.update_at,
         friendly_update_at: tools.formatDate(item.update_at, true),
@@ -159,10 +163,10 @@ exports.outColumn = function(item){
 }
 
 //topic类型过滤器
-exports.topicFormat = function (topics) {
+exports.topicFormat = function (topics) {   
   var arr = [];
   for (var i = 0, len = topics.length; i < len; i++) {
-    if (topics[i].type && topics[i].type == 1) {
+    if (topics[i] && topics[i].type == 1) {
       var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
       if (proArr.length >= 3) {
         topics[i].proName = proArr[2];
@@ -173,7 +177,7 @@ exports.topicFormat = function (topics) {
       arr.push(topics[i]);
     }
   }
-  return topics;
+  return arr;
 }
 
 exports.outDraft = function(item, options) {

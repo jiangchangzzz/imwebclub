@@ -1,5 +1,8 @@
 <tr class="list-users">
-	<td style="display:none;"><%= topic._id %></td>
+	<td style="display:none;" class="topic-id"><%= topic._id %></td>
+	<td>
+		<input type="checkbox" class="topic-check">
+	</td>
 	<td><%= topic.author.loginname %></td>
 	<td><%= topic.tab %></td>
 	<td><%- topic.title %></td>

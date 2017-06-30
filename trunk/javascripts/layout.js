@@ -96,3 +96,34 @@ $.extend(imweb.ajax, {
     }
 });
 //二维码
+
+$(document).ready(function(){
+    $('#column-list').delegate('.column-follow','click',function(){
+        var link=$(this);
+        var cid=link.data('cid');
+
+        $.ajax({
+            url: '/operate/follow',
+            type: 'post',
+            data: {
+                object_id: cid,
+                kind: 'column'
+            },
+            success: function(data){
+                if(data.ret===0){
+                   link.removeClass('link').text('已关注');
+                   var count=link.parent().siblings('.center').find('.follow-count');
+                   var follow=parseInt(count.text());
+                   count.text(follow+1);
+                }
+                else if(data.msg){
+                    console.log(data.msg);
+                }
+            },
+            error: function(data){
+                console.log(msg); 
+            }
+        })
+    });
+});
+

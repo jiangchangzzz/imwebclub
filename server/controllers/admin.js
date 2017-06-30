@@ -3,6 +3,8 @@ var User = require('../proxy').User;
 var Reply = require('../proxy').Reply;
 var Banner = require('../proxy').Banner;
 var Activity = require('../proxy').Activity;
+var Column=require('../proxy').Column;
+var TopicColumn=require('../proxy').TopicColumn;
 var _ = require('lodash');
 var tools = require('../common/tools');
 var EventProxy = require('eventproxy');
@@ -110,7 +112,6 @@ exports.saveUser = function(req, res, next) {
         return ep.emit('prop_err', '声望必须为数字。');
     }
 
-    console.log('---')
     User.getUserById(req.body["_id"], ep.done(function(user) {
         ep.emit('user', user);
     }));
@@ -164,6 +165,11 @@ exports.topic = function(req, res, next){
     return topics;
   }));
 
+  Column.getColumnsByQuery({},{},proxy.done('columns',function(columns){
+    return columns;
+  }));
+
+
   // 取分页数据
   var pagesCacheKey = JSON.stringify(query) + 'pages';
   cache.get(pagesCacheKey, proxy.done(function (pages) {
@@ -182,8 +188,10 @@ exports.topic = function(req, res, next){
 //   var tabs = [['all', '全部']].concat(config.tabs);
   var tabName = renderHelper.tabName(tab);
 
-  proxy.all('topics', 'pages',
-    function (topics, pages, tops) {
+  var selectedColumnId=req.query.columnid;
+
+  proxy.all('topics', 'pages','columns',/*'topicColumns',*/
+    function (topics, pages, columns,topicColumns) {
       res.render('admin/topic/index', {
         topics: _topicFormat(topics),
         current_page: page,
@@ -192,11 +200,26 @@ exports.topic = function(req, res, next){
         // tabs: tabs,
         tab: tab,
         sort: sort,
+        columns: columns,
+        topicColumns: topicColumns,
+        selectedColumnId: selectedColumnId,
         base: '/admin/topic/all',
         pageTitle: tabName && (tabName + '版块'),
         layout: false
       });
     });
+
+  if(selectedColumnId){
+    TopicColumn.getTopicColumnsBycolumnId(selectedColumnId,{},proxy.done('topicColumns',function(topicColumns){
+        var res=topicColumns.map(function(item){
+            return item.topic_id;
+        });
+        return res;
+    }))
+  }
+  else{
+      proxy.emit('topicColumns',[]);
+  }
 };
 
 //topic类型过滤器
@@ -240,6 +263,56 @@ exports.reply = function(req, res, next){
 		}
 		res.render('admin/reply/index',{"layout":false,"replies":reply_list})
 	});
+};
+
+//获取column管理界面
+exports.column=function(req,res,next){
+    var page=parseInt(req.query.page) || 1; 
+
+    var proxy = new EventProxy();
+    proxy.fail(next);
+
+    proxy.all('columns','pages',function(columns,pages){
+        columns=columns.map(function(column){
+            return dataAdapter.outColumn(column);
+        });
+        res.render('admin/column/index',{
+            columns: columns,
+            base: '/admin/column/all',
+            current_page: page,
+            pages: pages,
+            layout: false
+        });
+    });
+
+    //获取分页专栏数据    
+    var limit = config.list_activity_count;
+    var options = {
+        skip: (page - 1) * limit,
+        limit: limit
+    };
+    Column.getColumnsByQuery({},options,proxy.done(function(columns){
+        if(columns && columns.length>0){
+            proxy.after('column',columns.length,function(colums){
+                proxy.emit('columns',colums);
+            });
+
+            columns.map(function(column){
+                User.getUserById(column.owner_id,proxy.done('column',function(owner){
+                    column.owner=owner;
+                    return column;
+                }));
+            })
+        }
+        else{
+            proxy.emit('columns',[]);
+        }
+    }));
+
+    //获取页码数目
+    Column.getCountByQuery({ deleted: false },proxy.done('pages',function(pages){
+        return Math.ceil(pages/limit);
+    }));
 };
 
 exports.banner = function(req, res, next){

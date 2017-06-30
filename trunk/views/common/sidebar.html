@@ -41,89 +41,44 @@
     </a>-->
     <% } %>
     <%- partial('common/social.html') %>
-    <div id="hotSeminars" class="hide box border">
+
+    <% if(typeof columns!=='undefined' && columns.length && typeof followColumns!=='undefined'){ %>
+    <div id="hotSeminars" class="box border">
         <div class="box-head">
-            <b>热门专题</b>
-            <a href="javascript:void(0);" class="link">
+            <b>热门专栏</b>
+            <a href="/column/list" class="link">
           更多
         </a>
         </div>
         <hr class="solid-light">
         <div class="box-body">
-            <ul class="column-list">
+            <ul class="column-list" id="column-list">
+                <% columns.slice(0,5).forEach(function(column){ %>
                 <li>
                     <div class="left">
                         <div class="avatar">
-                            <img src="../../images/avatar1.jpg">
+                            <img src="<%= column.cover %>" alt="专栏封面">
                         </div>
                     </div>
                     <div class="right">
-                        <a href="javascript:void(0);" class="link">+关注</a>
+                        
+                        <% if(typeof followColumns!=='undefined' && followColumns.indexOf(column.id)!=-1){ %>
+                            <a href="javascript:void(0);">已关注</a>
+                        <% }else{ %>
+                            <a href="javascript:void(0);" class="link <%=!current_user ? 'nav-login' : 'column-follow' %>" data-cid=<%= column.id %>>+关注</a>
+                        <% } %>
+                        </a>
                     </div>
                     <div class="center">
-                        <b>结一老师的重构专栏</b>
-                        <span>524篇文章 | 234人关注</span>
+                        <a href="/column/<%= column.id %>"><%= column.title %>专栏</a>
+                        <span class="center-text"><%= column.topic_count %>篇文章 | <i class="follow-count"><%= column.follower_count %></i>人关注</span>
                     </div>
                 </li>
-                <li>
-                    <div class="left">
-                        <div class="avatar">
-                            <img src="../../images/avatar2.jpg">
-                        </div>
-                    </div>
-                    <div class="right">
-                        <a href="javascript:void(0);" class="link">+关注</a>
-                    </div>
-                    <div class="center">
-                        <b>结一老师的重构专栏</b>
-                        <span>524篇文章 | 234人关注</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="left">
-                        <div class="avatar">
-                            <img src="../../images/avatar3.jpg">
-                        </div>
-                    </div>
-                    <div class="right">
-                        <a href="javascript:void(0);" class="link">+关注</a>
-                    </div>
-                    <div class="center">
-                        <b>结一老师的重构专栏</b>
-                        <span>524篇文章 | 234人关注</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="left">
-                        <div class="avatar">
-                            <img src="../../images/avatar4.jpg">
-                        </div>
-                    </div>
-                    <div class="right">
-                        <a href="javascript:void(0);" class="link">+关注</a>
-                    </div>
-                    <div class="center">
-                        <b>结一老师的重构专栏</b>
-                        <span>524篇文章 | 234人关注</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="left">
-                        <div class="avatar">
-                            <img src="../../images/avatar5.jpg">
-                        </div>
-                    </div>
-                    <div class="right">
-                        <a href="javascript:void(0);" class="link">+关注</a>
-                    </div>
-                    <div class="center">
-                        <b>结一老师的重构专栏</b>
-                        <span>524篇文章 | 234人关注</span>
-                    </div>
-                </li>
+                <% }) %>
             </ul>
         </div>
     </div>
+    <% } %>
 
 <% if(typeof tops !== 'undefined'){ %>
     <div id="hotAuthors" class="box border">
@@ -144,7 +99,7 @@
                         </div>
                     </div>
                     <div class="right">
-                        <% if(current_user && current_user.following && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
+                        <% if(current_user && current_user.following && current_user.following.indexOf(user._id) !== -1) {%>
                             <a href="javascript:void(0);">已关注</a>
                             <% } else {%>
                                 <a href="javascript:void(0);" class="link <%=!current_user ? 'nav-login' : 'focus-add' %>" userid="<%=user.id%>">+关注</a>
