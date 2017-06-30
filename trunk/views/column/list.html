@@ -61,9 +61,6 @@
           <ul class="column-list">
             <% columns.forEach(function(column){ %>
             <li class="column-item clearfix">
-              <div class="list-head">
-                <a href="/user/<%= column.owner.loginname %>/index"><img src=<%= column.owner.avatar %> alt="用户头像"></a>
-              </div>
               <div class="list-img">
                 <div class="follow">
                   <button type="button" class="btn btn-default <%= column.is_follow?'':'hide' %> <%= isLogin?'cancel-btn':'nav-login' %>" data-id=<%= column.id %>>取消关注</button>
@@ -74,8 +71,8 @@
               <div class="list-content">
                 <h3><a href="/column/<%= column.id %>"><%= column.title %>专栏</a></h3>
                 <p class="content-sub">
-                  <span><%= column.topic_count %></span>篇文章
-                  <span><%= column.follower_count %></span>人关注
+                  <span><%= column.topic_count %>篇文章</span>
+                  <span class="follow-num"><%= column.follower_count %></span>人关注
                 </p>
                 <p class="content-desc">
                   <%= column.description %>
