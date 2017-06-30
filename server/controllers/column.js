@@ -100,15 +100,15 @@ exports.index = function (req, res, next) {
           Topic.getTopicById(items[i].topic_id, function (err, topic) {
             var prx = EventProxy.create();
             User.getUserById(topic.author_id, prx.done('author'));
-            if (topic.last_reply) {
-              Reply.getReplyById(topic.last_reply, prx.done('reply'));
-            } else {
-              Reply.getLastReplyByParentId(topic._id, prx.done('reply'));
-            }
+            // if (topic.last_reply) {
+            //   Reply.getReplyById(topic.last_reply, prx.done('reply'));
+            // } else {
+            //   Reply.getLastReplyByParentId(topic._id, prx.done('reply'));
+            // }
 
-            prx.all('author', 'reply', function (author, reply) {
+            prx.all('author', function (author) {
               topic.author = dataAdapter.outUser(author || {});
-              topic.reply = reply;
+              // topic.reply = reply;
               topic.friendly_create_at = tools.formatDate(topic.create_at, true);
               topic.friendly_update_at = tools.formatDate(topic.update_at, true);
               proxy.emit('topic', topic);
@@ -420,7 +420,7 @@ exports.addTopic = function (req, res, next) {
                   return ep.emit('fail', 403);
                 }
                 column.topic_count++;
-                
+
                 column.save(ep.done(function () {
                   notificateSubscriber(user, column, function(){
                     ep.emit('deal');
