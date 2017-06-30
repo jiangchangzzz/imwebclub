@@ -307,13 +307,13 @@ exports.follow = function(req, res, next) {
   });
 
   proxy.all('object', 'user', 'follow', function(object, user) {
-      UserCollect.getObjectCollectCount(object._id, proxy.done(function(count) {
+      UserFollow.getObjectFollowCount(object._id, proxy.done(function(count) {
           object.follower_count = count;
           object.save(function(){
             proxy.emit('object_updated', count);
           });
       }));
-      UserCollect.getUserCollectCount(user._id, kind, proxy.done(function(count) {
+      UserFollow.getUserFollowCount(user._id, kind, proxy.done(function(count) {
           if(kind === 'user'){
             user.following_count = count;
             user.save(function(){

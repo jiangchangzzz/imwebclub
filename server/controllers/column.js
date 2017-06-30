@@ -28,6 +28,7 @@ var renderHelper = require('../common/render_helper');
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
+  var isAdmin=currentUser.is_admin || false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
 
@@ -37,9 +38,7 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
-      console.log(topics.map(function (item) {
-        return dataAdapter.outTopic(item);
-      }));
+      console.log(currentUser);
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
@@ -50,6 +49,7 @@ exports.index = function (req, res, next) {
         current_page: page,
         pages: pages,
         is_follow: !!is_follow,
+        isAdmin: isAdmin,
         _layoutFile: false
       });
     });
@@ -78,7 +78,7 @@ exports.index = function (req, res, next) {
   var pagesCacheKey = `column_${column_id}_pages`;
   cache.get(pagesCacheKey, proxy.done(function (pages) {
     if (pages) {
-      proxy.emit('pages', pages);
+      proxy.emit('pages', pages); 
     } else {
       TopicColumn.getColumnTopicCount(column_id, proxy.done(function (topic_count) {
         var pages = Math.ceil(topic_count / limit);
@@ -123,6 +123,7 @@ exports.index = function (req, res, next) {
  */
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
+  var isAdmin=currentUser.is_admin || false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -182,7 +183,6 @@ exports.list = function (req, res, next) {
   });
 
   proxy.all('columns', 'pages', function (columns, pages) {
-    console.log(columns);
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
@@ -190,6 +190,7 @@ exports.list = function (req, res, next) {
       pages: pages,
       pageTitle: '专栏列表',
       sort: req.query.sort,
+      isAdmin: isAdmin,
       _layoutFile: false
     });
   });

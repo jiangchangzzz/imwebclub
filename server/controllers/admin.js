@@ -266,6 +266,54 @@ exports.reply = function(req, res, next){
 	});
 };
 
+//获取column管理界面
+exports.column=function(req,res,next){
+    var page=parseInt(req.query.page) || 1; 
+
+    var proxy = new EventProxy();
+    proxy.fail(next);
+
+    proxy.all('columns','pages',function(columns,pages){
+        columns=columns.map(function(column){
+            return dataAdapter.outColumn(column);
+        });
+        console.log(columns);
+        res.render('admin/column/index',{
+            columns: columns,
+            base: '/admin/column/all',
+            current_page: page,
+            pages: pages,
+            layout: false
+        });
+    });
+
+    //获取分页专栏数据    
+    var limit = config.list_activity_count;
+    var options = {
+        skip: (page - 1) * limit,
+        limit: limit
+    };
+    Column.getColumnsByQuery({},options,proxy.done(function(columns){
+        if(columns && columns.length>0){
+            proxy.after('column',columns.length,function(colums){
+                proxy.emit('columns',colums);
+            });
+
+            columns.map(function(column){
+                User.getUserById(column.owner_id,proxy.done('column',function(owner){
+                    column.owner=owner;
+                    return column;
+                }));
+            })
+        }
+    }));
+
+    //获取页码数目
+    Column.getCountByQuery({},proxy.done('pages',function(pages){
+        return Math.ceil(pages/limit);
+    }));
+};
+
 exports.banner = function(req, res, next){
     Banner.bannerList(function(results) {
         res.render('admin/banner/index',{'layout':false, 'banners': results});
