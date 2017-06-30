@@ -33,6 +33,10 @@ exports.remove = function (userId, objectId, callback) {
   UserFollow.remove({user_id: userId, object_id: objectId}, callback);
 };
 
+exports.removeByObjectId = function (objectId, callback) {
+  UserFollow.remove({object_id: objectId}, callback);
+};
+
 /**
  * 获取目标被关注的数目
  */

@@ -7,7 +7,7 @@ var at = require('../common/at');
 var User = require('../proxy').User;
 var Column = require('../proxy').Column;
 var Topic = require('../proxy').Topic;
-var Reply=require('../proxy').Reply;
+var Reply = require('../proxy').Reply;
 var UserFollow = require('../proxy').UserFollow;
 var TopicColumn = require('../proxy').TopicColumn;
 var EventProxy = require('eventproxy');
@@ -162,7 +162,7 @@ exports.list = function (req, res, next) {
     if (err) {
       return proxy.emit('fail');
     }
-    if(columns && columns.length > 0){
+    if (columns && columns.length > 0) {
       proxy.after('column', columns.length, function (objects) {
         proxy.emit('columns', objects);
       });
@@ -171,7 +171,7 @@ exports.list = function (req, res, next) {
         if (!currentUser) {
           proxy.emit('column', dataAdapter.outColumn(column));
         } else {
-          UserFollow.getUserFollow(currentUser._id, column._id, proxy.done(function (item){
+          UserFollow.getUserFollow(currentUser._id, column._id, proxy.done(function (item) {
             column.is_follow = !!item;
             proxy.emit('column', dataAdapter.outColumn(column));
           }));
@@ -213,7 +213,7 @@ exports.create = function (req, res, next) {
 exports.put = function (req, res, next) {
   if (!req.body.title || !req.body.description || !req.body.cover) {
     req.body._layoutFile = false;
-    req.body.isEdit=false
+    req.body.isEdit = false
     res.render('/column/edit', req.body);
     return;
   }
@@ -225,7 +225,7 @@ exports.put = function (req, res, next) {
   Column.newAndSave(title, description, cover, user._id, function (err, column) {
     if (err || !column) {
       req.body._layoutFile = false;
-      req.body.isEdit=false
+      req.body.isEdit = false
       res.render('/column/edit', req.body);
       return;
     }
@@ -343,7 +343,8 @@ exports.delete = function (req, res, next) {
     if (!column) {
       return ep.emit('fail', 403, '此话题不存在或已被删除。');
     }
-
+    column.topic_count = 0;
+    column.follower_count = 0;
     column.deleted = true;
     column.save(function (err) {
       if (err) {
@@ -352,7 +353,23 @@ exports.delete = function (req, res, next) {
           message: err.message
         });
       }
-      return ep.emit('done');
+      // 删除专栏文章关系表
+      TopicColumn.removeByColumnId(column_id, function (err) {
+        if (err) {
+          return ep.emit('fail', 403);
+        }
+        return ep.emit('topic_column_deleted');
+      });
+      // 删除用户关注表
+      UserFollow.removeByObjectId(column_id, function (err) {
+        if (err) {
+          return ep.emit('fail', 403);
+        }
+        return ep.emit('user_follow_deleted');
+      });
+      ep.all('topic_column_deleted','user_follow_deleted',function(){
+        ep.emit('done');
+      });
     });
   });
 };
@@ -372,7 +389,7 @@ exports.addTopic = function (req, res, next) {
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-  
+
   if (topic_ids.length > 0) {
     ep.after('deal', topic_ids.length, function () {
       ep.emit('done');
@@ -385,7 +402,7 @@ exports.addTopic = function (req, res, next) {
 
       for (var i = 0; i < topic_ids.length; i++) {
         var topic_id = topic_ids[i];
-        (function(topic_id){
+        (function (topic_id) {
           TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
             if (err) {
               return ep.emit('fail', 403);
@@ -413,8 +430,8 @@ exports.addTopic = function (req, res, next) {
   }
 }
 
-function notificateSubscriber(fromUser, column){
-  UserFollow.getUserFollowsByObjectId(column._id,null,function(err, items){
+function notificateSubscriber(fromUser, column) {
+  UserFollow.getUserFollowsByObjectId(column._id, null, function (err, items) {
     if (err || !items || items.length === 0) {
       return;
     }
@@ -426,8 +443,8 @@ function notificateSubscriber(fromUser, column){
         column: column
       });
     });
-    items.map(function(item){
-      User.getUserById(item.user_id,function(err, user){
+    items.map(function (item) {
+      User.getUserById(item.user_id, function (err, user) {
         ep.emit('user', user);
       });
     });
@@ -449,7 +466,7 @@ exports.removeTopic = function (req, res, next) {
   if (!user.is_admin) {
     return ep.emit('fail', 403, '无权限');
   }
-  
+
   if (topic_ids.length > 0) {
     ep.after('deal', topic_ids.length, function () {
       ep.emit('done');
@@ -462,7 +479,7 @@ exports.removeTopic = function (req, res, next) {
 
       for (var i = 0; i < topic_ids.length; i++) {
         var topic_id = topic_ids[i];
-        (function(topic_id){
+        (function (topic_id) {
           TopicColumn.getTopicColumn(column_id, topic_id, function (err, item) {
             if (err) {
               return ep.emit('fail', 403);
