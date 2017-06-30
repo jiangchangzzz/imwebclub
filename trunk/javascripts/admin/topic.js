@@ -6,12 +6,14 @@ $(document).ready(function () {
   $('#addTopic').click(function (e) {
     var topicids = getChecked();
     var columnid = $('#column-select').val();
+    var info=$('#topic-info');
 
     if(topicids.length===0){
-      $('#topic-info').text('请选择至少一篇文章');
+      info.text('请选择至少一篇文章');
       return;
     }
 
+    info.text('数据正在光速传输中...');
     $.ajax({
       url: '/column/add_topic',
       type: 'post',
@@ -21,15 +23,15 @@ $(document).ready(function () {
       },
       success: function(data){
         if(data.ret===0){
-          $('#topic-info').text('向专栏中添加文章成功');
+          info.text('向专栏中添加文章成功');
         }
         else{
-          $('#topic-info').text('向专栏中添加文章失败，请重试');
+          info.text('向专栏中添加文章失败，请重试');
           console.log(data);
         }
       },
       error: function(msg){
-        $('#topic-info').text('网络错误，请检查');
+        info.text('网络错误，请检查');
         console.log(msg);
       }
     });
@@ -39,12 +41,14 @@ $(document).ready(function () {
   $('#removeTopic').click(function (e) {
     var topicids = getChecked();
     var columnid = $('#column-select').val();
+    var info=$('#topic-info');
 
     if(topicids.length===0){
-      $('#topic-info').text('请选择至少一篇文章');
+      info.text('请选择至少一篇文章');
       return;
     }
 
+    info.text('数据正在光速传输中...');
     $.ajax({
       url: '/column/remove_topic',
       type: 'post', 
@@ -54,15 +58,15 @@ $(document).ready(function () {
       },
       success: function(data){
         if(data.ret===0){
-          $('#topic-info').text('从专栏中移除文章成功');
+          info.text('从专栏中移除文章成功');
         }
         else{
-          $('#topic-info').text('从专栏中移除文章失败，请重试');
+          info.text('从专栏中移除文章失败，请重试');
           console.log(data);
         }
       },
       error: function(msg){
-        $('#topic-info').text('网络错误，请检查');
+        info.text('网络错误，请检查');
         console.log(msg);
       }
     });

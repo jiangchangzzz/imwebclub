@@ -9,16 +9,16 @@ exports.getUserFollowsByUserId = function (userId, kind, opt, callback) {
   var defaultOpt = {sort: '-create_at'};
   opt = _.assign(defaultOpt, opt)
   if(kind && kind !== 'all'){
-    UserFollow.count({user_id: userId, kind: kind}, '', opt, callback);
+    UserFollow.find({user_id: userId, kind: kind}, {}, opt, callback);
   }else{
-    UserFollow.find({user_id: userId}, '', opt, callback);
+    UserFollow.find({user_id: userId}, {}, opt, callback);
   }
 };
 
 exports.getUserFollowsByObjectId = function (objectId, opt, callback) {
   var defaultOpt = {sort: '-create_at'};
   opt = _.assign(defaultOpt, opt)
-  UserFollow.count({object_id: objectId}, '', opt, callback);
+  UserFollow.find({object_id: objectId}, {}, opt, callback);
 };
 
 exports.newAndSave = function (userId, objectId, kind, callback) {

@@ -257,12 +257,11 @@ exports.sendColumnTopicToFollowers = function (data) {
         }
     });
     var subjectTpl = '[<%= column.title %>]专栏' 
-        + '发布了新文章<%=topic.title%>';
+        + '发布了新文章';
     var htmlTpl = [
         '<p><%= me.name || me.loginname %> 您好:</p>',
         '<p>',
-            '[<%= column.title %>]专栏 发布了新文章：',
-            '<a href="<%=siteUrl%>/topic/<%=topic._id%>"><%=topic.title%></a>',
+            '<a href="<%=siteUrl%>/column/<%=column._id%>">[<%= column.title %>]专栏</a> 发布了新文章：',
         '</p>',
         '<p>快去围观吧~~</p>',
         MAIL_FOOT

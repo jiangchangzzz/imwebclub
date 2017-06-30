@@ -28,7 +28,7 @@ var renderHelper = require('../common/render_helper');
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
-  var isAdmin=currentUser.is_admin || false;
+  var isAdmin = currentUser.is_admin || false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
 
@@ -78,7 +78,7 @@ exports.index = function (req, res, next) {
   var pagesCacheKey = `column_${column_id}_pages`;
   cache.get(pagesCacheKey, proxy.done(function (pages) {
     if (pages) {
-      proxy.emit('pages', pages); 
+      proxy.emit('pages', pages);
     } else {
       TopicColumn.getColumnTopicCount(column_id, proxy.done(function (topic_count) {
         var pages = Math.ceil(topic_count / limit);
@@ -95,22 +95,25 @@ exports.index = function (req, res, next) {
         proxy.emit('topics', topics);
       });
       for (var i = 0; i < items.length; i++) {
-        Topic.getTopicById(items[i].topic_id, function (err, topic) {
-          User.getUserById(topic.author_id, proxy.done('author'));
-          if (topic.last_reply) {
-            Reply.getReplyById(topic.last_reply, proxy.done('reply'));
-          } else {
-            Reply.getLastReplyByParentId(topic._id, proxy.done('reply'));
-          }
+        (function (i) {
+          Topic.getTopicById(items[i].topic_id, function (err, topic) {
+            var prx = EventProxy.create();
+            User.getUserById(topic.author_id, prx.done('author'));
+            if (topic.last_reply) {
+              Reply.getReplyById(topic.last_reply, prx.done('reply'));
+            } else {
+              Reply.getLastReplyByParentId(topic._id, prx.done('reply'));
+            }
 
-          proxy.all('author', 'reply', function (author, reply) {
-            topic.author = dataAdapter.outUser(author || {});
-            topic.reply = reply;
-            topic.friendly_create_at = tools.formatDate(topic.create_at, true);
-            topic.friendly_update_at = tools.formatDate(topic.update_at, true);
-            proxy.emit('topic', topic);
+            prx.all('author', 'reply', function (author, reply) {
+              topic.author = dataAdapter.outUser(author || {});
+              topic.reply = reply;
+              topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+              topic.friendly_update_at = tools.formatDate(topic.update_at, true);
+              proxy.emit('topic', topic);
+            });
           });
-        });
+        })(i);
       }
     } else {
       return proxy.emit('topics', []);
@@ -123,7 +126,7 @@ exports.index = function (req, res, next) {
  */
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
-  var isAdmin=currentUser.is_admin || false;
+  var isAdmin = currentUser.is_admin || false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -367,7 +370,7 @@ exports.delete = function (req, res, next) {
         }
         return ep.emit('user_follow_deleted');
       });
-      ep.all('topic_column_deleted','user_follow_deleted',function(){
+      ep.all('topic_column_deleted', 'user_follow_deleted', function () {
         ep.emit('done');
       });
     });
@@ -415,10 +418,12 @@ exports.addTopic = function (req, res, next) {
                   return ep.emit('fail', 403);
                 }
                 column.topic_count++;
+                
                 column.save(ep.done(function () {
-                  notificateSubscriber(user, column); // 给关注者发送邮件通知
-                  ep.emit('deal');
-                }));
+                  notificateSubscriber(user, column, function(){
+                    ep.emit('deal');
+                  }); // 给关注者发送邮件通知
+                }))
               });
             }
           })
@@ -430,18 +435,21 @@ exports.addTopic = function (req, res, next) {
   }
 }
 
-function notificateSubscriber(fromUser, column) {
-  UserFollow.getUserFollowsByObjectId(column._id, null, function (err, items) {
+function notificateSubscriber(fromUser, column, callback) {
+  console.log(column);
+  UserFollow.getUserFollowsByObjectId(column._id, {}, function (err, items) {
+    console.log(items);
     if (err || !items || items.length === 0) {
       return;
     }
     var ep = new EventProxy();
-    ep.after('user', topic_ids.length, function (users) {
+    ep.after('user', items.length, function (users) {
       mail.sendColumnTopicToFollowers({
         followers: users,
         user: fromUser,
         column: column
       });
+      callback();
     });
     items.map(function (item) {
       User.getUserById(item.user_id, function (err, user) {

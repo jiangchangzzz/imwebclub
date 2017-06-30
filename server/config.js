@@ -10,7 +10,9 @@ var config = {
   // debug 为 true 时，用于本地调试
   debug: true,
 
-  get mini_assets() { return !this.debug; }, // 是否启用静态文件的合并压缩，详见视图中的Loader
+  get mini_assets() {
+    return !this.debug;
+  }, // 是否启用静态文件的合并压缩，详见视图中的Loader
 
   name: '腾讯Web前端 IMWeb 团队社区 | blog | 团队博客', // 社区名字
   description: 'Web前端 腾讯IMWeb 团队社区', // 社区的描述
@@ -18,8 +20,8 @@ var config = {
 
   // 添加到 html head 中的信息
   site_headers: [
-     '<meta name="author" content="imwebteam@tencent" />',
-     '<meta property="wb:webmaster" content="f823bb51f1b4e265" />'
+    '<meta name="author" content="imwebteam@tencent" />',
+    '<meta property="wb:webmaster" content="f823bb51f1b4e265" />'
   ],
   site_logo: '/public/images/icon.png', // default is `name`
   site_icon: '/public/images/icon.png', // 默认没有 favicon, 这里填写网址
@@ -66,12 +68,12 @@ var config = {
   list_activity_count: 15,
 
   // 活动列表显示的活动数量
-  list_question_count:15,
+  list_question_count: 15,
 
   // RSS配置
   rss: {
     title: 'IMWeb：web牛人社区',
-    link: 'http://'+domain,
+    link: 'http://' + domain,
     language: 'zh-cn',
     description: 'IMWeb：web牛人社区',
     //最多获取的RSS Item数量
@@ -79,14 +81,24 @@ var config = {
   },
 
   // 邮箱配置
+  // mail_opts: {
+  //   host: 'smtp.126.com',
+  //   port: 25,
+  //   auth: {
+  //     user: 'club@126.com',
+  //     pass: 'club'
+  //   },
+  //   ignoreTLS: true,
+  // },
+
   mail_opts: {
-    host: 'smtp.126.com',
-    port: 25,
+    host: 'smtp.qq.com',
+    port: 465,
+    secureConnection: true,
     auth: {
-      user: 'club@126.com',
-      pass: 'club'
-    },
-    ignoreTLS: true,
+      user: 'system@imweb.io',
+      pass: '123asdfasdf'
+    }
   },
 
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
@@ -109,14 +121,14 @@ var config = {
   GITHUB_OAUTH: {
     clientID: 'a32d122e769fae39b898',
     clientSecret: '9cd819a15a6e886077b5a937aa0e1b8aac55f859',
-    callbackURL: 'http://'+domain+'/auth/github/callback'
+    callbackURL: 'http://' + domain + '/auth/github/callback'
   },
 
   //weibo app key
   WEIBO_OAUTH: {
     clientID: '3489481381',
     clientSecret: '52410f54674964564a475afc64511e5d',
-    callbackURL: 'http://'+domain+'/auth/weibo/callback'
+    callbackURL: 'http://' + domain + '/auth/weibo/callback'
   },
 
   // 是否允许直接注册（否则只能走 github 的方式）

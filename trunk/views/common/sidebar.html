@@ -42,7 +42,7 @@
     <% } %>
     <%- partial('common/social.html') %>
 
-    <% if(columns.length){ %>
+    <% if(typeof columns!=='undefined' && columns.length){ %>
     <div id="hotSeminars" class="box border">
         <div class="box-head">
             <b>热门专栏</b>
