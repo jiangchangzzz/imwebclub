@@ -81,24 +81,14 @@ var config = {
   },
 
   // 邮箱配置
-  // mail_opts: {
-  //   host: 'smtp.126.com',
-  //   port: 25,
-  //   auth: {
-  //     user: 'club@126.com',
-  //     pass: 'club'
-  //   },
-  //   ignoreTLS: true,
-  // },
-
   mail_opts: {
-    host: 'smtp.qq.com',
-    port: 465,
-    secureConnection: true,
+    host: 'smtp.126.com',
+    port: 25,
     auth: {
-      user: 'system@imweb.io',
-      pass: '123asdfasdf'
-    }
+      user: 'club@126.com',
+      pass: 'club'
+    },
+    ignoreTLS: true,
   },
 
   // admin 可删除话题，编辑标签。把 user_login_name 换成你的登录名
