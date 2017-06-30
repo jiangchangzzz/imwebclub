@@ -11,6 +11,7 @@ var Question = require('../proxy').Question;
 var Activity = require('../proxy').Activity;
 var Banner = require('../proxy').Banner;
 var Column=require('../proxy').Column;
+var UserFollow=require('../proxy').UserFollow;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
@@ -149,13 +150,16 @@ exports.index = function (req, res, next) {
           return dataAdapter.outColumn(column);
         });
         cache.set('columns',res,60*1);
+        proxy.emit('columns',columns);
       }));
     }
   }));
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners','columns',
-    function (topics, questions, tops, activity_imweb, activity_industry, banners,columns) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners','columns','followColumns',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners,columns,followColumns) {
+      console.log(typeof followColumns[0]);
+      console.log(typeof columns[0].id);
       res.render('index', {
         _layoutFile: false,
         topics: topics,
@@ -168,9 +172,24 @@ exports.index = function (req, res, next) {
         tab: tab,
         banners: banners,
         columns: columns,
+        followColumns: followColumns,
         pageTitle: tabName && (tabName + '版块')
       });
     });
+
+  //获取当前用户关注的专栏
+  var currentUser = req.session.user;
+  if(currentUser){
+    var userId=currentUser._id;
+    UserFollow.getUserFollowsByUserId(userId,'column',{},proxy.done('followColumns',function(followColumns){
+      return followColumns.map(function(item){
+        return item.object_id.toString();
+      });
+    }));
+  }
+  else{
+    proxy.emit('followColumns',[]);
+  }
 };
 
 exports.latestTopics = function (req, res, next) {

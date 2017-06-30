@@ -20,6 +20,8 @@
 
         h2{
             margin-top: -10px;
+            width: 600px;
+            overflow: hidden;
 
             .title{
                 color: #2FA0F0;
@@ -28,10 +30,16 @@
             }
 
             .addon{
+                display: inline-block;
+                max-width: 400px;
+                width: 100%;
                 margin-left: 20px; 
                 font-size: 15px;
                 font-weight: normal;
                 vertical-align: middle;
+                white-space:nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
 
