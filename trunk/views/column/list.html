@@ -57,6 +57,7 @@
             </div>
             <% } %>
           </div>
+          <% if(columns.length){ %>
           <ul class="column-list">
             <% columns.forEach(function(column){ %>
             <li class="column-item clearfix">
@@ -85,9 +86,7 @@
             </li>
             <% }) %>
           </ul>
-        </div>
-
-        <div class="pagination" current_page="<%= current_page %>">
+          <div class="pagination" current_page="<%= current_page %>">
       <ul>
         <% var base='/column/list' %>
         <% var base_url = base + (base.indexOf("?") < 0 ? "?" : "&") + "page="; %>
@@ -127,6 +126,10 @@
         <% } %>
       </ul>
     </div>
+    <% }else{ %>
+      <p class="no-item">专栏列表空空如也，快添加你的专栏吧^_^</p>
+    <% } %>
+        </div>
         
     </div>
     <%- partial('common/loginpop.html') %>

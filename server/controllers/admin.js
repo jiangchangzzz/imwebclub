@@ -306,6 +306,9 @@ exports.column=function(req,res,next){
                 }));
             })
         }
+        else{
+            proxy.emit('columns',[]);
+        }
     }));
 
     //获取页码数目
