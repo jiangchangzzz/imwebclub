@@ -152,7 +152,7 @@ exports.list = function (req, res, next) {
     if (pages) {
       proxy.emit('pages', pages);
     } else {
-      Column.getCountByQuery({}, proxy.done(function (all_columns_count) {
+      Column.getCountByQuery({ deleted: false }, proxy.done(function (all_columns_count) {
         var pages = Math.ceil(all_columns_count / limit);
         cache.set(pagesCacheKey, pages, 60 * 1);
         proxy.emit('pages', pages);
@@ -186,6 +186,7 @@ exports.list = function (req, res, next) {
   });
 
   proxy.all('columns', 'pages', function (columns, pages) {
+    console.log(pages);
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,

@@ -312,7 +312,7 @@ exports.column=function(req,res,next){
     }));
 
     //获取页码数目
-    Column.getCountByQuery({},proxy.done('pages',function(pages){
+    Column.getCountByQuery({ deleted: false },proxy.done('pages',function(pages){
         return Math.ceil(pages/limit);
     }));
 };

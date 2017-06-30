@@ -51,8 +51,8 @@
             <span><%= column.title %>专栏</span>
           </nav>
           <div class="index-header clearfix">
-            <div class="header-img">
-              <img src="<%= column.cover %>">
+            <div class="header-img" style="background-image: url(<%= column.cover %>)">
+              
             </div>
             <div class="header-text">
               <h2>
@@ -104,7 +104,6 @@
             </li>
             <% }) %> 
           </ul>
-        </div>
 
         <% if(column.topic_count>0){ %>
          <div class="pagination" current_page="<%= current_page %>">
@@ -147,9 +146,11 @@
         <% } %>
       </ul>
     </div>
+    
     <% }else{ %>
     <p class="no-item">当前专栏还没有文章，请联系管理员速速添加吧^_^</p>
     <% } %>
+        </div>
 
     </div>
     <%- partial('common/loginpop.html') %>

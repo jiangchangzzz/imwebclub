@@ -1,15 +1,15 @@
 'use strict';
 
 $(document).ready(function () {
+  var info=$('#topic-info');
 
   //添加文章到专栏
   $('#addTopic').click(function (e) {
     var topicids = getChecked();
     var columnid = $('#column-select').val();
-    var info=$('#topic-info');
 
     if(topicids.length===0){
-      info.text('请选择至少一篇文章');
+      showWarning('请选择至少一篇文章');
       return;
     }
 
@@ -23,15 +23,15 @@ $(document).ready(function () {
       },
       success: function(data){
         if(data.ret===0){
-          info.text('向专栏中添加文章成功');
+          showSuccess('向专栏中添加文章成功');
         }
         else{
-          info.text('向专栏中添加文章失败，请重试');
+          showWarning('向专栏中添加文章失败，请重试');
           console.log(data);
         }
       },
       error: function(msg){
-        info.text('网络错误，请检查');
+        showWarning('网络错误，请检查');
         console.log(msg);
       }
     });
@@ -44,11 +44,11 @@ $(document).ready(function () {
     var info=$('#topic-info');
 
     if(topicids.length===0){
-      info.text('请选择至少一篇文章');
+      showWarning('请选择至少一篇文章');
       return;
     }
 
-    info.text('数据正在光速传输中...');
+    showSuccess('数据正在光速传输中...');
     $.ajax({
       url: '/column/remove_topic',
       type: 'post', 
@@ -58,15 +58,15 @@ $(document).ready(function () {
       },
       success: function(data){
         if(data.ret===0){
-          info.text('从专栏中移除文章成功');
+          showSuccess('从专栏中移除文章成功');
         }
         else{
-          info.text('从专栏中移除文章失败，请重试');
+          showWarning('从专栏中移除文章失败，请重试');
           console.log(data);
         }
       },
       error: function(msg){
-        info.text('网络错误，请检查');
+        showWarning('网络错误，请检查');
         console.log(msg);
       }
     });
@@ -82,6 +82,14 @@ $(document).ready(function () {
       }
     });
     return topicids;
+  }
+
+  function showSuccess(text){
+    info.text(text).attr('class','alert alert-success');
+  }
+
+  function showWarning(text){
+    info.text(text).attr('class','alert alert-warning');
   }
 
   // var columnid = getQueryStringV(location.href, "columnid");
