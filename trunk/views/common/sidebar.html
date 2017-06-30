@@ -65,13 +65,13 @@
                         <% if(typeof followColumns!=='undefined' && followColumns.indexOf(column.id)!=-1){ %>
                             <a href="javascript:void(0);">已关注</a>
                         <% }else{ %>
-                            <a href="javascript:void(0);" class="link column-follow" data-cid=<%= column.id %>>+关注</a>
+                            <a href="javascript:void(0);" class="link <%=!current_user ? 'nav-login' : 'column-follow' %>" data-cid=<%= column.id %>>+关注</a>
                         <% } %>
                         </a>
                     </div>
                     <div class="center">
                         <a href="/column/<%= column.id %>"><%= column.title %>专栏</a>
-                        <span><%= column.topic_count %>篇文章 | <%= column.follower_count %>人关注</span>
+                        <span><%= column.topic_count %>篇文章 | <span class="follow-count"><%= column.follower_count %></span>人关注</span>
                     </div>
                 </li>
                 <% }) %>
