@@ -66,8 +66,8 @@
             </div>
             <div class="header-btn">
               <span id="column-id" class="hide"><%= column.id %></span>
-              <button type="button" class="btn btn-default cancel-btn <%= is_follow?'':'hide' %>" data-id=<%= column.id %>>取消关注</button>
-              <button type="button" class="btn follow-btn <%= is_follow?'hide':'' %>" data-id=<%= column.id %>>关注</button>
+              <button type="button" class="btn btn-default <%= is_follow?'':'hide' %> <%= isLogin?'cancel-btn':'nav-login' %>" data-id=<%= column.id %>>取消关注</button>
+              <button type="button" class="btn <%= is_follow?'hide':'' %> <%= isLogin?'follow-btn':'nav-login' %>" data-id=<%= column.id %>>关注</button>
               <% if(isAdmin){ %>
               <a href="/column/<%= column_id %>/edit" class="link-btn">修改专栏</a>
               <% } %>

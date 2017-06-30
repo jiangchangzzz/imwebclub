@@ -66,8 +66,8 @@
               </div>
               <div class="list-img">
                 <div class="follow">
-                  <button type="button" class="btn btn-default cancel-btn <%= column.is_follow?'':'hide' %>" data-id=<%= column.id %>>取消关注</button>
-                  <button type="button" class="btn follow-btn <%= column.is_follow?'hide':'' %>" data-id=<%= column.id %>>关注</button>
+                  <button type="button" class="btn btn-default <%= column.is_follow?'':'hide' %> <%= isLogin?'cancel-btn':'nav-login' %>" data-id=<%= column.id %>>取消关注</button>
+                  <button type="button" class="btn <%= column.is_follow?'hide':'' %> <%= isLogin?'follow-btn':'nav-login' %>" data-id=<%= column.id %>>关注</button>
                 </div>
                 <div class="thumbnail" style="background-image: url(<%= column.cover %>)"></div>
               </div>
