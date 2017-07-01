@@ -112,7 +112,6 @@ exports.saveUser = function(req, res, next) {
         return ep.emit('prop_err', '声望必须为数字。');
     }
 
-    console.log('---')
     User.getUserById(req.body["_id"], ep.done(function(user) {
         ep.emit('user', user);
     }));
@@ -277,7 +276,6 @@ exports.column=function(req,res,next){
         columns=columns.map(function(column){
             return dataAdapter.outColumn(column);
         });
-        console.log(columns);
         res.render('admin/column/index',{
             columns: columns,
             base: '/admin/column/all',

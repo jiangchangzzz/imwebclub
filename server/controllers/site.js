@@ -10,8 +10,8 @@ var Topic = require('../proxy').Topic;
 var Question = require('../proxy').Question;
 var Activity = require('../proxy').Activity;
 var Banner = require('../proxy').Banner;
-var Column=require('../proxy').Column;
-var UserFollow=require('../proxy').UserFollow;
+var Column = require('../proxy').Column;
+var UserFollow = require('../proxy').UserFollow;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
@@ -26,35 +26,39 @@ exports.index = function (req, res, next) {
   var proxy = new eventproxy();
   proxy.fail(next);
 
-  var options = { limit: 10, sort: '-top -visit_count' };
+  var options = {
+    limit: 10,
+    sort: '-top -visit_count'
+  };
 
   // 取排行榜上的用户
   // cache.get('tops', proxy.done(function (tops) {
   //   if (tops) {
   //     proxy.emit('tops', tops);
   //   } else {
-      User.getUsersByQuery(
-        {
-          '$or': [{
-            is_block: {
-              '$exists': false
-            }
-          }, {
-            is_block: false
-          }]
-        },
-        { limit: 10, sort: '-topic_count' },
-        proxy.done('tops', function (tops) {
-          cache.set('tops', tops, 60 * 1);
-          return tops;
-        })
-      );
+  User.getUsersByQuery({
+      '$or': [{
+        is_block: {
+          '$exists': false
+        }
+      }, {
+        is_block: false
+      }]
+    }, {
+      limit: 10,
+      sort: '-topic_count'
+    },
+    proxy.done('tops', function (tops) {
+      cache.set('tops', tops, 60 * 1);
+      return tops;
+    })
+  );
   //   }
   // }));
   // END 取排行榜上的用户
 
   //取文章
-  cache.get('topics', proxy.done(function(topics) {
+  cache.get('topics', proxy.done(function (topics) {
     if (topics) {
       proxy.emit('topics', topics);
     } else {
@@ -63,7 +67,7 @@ exports.index = function (req, res, next) {
           $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 60 * 1000).toISOString()
         }
       }, options, proxy.done('topics', function (topics) {
-        var result = topics.map(function(item){
+        var result = topics.map(function (item) {
           return dataAdapter.outTopic(item);
         });
         cache.set('topics', result, 60 * 1);
@@ -73,30 +77,33 @@ exports.index = function (req, res, next) {
   }));
 
   //取问答
-  cache.get('questions', proxy.done(function(questions) {
+  cache.get('questions', proxy.done(function (questions) {
     if (questions) {
       proxy.emit('questions', questions);
     } else {
       Question.getQuestionsByQuery({}, options, proxy.done('questions', function (questions) {
-          var result = questions.map(function(item){
-            return dataAdapter.outQuestion(item);
-          });
-          cache.set('questions', result, 60 * 1);
-          return result;
+        var result = questions.map(function (item) {
+          return dataAdapter.outQuestion(item);
+        });
+        cache.set('questions', result, 60 * 1);
+        return result;
       }));
     }
   }));
 
   //取活动
-  cache.get('activity_imweb', proxy.done(function(imwebs) {
+  cache.get('activity_imweb', proxy.done(function (imwebs) {
     if (imwebs) {
       proxy.emit('activity_imweb', imwebs);
     } else {
-      Activity.getActivitiesByQuery(
-        { tab: 'imweb' },
-        { limit: 6, sort: '-create_at' },
+      Activity.getActivitiesByQuery({
+          tab: 'imweb'
+        }, {
+          limit: 6,
+          sort: '-create_at'
+        },
         proxy.done('activity_imweb', function (imwebs) {
-          var result = imwebs.map(function(item){
+          var result = imwebs.map(function (item) {
             return dataAdapter.outActivity(item);
           });
           cache.set('activity_imweb', result, 60 * 1);
@@ -106,15 +113,18 @@ exports.index = function (req, res, next) {
     }
   }));
 
-  cache.get('activity_industry', proxy.done(function(industrys) {
+  cache.get('activity_industry', proxy.done(function (industrys) {
     if (industrys) {
       proxy.emit('activity_industry', industrys);
     } else {
-      Activity.getActivitiesByQuery(
-        { tab: 'industry' },
-        { limit: 6, sort: '-create_at' },
+      Activity.getActivitiesByQuery({
+          tab: 'industry'
+        }, {
+          limit: 6,
+          sort: '-create_at'
+        },
         proxy.done('activity_industry', function (industrys) {
-          var result = industrys.map(function(item){
+          var result = industrys.map(function (item) {
             return dataAdapter.outActivity(item);
           });
           cache.set('activity_industry', result, 60 * 1);
@@ -124,42 +134,35 @@ exports.index = function (req, res, next) {
     }
   }));
 
-  cache.get('banners', proxy.done(function(banners) {
+  cache.get('banners', proxy.done(function (banners) {
     if (banners) {
       proxy.emit('banners', banners);
     } else {
-      Banner.activeBannersSortedByIndex(proxy.done('banners', function(banners) {
-          cache.set('banners', banners, 60 * 1);
-          return banners;
+      Banner.activeBannersSortedByIndex(proxy.done('banners', function (banners) {
+        cache.set('banners', banners, 60 * 1);
+        return banners;
       }));
     }
   }));
 
   //获取主页专栏数据
-  cache.get('columns',proxy.done(function(columns){
-    if(columns){
-      return proxy.emit('columns',columns);
-    }
-    else{
-      var options = {
-        limit: 5,
-        sort: '-follower_count -create_at'
-      };
-      Column.getColumnsByQuery({},options,proxy.done(function(columns){
-        var res = columns.map(function (column) {
-          return dataAdapter.outColumn(column);
-        });
-        cache.set('columns',res,60*1);
-        proxy.emit('columns',columns);
-      }));
-    }
+
+
+  var options = {
+    limit: 5,
+    sort: '-follower_count -create_at'
+  };
+  Column.getColumnsByQuery({}, options, proxy.done(function (columns) {
+    var res = columns.map(function (column) {
+      return dataAdapter.outColumn(column);
+    });
+    proxy.emit('columns', columns);
   }));
 
+
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners','columns','followColumns',
-    function (topics, questions, tops, activity_imweb, activity_industry, banners,columns,followColumns) {
-      console.log(typeof followColumns[0]);
-      console.log(typeof columns[0].id);
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners', 'columns', 'followColumns',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners, columns, followColumns) {
       res.render('index', {
         _layoutFile: false,
         topics: topics,
@@ -179,16 +182,15 @@ exports.index = function (req, res, next) {
 
   //获取当前用户关注的专栏
   var currentUser = req.session.user;
-  if(currentUser){
-    var userId=currentUser._id;
-    UserFollow.getUserFollowsByUserId(userId,'column',{},proxy.done('followColumns',function(followColumns){
-      return followColumns.map(function(item){
+  if (currentUser) {
+    var userId = currentUser._id;
+    UserFollow.getUserFollowsByUserId(userId, 'column', {}, proxy.done('followColumns', function (followColumns) {
+      return followColumns.map(function (item) {
         return item.object_id.toString();
       });
     }));
-  }
-  else{
-    proxy.emit('followColumns',[]);
+  } else {
+    proxy.emit('followColumns', []);
   }
 };
 
@@ -196,9 +198,12 @@ exports.latestTopics = function (req, res, next) {
   var proxy = new eventproxy();
   proxy.fail(next);
 
-  var options = { limit: 10, sort: '-top -visit_count -create_at' };
+  var options = {
+    limit: 10,
+    sort: '-top -visit_count -create_at'
+  };
 
-  cache.get('topics', proxy.done(function(topics) {
+  cache.get('topics', proxy.done(function (topics) {
     if (topics) {
       proxy.emit('topics', topics);
     } else {
@@ -207,7 +212,7 @@ exports.latestTopics = function (req, res, next) {
           $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 60 * 1000).toISOString()
         }
       }, options, proxy.done('topics', function (topics) {
-        var result = topics.map(function(item){
+        var result = topics.map(function (item) {
           return dataAdapter.outTopic(item);
         });
         cache.set('topics', result, 60 * 1);
@@ -216,10 +221,10 @@ exports.latestTopics = function (req, res, next) {
     }
   }));
 
-  proxy.all('topics', function(topics) {
-        res.end('callback(' + JSON.stringify(topics) +')');
-        return true;
-    });
+  proxy.all('topics', function (topics) {
+    res.end('callback(' + JSON.stringify(topics) + ')');
+    return true;
+  });
 }
 
 // exports.sitemap = function (req, res, next) {

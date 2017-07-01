@@ -29,7 +29,8 @@ var renderHelper = require('../common/render_helper');
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
-  var isAdmin = currentUser.is_admin || false;
+  var isLogin=!!currentUser;
+  var isAdmin = currentUser? currentUser.is_admin : false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
 
@@ -39,7 +40,6 @@ exports.index = function (req, res, next) {
   var events = ['column', 'is_follow', 'topics', 'pages'];
   var proxy = EventProxy.create(events,
     function (column, is_follow, topics, pages) {
-      console.log(currentUser);
       res.render('column/index', {
         active: 'column',
         column_id: column_id,
@@ -51,6 +51,7 @@ exports.index = function (req, res, next) {
         pages: pages,
         is_follow: !!is_follow,
         isAdmin: isAdmin,
+        isLogin: isLogin,
         _layoutFile: false
       });
     });
@@ -124,7 +125,8 @@ exports.index = function (req, res, next) {
  */
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
-  var isAdmin = currentUser.is_admin || false;
+  var isLogin=!!currentUser;
+  var isAdmin = currentUser? currentUser.is_admin : false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -184,7 +186,6 @@ exports.list = function (req, res, next) {
   });
 
   proxy.all('columns', 'pages', function (columns, pages) {
-    console.log(pages);
     res.render('column/list', {
       columns: columns,
       list_column_count: limit,
@@ -193,6 +194,7 @@ exports.list = function (req, res, next) {
       pageTitle: '专栏列表',
       sort: req.query.sort,
       isAdmin: isAdmin,
+      isLogin: isLogin,
       _layoutFile: false
     });
   });
@@ -240,7 +242,6 @@ exports.put = function (req, res, next) {
  */
 exports.showEdit = function (req, res, next) {
   var column_id = req.params.cid;
-  console.log(column_id);
 
   Column.getColumnById(column_id, function (err, column) {
     if (!column) {
@@ -435,9 +436,7 @@ exports.addTopic = function (req, res, next) {
 }
 
 function notificateSubscriber(fromUser, column, callback) {
-  console.log(column);
   UserFollow.getUserFollowsByObjectId(column._id, {}, function (err, items) {
-    console.log(items);
     if (err || !items || items.length === 0) {
       return;
     }

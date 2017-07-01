@@ -112,6 +112,9 @@ $(document).ready(function(){
             success: function(data){
                 if(data.ret===0){
                    link.removeClass('link').text('已关注');
+                   var count=link.parent().siblings('.center').find('.follow-count');
+                   var follow=parseInt(count.text());
+                   count.text(follow+1);
                 }
                 else if(data.msg){
                     console.log(data.msg);

@@ -38,39 +38,39 @@ $(document).ready(function () {
   });
 
   //从专栏中移除文章
-  $('#removeTopic').click(function (e) {
-    var topicids = getChecked();
-    var columnid = $('#column-select').val();
-    var info=$('#topic-info');
+  // $('#removeTopic').click(function (e) {
+  //   var topicids = getChecked();
+  //   var columnid = $('#column-select').val();
+  //   var info=$('#topic-info');
 
-    if(topicids.length===0){
-      showWarning('请选择至少一篇文章');
-      return;
-    }
+  //   if(topicids.length===0){
+  //     showWarning('请选择至少一篇文章');
+  //     return;
+  //   }
 
-    showSuccess('数据正在光速传输中...');
-    $.ajax({
-      url: '/column/remove_topic',
-      type: 'post', 
-      data: {
-        cid: columnid,
-        tids: topicids
-      },
-      success: function(data){
-        if(data.ret===0){
-          showSuccess('从专栏中移除文章成功');
-        }
-        else{
-          showWarning('从专栏中移除文章失败，请重试');
-          console.log(data);
-        }
-      },
-      error: function(msg){
-        showWarning('网络错误，请检查');
-        console.log(msg);
-      }
-    });
-  });
+  //   showSuccess('数据正在光速传输中...');
+  //   $.ajax({
+  //     url: '/column/remove_topic',
+  //     type: 'post', 
+  //     data: {
+  //       cid: columnid,
+  //       tids: topicids
+  //     },
+  //     success: function(data){
+  //       if(data.ret===0){
+  //         showSuccess('从专栏中移除文章成功');
+  //       }
+  //       else{
+  //         showWarning('从专栏中移除文章失败，请重试');
+  //         console.log(data);
+  //       }
+  //     },
+  //     error: function(msg){
+  //       showWarning('网络错误，请检查');
+  //       console.log(msg);
+  //     }
+  //   });
+  // });
 
   function getChecked() {
     var topicids = [];
