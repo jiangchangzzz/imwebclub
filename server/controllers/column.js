@@ -101,14 +101,13 @@ exports.index = function (req, res, next) {
       async.whilst(
           function() { return count < items.length; },
           function(callback) {
-            count++;
             Topic.getTopicById(items[count].topic_id, function (err, topic) {
               User.getUserById(topic.author_id, function (author) {
                 topic.author = dataAdapter.outUser(author || {});
-                topic.reply = reply;
                 topic.friendly_create_at = tools.formatDate(topic.create_at, true);
                 topic.friendly_update_at = tools.formatDate(topic.update_at, true);
                 proxy.emit('topic', topic);
+                count++;
                 callback(null, count);
               });
             });
@@ -421,8 +420,9 @@ exports.addTopic = function (req, res, next) {
                 
                 column.save(ep.done(function () {
                   notificateSubscriber(user, column, function(){
-                    ep.emit('deal');
+                    
                   }); // 给关注者发送邮件通知
+                  ep.emit('deal');
                 }))
               });
             }
