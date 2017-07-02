@@ -69,7 +69,7 @@ router.get('/user/:name/index', user.index); // 用户个人主页
 router.get('/user/:name/setting', auth.userRequired, user.showSetting); // 用户个人设置页
 router.get('/user/:name/following', user.showFollowing); // 用户个人关注
 router.get('/user/:name/follower', user.showFollower); // 用户粉丝
-router.get('/user/:name/question', user.listQuestions); // 用户的we
+router.get('/user/:name/questions', user.listQuestions); // 用户的we
 router.get('/user/:name/collections', user.listCollectedTopics);  // 用户收藏的所有话题页
 router.get('/user/:name/topics', user.listTopics);  // 用户发布的所有话题页
 router.get('/user/:name/replies', user.listReplies);  // 用户参与的所有回复页
