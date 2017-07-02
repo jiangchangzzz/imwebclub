@@ -84,10 +84,10 @@
                   <div class="article-title">
                     <h3><a href=<%= '/topic/'+topic.id %>><%= topic.title %></a></h3>
                     <p>
-                      <span><%= topic.author.name %>于<%= topic.friendly_create_at %>发表</span>
-                      <span class="title-icon"><i class="fa fa-eye"></i><%= topic.reply_count %></span>
-                      <span class="title-icon"><i class="fa fa-weixin"></i>0</span>
-                      <span class="title-icon"><i class="fa fa-heart"></i>0</span>
+                      <span><%= topic.author.name || topic.author.loginname %>于<%= topic.friendly_create_at %>发表</span>
+                      <span title="浏览" class="title-icon"><i class="fa fa-eye"></i><%= topic.visit_count || 0 %></span>
+                      <span title="评论" class="title-icon"><i class="fa fa-weixin"></i><%= topic.reply_count || 0 %></span>
+                      <span title="收藏" class="title-icon"><i class="fa fa-heart"></i><%= topic.collect_count || 0 %></span>
                     </p>
                   </div>
                   <% if(isAdmin){ %>

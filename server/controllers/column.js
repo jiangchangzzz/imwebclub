@@ -101,7 +101,7 @@ exports.index = function (req, res, next) {
           function() { return count < items.length; },
           function(callback) {
             Topic.getTopicById(items[count].topic_id, function (err, topic) {
-              User.getUserById(topic.author_id, function (author) {
+              User.getUserById(topic.author_id, function (err,author) {
                 topic.author = dataAdapter.outUser(author || {});
                 topic.friendly_create_at = tools.formatDate(topic.create_at, true);
                 topic.friendly_update_at = tools.formatDate(topic.update_at, true);
