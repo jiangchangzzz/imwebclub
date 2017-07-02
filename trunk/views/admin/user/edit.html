@@ -46,9 +46,15 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="create_at">声望</label>
+						<label class="control-label" for="score">声望</label>
 						<div class="controls">
-							<input type="text" class="input-xlarge" id="create_at" value="<%= user.score==null?"":user.score %>" name="score"/>
+							<input type="text" class="input-xlarge" id="score" value="<%= user.score==null?"":user.score %>" name="score"/>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="role">角色</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="role" value="<%= user.role==null?"":user.role %>" name="role"/>
 						</div>
 					</div>
 					<div class="form-actions">
@@ -59,4 +65,3 @@
 		  </div>
         </div>
       </div>
- 

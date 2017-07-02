@@ -84,7 +84,7 @@ exports.editUser = function(req, res, next){
 exports.saveUser = function(req, res, next) {
     var updated = {};
     _.each(
-        ['name', /*'company', */'comp_mail', /*'email', */'score'],
+        ['name', /*'company', */'comp_mail', /*'email', */'score', 'role'],
         function(item) {
             if (req.body[item] !== undefined) {
                 updated[item] = validator.trim(req.body[item]);
@@ -267,7 +267,7 @@ exports.reply = function(req, res, next){
 
 //获取column管理界面
 exports.column=function(req,res,next){
-    var page=parseInt(req.query.page) || 1; 
+    var page=parseInt(req.query.page) || 1;
 
     var proxy = new EventProxy();
     proxy.fail(next);
@@ -285,7 +285,7 @@ exports.column=function(req,res,next){
         });
     });
 
-    //获取分页专栏数据    
+    //获取分页专栏数据
     var limit = config.list_activity_count;
     var options = {
         skip: (page - 1) * limit,
