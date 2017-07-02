@@ -1,0 +1,16 @@
+<div class='user-panel'>
+  <div class='user-panel__content'>
+    <div class='user-panel__content__detail'>
+      <%- partial('./nav') %>
+      <div class='breadcrumb--content'>
+        <div class='breadcrumb--content__section section--show'>
+          <div id='content'>
+            <%- partial('./user', { users: follower, follow: false }) %>
+          </div>           
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
