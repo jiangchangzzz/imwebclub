@@ -10,7 +10,7 @@
 	</li>
 	<li class='breadcrumb__link <%if (tab === "questions") {%>active<%}%>'>
 		<i class="nav-icon fa fa-question-circle"></i>
-		<a href='/user/<%= user.loginname %>/question'><%=isCurrentUser ? '我' : '他' %>的问题</a>
+		<a href='/user/<%= user.loginname %>/questions'><%=isCurrentUser ? '我' : '他' %>的问题</a>
 	</li>
 	<li class='breadcrumb__link <%if (tab === "replies") {%>active<%}%>'>
 		<i class="nav-icon fa fa-commenting"></i>	
@@ -20,9 +20,9 @@
 		<i class="nav-icon fa fa-heart"></i>	
 		<a href='#'>我的收藏</a>
 	</li>-->
-	<li class='breadcrumb__link <% console.log(tab);if (tab === "follower") {%>active<%}%>'>
+	<li class='breadcrumb__link <% console.log(tab);if (tab === "follower" || tab==="following") {%>active<%}%>'>
 		<i class="nav-icon fa fa-link"></i>
-		<a href='/user/<%= user.loginname %>/follower'><%=isCurrentUser ? '我' : '他' %>的粉丝</a>
+		<a href='/user/<%= user.loginname %>/follower'>关系中心</a>
 	</li>
 	<%if(isCurrentUser) {%>
 	<li class='breadcrumb__link <%if (tab === "setting") {%>active<%}%>'>

@@ -1,12 +1,14 @@
 <div class='content'>
   <%if(users && users.length >0 ) {%>
   <% users.forEach(function(user) { %>
-    <div class='panel' id='<%= user.id %>'>
+    <div class='follow-panel' id='<%= user.id %>'>
      <div class="avatar ui-avatar-48">
       <img style="width: 100%;" src="<%=user.avatar%>">
     </div>
-      <div><%= user.name || user.loginname %></div>
-      <div>声望:<%= user.score %></div>
+      <div class="user-info">
+        <div class="user-name"><%= user.name || user.loginname %></div>
+        <div>声望:<%= user.score %></div>
+      </div>
       <% if(follow) { %>
         <div class='follow-cancel'><button>取消关注</button></div>
       <% } %>

@@ -166,6 +166,8 @@ exports.getFollowUser = function(followUser, callback) {
         loginname: user.loginname,
         score: user.score,
         avatar: user.avatar,
+        follower_count: user.follower_count,
+        following_count: user.following_count
       })
     }));
   })

@@ -43,52 +43,57 @@
       </div>
     </div>
   </div>
-  <!-- 个人主页头部end -->
+    <!-- 个人主页头部end -->
   <div class='user-panel__content'>
     <div class='user-panel__content__detail'>
       <%- partial('./nav') %>
         <div class='breadcrumb--content'>
           <div class='breadcrumb--content__section section--show'>
             <!--<%- partial('./userInfo') %>-->
-            <div class='panel'>
-              <div class='header'>
-                <span class='col_fade'>最近创建的文章</span>
-              </div>
-              <ul class="topic-list">
-                  <% if (typeof(recent_topics) !== 'undefined' && recent_topics.length > 0) { %>
-                    <%- partial('../topic/abstract', { collection: recent_topics, as: 'topic' }) %>
-                    <div class='cell more'>
-                      <a class='dark' href="/user/<%= user.loginname %>/topics">查看更多»</a>
+            <div class="user-title">个人动态</div>      
+              <%if(activities && activities.length >0 ) {%>
+                <% activities.forEach(function(activity) { %>
+                  <% let time = activity.create_at;
+                     let month = parseInt(time.getMonth())+1;
+                    time = time.getFullYear() + '年'+ month + '月' + time.getDate() + '日';%>
+                  <%  let status;
+                      let prefix;
+                      let reply;
+                     if(activity.cover) {
+                      status = "我发表了文章";
+                      prefix = "topic";
+                      reply = '回复';
+                    } else {
+                      status = "我提出了问题";
+                      prefix = "question";
+                      reply = '回答';
+                    }
+                  %>
+                <div class="user-status-panel">
+                  <div class="breadcrumb--content__status">
+                    <%= status %> <%= time %>
+                  </div>
+                  <div class="breadcrumb--content__title">
+                    <a href='/<%= prefix %>/<%= activity._id %>'><%=  activity.title %></a>
+                  </div>
+                  <div class="breadcrumb--content__paper">
+                    <%=  activity.content %>
+                  </div>
+                  <div class="breadcrumb--content__follow">
+                    <div class="follow-item">
+                      关注<%= activity.collect_count %>
                     </div>
-                  <% } else { %>
-                    <div class='inner'>
-                      <p>无话题</p>
+                    <div class="follow-item">
+                      <%= reply %><%= activity.reply_count %>
                     </div>
-                  <% } %>
-              </ul>
-            </div>
+                  </div>
+                </div>  
+                <% }) %>
+                <%} else {%>
+                 <p>暂无活动</p>
+              <%}%>
+     
           </div>
-          <div class='breadcrumb--content__section section--show'>
-            <div class='panel'>
-              <div class='header'>
-                <span class='col_fade'>最近评论</span>
-              </div>
-               <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>   
-                <% recent_replies.map(function(reply){ %>
-                  <div>评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a></div>
-                <%  }) %>
-                  <div class='cell more'>
-                      <a class='dark' href="/user/<%= user.loginname %>/replies">查看更多»</a>
-                    </div>
-                <% } else { %>
-                <div class='inner'>
-                  <p>没有评论</p>
-                </div>
-                <% } %>
-            </div>
-
-          </div>
-
         </div>
     </div>
   </div>
