@@ -56,8 +56,7 @@
                 <% columns.slice(0,5).forEach(function(column){ %>
                 <li>
                     <div class="left">
-                        <div class="avatar">
-                            <img src="<%= column.cover %>" alt="专栏封面">
+                        <div class="avatar" style="background-image: url(<%= column.cover %>)">
                         </div>
                     </div>
                     <div class="right">
