@@ -15,6 +15,7 @@ var tools = require('../common/tools');
 var store = require('../common/store');
 var config = require('../config');
 var _ = require('lodash');
+var async = require('async');
 var cache = require('../common/cache');
 var logger = require('../common/logger');
 var escapeHtml = require('escape-html');
@@ -95,27 +96,22 @@ exports.index = function (req, res, next) {
       proxy.after('topic', items.length, function (topics) {
         proxy.emit('topics', topics);
       });
-      for (var i = 0; i < items.length; i++) {
-        (function (i) {
-          Topic.getTopicById(items[i].topic_id, function (err, topic) {
-            var prx = EventProxy.create();
-            User.getUserById(topic.author_id, prx.done('author'));
-            // if (topic.last_reply) {
-            //   Reply.getReplyById(topic.last_reply, prx.done('reply'));
-            // } else {
-            //   Reply.getLastReplyByParentId(topic._id, prx.done('reply'));
-            // }
-
-            prx.all('author', function (author) {
-              topic.author = dataAdapter.outUser(author || {});
-              // topic.reply = reply;
-              topic.friendly_create_at = tools.formatDate(topic.create_at, true);
-              topic.friendly_update_at = tools.formatDate(topic.update_at, true);
-              proxy.emit('topic', topic);
+      var count = 0;
+      async.whilst(
+          function() { return count < items.length; },
+          function(callback) {
+            Topic.getTopicById(items[count].topic_id, function (err, topic) {
+              User.getUserById(topic.author_id, function (author) {
+                topic.author = dataAdapter.outUser(author || {});
+                topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+                topic.friendly_update_at = tools.formatDate(topic.update_at, true);
+                proxy.emit('topic', topic);
+                count++;
+                callback(null, count);
+              });
             });
-          });
-        })(i);
-      }
+          }
+      );
     } else {
       return proxy.emit('topics', []);
     }
@@ -423,8 +419,9 @@ exports.addTopic = function (req, res, next) {
 
                 column.save(ep.done(function () {
                   notificateSubscriber(user, column, function(){
-                    ep.emit('deal');
+
                   }); // 给关注者发送邮件通知
+                  ep.emit('deal');
                 }))
               });
             }
