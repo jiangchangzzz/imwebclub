@@ -139,8 +139,10 @@ exports.replyForTopic = function(req, res, next){
 
 exports.topic = function(req, res, next){
   var page = parseInt(req.query.page, 10) || 1;
+  // var search = req.params.key;
   page = page > 0 ? page : 1;
-  var tab = 'all';
+  // var tab = 'all';
+  var tab = req.params.tab || 'all';
   var sort = 'default';  // 根据不同的参数决定文章排序方式
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
@@ -160,7 +162,17 @@ exports.topic = function(req, res, next){
     limit: limit,
     sort: sortType
   };
+  if (tab && tab !== 'all') {
+    if (tab === 'good') {
+      query.good = true;
+    } else {
+      query.tab = tab;
+    }
+  }
 
+  // if (search) {
+  //   query.title = new RegExp(search, 'i');
+  // }
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
     return topics;
   }));
@@ -203,8 +215,7 @@ exports.topic = function(req, res, next){
         columns: columns,
         topicColumns: topicColumns,
         selectedColumnId: selectedColumnId,
-        base: '/admin/topic/all',
-        pageTitle: tabName && (tabName + '版块'),
+        base: '/admin/topic/' + tab ,
         layout: false
       });
     });
@@ -267,7 +278,7 @@ exports.reply = function(req, res, next){
 
 //获取column管理界面
 exports.column=function(req,res,next){
-    var page=parseInt(req.query.page) || 1; 
+    var page=parseInt(req.query.page) || 1;
 
     var proxy = new EventProxy();
     proxy.fail(next);
@@ -285,7 +296,7 @@ exports.column=function(req,res,next){
         });
     });
 
-    //获取分页专栏数据    
+    //获取分页专栏数据
     var limit = config.list_activity_count;
     var options = {
         skip: (page - 1) * limit,
