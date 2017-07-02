@@ -139,7 +139,7 @@ exports.replyForTopic = function(req, res, next){
 
 exports.topic = function(req, res, next){
   var page = parseInt(req.query.page, 10) || 1;
-  // var search = req.params.key;
+  var search = req.query.key;
   page = page > 0 ? page : 1;
   // var tab = 'all';
   var tab = req.params.tab || 'all';
@@ -170,9 +170,9 @@ exports.topic = function(req, res, next){
     }
   }
 
-  // if (search) {
-  //   query.title = new RegExp(search, 'i');
-  // }
+  if (search) {
+    query.title = new RegExp(search, 'i');
+  }
   Topic.getTopicsByQuery(query, options, proxy.done('topics', function (topics) {
     return topics;
   }));
@@ -215,7 +215,7 @@ exports.topic = function(req, res, next){
         columns: columns,
         topicColumns: topicColumns,
         selectedColumnId: selectedColumnId,
-        base: '/admin/topic/' + tab ,
+        base: '/admin/topic/' + tab + (search && search !== 'undefined' ? '?key=' + search : '' ),
         layout: false
       });
     });
