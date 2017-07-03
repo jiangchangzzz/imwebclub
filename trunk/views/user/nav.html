@@ -22,7 +22,7 @@
 	</li>-->
 	<li class='breadcrumb__link <% console.log(tab);if (tab === "follower" || tab==="following") {%>active<%}%>'>
 		<i class="nav-icon fa fa-link"></i>
-		<a href='/user/<%= user.loginname %>/follower'>关系中心</a>
+		<a href='/user/<%= user.loginname %>/following'>关系中心</a>
 	</li>
 	<%if(isCurrentUser) {%>
 	<li class='breadcrumb__link <%if (tab === "setting") {%>active<%}%>'>
