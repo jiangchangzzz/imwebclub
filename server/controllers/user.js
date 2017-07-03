@@ -72,7 +72,7 @@ exports.index = function (req, res, next) {
       if (!user.active && req.session.user && req.session.user.is_admin) {
         token = utility.md5(user.email + user.pass + config.session_secret);
       }
-      let arr = recent_topics.concat(recent_questions, recent_replies);
+      var arr = recent_topics.concat(recent_questions, recent_replies);
       arr = quickSort(arr);
       res.render('user/index', {
         user: user,
@@ -96,7 +96,7 @@ exports.index = function (req, res, next) {
     var opt = {limit: 5, sort: '-create_at'};
 
     Topic.getTopicsByQuery(query, opt, proxy.done('recent_topics'));
-  
+
     Question.getQuestionsByQuery(query, opt, proxy.done('recent_questions'));
 
     Reply.getRepliesByAuthorId(user._id, 'topic', {
@@ -238,10 +238,10 @@ exports.showFollowing = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('following', function(followUser) {
-      return res.render('user/followings', { 
-        user: user, 
-        following: followUser, 
-        currentUser: req.session.user, 
+      return res.render('user/followings', {
+        user: user,
+        following: followUser,
+        currentUser: req.session.user,
         tab: 'following',
         current_page: page,
         base: '/user/' + user_name + '/following',
@@ -257,7 +257,7 @@ exports.showFollower = function (req, res, next) {
   var user_name = req.params.name;
   var page = Number(req.query.page) || 1;
   var limit = config.list_topic_count;
-  
+
   User.getUserByLoginName(user_name, function (err, user) {
     // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
@@ -269,10 +269,10 @@ exports.showFollower = function (req, res, next) {
     user.error = null;
     var ep = new EventProxy();
     ep.all('following', function(followUser) {
-      return res.render('user/followers', { 
-        user: user, 
-        follower: followUser, 
-        currentUser: req.session.user, 
+      return res.render('user/followers', {
+        user: user,
+        follower: followUser,
+        currentUser: req.session.user,
         tab: 'following',
         current_page: page,
         base: '/user/' + user_name + '/follower',
@@ -633,10 +633,10 @@ exports.listReplies = function (req, res, next) {
     var proxy = new EventProxy();
     proxy.assign('recent_replies', 'pages', render);
     proxy.fail(next);
-    
+
 
     var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
-    
+
     Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
       // 获取所有有评论的主题
       var topic_ids = replies.map(function (reply) {
