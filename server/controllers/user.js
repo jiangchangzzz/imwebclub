@@ -237,7 +237,6 @@ exports.showFollowing = function (req, res, next) {
     }
     user.error = null;
     var ep = new EventProxy();
-<<<<<<< HEAD
     ep.all('following', function(followUser) {
       return res.render('user/followings', { 
         user: user, 
@@ -251,17 +250,6 @@ exports.showFollowing = function (req, res, next) {
     })
     const eachFollowing = user.following.slice(limit*(page-1),limit*page);
     User.getFollowUser(eachFollowing , ep.done('following'));
-=======
-    ep.all('following', function (followUser) {
-      return res.render('user/follow', {
-        user: user,
-        followUser: followUser,
-        currentUser: req.session.user,
-        tab: 'follwing'
-      });
-    })
-    User.getFollowUser(user.following, ep.done('following'));
->>>>>>> 0b1d5e849797b52eb46d651699210c584553733f
   });
 };
 
@@ -647,16 +635,8 @@ exports.listReplies = function (req, res, next) {
     proxy.fail(next);
     
 
-<<<<<<< HEAD
     var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
     
-=======
-    var opt = {
-      skip: (page - 1) * limit,
-      limit: limit,
-      sort: '-create_at'
-    };
->>>>>>> 0b1d5e849797b52eb46d651699210c584553733f
     Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
       // 获取所有有评论的主题
       var topic_ids = replies.map(function (reply) {
