@@ -226,7 +226,7 @@ exports.followings = function (req, res, next) {
 exports.showFollowing = function (req, res, next) {
   var user_name = req.params.name;
   var page = Number(req.query.page) || 1;
-  var limit = config.list_topic_count;
+  var limit = 5;
   User.getUserByLoginName(user_name, function (err, user) {
     // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
@@ -256,8 +256,7 @@ exports.showFollowing = function (req, res, next) {
 exports.showFollower = function (req, res, next) {
   var user_name = req.params.name;
   var page = Number(req.query.page) || 1;
-  var limit = config.list_topic_count;
-
+  var limit = 5;
   User.getUserByLoginName(user_name, function (err, user) {
     // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {

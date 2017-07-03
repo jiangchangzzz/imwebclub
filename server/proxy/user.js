@@ -159,7 +159,7 @@ exports.getFollowUser = function(followUser, callback) {
   _.forEach(followUser, id => {
     User.findOne({_id: id}, ep.done(function(user) {
       if (!user) {
-        return res.render404('这个用户不存在。');
+        return callback(new Error('该用户不存在'));;
       }
       ep.emit('follow', {
         id,
