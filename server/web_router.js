@@ -87,7 +87,8 @@ router.delete('/user/follow', user.deleteFollowUser); //取消关注
 router.get('/user/followings', auth.userRequired, user.followings); // api:分页获取关注的对象
 
 // message controler
-router.get('/my/messages', auth.userRequired, message.index); // 用户个人的所有消息页
+router.get('/message/me', auth.userRequired, message.index); // 用户个人的所有消息页
+router.get('/message/system', auth.userRequired, message.system); //系统通知的消息页
 
 // 文章
 
@@ -172,6 +173,8 @@ router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
 router.get('/admin/message', auth.adminRequired, admin.message);
+router.post('/admin/message',auth.adminRequired,admin.saveMessage);
+router.get('/admin/message/:mid/delete',auth.adminRequired, admin.removeMessage);
 
 // 专栏
 router.get('/column/create', auth.userRequired, column.create); //新增某专栏

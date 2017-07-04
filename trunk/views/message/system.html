@@ -48,29 +48,25 @@
         <div id="content">
           <div class="message-container">
             <nav class="message-nav">
-              <a href="/message/me" class="active">用户消息</a>
-              <a href="/message/system">系统消息</a>
+              <a href="/message/me">用户消息</a>
+              <a href="/message/system" class="active">系统消息</a>
             </nav>
             <div class="block">
-              <div class="block-header">
-                <h3 class="block-title">新消息</h3>
-              </div>
-              <div class="block-content">
-                <% if (typeof(hasnot_read_messages) !== 'undefined' && hasnot_read_messages.length > 0) { %>
-                  <%- partial('../message/message', { collection: hasnot_read_messages, as: 'message' }) %>
-                    <% } else { %>
-                      <p class="no-message">没有新的消息</p>
-                      <% } %>
-              </div>
-            </div>
-            <div class="block">
-              <div class="block-header">  
-                <h3 class="block-title">已读消息</h3>
-              </div>
-              <div class="block-content">
-                <% if (typeof(has_read_messages) !== 'undefined' && has_read_messages.length > 0) { %>
-                  <%- partial('../message/message', { collection: has_read_messages, as: 'message' }) %>
-                  <div class='pagination' current_page='<%= current_page %>'>
+              <% if(messages.length){ %>
+              <ul>
+                <% messages.forEach(function(message){ %>
+                <li class="item">
+                  <h3 class="item-title">
+                    <%= message.title %>
+                    <span class="item-time"><%= message.friendly_create_at %></span>                    
+                  </h3>
+                  <p class="item-body">
+                    <%= message.content %>
+                  </p>
+                </li>
+                <% }) %>
+              </ul>
+              <div class='pagination' current_page='<%= current_page %>'>
               <ul>
                 <% var base_url = base + (base.indexOf('?') < 0 ? '?' : '&') + 'page='; %>
                   <% if (current_page == 1) { %>
@@ -115,11 +111,10 @@
                                                 <% } %>
               </ul>
             </div>
-                    <% } else { %>
-                    <p class="no-message">没有已读消息</p>
-                    <% } %>
-              </div>
-            </div>
+            <% }else{ %>
+            <p class="no-message">没有系统消息</p>
+            <% } %>
+          </div>
           </div>
         </div>
     </div>

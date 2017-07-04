@@ -3,8 +3,9 @@ var User = require('../proxy').User;
 var Reply = require('../proxy').Reply;
 var Banner = require('../proxy').Banner;
 var Activity = require('../proxy').Activity;
-var Column=require('../proxy').Column;
-var TopicColumn=require('../proxy').TopicColumn;
+var Column = require('../proxy').Column;
+var TopicColumn = require('../proxy').TopicColumn;
+var SystemMessage = require('../proxy').SystemMessage;
 var _ = require('lodash');
 var tools = require('../common/tools');
 var EventProxy = require('eventproxy');
@@ -19,16 +20,16 @@ function formatAvatar(url) {
   url = url.replace('//www.gravatar.com', '//gravatar.com');
   // 让协议自适应 protocol
   if (url.indexOf('http:') === 0) {
-          url = url.slice(5);
+    url = url.slice(5);
   }
 
   //如果没有gravatar头像，则用默认
   if (url.indexOf("gravatar.com") >= 0 && url.indexOf("d=retro") < 0) {
-          url += "&d=retro";
+    url += "&d=retro";
   }
   // 如果是 github 的头像，则限制大小
   if (url.indexOf('githubusercontent') !== -1) {
-          url += '&s=120';
+    url += '&s=120';
   }
   return url;
 }
@@ -46,102 +47,105 @@ function html_encode(str) {
   return s;
 }
 
-exports.editUser = function(req, res, next){
-        var user_name = req.params.name;
-        var ep = new EventProxy();
-        ep.fail(next);
-        User.getUserByLoginName(user_name, function(err, user) {
-            if (err) {
-                return next(err);
-            }
-            if (!user) {
-                res.send({
-                    ret: 400,
-                    data: null
-                });
-                return;
-            }
-            ep.emit('user', user);
-            Topic.queryAuthorTopic(user._id, +new Date(), 100, ep.done('topic'));
-        });
-
-        ep.all('topic', 'user', function(topic, user) {
-            for (var i = 0, len = topic.length; i < len; i++) {
-                topic[i].summary = html_encode(topic[i].summary);
-            }
-            user.topic = topic;
-            res.render('admin/user/edit',{
-                user:user
-            });
-
-        });
-/*     proxy.all('topics', 'tops', 'no_reply_topics', 'pages', 'topic_caculate',
-            function(topics, tops, no_reply_topics, pages, topic_caculate) {
-                res.render('admin/:name/edits', {
-                });*/
-};
-
-exports.saveUser = function(req, res, next) {
-    var updated = {};
-    _.each(
-        ['name', /*'company', */'comp_mail', /*'email', */'score'],
-        function(item) {
-            if (req.body[item] !== undefined) {
-                updated[item] = validator.trim(req.body[item]);
-            }
-        }
-    );
-    var oldPass = req.body.old_pass || '';
-    var requirePassCheck = updated.pass !== undefined;
-    var ep = new EventProxy();
-
-    ep.fail(next);
-    ep.on('fail', function(ret, msg) {
-        ep.unbind();
-        var data = _.extend({}, updated, dataAdapter.outUserAll(req.session.user), {
-            error: msg,
-            ret: ret,
-            group: req.params.group || 'account',
-            pass: ''
-        });
-        res.render('user/setting', data);
-    });
-
-
-    if (!validator.isNumeric(updated.score)) {
-        return ep.emit('prop_err', '声望必须为数字。');
+exports.editUser = function (req, res, next) {
+  var user_name = req.params.name;
+  var ep = new EventProxy();
+  ep.fail(next);
+  User.getUserByLoginName(user_name, function (err, user) {
+    if (err) {
+      return next(err);
     }
+    if (!user) {
+      res.send({
+        ret: 400,
+        data: null
+      });
+      return;
+    }
+    ep.emit('user', user);
+    Topic.queryAuthorTopic(user._id, +new Date(), 100, ep.done('topic'));
+  });
 
-    User.getUserById(req.body["_id"], ep.done(function(user) {
-        ep.emit('user', user);
-    }));
-
-    ep.all('user', function(user) {
-        _.extend(user, updated);
-        user.save(ep.done('user_save'));
-        res.redirect('/admin/user/all');
+  ep.all('topic', 'user', function (topic, user) {
+    for (var i = 0, len = topic.length; i < len; i++) {
+      topic[i].summary = html_encode(topic[i].summary);
+    }
+    user.topic = topic;
+    res.render('admin/user/edit', {
+      user: user
     });
 
-    ep.all('user_save', function(user) {
-        ep.unbind();
-        req.session.user = user.toObject({
-            virtual: true
-        });
+  });
+  /*     proxy.all('topics', 'tops', 'no_reply_topics', 'pages', 'topic_caculate',
+              function(topics, tops, no_reply_topics, pages, topic_caculate) {
+                  res.render('admin/:name/edits', {
+                  });*/
+};
+
+exports.saveUser = function (req, res, next) {
+  var updated = {};
+  _.each(
+    ['name', /*'company', */ 'comp_mail', /*'email', */ 'score'],
+    function (item) {
+      if (req.body[item] !== undefined) {
+        updated[item] = validator.trim(req.body[item]);
+      }
+    }
+  );
+  var oldPass = req.body.old_pass || '';
+  var requirePassCheck = updated.pass !== undefined;
+  var ep = new EventProxy();
+
+  ep.fail(next);
+  ep.on('fail', function (ret, msg) {
+    ep.unbind();
+    var data = _.extend({}, updated, dataAdapter.outUserAll(req.session.user), {
+      error: msg,
+      ret: ret,
+      group: req.params.group || 'account',
+      pass: ''
     });
+    res.render('user/setting', data);
+  });
+
+
+  if (!validator.isNumeric(updated.score)) {
+    return ep.emit('prop_err', '声望必须为数字。');
+  }
+
+  User.getUserById(req.body["_id"], ep.done(function (user) {
+    ep.emit('user', user);
+  }));
+
+  ep.all('user', function (user) {
+    _.extend(user, updated);
+    user.save(ep.done('user_save'));
+    res.redirect('/admin/user/all');
+  });
+
+  ep.all('user_save', function (user) {
+    ep.unbind();
+    req.session.user = user.toObject({
+      virtual: true
+    });
+  });
 
 };
 
-exports.replyForTopic = function(req, res, next){
-    Reply.getRepliesByTopicId(req.params.tid, function(err, replies){
-        res.render('admin/reply/index',{"layout":false,"replies":replies});
+exports.replyForTopic = function (req, res, next) {
+  Reply.getRepliesByTopicId(req.params.tid, function (err, replies) {
+    res.render('admin/reply/index', {
+      "layout": false,
+      "replies": replies
     });
+  });
 };
 
-exports.topic = function(req, res, next){
+exports.topic = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var tab = 'all';
-  var sort = 'default';  // 根据不同的参数决定文章排序方式
+  var sort = 'default'; // 根据不同的参数决定文章排序方式
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
     'latest': '-create_at',
@@ -165,7 +169,7 @@ exports.topic = function(req, res, next){
     return topics;
   }));
 
-  Column.getColumnsByQuery({},{},proxy.done('columns',function(columns){
+  Column.getColumnsByQuery({}, {}, proxy.done('columns', function (columns) {
     return columns;
   }));
 
@@ -185,13 +189,13 @@ exports.topic = function(req, res, next){
   }));
   // END 取分页数据
 
-//   var tabs = [['all', '全部']].concat(config.tabs);
+  //   var tabs = [['all', '全部']].concat(config.tabs);
   var tabName = renderHelper.tabName(tab);
 
-  var selectedColumnId=req.query.columnid;
+  var selectedColumnId = req.query.columnid;
 
-  proxy.all('topics', 'pages','columns',/*'topicColumns',*/
-    function (topics, pages, columns,topicColumns) {
+  proxy.all('topics', 'pages', 'columns', /*'topicColumns',*/
+    function (topics, pages, columns, topicColumns) {
       res.render('admin/topic/index', {
         topics: _topicFormat(topics),
         current_page: page,
@@ -209,16 +213,15 @@ exports.topic = function(req, res, next){
       });
     });
 
-  if(selectedColumnId){
-    TopicColumn.getTopicColumnsBycolumnId(selectedColumnId,{},proxy.done('topicColumns',function(topicColumns){
-        var res=topicColumns.map(function(item){
-            return item.topic_id;
-        });
-        return res;
+  if (selectedColumnId) {
+    TopicColumn.getTopicColumnsBycolumnId(selectedColumnId, {}, proxy.done('topicColumns', function (topicColumns) {
+      var res = topicColumns.map(function (item) {
+        return item.topic_id;
+      });
+      return res;
     }))
-  }
-  else{
-      proxy.emit('topicColumns',[]);
+  } else {
+    proxy.emit('topicColumns', []);
   }
 };
 
@@ -240,257 +243,360 @@ var _topicFormat = function (topics) {
   return topics;
 }
 
-exports.user = function(req, res, next){
-	//查询所有用户
+exports.user = function (req, res, next) {
+  //查询所有用户
 
-	User.getAllUsers(function(results){
-		user_list = results;
-        for(var i in user_list){
-            user_list[i]['friendly_create_at'] = tools.formatDate(user_list[i].create_at, false);
-            user_list[i]['friendly_update_at'] = tools.formatDate(user_list[i].update_at, false);
-        }
-		res.render('admin/user/index',{"layout":false,"users":user_list})
-	});
+  User.getAllUsers(function (results) {
+    user_list = results;
+    for (var i in user_list) {
+      user_list[i]['friendly_create_at'] = tools.formatDate(user_list[i].create_at, false);
+      user_list[i]['friendly_update_at'] = tools.formatDate(user_list[i].update_at, false);
+    }
+    res.render('admin/user/index', {
+      "layout": false,
+      "users": user_list
+    })
+  });
 };
 
-exports.reply = function(req, res, next){
-	Reply.replyList2(function(results){
-		reply_list = results;
-		//date format
-		for(var i in reply_list){
-			reply_list[i]['friendly_create_at'] = tools.formatDate(reply_list[i].create_at, false);
-			reply_list[i]['friendly_update_at'] = tools.formatDate(reply_list[i].update_at, false);
-		}
-		res.render('admin/reply/index',{"layout":false,"replies":reply_list})
-	});
+exports.reply = function (req, res, next) {
+  Reply.replyList2(function (results) {
+    reply_list = results;
+    //date format
+    for (var i in reply_list) {
+      reply_list[i]['friendly_create_at'] = tools.formatDate(reply_list[i].create_at, false);
+      reply_list[i]['friendly_update_at'] = tools.formatDate(reply_list[i].update_at, false);
+    }
+    res.render('admin/reply/index', {
+      "layout": false,
+      "replies": reply_list
+    })
+  });
 };
 
 //获取column管理界面
-exports.column=function(req,res,next){
-    var page=parseInt(req.query.page) || 1; 
+exports.column = function (req, res, next) {
+  var page = parseInt(req.query.page) || 1;
 
-    var proxy = new EventProxy();
-    proxy.fail(next);
+  var proxy = new EventProxy();
+  proxy.fail(next);
 
-    proxy.all('columns','pages',function(columns,pages){
-        columns=columns.map(function(column){
-            return dataAdapter.outColumn(column);
-        });
-        res.render('admin/column/index',{
-            columns: columns,
-            base: '/admin/column/all',
-            current_page: page,
-            pages: pages,
-            layout: false
-        });
+  proxy.all('columns', 'pages', function (columns, pages) {
+    columns = columns.map(function (column) {
+      return dataAdapter.outColumn(column);
     });
-
-    //获取分页专栏数据    
-    var limit = config.list_activity_count;
-    var options = {
-        skip: (page - 1) * limit,
-        limit: limit
-    };
-    Column.getColumnsByQuery({},options,proxy.done(function(columns){
-        if(columns && columns.length>0){
-            proxy.after('column',columns.length,function(colums){
-                proxy.emit('columns',colums);
-            });
-
-            columns.map(function(column){
-                User.getUserById(column.owner_id,proxy.done('column',function(owner){
-                    column.owner=owner;
-                    return column;
-                }));
-            })
-        }
-        else{
-            proxy.emit('columns',[]);
-        }
-    }));
-
-    //获取页码数目
-    Column.getCountByQuery({ deleted: false },proxy.done('pages',function(pages){
-        return Math.ceil(pages/limit);
-    }));
-};
-
-exports.banner = function(req, res, next){
-    Banner.bannerList(function(results) {
-        res.render('admin/banner/index',{'layout':false, 'banners': results});
+    res.render('admin/column/index', {
+      columns: columns,
+      base: '/admin/column/all',
+      current_page: page,
+      pages: pages,
+      layout: false
     });
-};
+  });
 
-exports.addBanner = function(req, res, next) {
-    res.render('admin/banner/add', {isNew: true});
-};
+  //获取分页专栏数据    
+  var limit = config.list_activity_count;
+  var options = {
+    skip: (page - 1) * limit,
+    limit: limit
+  };
+  Column.getColumnsByQuery({}, options, proxy.done(function (columns) {
+    if (columns && columns.length > 0) {
+      proxy.after('column', columns.length, function (colums) {
+        proxy.emit('columns', colums);
+      });
 
-exports.saveBanner = function(req, res, next) {
-    var updated = {};
-    var bid = req.body.bid;
-    var ep = EventProxy.create();
-    _.each(
-        ['image', 'link', 'background', 'index', 'status'],
-        function(item) {
-            if (req.body[item] !== undefined) {
-                updated[item] = validator.trim(req.body[item]);
-            }
-        }
-    );
-    if (!bid) { // 新建
-        Banner.newAndSave(updated, function (results) {
-            res.redirect('all');
-        });
-    } else { // 修改
-        ep.on('fail', function(ret, msg) {
-            ep.unbind();
-            res.send({ret: ret || 400, msg: msg || ''});
-        });
-        ep.on('done', function() {
-            res.redirect('all');
-        });
-
-        Banner.getBannerById(bid, function(banner) {
-            if (!banner) {
-                return ep.emit('fail', 401, 'no banner');
-            }
-            ep.emit('banner', banner);
-        });
-
-        ep.all('banner', function(banner) {
-            _.extend(banner, updated);
-            banner.save(ep.emit('done'));
-        });
+      columns.map(function (column) {
+        User.getUserById(column.owner_id, proxy.done('column', function (owner) {
+          column.owner = owner;
+          return column;
+        }));
+      })
+    } else {
+      proxy.emit('columns', []);
     }
+  }));
+
+  //获取页码数目
+  Column.getCountByQuery({
+    deleted: false
+  }, proxy.done('pages', function (pages) {
+    return Math.ceil(pages / limit);
+  }));
 };
 
-exports.removeBanner = function(req, res, next) {
-    var bid = req.body.id;
-    var ep = EventProxy.create();
-    ep.on('fail', function(ret, msg) {
-        ep.unbind();
-        res.send({ret: ret || 400, msg: msg || ''});
+exports.banner = function (req, res, next) {
+  Banner.bannerList(function (results) {
+    res.render('admin/banner/index', {
+      'layout': false,
+      'banners': results
     });
-    ep.on('done', function() {
-        res.send({ret: 0});
+  });
+};
+
+exports.addBanner = function (req, res, next) {
+  res.render('admin/banner/add', {
+    isNew: true
+  });
+};
+
+exports.saveBanner = function (req, res, next) {
+  var updated = {};
+  var bid = req.body.bid;
+  var ep = EventProxy.create();
+  _.each(
+    ['image', 'link', 'background', 'index', 'status'],
+    function (item) {
+      if (req.body[item] !== undefined) {
+        updated[item] = validator.trim(req.body[item]);
+      }
+    }
+  );
+  if (!bid) { // 新建
+    Banner.newAndSave(updated, function (results) {
+      res.redirect('all');
+    });
+  } else { // 修改
+    ep.on('fail', function (ret, msg) {
+      ep.unbind();
+      res.send({
+        ret: ret || 400,
+        msg: msg || ''
+      });
+    });
+    ep.on('done', function () {
+      res.redirect('all');
     });
 
-    Banner.getBannerById(bid, function(banner) {
-        if (!banner) {
-            return ep.emit('fail', 401, 'no banner');
-        }
-        ep.emit('banner', banner);
+    Banner.getBannerById(bid, function (banner) {
+      if (!banner) {
+        return ep.emit('fail', 401, 'no banner');
+      }
+      ep.emit('banner', banner);
     });
 
-    ep.all('banner', function(banner) {
-        banner.remove();
-        ep.emit('done');
+    ep.all('banner', function (banner) {
+      _.extend(banner, updated);
+      banner.save(ep.emit('done'));
     });
+  }
+};
+
+exports.removeBanner = function (req, res, next) {
+  var bid = req.body.id;
+  var ep = EventProxy.create();
+  ep.on('fail', function (ret, msg) {
+    ep.unbind();
+    res.send({
+      ret: ret || 400,
+      msg: msg || ''
+    });
+  });
+  ep.on('done', function () {
+    res.send({
+      ret: 0
+    });
+  });
+
+  Banner.getBannerById(bid, function (banner) {
+    if (!banner) {
+      return ep.emit('fail', 401, 'no banner');
+    }
+    ep.emit('banner', banner);
+  });
+
+  ep.all('banner', function (banner) {
+    banner.remove();
+    ep.emit('done');
+  });
 
 };
 
-exports.editBanner = function(req, res, next) {
-    var bid = req.params.bid;
-    var ep = EventProxy.create();
-    Banner.getBannerById(bid, function(banner) {
-        if (!banner) {
-            return ep.emit('fail', 401, 'no banner');
-        }
-        ep.emit('banner', banner);
+exports.editBanner = function (req, res, next) {
+  var bid = req.params.bid;
+  var ep = EventProxy.create();
+  Banner.getBannerById(bid, function (banner) {
+    if (!banner) {
+      return ep.emit('fail', 401, 'no banner');
+    }
+    ep.emit('banner', banner);
+  });
+  ep.all('banner', function (banner) {
+    res.render('admin/banner/add', {
+      banner: banner,
+      isNew: false
     });
-    ep.all('banner', function(banner) {
-        res.render('admin/banner/add', {banner: banner, isNew: false});
-    });
+  });
 };
 
-exports.activity = function(req, res, next) {
-    Activity.list(function(results) {
-        res.render('admin/activity/index',{'layout':false, 'activities': results});
+exports.activity = function (req, res, next) {
+  Activity.list(function (results) {
+    res.render('admin/activity/index', {
+      'layout': false,
+      'activities': results
     });
+  });
 }
-exports.addActivity = function(req, res, next) {
-    res.render('admin/activity/add', {isNew: true});
+exports.addActivity = function (req, res, next) {
+  res.render('admin/activity/add', {
+    isNew: true
+  });
 };
 
-exports.saveActivity = function(req, res, next) {
-    var updated = {};
-    var acid = req.body.acid;
-    var ep = EventProxy.create();
-    _.each(
-        ['image', 'link', 'title', 'desc', 'pptlink'],
-        function(item) {
-            if (req.body[item] !== undefined) {
-                updated[item] = validator.trim(req.body[item]);
-            }
-        }
-    );
-    if (!acid) { // 新建
-        Activity.newAndSave(updated, function (results) {
-            res.redirect('all');
-        });
-    } else { // 修改
-        ep.on('fail', function(ret, msg) {
-            ep.unbind();
-            res.send({ret: ret || 400, msg: msg || ''});
-        });
-        ep.on('done', function() {
-            res.redirect('all');
-        });
-
-        Activity.getActivityById(acid, function(activity) {
-            if (!activity) {
-                return ep.emit('fail', 401, 'no activity');
-            }
-            ep.emit('activity', activity);
-        });
-
-        ep.all('activity', function(activity) {
-            _.extend(activity, updated);
-            activity.save(ep.emit('done'));
-        });
+exports.saveActivity = function (req, res, next) {
+  var updated = {};
+  var acid = req.body.acid;
+  var ep = EventProxy.create();
+  _.each(
+    ['image', 'link', 'title', 'desc', 'pptlink'],
+    function (item) {
+      if (req.body[item] !== undefined) {
+        updated[item] = validator.trim(req.body[item]);
+      }
     }
+  );
+  if (!acid) { // 新建
+    Activity.newAndSave(updated, function (results) {
+      res.redirect('all');
+    });
+  } else { // 修改
+    ep.on('fail', function (ret, msg) {
+      ep.unbind();
+      res.send({
+        ret: ret || 400,
+        msg: msg || ''
+      });
+    });
+    ep.on('done', function () {
+      res.redirect('all');
+    });
+
+    Activity.getActivityById(acid, function (activity) {
+      if (!activity) {
+        return ep.emit('fail', 401, 'no activity');
+      }
+      ep.emit('activity', activity);
+    });
+
+    ep.all('activity', function (activity) {
+      _.extend(activity, updated);
+      activity.save(ep.emit('done'));
+    });
+  }
 };
 
-exports.editActivity = function(req, res, next) {
-    var acid = req.params.acid;
-    var ep = EventProxy.create();
-    Activity.getActivityById(acid, function(activity) {
-        if (!activity) {
-            return ep.emit('fail', 401, 'no activity');
-        }
-        ep.emit('activity', activity);
+exports.editActivity = function (req, res, next) {
+  var acid = req.params.acid;
+  var ep = EventProxy.create();
+  Activity.getActivityById(acid, function (activity) {
+    if (!activity) {
+      return ep.emit('fail', 401, 'no activity');
+    }
+    ep.emit('activity', activity);
+  });
+  ep.all('activity', function (activity) {
+    res.render('admin/activity/add', {
+      activity: activity,
+      isNew: false
     });
-    ep.all('activity', function(activity) {
-        res.render('admin/activity/add', {activity: activity, isNew: false});
-    });
+  });
 };
 
-exports.removeActivity = function(req, res, next) {
-    var acid = req.body.id;
-    var ep = EventProxy.create();
-    ep.on('fail', function(ret, msg) {
-        ep.unbind();
-        res.send({ret: ret || 400, msg: msg || ''});
+exports.removeActivity = function (req, res, next) {
+  var acid = req.body.id;
+  var ep = EventProxy.create();
+  ep.on('fail', function (ret, msg) {
+    ep.unbind();
+    res.send({
+      ret: ret || 400,
+      msg: msg || ''
     });
-    ep.on('done', function() {
-        res.send({ret: 0});
+  });
+  ep.on('done', function () {
+    res.send({
+      ret: 0
     });
+  });
 
-    Activity.getActivityById(acid, function(activity) {
-        if (!activity) {
-            return ep.emit('fail', 401, 'no activity');
-        }
-        ep.emit('activity', activity);
-    });
+  Activity.getActivityById(acid, function (activity) {
+    if (!activity) {
+      return ep.emit('fail', 401, 'no activity');
+    }
+    ep.emit('activity', activity);
+  });
 
-    ep.all('activity', function(activity) {
-        activity.remove();
-        ep.emit('done');
-    });
+  ep.all('activity', function (activity) {
+    activity.remove();
+    ep.emit('done');
+  });
 
 };
 
-exports.message=function(req,res,next){
-    res.render('admin/message/index',{
+exports.message = function (req, res, next) {
+    var page = parseInt(req.query.page) || 1;
+    page = page > 0 ? page : 1;
+    var pageSize = config.list_system_message_count;
+
+    var ep=new EventProxy();
+    ep.all('pages','messages',function(pages,messages){
+      messages.forEach(function(message){
+        message.friendly_create_at = tools.formatDate(message.create_at, true);
+      })
+        res.render('admin/message/index',{
+            pages: pages,
+            messages: messages,
+            current_page: page,
+            base: '/admin/message'
+        });
     });
+
+    SystemMessage.getSystemMessagePage(pageSize, page, ep.done('messages',function(messages){
+      return messages.map(function(message){
+        message.friendly_create_at = tools.formatDate(message.create_at, true);
+        return message;
+      });
+    }));
+
+    SystemMessage.getSystemMessageCount(ep.done('pages',function(count){
+      return Math.ceil(count/pageSize);
+    }));
+};
+
+exports.saveMessage=function(req,res,next){
+  var userId=req.session.user._id;
+  var title=req.body.title;
+  var content=req.body.content;
+
+  if(!title && !content){
+    res.redirect('/admin/message');
+  }
+
+  SystemMessage.newAndSave(title,content,userId,function(err,data){
+    if(err || !data){
+      next(err);
+    }
+    res.redirect('/admin/message');
+  });
+};
+
+exports.removeMessage=function(req,res,next){
+  var mid=req.params.mid;
+  var user=req.session.user;
+
+  var ep = tools.createJsonEventProxy(res, next);
+  ep.all('remove',function(){
+    ep.emit('done');
+  });
+
+  if(!user.is_admin){
+    ep.emit('fail',403, '无权限');
+  }
+
+  SystemMessage.removeSystemMessage(mid,function(err,data){
+    if(err){
+      ep.emit('fail');
+    }
+
+    ep.emit('remove');
+  });   
 };

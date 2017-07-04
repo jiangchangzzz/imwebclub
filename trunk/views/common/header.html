@@ -31,7 +31,10 @@
                     </ol>
                   </div>
                   <div class="menu-btn">
-                    <a id="nav-message-menu" href="/my/messages" class="ico fa fa-envelope"></a>
+                    <% if(typeof messageCount !== 'undefined'){ %>
+                    <span class="message-point <%= messageCount===0?'hide':'' %>"><%= messageCount %></span>
+                    <% } %>
+                    <a id="nav-message-menu" href="/message/me" class="ico fa fa-envelope"></a>
                   </div>
                   <div class="menu-btn">
                     <a id="nav-user-menu" href="javascript:void(0);" class="ico fa fa-user" title="<%= current_user.loginname %>"></a>

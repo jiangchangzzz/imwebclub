@@ -12,6 +12,7 @@ var Activity = require('../proxy').Activity;
 var Banner = require('../proxy').Banner;
 var Column = require('../proxy').Column;
 var UserFollow = require('../proxy').UserFollow;
+var Message = require('../proxy').Message;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
@@ -161,8 +162,8 @@ exports.index = function (req, res, next) {
 
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners','columns','followColumns',
-    function (topics, questions, tops, activity_imweb, activity_industry, banners,columns,followColumns) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners', 'columns', 'followColumns', 'messageCount',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners, columns, followColumns, messageCount) {
       res.render('index', {
         _layoutFile: false,
         topics: topics,
@@ -176,6 +177,7 @@ exports.index = function (req, res, next) {
         banners: banners,
         columns: columns,
         followColumns: followColumns,
+        messageCount: messageCount,
         pageTitle: tabName && (tabName + '版块')
       });
     });
@@ -191,6 +193,14 @@ exports.index = function (req, res, next) {
     }));
   } else {
     proxy.emit('followColumns', []);
+  }
+
+  //获取未读消息数量
+  if (currentUser) {
+    var userId = currentUser._id;
+    Message.getMessagesCount(userId, proxy.done('messageCount'));
+  } else {
+    proxy.emit('messageCount', 0);
   }
 };
 

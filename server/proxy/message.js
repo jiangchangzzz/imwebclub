@@ -129,3 +129,24 @@ exports.updateMessagesToRead = function (userId, messages, callback) {
   var query = { master_id: userId, _id: { $in: ids } };
   Message.update(query, { $set: { has_read: true } }, { multi: true }).exec(callback);
 };
+
+/**
+ * 根据用户ID，获取分页已读消息
+ */
+exports.getReadMessagePageByUserId=function(userId,pageSize,pageIndex,callback){
+  var skipNum=(pageIndex-1)*pageSize;
+  return Message.find({ master_id: userId, has_read: true })
+    .sort('-create_at')
+    .skip(skipNum)
+    .limit(pageSize)
+    .exec(callback);
+};
+
+/**
+ * 根据用户ID，获取已读消息数量
+ */
+exports.getReadMessageCountByUserId=function(userId,callback){
+  return Message
+    .count({ has_read: true })
+    .exec(callback);
+};

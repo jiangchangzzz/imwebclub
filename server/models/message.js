@@ -15,7 +15,7 @@ var MessageSchema = new Schema({
   type: { type: String },
   master_id: { type: ObjectId},
   author_id: { type: ObjectId },
-  topic_id: { type: ObjectId },
+  topic_id: { type: ObjectId }, 
   reply_id: { type: ObjectId },
   column_id: { type: ObjectId },
   question_id: { type: ObjectId },
