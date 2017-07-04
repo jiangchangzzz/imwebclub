@@ -6,6 +6,8 @@ var Message = require('../models').Message;
 var User = require('./user');
 var Topic = require('./topic');
 var Reply = require('./reply');
+var Column=require('./column');
+var Question=require('./question');
 
 /**
  * 根据用户ID，获取未读消息的数量
@@ -54,7 +56,32 @@ var getMessageRelations = exports.getMessageRelations = function (message, callb
     User.getUserById(message.author_id, proxy.done('author'));
     Topic.getTopicById(message.topic_id, proxy.done('topic'));
     Reply.getReplyById(message.reply_id, proxy.done('reply'));
-  } else {
+  } else if(message.type==='column'){
+    var proxy=new EventProxy();
+    proxy.fail(callback);
+    proxy.all('column',function(column){
+      message.column=column;
+      if(!column){
+        message.is_invalid=true;
+      }
+      return callback(null,message);
+    });
+
+    Column.getColumnById(message.column_id,proxy.done('column'));    
+  }else if(message.type==='question'){
+    var proxy = new EventProxy();
+    proxy.fail(callback);
+    proxy.assign('author', 'question', function (author, question) {
+      message.author = author;
+      message.question = question;
+      if (!author || !question) {
+        message.is_invalid = true;
+      }
+      return callback(null, message);
+    }); // 接收异常
+    User.getUserById(message.author_id, proxy.done('author'));
+    Question.getQuestionById(message.question_id,proxy.done('question'));
+  }else{
     return callback(null, {is_invalid: true});
   }
 };

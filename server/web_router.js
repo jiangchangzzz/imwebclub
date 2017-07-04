@@ -171,6 +171,8 @@ router.post('/admin/activity/save', auth.adminRequired, admin.saveActivity);
 router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
+router.get('/admin/message', auth.adminRequired, admin.message);
+
 // 专栏
 router.get('/column/create', auth.userRequired, column.create); //新增某专栏
 router.post('/column/create', auth.userRequired, column.put);

@@ -23,14 +23,17 @@ var mail = require('../common/mail');
 var dataAdapter = require('../common/dataAdapter');
 var renderHelper = require('../common/render_helper');
 
+//发送消息辅助方法
+var message = require('../common/message');
+
 /**
  * 某一专栏的详情页
  */
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
-  var isLogin=!!currentUser;
-  var isAdmin = currentUser? currentUser.is_admin : false;
+  var isLogin = !!currentUser;
+  var isAdmin = currentUser ? currentUser.is_admin : false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
 
@@ -98,19 +101,21 @@ exports.index = function (req, res, next) {
       });
       var count = 0;
       async.whilst(
-          function() { return count < items.length; },
-          function(callback) {
-            Topic.getTopicById(items[count].topic_id, function (err, topic) {
-              User.getUserById(topic.author_id, function (err,author) {
-                topic.author = dataAdapter.outUser(author || {});
-                topic.friendly_create_at = tools.formatDate(topic.create_at, true);
-                topic.friendly_update_at = tools.formatDate(topic.update_at, true);
-                proxy.emit('topic', topic);
-                count++;
-                callback(null, count);
-              });
+        function () {
+          return count < items.length;
+        },
+        function (callback) {
+          Topic.getTopicById(items[count].topic_id, function (err, topic) {
+            User.getUserById(topic.author_id, function (err, author) {
+              topic.author = dataAdapter.outUser(author || {});
+              topic.friendly_create_at = tools.formatDate(topic.create_at, true);
+              topic.friendly_update_at = tools.formatDate(topic.update_at, true);
+              proxy.emit('topic', topic);
+              count++;
+              callback(null, count);
             });
-          }
+          });
+        }
       );
     } else {
       return proxy.emit('topics', []);
@@ -123,8 +128,8 @@ exports.index = function (req, res, next) {
  */
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
-  var isLogin=!!currentUser;
-  var isAdmin = currentUser? currentUser.is_admin : false;
+  var isLogin = !!currentUser;
+  var isAdmin = currentUser ? currentUser.is_admin : false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -150,7 +155,9 @@ exports.list = function (req, res, next) {
     if (pages) {
       proxy.emit('pages', pages);
     } else {
-      Column.getCountByQuery({ deleted: false }, proxy.done(function (all_columns_count) {
+      Column.getCountByQuery({
+        deleted: false
+      }, proxy.done(function (all_columns_count) {
         var pages = Math.ceil(all_columns_count / limit);
         cache.set(pagesCacheKey, pages, 60 * 1);
         proxy.emit('pages', pages);
@@ -392,14 +399,18 @@ exports.addTopic = function (req, res, next) {
   }
 
   if (topic_ids.length > 0) {
-    ep.after('deal', topic_ids.length, function () {
-      ep.emit('done');
-    });
-
     Column.getColumnById(column_id, function (err, column) {
       if (err || !column) {
         return ep.emit('fail', '此活动不存在或已被删除。');
       }
+
+      ep.after('deal', topic_ids.length, function () {
+        notificateSubscriber(user, column, function () {
+
+        }); // 给关注者发送邮件通知
+
+        ep.emit('done');
+      });
 
       for (var i = 0; i < topic_ids.length; i++) {
         var topic_id = topic_ids[i];
@@ -418,9 +429,6 @@ exports.addTopic = function (req, res, next) {
                 column.topic_count++;
 
                 column.save(ep.done(function () {
-                  notificateSubscriber(user, column, function(){
-
-                  }); // 给关注者发送邮件通知
                   ep.emit('deal');
                 }))
               });
@@ -439,6 +447,13 @@ function notificateSubscriber(fromUser, column, callback) {
     if (err || !items || items.length === 0) {
       return;
     }
+
+    //给关注者发送消息
+    var master_ids = items.map(function (item) {
+      return item.user_id;
+    });
+    message.sendColumnMessage(master_ids, column._id);
+
     var ep = new EventProxy();
     ep.after('user', items.length, function (users) {
       mail.sendColumnTopicToFollowers({
@@ -446,6 +461,7 @@ function notificateSubscriber(fromUser, column, callback) {
         user: fromUser,
         column: column
       });
+
       callback();
     });
     items.map(function (item) {

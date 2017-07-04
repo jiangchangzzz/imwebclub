@@ -489,3 +489,8 @@ exports.removeActivity = function(req, res, next) {
     });
 
 };
+
+exports.message=function(req,res,next){
+    res.render('admin/message/index',{
+    });
+};

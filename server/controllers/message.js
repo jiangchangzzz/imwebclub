@@ -6,8 +6,13 @@ exports.index = function (req, res, next) {
   var ep = new eventproxy();
   ep.fail(next);
 
-  ep.all('has_read_messages', 'hasnot_read_messages', function (has_read_messages, hasnot_read_messages) {
-    res.render('message/index', {has_read_messages: has_read_messages, hasnot_read_messages: hasnot_read_messages});
+  ep.all('has_read_messages', 'hasnot_read_messages',  function (has_read_messages, hasnot_read_messages) {
+    console.log(has_read_messages);
+    res.render('message/index', {
+      has_read_messages: has_read_messages,
+      hasnot_read_messages: hasnot_read_messages,
+      _layoutFile: false
+    });
   });
 
   ep.all('has_read', 'unread', function (has_read, unread) {

@@ -17,6 +17,8 @@ var MessageSchema = new Schema({
   author_id: { type: ObjectId },
   topic_id: { type: ObjectId },
   reply_id: { type: ObjectId },
+  column_id: { type: ObjectId },
+  question_id: { type: ObjectId },
   has_read: { type: Boolean, default: false },
   create_at: { type: Date, default: Date.now }
 });
