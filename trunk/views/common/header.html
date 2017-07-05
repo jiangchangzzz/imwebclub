@@ -31,8 +31,10 @@
                     </ol>
                   </div>
                   <div class="menu-btn">
-                    <% if(typeof messageCount !== 'undefined'){ %>
-                    <span class="message-point <%= messageCount===0?'hide':'' %>"><%= messageCount %></span>
+                    <% if(typeof messageCount !== 'undefined' && typeof systemCount !== 'undefined'){ 
+                        var count=messageCount+systemCount;
+                    %>
+                    <span class="message-point <%= count===0?'hide':'' %>"><%= count %></span>
                     <% } %>
                     <a id="nav-message-menu" href="/message/me" class="ico fa fa-envelope"></a>
                   </div>

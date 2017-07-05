@@ -10,6 +10,7 @@ var Topic = require('../proxy').Topic;
 var Reply = require('../proxy').Reply;
 var UserFollow = require('../proxy').UserFollow;
 var TopicColumn = require('../proxy').TopicColumn;
+var Message=require('../proxy').Message;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var store = require('../common/store');
@@ -375,7 +376,16 @@ exports.delete = function (req, res, next) {
         }
         return ep.emit('user_follow_deleted');
       });
-      ep.all('topic_column_deleted', 'user_follow_deleted', function () {
+
+      //删除关联消息
+      Message.removeMessageByColumnId(column_id,function(err){
+        if(err){
+          return ep.emit('fail',403);
+        }
+        return ep.emit('message_deleted');
+      }); 
+
+      ep.all('topic_column_deleted', 'user_follow_deleted', 'message_deleted', function () {
         ep.emit('done');
       });
     });

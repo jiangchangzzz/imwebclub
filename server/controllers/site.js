@@ -13,6 +13,7 @@ var Banner = require('../proxy').Banner;
 var Column = require('../proxy').Column;
 var UserFollow = require('../proxy').UserFollow;
 var Message = require('../proxy').Message;
+var SystemMessage=require('../proxy').SystemMessage;
 var config = require('../config');
 var eventproxy = require('eventproxy');
 var cache = require('../common/cache');
@@ -162,13 +163,12 @@ exports.index = function (req, res, next) {
 
 
   var tabName = renderHelper.tabName(tab);
-  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners', 'columns', 'followColumns', 'messageCount',
-    function (topics, questions, tops, activity_imweb, activity_industry, banners, columns, followColumns, messageCount) {
+  proxy.all('topics', 'questions', 'tops', 'activity_imweb', 'activity_industry', 'banners', 'columns', 'followColumns',
+    function (topics, questions, tops, activity_imweb, activity_industry, banners, columns, followColumns) {
       res.render('index', {
         _layoutFile: false,
         topics: topics,
         questions: questions,
-        // list_topic_count: limit,
         tops: tops,
         activity_industry: activity_industry,
         activity_imweb: activity_imweb,
@@ -177,7 +177,6 @@ exports.index = function (req, res, next) {
         banners: banners,
         columns: columns,
         followColumns: followColumns,
-        messageCount: messageCount,
         pageTitle: tabName && (tabName + '版块')
       });
     });
@@ -193,14 +192,6 @@ exports.index = function (req, res, next) {
     }));
   } else {
     proxy.emit('followColumns', []);
-  }
-
-  //获取未读消息数量
-  if (currentUser) {
-    var userId = currentUser._id;
-    Message.getMessagesCount(userId, proxy.done('messageCount'));
-  } else {
-    proxy.emit('messageCount', 0);
   }
 };
 

@@ -40,7 +40,9 @@ var requestLog = require('./server/middlewares/request_log');
 var renderMiddleware = require('./server/middlewares/render');
 var logger = require('./server/common/logger');
 var helmet = require('helmet');
-var bytes = require('bytes')
+var bytes = require('bytes');
+
+var messageCount=require('./server/middlewares/message_count');
 
 
 // 静态文件目录
@@ -127,6 +129,9 @@ passport.use(new GitHubStrategy(config.GITHUB_OAUTH, githubStrategyMiddleware));
 // custom middleware
 app.use(auth.authUser);
 app.use(auth.blockUser());
+
+//消息数量中间件
+app.use(messageCount);
 
 if (!config.debug) {
   app.use(function (req, res, next) {

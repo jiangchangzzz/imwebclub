@@ -150,3 +150,19 @@ exports.getReadMessageCountByUserId=function(userId,callback){
     .count({ has_read: true })
     .exec(callback);
 };
+
+/**
+ * 根据专栏ID，删除专栏消息
+ */
+exports.removeMessageByColumnId=function(columnId,callback){
+  Message.remove({ column_id: columnId })
+    .exec(callback);
+}
+
+/**
+ * 根据文章ID，删除文章消息
+ */
+exports.removeMessageByTopicId=function(topicId,callback){
+  Message.remove({ topic_id: topicId })
+    exec(callback);
+}

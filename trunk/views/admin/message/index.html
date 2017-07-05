@@ -97,6 +97,10 @@
         <% }else{ %>
         <p class="no-message">没有系统消息</p>
         <% } %>
+        <div id="message-info">
+          <p class="alert alert-success hide" id="success-info"></p>
+          <p class="alert hide" id="fail-info"></p>
+        </div>
       </div>
       <%- partial('modal') %>
   </div>

@@ -1,5 +1,6 @@
 var Message = require('../proxy').Message;
 var SystemMessage = require('../proxy').SystemMessage;
+var User=require('../proxy').User;
 var eventproxy = require('eventproxy');
 var config = require('../config');
 var tools = require('../common/tools');
@@ -54,29 +55,62 @@ exports.index = function (req, res, next) {
 
 //获取系统消息页面
 exports.system = function (req, res, next) {
-  var page = parseInt(req.query.page) || 1;
-  page = page > 0 ? page : 1;
-  var pageSize = config.list_system_message_count;
+  var user_id=req.session.user._id;
 
   var ep=new eventproxy();
-  ep.all('messages','pages',function(messages,pages){
+  ep.all('noReadSystemMessages','readSystemMessages','updateMessageTime',function(noReadSystemMessages,readSystemMessages,time){
     res.render('message/system',{
       _layoutFile: false,
-      messages: messages,
-      pages: pages,
-      current_page: page,
-      base: '/message/system'
+      noReadSystemMessages: noReadSystemMessages,   //未读系统消息
+      readSystemMessages: readSystemMessages        //已读系统消息
     });
   });
 
-  SystemMessage.getSystemMessagePage(pageSize, page, ep.done('messages',function(messages){
-    return messages.map(function(message){
-      message.friendly_create_at = tools.formatDate(message.create_at, true);
-      return message;
-    });
-  }));
+  User.getUserById(user_id,function(err,user){
+    if(err){
+      next(err);
+    }
 
-  SystemMessage.getSystemMessageCount(ep.done('pages',function(count){
-    return Math.ceil(count/pageSize);
-  }));
+    var time=user.last_message_time;
+    //获取未读消息列表
+    SystemMessage.getNoReadSystemMessageByTime(time,ep.done('noReadSystemMessages',function(messages){
+      return messages.map(function(message){
+        message.friendly_create_at = tools.formatDate(message.create_at, true);
+        return message;
+      });
+    }));
+
+    //获取已读消息列表
+    SystemMessage.getReadSystemMessageByTime(time,ep.done('readSystemMessages',function(messages){
+      return messages.map(function(message){
+        message.friendly_create_at = tools.formatDate(message.create_at, true);
+        return message;
+      });
+    }));
+
+    //更新用户最后阅读系统消息时间
+    User.updateLastMessageTime(user_id,ep.done('updateMessageTime'));
+  });
+
+  // var ep=new eventproxy();
+  // ep.all('messages','pages',function(messages,pages){
+  //   res.render('message/system',{
+  //     _layoutFile: false,
+  //     messages: messages,
+  //     pages: pages,
+  //     current_page: page,
+  //     base: '/message/system'
+  //   });
+  // });
+
+  // SystemMessage.getSystemMessagePage(pageSize, page, ep.done('messages',function(messages){
+  //   return messages.map(function(message){
+  //     message.friendly_create_at = tools.formatDate(message.create_at, true);
+  //     return message;
+  //   });
+  // }));
+
+  // SystemMessage.getSystemMessageCount(ep.done('pages',function(count){
+  //   return Math.ceil(count/pageSize);
+  // }));
 };
