@@ -8,8 +8,7 @@ var SystemMessage=new Schema({
     title: { type: String },   //标题
     content: { type: String },   //内容
     owner_id: { type: ObjectId, ref: 'User'},   //创建人
-    create_at: { type: Date, default: Date.now, index: true },   //创建时间
-    deleted: { type: Boolean, default: false }    //是否删除
+    create_at: { type: Date, default: Date.now, index: true }   //创建时间
 });
 
 SystemMessage.plugin(BaseModel);
