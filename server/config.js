@@ -70,6 +70,12 @@ var config = {
   // 活动列表显示的活动数量
   list_question_count: 15,
 
+  // 已读消息列表显示消息数量
+  list_message_count: 15,
+
+  //系统消息数量
+  list_system_message_count: 15,
+
   // RSS配置
   rss: {
     title: 'IMWeb：web牛人社区',

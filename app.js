@@ -40,7 +40,9 @@ var requestLog = require('./server/middlewares/request_log');
 var renderMiddleware = require('./server/middlewares/render');
 var logger = require('./server/common/logger');
 var helmet = require('helmet');
-var bytes = require('bytes')
+var bytes = require('bytes');
+
+var messageCount=require('./server/middlewares/message_count');
 
 
 // 静态文件目录
@@ -128,6 +130,9 @@ passport.use(new GitHubStrategy(config.GITHUB_OAUTH, githubStrategyMiddleware));
 app.use(auth.authUser);
 app.use(auth.blockUser());
 
+//消息数量中间件
+app.use(messageCount);
+
 if (!config.debug) {
   app.use(function (req, res, next) {
     if (req.path === '/api' || req.path.indexOf('/api') === -1) {
@@ -177,6 +182,13 @@ if (config.debug) {
     return res.status(500).send('500 status');
   });
 }
+
+//没有找到则跳转到404页面
+app.use(function(req,res){
+  if(!res.headersSent){
+    res.status(404).render('404',{ _layoutFile: false });
+  }
+});
 
 if (!module.parent) {
   app.listen(config.port, function () {

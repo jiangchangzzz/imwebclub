@@ -1,0 +1,55 @@
+<% if (message.has_read) { %>
+<div class='message-item' message_id='<%= message._id %>'>
+  <% } else { %>
+  <div class='message-item' message_id='<%= message._id %>'>
+    <% } %>
+		<p>
+    <% if(message.type == 'reply'){ %>
+		
+			<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
+			回复了你的文章
+			<a href="/topic/<%- message.topic._id + (message.reply ? '#' + message.reply._id : '') %>" target='_blank'><%=
+        message.topic.title %></a>
+		
+    <% } %>
+    <% if(message.type == 'reply2'){ %>
+		
+			<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
+			在文章
+			<a href="/topic/<%= message.topic._id + (message.reply ? '#' + message.reply._id : '') %>" target='_blank'><%=
+        message.topic.title %></a>
+			中回复了你的回复
+		
+    <% } %>
+    <% if(message.type == 'follow'){ %>
+	
+		<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
+		关注了你
+	
+    <% } %>
+    <% if (message.type == 'at'){ %>
+		
+			<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
+			在文章
+			<a href="/topic/<%= message.topic._id + (message.reply ? '#' + message.reply._id : '') %>" target='_blank'><%=
+        message.topic.title %></a>
+			中@了你
+		
+    <% } %>
+		<% if(message.type==='column'){ %>
+		
+			你关注的
+			<a href="/column/<%= message.column._id %>" target="_blank"><%= message.column.title %></a>
+			专栏更新了，快去看看吧
+		
+		<% } %>
+		<% if(message.type==='question'){ %>
+		
+			<a href="/user/<%= message.author.loginname %>/index" target="_blank"><%= message.author.loginname %></a>
+			回答了你的问题
+			<a href="/question/<%= message.question._id %>" target="_blank"><%= message.question.title %></a>
+		
+		<% } %>
+		<span class="message-time"><%= message.friendly_create_at %></span>
+		</p>
+  </div>
