@@ -153,6 +153,7 @@ router.get('/draft/get/:id', auth.userRequired, draft.get);
 
 //admin
 router.get('/admin/topic/all', auth.adminRequired, admin.topic);  //  话题管理
+// router.get('/admin/topic/:key', auth.adminRequired, admin.topic);
 router.get('/admin/user/all', auth.adminRequired, admin.user);  //  用户管理
 router.get('/admin/reply/all', auth.adminRequired, admin.reply);  //  评论管理
 router.get('/admin/column/all', auth.adminRequired, admin.column);   //专栏管理
