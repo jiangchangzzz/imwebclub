@@ -183,6 +183,13 @@ if (config.debug) {
   });
 }
 
+//没有找到则跳转到404页面
+app.use(function(req,res){
+  if(!res.headersSent){
+    res.status(404).render('404',{ _layoutFile: false });
+  }
+});
+
 if (!module.parent) {
   app.listen(config.port, function () {
     logger.info('Imwebclub listening on port', config.port);
