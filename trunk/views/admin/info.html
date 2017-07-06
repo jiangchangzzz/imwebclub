@@ -1,0 +1,10 @@
+<!-- 成功错误信息提醒 -->
+<div class="admin-info">
+    <% if(success.length){ %>
+    <p class="alert alert-success"><%= success %></p>
+    <% } %>
+
+    <% if(error.length){ %>
+    <p class="alert"><%= error %></p>
+    <% } %>
+</div>

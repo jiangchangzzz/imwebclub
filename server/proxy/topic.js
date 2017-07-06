@@ -264,3 +264,12 @@ exports.queryAuthorTopic = function (authorId, beforeTime, limit, callback) {
     .limit(limit)
     .exec(callback);
 };
+
+/**
+ * 获取用户文章数量
+ */
+exports.getTopicCount=function(authorId){
+  return Topic.count({
+    author_id: authorId
+  }).exec();
+};

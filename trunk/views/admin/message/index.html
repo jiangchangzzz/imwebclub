@@ -49,53 +49,9 @@
             <% }) %>
           </tbody>
         </table>
-        <div class='pagination' current_page='<%= current_page %>'>
-              <ul>
-                <% var base_url = base + (base.indexOf('?') < 0 ? '?' : '&') + 'page='; %>
-                  <% if (current_page == 1) { %>
-                    <li class='disabled btn-step'><i class="fa fa-step-backward"></i></li>
-                    <% } else { %>
-                      <li class='btn-step'><a href="<%= base_url %>1"><i class="fa fa-backward"></i></a></li>
-                      <% } %>
-
-                        <%
-				    var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
-				    var page_end = page_start + 4 >= pages ? pages : page_start + 4;
-				    %>
-
-                          <% if (page_start > 1) { %>
-                            <li><a>...</a></li>
-                            <% } %>
-
-                              <% for(var i = page_start; i <= page_end; i++) { %>
-                                <% if (i === current_page) { %>
-                                  <li class='disabled'>
-                                    <a>
-                                      <%= i %>
-                                    </a>
-                                  </li>
-                                  <% } else { %>
-                                    <li>
-                                      <a href='<%= base_url + i %>'>
-                                        <%= i %>
-                                      </a>
-                                    </li>
-                                    <% } %>
-                                      <% } %>
-
-                                        <% if (page_end < pages ) { %>
-                                          <li><a>...</a></li>
-                                          <% } %>
-
-                                            <% if (current_page == pages) { %>
-                                              <li class='disabled btn-step'><i class="fa fa-step-forward"></i></li>
-                                              <% } else { %>
-                                                <li class='btn-step'><a href='<%= base_url + pages %>'><i class="fa fa-forward"></i></a></li>
-                                                <% } %>
-              </ul>
-            </div>
+        <%- partial('../../common/page') %>
         <% }else{ %>
-        <p class="no-message">没有系统消息</p>
+        <p class="no-message">系统消息列表空空如也，快添加你的系统消息吧^_^</p>
         <% } %>
         <div id="message-info">
           <p class="alert alert-success hide" id="success-info"></p>
@@ -106,5 +62,4 @@
   </div>
 </div>
 
-<!-- <script src="/libs/bootstrap/js/jquery.js"></script> -->
 <script src="/libs/bootstrap/js/bootstrap.min.js"></script>

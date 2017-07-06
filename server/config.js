@@ -76,6 +76,9 @@ var config = {
   //系统消息数量
   list_system_message_count: 15,
 
+  //名人堂数据数量
+  list_celebrity_count: 15,
+
   // RSS配置
   rss: {
     title: 'IMWeb：web牛人社区',

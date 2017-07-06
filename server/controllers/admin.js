@@ -6,6 +6,8 @@ var Activity = require('../proxy').Activity;
 var Column = require('../proxy').Column;
 var TopicColumn = require('../proxy').TopicColumn;
 var SystemMessage = require('../proxy').SystemMessage;
+var Celebrity=require('../proxy').Celebrity;
+var Promise=require('bluebird');
 var _ = require('lodash');
 var tools = require('../common/tools');
 var EventProxy = require('eventproxy');
@@ -533,70 +535,149 @@ exports.removeActivity = function (req, res, next) {
 };
 
 exports.message = function (req, res, next) {
-    var page = parseInt(req.query.page) || 1;
-    page = page > 0 ? page : 1;
-    var pageSize = config.list_system_message_count;
+  var page = parseInt(req.query.page) || 1;
+  page = page > 0 ? page : 1;
+  var pageSize = config.list_system_message_count;
 
-    var ep=new EventProxy();
-    ep.all('pages','messages',function(pages,messages){
-      messages.forEach(function(message){
-        message.friendly_create_at = tools.formatDate(message.create_at, true);
-      })
-        res.render('admin/message/index',{
-            pages: pages,
-            messages: messages,
-            current_page: page,
-            base: '/admin/message'
-        });
+  var ep = new EventProxy();
+  ep.all('pages', 'messages', function (pages, messages) {
+    messages.forEach(function (message) {
+      message.friendly_create_at = tools.formatDate(message.create_at, true);
+    })
+    res.render('admin/message/index', {
+      pages: pages,
+      messages: messages,
+      current_page: page,
+      base: '/admin/message'
     });
+  });
 
-    SystemMessage.getSystemMessagePage(pageSize, page, ep.done('messages',function(messages){
-      return messages.map(function(message){
-        message.friendly_create_at = tools.formatDate(message.create_at, true);
-        return message;
-      });
-    }));
+  SystemMessage.getSystemMessagePage(pageSize, page, ep.done('messages', function (messages) {
+    return messages.map(function (message) {
+      message.friendly_create_at = tools.formatDate(message.create_at, true);
+      return message;
+    });
+  }));
 
-    SystemMessage.getSystemMessageCount(ep.done('pages',function(count){
-      return Math.ceil(count/pageSize);
-    }));
+  SystemMessage.getSystemMessageCount(ep.done('pages', function (count) {
+    return Math.ceil(count / pageSize);
+  }));
 };
 
-exports.saveMessage=function(req,res,next){
-  var userId=req.session.user._id;
-  var title=req.body.title;
-  var content=req.body.content;
+exports.saveMessage = function (req, res, next) {
+  var userId = req.session.user._id;
+  var title = req.body.title;
+  var content = req.body.content;
 
-  if(!title && !content){
+  if (!title && !content) {
     res.redirect('/admin/message');
   }
 
-  SystemMessage.newAndSave(title,content,userId,function(err,data){
-    if(err || !data){
+  SystemMessage.newAndSave(title, content, userId, function (err, data) {
+    if (err || !data) {
       next(err);
     }
     res.redirect('/admin/message');
   });
 };
 
-exports.removeMessage=function(req,res,next){
-  var mid=req.params.mid;
-  var user=req.session.user;
+exports.removeMessage = function (req, res, next) {
+  var mid = req.params.mid;
+  var user = req.session.user;
 
   var ep = tools.createJsonEventProxy(res, next);
-  ep.all('remove',function(){
+  ep.all('remove', function () {
     ep.emit('done');
   });
 
-  if(!user.is_admin){
-    ep.emit('fail',403, '无权限');
+  if (!user.is_admin) {
+    ep.emit('fail', 403, '无权限');
   }
 
-  SystemMessage.removeSystemMessage(mid,function(err,data){
-    if(err){
+  SystemMessage.removeSystemMessage(mid, function (err, data) {
+    if (err) {
       ep.emit('fail');
     }
 
     ep.emit('remove');
-  });   
+  });
 };
+
+/**
+ * 获取名人堂管理页面
+ */
+exports.celebrity = function (req, res, next) {
+  var page = parseInt(req.query.page) || 1;
+  var page = page > 0 ? page : 1;
+  var pageSize = config.list_celebrity_count;
+
+  Promise.all([
+    Celebrity.getCelebrityPage(pageSize, page),
+    Celebrity.getCount()
+  ]).spread(function(celebrities,count){
+    var pages=Math.ceil(count/pageSize);
+    res.render('admin/celebrity/index', {
+      celebrities: celebrities,
+      pages: pages,
+      current_page: page,
+      base: '/admin/celebrity'
+    });
+  })
+  .catch(next);
+};
+
+/**
+ * 添加名人数据
+ */
+exports.createCelebrity=function(req,res,next){
+  var celebrity=req.body.celebrity;
+  
+  //数据校验
+  if(celebrity.name.length===0){
+    req.flash('error','名人的姓名不能为空');
+    return res.redirect('back');
+  }
+
+  //判断关联用户是否存在
+  if(celebrity.user){
+    User.getUserByLoginName(celebrity.user,function(err,user){
+      if(err){
+        return next(err);
+      }
+      if(!user){
+        req.flash('error','关联用户不存在');
+        return res.redirect('back');
+      }
+
+      celebrity.userId=user._id;
+      create();
+    }); 
+  }
+  else{
+    create();
+  }
+
+  //向表中插入数据
+  function create(){
+    Celebrity.newAndSave(celebrity)
+    .then(function(result){
+      req.flash('success','添加名人数据成功');
+      res.redirect('/admin/celebrity');
+    })
+    .catch(next);
+  }
+};  
+
+/**
+ * 移除名人数据
+ */
+exports.removeCelebrity=function(req,res,next){
+  var celebrityId=req.params.celebrity;
+
+  Celebrity.removeCelebrity(celebrityId)
+    .then(function(result){
+      req.flash('success','移除名人数据成功');
+      res.redirect('/admin/celebrity');
+    })
+    .catch(next);
+}

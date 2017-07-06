@@ -42,8 +42,11 @@ var logger = require('./server/common/logger');
 var helmet = require('helmet');
 var bytes = require('bytes');
 
-var messageCount=require('./server/middlewares/message_count');
+var mongoose=require('mongoose');
+var bluebird=require('bluebird');
+var flash=require('connect-flash');
 
+var messageCount=require('./server/middlewares/message_count');
 
 // 静态文件目录
 var staticDir = path.join(__dirname, 'public');
@@ -169,13 +172,20 @@ app.use(busboy({
   }
 }));
 
+//mongoose使用bluebird提供的扩展Promise
+mongoose.Promise=bluebird;
+
+//使用flash中间件显示成功和错误信息
+app.use(flash());
+app.use(function(req,res,next){
+  res.locals.success=req.flash('success').toString();
+  res.locals.error=req.flash('error').toString();
+  next();
+});
+
 // routes
 app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
-
-app.use('/err',function(req,res,next){
-  next(new Error());
-});
 
 // error handler
 if (config.debug) {

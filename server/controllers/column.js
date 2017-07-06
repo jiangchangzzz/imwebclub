@@ -193,6 +193,7 @@ exports.list = function (req, res, next) {
 
   proxy.all('columns', 'pages', function (columns, pages) {
     res.render('column/list', {
+      active: 'column',
       columns: columns,
       list_column_count: limit,
       current_page: page,

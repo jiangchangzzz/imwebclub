@@ -1,0 +1,120 @@
+.clearfix{
+    clear: none;
+
+    &:before,
+    &:after{
+        content: '';
+        display: table;
+    }
+
+    &:after{
+        clear: both;
+    }
+}
+
+.celebrity-nav{
+    border-bottom: 1px solid #dfdfdf;
+
+    a{
+        display: inline-block;
+        padding: 4px 8px;
+        border-bottom: 3px solid transparent;
+
+        &.active{
+            color: #2fa0ef;
+            border-bottom-color: #2fa0ef;
+        }
+    }
+}
+
+.item{
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+
+    &-img{
+        float: left;
+
+        img{
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+        }
+    }
+
+    &-content{
+        padding-left: 72px;
+    }
+
+    &-header{
+        .header-title{
+            float: left;
+
+            .title-info{
+                color: #999;
+            }
+        }
+
+        .header-btn{
+            float: right;
+            padding-top: 18px;
+
+            .follow-btn{
+                padding: 7px 14px;
+                border: none;
+                outline: none;
+                background-color: #2FA0F0;
+                color: #fff;
+                border: 1px solid #2FA0F0;
+                border-radius: 4px;
+
+                &:hover{
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+
+    &-body{
+        a{
+            color: #2FA0F0;
+
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+
+        strong{
+            font-weight: bold;
+        }
+
+        .body-introduce{
+            margin-top: 4px;
+            line-height: 25px;
+        }
+    }
+}
+
+.btn{
+    padding: 7px 14px;
+    border: none;
+    outline: none;
+    background-color: #2FA0F0;
+    color: #fff;
+    border: 1px solid #2FA0F0;
+    border-radius: 4px;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.btn-default{
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.65);
+    border: 1px solid #ddd;
+
+    &:hover{
+        color: #2FA0F0;
+        border-color: #2FA0F0;
+    }
+}

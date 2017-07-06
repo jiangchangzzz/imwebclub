@@ -36,6 +36,7 @@ $(document).ready(function(){
         uploadImage();
     });
 
+    //上传图片
     function uploadImage(){
         var image=$('#file')[0].files[0];
         var type=image.type;

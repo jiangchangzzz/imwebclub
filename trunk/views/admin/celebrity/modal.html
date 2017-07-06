@@ -1,0 +1,50 @@
+<div id="myModal" class="modal" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">x</button>
+    <h3 id="myModalLabel">添加数据</h3>
+  </div>
+  <form class="form form-horizontal" method="post" id="celebrityForm">
+    <div class="modal-body">
+      <div class="form-group" id="name-group">
+        <label class="control-label col-md-2" for="name">姓名：</label>
+        <input type="text" class="form-control" id="name" name="celebrity[name]" placeholder="消息标题，2到32个字符">
+        <span id="name-info" class="form-info"></span>
+      </div>
+      <div class="form-group" id="file-group">
+        <label class="control-label col-md-2" for="file">头像：</label>
+        <input type="file" class="form-control" id="file">
+        <span id="file-info"></span>
+        <input type="hidden" id="avatar" name="celebrity[avatar]">
+      </div>
+      <div class="form-group" id="company-group">
+        <label class="control-label col-md-2" for="company">公司：</label>
+        <input type="text" class="form-control" id="company" name="celebrity[company]" placeholder="公司">
+        <span id="company-info" class="form-info"></span>
+      </div>
+      <div class="form-group" id="github-group">
+        <label class="control-label col-md-2" for="github">github主页：</label>
+        <input type="text" class="form-control" id="github" name="celebrity[github]" placeholder="github">
+        <span id="github-info" class="form-info"></span>
+      </div>
+      <div class="form-group" id="user-group">
+        <label class="control-label col-md-2" for="user">关联用户：</label>
+        <input type="text" class="form-control" id="user" name="celebrity[user]" placeholder="关联用户">
+        <span id="user-info" class="form-info"></span>
+      </div>
+      <div class="form-group" id="home-group">
+        <label class="control-label col-md-2" for="home">个人主页：</label>
+        <input type="text" class="form-control" id="home" name="celebrity[home]" placeholder="个人主页">
+        <span id="home-info" class="form-info"></span>
+      </div>
+      <div class="form-group" id="description-group">
+        <label class="control-label col-md-2" for="description">简介：</label>
+        <textarea type="text" class="form-control" id="description" name="celebrity[description]" rows="5"></textarea>
+        <span id="description-info" class="form-info"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">确 定</button>
+      <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+    </div>
+  </form>
+</div>
