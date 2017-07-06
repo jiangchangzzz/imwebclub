@@ -173,22 +173,27 @@ app.use(busboy({
 app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
 
+app.use('/err',function(req,res,next){
+  next(new Error());
+});
+
 // error handler
 if (config.debug) {
   app.use(errorhandler());
 } else {
+  //没有找到则跳转到404页面
+  app.use(function(req,res){
+    if(!res.headersSent){
+      return res.status(404).render('error/index',{ _layoutFile: false, code: 404 });
+    }
+  });
+
+  //服务器错误跳转到5xx页面
   app.use(function (err, req, res, next) {
     logger.error(err);
-    return res.status(500).send('500 status');
+    return res.status(500).render('error/index',{ _layoutFile: false, code: 500 });
   });
 }
-
-//没有找到则跳转到404页面
-app.use(function(req,res){
-  if(!res.headersSent){
-    res.status(404).render('404',{ _layoutFile: false });
-  }
-});
 
 if (!module.parent) {
   app.listen(config.port, function () {
