@@ -188,7 +188,7 @@ app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
 
 // error handler
-if (config.debug) {
+if (process.env.NODE_ENV !== 'production') {
   app.use(errorhandler());
 } else {
   //没有找到则跳转到404页面

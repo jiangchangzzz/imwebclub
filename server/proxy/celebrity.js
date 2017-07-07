@@ -1,7 +1,4 @@
 var Celebrity=require('../models').Celebrity;
-var UserFollow=require('../proxy').UserFollow;
-var Topic=require('../proxy').Topic;
-var Promise=require('bluebird');
 
 /**
  * 获取名人分页数据

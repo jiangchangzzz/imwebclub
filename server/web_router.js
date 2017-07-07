@@ -175,8 +175,8 @@ router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
 router.get('/admin/message', auth.adminRequired, admin.message);
-router.post('/admin/message',auth.adminRequired,admin.saveMessage);
-router.get('/admin/message/:mid/delete',auth.adminRequired, admin.removeMessage);
+router.post('/admin/message',auth.adminRequired,admin.createMessage);
+router.get('/admin/message/:message/remove',auth.adminRequired, admin.removeMessage);
 
 //名人堂管理
 router.get('/admin/celebrity',auth.adminRequired,admin.celebrity);

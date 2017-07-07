@@ -196,9 +196,11 @@ exports.listOrderByTeam = function(start, limit, callback) {
         .exec(callback);
 };
 
-//更新用户最后阅读系统消息时间
-exports.updateLastMessageTime=function(user_id,callback){
-  User.where({_id: user_id})
+/**
+ * 更新用户最后阅读系统消息时间
+ */
+exports.updateLastMessageTime=function(user_id){
+  return User.where({_id: user_id})
     .update({last_message_time: Date.now()})
-    .exec(callback);
+    .exec();
 };

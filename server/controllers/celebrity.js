@@ -2,7 +2,6 @@ var config = require('../config');
 var Promise = require('bluebird');
 var Celebrity = require('../proxy').Celebrity;
 var Topic=require('../proxy').Topic;
-var User=require('../proxy').User;
 
 /**
  * 获取名人堂列表页面
@@ -34,10 +33,12 @@ exports.list = function (req, res, next) {
  * 分页获取名人数据，文章数目
  */
 function getCelebrities(pageSize, page) {
+  //获取名人分页数据
   return Celebrity.getCelebrityPage(pageSize, page)
     .then(function (celebrities) {
+
+      //若关联用户存在，则获取其文章数目
       return Promise.map(celebrities, function (celebrity) {
-        //若关联用户存在，则获取其文章数目
         if (celebrity.userId) {
           var id = celebrity.userId._id;
           return Topic.getTopicCount(id)

@@ -43,8 +43,8 @@
               <td><%= message.title %></td>
               <td><%= message.content %></td>
               <td><%= message.owner_id.loginname %></td>
-              <td><%= message.friendly_create_at %></td>
-              <td><button type="button" class="btn btn-default delete-message" data-id=<%= message._id %>>删除</button></td>
+              <td><%= message.create_at_ago() %></td>
+              <td><a class="btn btn-default delete-message" href="/admin/message/<%= message._id %>/remove">删除</a></td>
             </tr>
             <% }) %>
           </tbody>
@@ -53,10 +53,7 @@
         <% }else{ %>
         <p class="no-message">系统消息列表空空如也，快添加你的系统消息吧^_^</p>
         <% } %>
-        <div id="message-info">
-          <p class="alert alert-success hide" id="success-info"></p>
-          <p class="alert hide" id="fail-info"></p>
-        </div>
+        <%- partial('../info') %>
       </div>
       <%- partial('modal') %>
   </div>

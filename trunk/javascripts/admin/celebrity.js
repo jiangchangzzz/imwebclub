@@ -2,6 +2,13 @@
 
 $(document).ready(function(){
 
+    //删除名人数据
+    $('.delete-celebrity').click(function(e){
+        if(!confirm('确定删除此名人数据吗？')){
+            e.preventDefault();
+        }
+    }); 
+
     $('#file').change(function(e){
         uploadImage();
     });

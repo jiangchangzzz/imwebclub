@@ -2,31 +2,10 @@
 
 $(document).ready(function(){
     //删除系统消息
-    $('.delete-message').click(function(){
+    $('.delete-message').click(function(e){
         if(!confirm('确定删除此系统消息吗？')){
-            return;
+            e.preventDefault();
         }
-
-        var btn=$(this);
-        var mid=btn.data('id');
-        showSuccess('数据正在光速传输中...');
-        $.ajax({
-            url: '/admin/message/'+mid+'/delete',
-            type: 'get',
-            success: function(data){
-                if(data.ret===0){
-                    showSuccess('系统消息发送成功');
-                    location.href='/admin/message';
-                }else{
-                    showFailure('系统消息发送失败,请重试');
-                    console.log(data.msg);
-                }
-            },
-            error: function(xhr,msg){
-                showFailure('网络错误，请检查');
-                console.log(msg);
-            }
-        })
     });
 
     //显示成功信息
