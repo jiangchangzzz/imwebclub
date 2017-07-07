@@ -42,7 +42,7 @@
 </head>
 
 <body>
-  <%- partial('common/header.html') %>
+  <%- partial('common/navhead.html') %>
     <div id="main" class="clearfix">
       <%- partial('common/sidebar.html') %>
         <div id="content">
@@ -52,7 +52,7 @@
           </nav>
           <div class="index-header clearfix">
             <div class="header-img" style="background-image: url(<%= column.cover %>)">
-              
+
             </div>
             <div class="header-text">
               <h2>
@@ -102,7 +102,7 @@
                 </p>
               </div>
             </li>
-            <% }) %> 
+            <% }) %>
           </ul>
 
         <% if(column.topic_count>0){ %>
@@ -146,7 +146,7 @@
         <% } %>
       </ul>
     </div>
-    
+
     <% }else{ %>
     <p class="no-item">当前专栏还没有文章，请联系管理员速速添加吧^_^</p>
     <% } %>

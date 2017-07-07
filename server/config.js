@@ -8,7 +8,7 @@ var domain = 'test.imweb.io';
 
 var config = {
   // debug 为 true 时，用于本地调试
-  debug: true,
+  debug: false,
 
   get mini_assets() {
     return !this.debug;
