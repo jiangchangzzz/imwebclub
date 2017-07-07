@@ -12,7 +12,8 @@ var config = {
 
   get mini_assets() {
     return !this.debug;
-  }, // 是否启用静态文件的合并压缩，详见视图中的Loader
+  },
+  // 是否启用静态文件的合并压缩，详见视图中的Loader
 
   name: '腾讯Web前端 IMWeb 团队社区 | blog | 团队博客', // 社区名字
   description: 'Web前端 腾讯IMWeb 团队社区', // 社区的描述

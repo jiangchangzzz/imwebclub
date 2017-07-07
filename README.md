@@ -33,7 +33,7 @@ npm run watch
 ```bash
 ./trunk/
 ```
-，构建后生成 ./viwes, ./public 文件夹，分别存放编译好的页面模版以及静态资源       
+，构建后生成 ./viwes, ./public 文件夹，分别存放编译好的页面模版以及静态资源
 
 ./libs目录下的是旧文章编辑页依赖的资源，不改文章编辑页的话基本不用动
 
@@ -42,3 +42,12 @@ npm run watch
 ./server/
 ```
 
+启动
+```bash
+npm run start
+```
+
+重启
+```bash
+npm run restart
+```

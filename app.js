@@ -1,16 +1,4 @@
-/*!
- * nodeclub - app.js
- */
-
-/**
- * Module dependencies.
- */
-
 var config = require('./server/config');
-
-// if (!config.debug && config.oneapm_key) {
-//   require('oneapm');
-// }
 
 require('colors');
 var path = require('path');

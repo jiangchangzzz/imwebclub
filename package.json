@@ -1,10 +1,9 @@
 {
-  "name": "nodeclub",
-  "version": "2.1.1",
+  "name": "imwebclub",
+  "version": "1.0.0",
   "private": true,
   "main": "app.js",
-  "description": "A Node.js bbs using MongoDB",
-  "repository": "https://github.com/cnodejs/nodeclub",
+  "description": "Tencent IMWebb blog",
   "dependencies": {
     "EventEmitter": "^1.0.0",
     "async": "1.5.2",
@@ -95,6 +94,7 @@
     "build": "rm -rf views/* && NODE_ENV=production webpack --progress --hide-modules",
     "watch": "webpack --progress --hide-modules --colors --watch",
     "dev": "sudo NODE_ENV=test node app.js",
-    "start": "NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name imweb --max-memory-restart 400M"
+    "start": "NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name imweb --max-memory-restart 400M",
+    "restart": "NODE_ENV=production ./node_modules/.bin/pm2 restart imweb"
   }
 }
