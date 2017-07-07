@@ -30,8 +30,11 @@ var logger = require('./server/common/logger');
 var helmet = require('helmet');
 var bytes = require('bytes');
 
-var messageCount=require('./server/middlewares/message_count');
+var mongoose=require('mongoose');
+var bluebird=require('bluebird');
+var flash=require('connect-flash');
 
+var messageCount=require('./server/middlewares/message_count');
 
 // 静态文件目录
 var staticDir = path.join(__dirname, 'public');
@@ -157,26 +160,38 @@ app.use(busboy({
   }
 }));
 
+//mongoose使用bluebird提供的扩展Promise
+mongoose.Promise=bluebird;
+
+//使用flash中间件显示成功和错误信息
+app.use(flash());
+app.use(function(req,res,next){
+  res.locals.success=req.flash('success').toString();
+  res.locals.error=req.flash('error').toString();
+  next();
+});
+
 // routes
 app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
 
 // error handler
-if (config.debug) {
+if (process.env.NODE_ENV !== 'production') {
   app.use(errorhandler());
 } else {
+  //没有找到则跳转到404页面
+  app.use(function(req,res){
+    if(!res.headersSent){
+      return res.status(404).render('error/index',{ _layoutFile: false, code: 404 });
+    }
+  });
+
+  //服务器错误跳转到5xx页面
   app.use(function (err, req, res, next) {
     logger.error(err);
-    return res.status(500).send('500 status');
+    return res.status(500).render('error/index',{ _layoutFile: false, code: 500 });
   });
 }
-
-//没有找到则跳转到404页面
-app.use(function(req,res){
-  if(!res.headersSent){
-    res.status(404).render('404',{ _layoutFile: false });
-  }
-});
 
 if (!module.parent) {
   app.listen(config.port, function () {

@@ -1,0 +1,71 @@
+<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+
+<!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<script>
+  window.imweb = window.imweb || {};
+  imweb._csrf = '<%- csrf %>';
+  <% if (typeof(current_user) !== 'undefined') { %>
+  imweb.user = {
+    id: '<%= current_user._id %>',
+    loginname: '<%= current_user.loginname %>',
+    is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+  };
+  <% } else { %>
+  imweb.user = null;
+  <% } %>
+
+</script>
+
+<div class="container-fluid admin-container">
+  <div class="row-fluid">
+    <%- partial('../sidebar') %>
+      <div class="span10">
+        <div class="row-fluid">
+          <div class="page-header clearfix">
+            <h1 class="header-title">名人堂</h1>
+            <button type="button" class="btn btn-primary header-btn" data-toggle="modal" data-target="#myModal">添加数据</button>
+          </div>
+          <% if(celebrities.length){ %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th width="10%">名字</th>
+                  <th width="10%">公司</th>
+                  <th width="10%">github主页</th>
+                  <th width="10%">个人主页</th>
+                  <th width="20%">简介</th>
+                  <th width="10%">关联用户</th>
+                  <th width="10%">创建时间</th>
+                  <th width="10%">删除</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% celebrities.forEach(function(celebrity){ %>
+                  <tr>
+                    <td><%= celebrity.name %></td>
+                    <td><%= celebrity.company || '无' %></td>
+                    <td><%= celebrity.github || '无' %></td>
+                    <td><%= celebrity.home || '无' %></td>
+                    <td><%= celebrity.description || '无' %></td>
+                    <td><%= typeof(celebrity.userId)==='undefined'?'无':celebrity.userId.loginname %></td>
+                    <td><%= celebrity.create_at_ago() %></td>
+                    <td><a class="btn btn-default delete-celebrity" href="/admin/celebrity/<%= celebrity._id %>/remove">删除</a></td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+            <%- partial('../../common/page') %>
+            <% }else{ %>
+              <p class="no-celebrity">名人列表空空如也，快添加你的名人堂吧^_^</p>
+              <% } %>
+          <%- partial('../info') %>
+        </div>
+      </div>
+
+      <%- partial('modal') %>
+  </div>
+</div>
+
+<script src="/libs/bootstrap/js/bootstrap.min.js"></script>

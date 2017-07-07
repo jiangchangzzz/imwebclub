@@ -6,6 +6,8 @@ var Activity = require('../proxy').Activity;
 var Column = require('../proxy').Column;
 var TopicColumn = require('../proxy').TopicColumn;
 var SystemMessage = require('../proxy').SystemMessage;
+var Celebrity = require('../proxy').Celebrity;
+var Promise = require('bluebird');
 var _ = require('lodash');
 var tools = require('../common/tools');
 var EventProxy = require('eventproxy');
@@ -147,7 +149,7 @@ exports.topic = function (req, res, next) {
   page = page > 0 ? page : 1;
   // var tab = 'all';
   var tab = req.params.tab || 'all';
-  var sort = 'default';  // 根据不同的参数决定文章排序方式
+  var sort = 'default'; // 根据不同的参数决定文章排序方式
   var sortMap = {
     'hot': '-visit_count -collect_count -reply_count -create_at',
     'latest': '-create_at',
@@ -219,7 +221,7 @@ exports.topic = function (req, res, next) {
         columns: columns,
         topicColumns: topicColumns,
         selectedColumnId: selectedColumnId,
-        base: '/admin/topic/' + tab + (search && search !== 'undefined' ? '?key=' + search : '' ),
+        base: '/admin/topic/' + tab + (search && search !== 'undefined' ? '?key=' + search : ''),
         layout: false
       });
     });
@@ -543,71 +545,197 @@ exports.removeActivity = function (req, res, next) {
 
 };
 
+/**
+ * 获取消息管理页面
+ */
 exports.message = function (req, res, next) {
-    var page = parseInt(req.query.page) || 1;
-    page = page > 0 ? page : 1;
-    var pageSize = config.list_system_message_count;
+  var page = parseInt(req.query.page) || 1;
+  page = page > 0 ? page : 1;
+  var pageSize = config.list_system_message_count;
 
-    var ep=new EventProxy();
-    ep.all('pages','messages',function(pages,messages){
-      messages.forEach(function(message){
-        message.friendly_create_at = tools.formatDate(message.create_at, true);
-      })
-        res.render('admin/message/index',{
-            pages: pages,
-            messages: messages,
-            current_page: page,
-            base: '/admin/message'
-        });
+  Promise.all([
+    SystemMessage.getSystemMessagePage(pageSize, page),//获取系统消息分页数据
+    SystemMessage.getSystemMessageCount()//获取系统消息总数
+  ]).spread(function(messages, count){
+    var pages=Math.ceil(count/pageSize);
+    res.render('admin/message/index', {
+      messages: messages,
+      pages: pages,
+      current_page: page,
+      base: '/admin/message'
     });
+  });
+};
 
-    SystemMessage.getSystemMessagePage(pageSize, page, ep.done('messages',function(messages){
-      return messages.map(function(message){
-        message.friendly_create_at = tools.formatDate(message.create_at, true);
-        return message;
+/**
+ * 创建系统消息
+ */
+exports.createMessage = function (req, res, next) {
+  var userId = req.session.user._id;
+  var message=req.body.message;
+
+  //数据校验
+  if(!message.title.length){
+    req.flash('error','系统消息的标题不能为空');
+    return res.redirect('back');
+  }
+  if(!message.content.length){
+    req.flash('error','系统消息的内容不能为空');
+    return res.redirect('back');
+  }
+
+  //向表中插入数据
+  message.owner_id=userId;
+  SystemMessage.newAndSave(message)
+    .then(function(result){
+      req.flash('success','发布系统消息成功');
+      res.redirect('/admin/message');
+    })
+    .catch(next);
+};
+
+/**
+ * 移除系统消息
+ */
+exports.removeMessage = function (req, res, next) {
+  var messageId = req.params.message;
+
+  SystemMessage.removeSystemMessage(messageId)
+    .then(function(result){
+      req.flash('success','移除系统消息数据成功');
+      res.redirect('/admin/message');
+    })
+    .catch(next);
+};
+
+/**
+ * 获取名人堂管理页面
+ */
+exports.celebrity = function (req, res, next) {
+  var page = parseInt(req.query.page) || 1;
+  var page = page > 0 ? page : 1;
+  var pageSize = config.list_celebrity_count;
+
+  Promise.all([
+      Celebrity.getCelebrityPage(pageSize, page),
+      Celebrity.getCount()
+    ]).spread(function (celebrities, count) {
+      var pages = Math.ceil(count / pageSize);
+      res.render('admin/celebrity/index', {
+        celebrities: celebrities,
+        pages: pages,
+        current_page: page,
+        base: '/admin/celebrity'
       });
-    }));
-
-    SystemMessage.getSystemMessageCount(ep.done('pages',function(count){
-      return Math.ceil(count/pageSize);
-    }));
+    })
+    .catch(next);
 };
 
-exports.saveMessage=function(req,res,next){
-  var userId=req.session.user._id;
-  var title=req.body.title;
-  var content=req.body.content;
+/**
+ * 添加名人数据
+ */
+exports.createCelebrity = function (req, res, next) {
+  var getUserByLoginName = Promise.promisify(User.getUserByLoginName);
+  var celebrity = req.body.celebrity;
 
-  if(!title && !content){
-    res.redirect('/admin/message');
+  //数据校验
+  if (!celebrity.name.length) {
+    req.flash('error', '名人姓名不能为空');
+    return res.redirect('back');
   }
 
-  SystemMessage.newAndSave(title,content,userId,function(err,data){
-    if(err || !data){
-      next(err);
-    }
-    res.redirect('/admin/message');
-  });
-};
+  //判断关联用户是否存在
+  if (celebrity.user) {
+    getUserByLoginName(celebrity.user)
+      .then(function (user) {
+        if (!user) {
+          req.flash('error', '关联用户不存在');
+          return res.redirect('back');
+        }
 
-exports.removeMessage=function(req,res,next){
-  var mid=req.params.mid;
-  var user=req.session.user;
-
-  var ep = tools.createJsonEventProxy(res, next);
-  ep.all('remove',function(){
-    ep.emit('done');
-  });
-
-  if(!user.is_admin){
-    ep.emit('fail',403, '无权限');
+        celebrity.userId = user._id;
+        create();
+      })
+      .catch(next);
+  } else {
+    create();
   }
 
-  SystemMessage.removeSystemMessage(mid,function(err,data){
-    if(err){
-      ep.emit('fail');
-    }
-
-    ep.emit('remove');
-  });
+  //向表中插入数据
+  function create() {
+    Celebrity.newAndSave(celebrity)
+      .then(function (result) {
+        req.flash('success', '添加名人数据成功');
+        res.redirect('/admin/celebrity');
+      })
+      .catch(next);
+  }
 };
+
+/**
+ * 修改名人数据
+ */
+exports.updateCelebrity=function(req,res,next){
+  var getUserByLoginName = Promise.promisify(User.getUserByLoginName);
+  var celebrity=req.body.celebrity;
+  var celebrityId=req.params.celebrity;
+
+  //数据校验
+  if (!celebrity.name.length) {
+    req.flash('error', '名人的姓名不能为空');
+    return res.redirect('back');
+  }
+  if(!celebrityId){
+    req.flash('error','缺少必须的id');
+    return res.redirect('back');
+  }
+
+   //判断关联用户是否存在
+  if (celebrity.user) {
+    getUserByLoginName(celebrity.user)
+      .then(function (user) {
+        if (!user) {
+          req.flash('error', '关联用户不存在');
+          return res.redirect('back');
+        }
+
+        celebrity.userId = user._id;
+        update();
+      })
+      .catch(next);
+  } else {
+    update();
+  }
+
+  //向表中插入数据
+  function update() {
+    Celebrity.updateCelebrity(celebrityId,{
+      name: celebrity.name,
+      company: celebrity.company,
+      github: celebrity.github,
+      home: celebrity.home,
+      description: celebrity.description,
+      avatar: celebrity.avatar,
+      userId: celebrity.userId
+    })
+      .then(function (result) {
+        req.flash('success', '添加名人数据成功');
+        res.redirect('/admin/celebrity');
+      })
+      .catch(next);
+  }
+}
+
+/**
+ * 移除名人数据
+ */
+exports.removeCelebrity = function (req, res, next) {
+  var celebrityId = req.params.celebrity;
+
+  Celebrity.removeCelebrity(celebrityId)
+    .then(function (result) {
+      req.flash('success', '移除名人数据成功');
+      res.redirect('/admin/celebrity');
+    })
+    .catch(next);
+}

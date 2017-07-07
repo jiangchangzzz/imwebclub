@@ -20,6 +20,7 @@ var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
 var activity = require('./controllers/activity');
 var column = require('./controllers/column');
+var celebrity=require('./controllers/celebrity');
 // var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');
@@ -174,8 +175,13 @@ router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
 router.get('/admin/message', auth.adminRequired, admin.message);
-router.post('/admin/message',auth.adminRequired,admin.saveMessage);
-router.get('/admin/message/:mid/delete',auth.adminRequired, admin.removeMessage);
+router.post('/admin/message',auth.adminRequired,admin.createMessage);
+router.get('/admin/message/:message/remove',auth.adminRequired, admin.removeMessage);
+
+//名人堂管理
+router.get('/admin/celebrity',auth.adminRequired,admin.celebrity);
+router.post('/admin/celebrity',auth.adminRequired,admin.createCelebrity);
+router.get('/admin/celebrity/:celebrity/remove',auth.adminRequired,admin.removeCelebrity);
 
 // 专栏
 router.get('/column/create', auth.userRequired, column.create); //新增某专栏
@@ -187,6 +193,9 @@ router.post('/column/:cid/delete', auth.userRequired, column.delete);  // 删除
 router.get('/column/:cid', column.index);  // 显示专栏详情
 router.post('/column/add_topic', auth.userRequired, column.addTopic);
 router.post('/column/remove_topic', auth.userRequired, column.removeTopic);
+
+//名人堂
+router.get('/celebrity/list', celebrity.list);   //列表页面
 
 // static
 router.get('/about', staticController.about);
@@ -255,11 +264,11 @@ router.get('/search/:key', search.index);
 
 router.get('/topics/latestTopics/sort/:sort', site.latestTopics);
 
-if (!config.debug) { // 这个兼容破坏了不少测试
-	router.get('/:name', function (req, res) {
-	  res.redirect('/user/' + req.params.name)
-	})
-}
+// if (!config.debug) { // 这个兼容破坏了不少测试
+// 	router.get('/:name', function (req, res) {
+// 	  res.redirect('/user/' + req.params.name)
+// 	})
+// }
 
 
 module.exports = router;

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <% if (typeof(topic) !== 'undefined') { %>
+    <title>
+      <%= topic.title %> -
+        <%= config.name %>
+    </title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+      <title>
+        <%= pageTitle %> -
+          <%= config.name %>
+      </title>
+      <% } else { %>
+        <title>
+          <%= config.description %>
+        </title>
+        <% } %>
+          <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+          <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+          <meta name="author" content="imwebteam@tencent">
+          <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+          <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+          <script>
+            window.imweb = window.imweb || {};
+            imweb._csrf = '<%- csrf %>';
+            <% if (current_user) { %>
+            imweb.user = {
+              id: '<%= current_user._id %>',
+              loginname: '<%= current_user.loginname %>',
+              is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+            };
+            <% } else { %>
+            imweb.user = null;
+            <% } %>
+
+          </script>
+</head>
+
+<body>
+  <%- partial('common/header.html') %>
+    <div id="main" class="clearfix">
+      <%- partial('common/sidebar.html') %>
+        <div id="content">
+          <nav class="celebrity-nav">
+            <a class="active" href="/celebrity/list">名人堂</a>
+          </nav>
+          <% if(celebrities.length){ %>
+          <ul>
+            <% celebrities.forEach(function(celebrity){ %>
+            <li class="item">
+              <div class="item-img">
+                <img src="<%= celebrity.userId?celebrity.userId.avatar:celebrity.avatar %>" alt=<%= celebrity.name %>>
+              </div>
+              <div class="item-content">
+                <div class="item-header clearfix">
+                  <div class="header-title">
+                    <h3><%= celebrity.name %></h3>
+                    <p class="title-info">
+                      关注 <span class="follow-num"><%= celebrity.userId?celebrity.userId.follower.length:0 %></span> | 文章 <%= celebrity.userId?celebrity.userId.topic_count:0 %>
+                    </p>
+                  </div>
+                  <% if(celebrity.userId){ %>
+                  <div class="header-btn" data-id=<%= celebrity.userId._id %>>
+                    <% var isFollow=(current_user.following.indexOf(celebrity.userId._id.toString())>=0) %>
+                    <button type="button" class="btn <%= isFollow?'hide':'' %> <%= current_user?'follow-btn':'nav-login' %>">关 注</button>
+                    <button type="button" class="btn btn-default <%= isFollow?'':'hide' %> <%= current_user?'cancel-btn':'nav-login' %>">取消关注</button>
+                  </div>
+                  <% } %>
+                </div>
+                <div class="item-body">
+                  <p><strong>就职公司：</strong><%= celebrity.company || '未知' %></p>
+                  <p><strong>github: </strong>
+                    <% if(celebrity.github){ %>
+                      <a href=<%= celebrity.github %> target="_blank"><%= celebrity.github %></a>
+                    <% }else{ %>
+                      未知
+                    <% } %>
+                  </p>
+                  <p><strong>个人主页: </strong>
+                    <% if(celebrity.home){ %>
+                      <a href=<%= celebrity.home %> target="_blank"><%= celebrity.home %></a>
+                    <% }else{ %>
+                      未知
+                    <% } %>
+                  </p>
+                  <p class="body-introduce"><strong>简介：</strong><%= celebrity.description || '无' %></p>
+                </div>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
+          <%- partial('../common/page') %>
+          <% }else{ %>
+            <p class="no-celebrity">名人堂列表空空如也，请联系管理员速速添加吧^_^</p>
+          <% } %>
+        </div>
+    </div>
+    <%- partial('common/loginpop.html') %>
+      <%- partial('common/footer.html') %>
+</body>

@@ -64,7 +64,7 @@
                       <li class="item">
                         <h3 class="item-title">
                           <%= message.title %>
-                            <span class="item-time"><%= message.friendly_create_at %></span>
+                            <span class="item-time"><%= message.create_at_ago() %></span>
                         </h3>
                         <p class="item-body">
                           <%= message.content %>
@@ -90,7 +90,7 @@
                       <li class="item">
                         <h3 class="item-title">
                           <%= message.title %>
-                            <span class="item-time"><%= message.friendly_create_at %></span>
+                            <span class="item-time"><%= message.create_at_ago() %></span>
                         </h3>
                         <p class="item-body">
                           <%= message.content %>
