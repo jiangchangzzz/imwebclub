@@ -53,19 +53,21 @@
             <% celebrities.forEach(function(celebrity){ %>
             <li class="item">
               <div class="item-img">
-                <img src=<%= celebrity.avatar %> alt=<%= celebrity.name %>>
+                <img src="<%= celebrity.avatar %>" alt=<%= celebrity.name %>>
               </div>
               <div class="item-content">
                 <div class="item-header clearfix">
                   <div class="header-title">
                     <h3><%= celebrity.name %></h3>
                     <p class="title-info">
-                      关注 <%= celebrity.userId?celebrity.userId.follower_count:0 %> | 文章 <%= celebrity.userId?celebrity.userId.topic_count:0 %>
+                      关注 <span class="follow-num"><%= celebrity.userId?celebrity.userId.follower_count:0 %></span> | 文章 <%= celebrity.userId?celebrity.userId.topic_count:0 %>
                     </p>
                   </div>
                   <% if(celebrity.userId){ %>
-                  <div class="header-btn">
-                    <button type="button" class="follow-btn">关注</button>
+                  <div class="header-btn" data-id=<%= celebrity.userId._id %>>
+                    <% var isFollow=(current_user.following.indexOf(celebrity.userId._id.toString())>=0) %>
+                    <button type="button" class="btn <%= isFollow?'hide':'' %> <%= current_user?'follow-btn':'nav-login' %>">关 注</button>
+                    <button type="button" class="btn btn-default <%= isFollow?'':'hide' %> <%= current_user?'cancel-btn':'nav-login' %>">取消关注</button>
                   </div>
                   <% } %>
                 </div>

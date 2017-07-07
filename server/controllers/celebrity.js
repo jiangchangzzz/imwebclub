@@ -1,7 +1,8 @@
 var config = require('../config');
-var Promise=require('bluebird');
-var UserFollow=require('../proxy').UserFollow;
+var Promise = require('bluebird');
 var Celebrity = require('../proxy').Celebrity;
+var Topic=require('../proxy').Topic;
+var User=require('../proxy').User;
 
 /**
  * 获取名人堂列表页面
@@ -10,20 +11,43 @@ exports.list = function (req, res, next) {
   var page = parseInt(req.query.page) || 1;
   var page = page > 0 ? page : 1;
   var pageSize = config.list_celebrity_count;
+  var userId=req.session.user?req.session.user._id:null;
 
   Promise.all([
-      Celebrity.getCelebrityPage(pageSize,page),
+      getCelebrities(pageSize, page), 
       Celebrity.getCount()
     ]).spread(function (celebrities, count) {
       var pages = Math.ceil(count / pageSize);
-      console.log(celebrities);
       res.render('celebrity/list', {
         _layoutFile: false,
         celebrities: celebrities,
         pages: pages,
         current_page: page,
-        base: '/celebrity/list'
+        base: '/celebrity/list',
+        active: 'celebrity'
       });
     })
     .catch(next);
 };
+
+/**
+ * 分页获取名人数据，文章数目
+ */
+function getCelebrities(pageSize, page) {
+  return Celebrity.getCelebrityPage(pageSize, page)
+    .then(function (celebrities) {
+      return Promise.map(celebrities, function (celebrity) {
+        //若关联用户存在，则获取其文章数目
+        if (celebrity.userId) {
+          var id = celebrity.userId._id;
+          return Topic.getTopicCount(id)
+            .then(function(topic_count){
+              celebrity.userId.topic_count = topic_count;
+              return celebrity;
+            });
+        } else {
+          return celebrity;
+        }
+      });
+    });
+}
