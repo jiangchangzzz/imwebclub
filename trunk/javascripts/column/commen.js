@@ -1,21 +1,24 @@
 'use strict';
 
 $(document).ready(function(){
+    //关注专栏
     $('.follow-btn').click(function(e){
         var btn=$(e.target);
         var id=btn.data('id');
-        toggleFollow(id,btn);
+        toggleFollow(id,btn); 
     });
 
+    //取消关注专栏
     $('.cancel-btn').click(function(e){
         var btn=$(e.target);
         var id=btn.data('id');
         toggleFollow(id,btn);
     });
 
+    //改变关注和未关注状态
     function toggleFollow(id,btn){
          $.ajax({
-            url: '/operate/follow',
+            url: '/operate/follow?_csrf=' + imweb._csrf,
             type: 'post',
             data: {
                 object_id: id,

@@ -9,7 +9,7 @@ $(document).ready(function(){
 
         var info=$('#handle-info');
         $.ajax({
-            url: '/column/'+columnId+'/delete',
+            url: '/column/'+columnId+'/delete?_csrf=' + imweb._csrf,
             type: 'post',
             data: {
                 cid: columnId

@@ -8,7 +8,7 @@ $(document).ready(function(){
         var tids=[btn.data('tid')];
 
         $.ajax({
-            url: '/column/remove_topic',
+            url: '/column/remove_topic?_csrf=' + imweb._csrf,
             type: 'post',
             data: {
                 cid: cid,
@@ -20,12 +20,10 @@ $(document).ready(function(){
                 }
                 else{
                     info.text('从专栏中移除文章失败，请重试');
-                    console.log(data);
                 }
             },
-            error: function(error){
+            error: function(xhr){
                 info.text('网络错误，请检查');
-                console.log(error);
             }
         })
     });
