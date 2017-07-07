@@ -23,14 +23,24 @@ $(document).ready(function(){
             },
             success: function(data){
                 if(data.ret===0){
-                    btn.siblings('button').removeClass('hide');
+                    btn.siblings('.btn').removeClass('hide');
                     btn.addClass('hide');
+
+                    var numEle=btn.parents('.column-item').find('.follow-num');
+                    var num=parseInt(numEle.text());
+                    if(btn.hasClass('follow-btn')){
+                        num++;
+                    }
+                    else if(btn.hasClass('cancel-btn')){
+                        num--;
+                    }
+                    numEle.text(num);
                 }
                 else if(data.msg){
                     console.log(data.msg);
                 }
             },
-            error: function(data){
+            error: function(xhr,msg){
                 console.log(msg); 
             }
         })

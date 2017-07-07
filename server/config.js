@@ -8,7 +8,7 @@ var domain = 'test.imweb.io';
 
 var config = {
   // debug 为 true 时，用于本地调试
-  debug: true,
+  debug: false,
 
   get mini_assets() {
     return !this.debug;
@@ -72,6 +72,9 @@ var config = {
 
   // 已读消息列表显示消息数量
   list_message_count: 15,
+
+  //专栏列表显示专栏数量
+  list_column_count: 15,
 
   //系统消息数量
   list_system_message_count: 15,

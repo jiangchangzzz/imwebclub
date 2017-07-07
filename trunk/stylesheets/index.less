@@ -100,7 +100,11 @@
 
 
 .column {
-    margin-bottom: 20px;
+    margin-bottom: 70px;
+
+    &:last-child{
+        margin-bottom: 20px;
+    }
 
     .column-head {
         padding: 0 6px;
@@ -129,6 +133,7 @@
 
     .column-body {
         min-height: 240px;
+        padding: 10px 0;
 
         .slider {
             float: left;
@@ -195,6 +200,7 @@
             li.question-item {
                 border-bottom: solid 1px @column-weak;
                 height: 130px;
+                padding: 20px 0;
                 overflow: hidden;
 
                 .item-header {
@@ -303,6 +309,10 @@
             }
         }
     }
+}
+
+#hotArticles{
+    margin-top: 20px;
 }
 
 // #social, #hotAuthors {

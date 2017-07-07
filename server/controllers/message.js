@@ -6,7 +6,9 @@ var eventproxy = require('eventproxy');
 var config = require('../config');
 var tools = require('../common/tools');
 
-//获取用户消息页面
+/**
+ * 获取用户消息页面
+ */
 exports.index = function (req, res, next) {
   var user_id = req.session.user._id;
   var page = parseInt(req.query.page) || 1;
@@ -54,7 +56,9 @@ exports.index = function (req, res, next) {
   }));
 };
 
-//获取系统消息页面
+/**
+ * 获取系统消息页面
+ */
 exports.system = function (req, res, next) {
   var getUserById = Promise.promisify(User.getUserById);
   var user_id = req.session.user._id;
@@ -63,16 +67,17 @@ exports.system = function (req, res, next) {
     .then(function (user) {
       var time = user.last_message_time;
       return Promise.all([
-        SystemMessage.getNoReadSystemMessageByTime(time), //获取未读消息列表
-        SystemMessage.getReadSystemMessageByTime(time), //获取已读消息列表
-        User.updateLastMessageTime(user_id) //更新用户最后阅读系统消息时间
-      ]).spread(function (noReadSystemMessages, readSystemMessages) {
-        res.render('message/system', {
-          _layoutFile: false,
-          noReadSystemMessages: noReadSystemMessages, //未读系统消息
-          readSystemMessages: readSystemMessages //已读系统消息
+          SystemMessage.getNoReadSystemMessageByTime(time), //获取未读消息列表
+          SystemMessage.getReadSystemMessageByTime(time), //获取已读消息列表
+          User.updateLastMessageTime(user_id) //更新用户最后阅读系统消息时间
+        ])
+        .spread(function (noReadSystemMessages, readSystemMessages) {
+          res.render('message/system', {
+            _layoutFile: false,
+            noReadSystemMessages: noReadSystemMessages, //未读系统消息
+            readSystemMessages: readSystemMessages //已读系统消息
+          });
         });
-      });
     })
     .catch(next);
 };
