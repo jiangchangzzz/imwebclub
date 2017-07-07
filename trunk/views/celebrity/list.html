@@ -49,18 +49,19 @@
           <nav class="celebrity-nav">
             <a class="active" href="/celebrity/list">名人堂</a>
           </nav>
+          <% if(celebrities.length){ %>
           <ul>
             <% celebrities.forEach(function(celebrity){ %>
             <li class="item">
               <div class="item-img">
-                <img src="<%= celebrity.avatar %>" alt=<%= celebrity.name %>>
+                <img src="<%= celebrity.userId?celebrity.userId.avatar:celebrity.avatar %>" alt=<%= celebrity.name %>>
               </div>
               <div class="item-content">
                 <div class="item-header clearfix">
                   <div class="header-title">
                     <h3><%= celebrity.name %></h3>
                     <p class="title-info">
-                      关注 <span class="follow-num"><%= celebrity.userId?celebrity.userId.follower_count:0 %></span> | 文章 <%= celebrity.userId?celebrity.userId.topic_count:0 %>
+                      关注 <span class="follow-num"><%= celebrity.userId?celebrity.userId.follower.length:0 %></span> | 文章 <%= celebrity.userId?celebrity.userId.topic_count:0 %>
                     </p>
                   </div>
                   <% if(celebrity.userId){ %>
@@ -75,14 +76,14 @@
                   <p><strong>就职公司：</strong><%= celebrity.company || '未知' %></p>
                   <p><strong>github: </strong>
                     <% if(celebrity.github){ %>
-                      <a href=<%= celebrity.github %>><%= celebrity.github %></a>
+                      <a href=<%= celebrity.github %> target="_blank"><%= celebrity.github %></a>
                     <% }else{ %>
                       未知
                     <% } %>
                   </p>
                   <p><strong>个人主页: </strong>
                     <% if(celebrity.home){ %>
-                      <a href=<%= celebrity.home %>><%= celebrity.home %></a>
+                      <a href=<%= celebrity.home %> target="_blank"><%= celebrity.home %></a>
                     <% }else{ %>
                       未知
                     <% } %>
@@ -94,6 +95,9 @@
             <% }) %>
           </ul>
           <%- partial('../common/page') %>
+          <% }else{ %>
+            <p class="no-celebrity">名人堂列表空空如也，请联系管理员速速添加吧^_^</p>
+          <% } %>
         </div>
     </div>
     <%- partial('common/loginpop.html') %>
