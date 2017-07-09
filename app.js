@@ -59,7 +59,7 @@ app.enable('trust proxy');
 // Request logger。请求时间
 app.use(requestLog);
 
-if (config.debug) {
+if (process.env.NODE_ENV !== 'production') {
   // 渲染时间
   app.use(renderMiddleware.render);
   app.use(LoaderConnect.less(__dirname)); // 测试环境用，编译 .less on the fly
@@ -113,8 +113,10 @@ app.use(auth.blockUser());
 //消息数量中间件
 app.use(messageCount);
 
-if (!config.debug) {
+//csrf校验
+if (process.env.NODE_ENV === 'production') {
   app.use(function (req, res, next) {
+    console.log(req.path);
     if (req.path === '/api' || req.path.indexOf('/api') === -1) {
       csurf()(req, res, next);
       return;

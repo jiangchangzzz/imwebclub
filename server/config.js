@@ -8,11 +8,11 @@ var domain = 'test.imweb.io';
 
 var config = {
   // debug 为 true 时，用于本地调试
-  debug: true,
+  debug: false,
 
   name: '腾讯Web前端 IMWeb 团队社区 | blog | 团队博客', // 社区名字
   description: 'Web前端 腾讯IMWeb 团队社区', // 社区的描述
-  keywords: '前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io',
+  keywords: '前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs,vue,react,react-native,node, express, connect, socket.io, lego.imweb.io',
 
   // 添加到 html head 中的信息
   site_headers: [

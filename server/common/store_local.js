@@ -1,3 +1,4 @@
+'use strict';
 var config  = require('../config');
 var utility = require('utility');
 var path    = require('path');

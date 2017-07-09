@@ -1,3 +1,4 @@
+'use strict';
 var Styliner = require('styliner');
 var resanitize = require('resanitize');
 var XMLWriter = require('xml-writer');
@@ -99,12 +100,12 @@ var ENMLOfHTML = function(text, options, cb) {
 
       text = text.replace(/<\/?style[^<]*<\/style>/g, '');
 
-      // modified by linbo 
+      // modified by linbo
       text = text.replace(/<br>/g, '<br/>');               // <br> -> </br>
       text = text.replace(/<title>[^<]*<\/title>/g, '');   // Delete <title>***</title>
       var regex = /(<img [^>]*>)/g;
       text = text.replace(regex, "$1</img>");              // add </img> after <img>
-      var regex = /(<img.*)(href=.*)(style=[^>]*>)/g;      
+      var regex = /(<img.*)(href=.*)(style=[^>]*>)/g;
       text = text.replace(regex, "$1$3");                  // Delete element href in <img **>
 
       //default host

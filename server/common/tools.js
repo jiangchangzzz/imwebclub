@@ -1,5 +1,5 @@
+'use strict';
 var _ = require('lodash');
-//var bcrypt = require('bcrypt');
 var passwordHash = require('password-hash');
 var moment = require('moment');
 var EventProxy = require('eventproxy');

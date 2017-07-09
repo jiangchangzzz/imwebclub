@@ -1,3 +1,4 @@
+'use strict';
 var logger = require('../common/logger');
 
 // Patch res.render method to output logger

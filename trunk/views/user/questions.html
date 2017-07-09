@@ -7,7 +7,7 @@
         <div class='breadcrumb--content__section section--show'>
         <%  if(questions && questions.length > 0 ){ %>
           <% questions.forEach(question => { %>
-               <% let time = new Date(question.create_at);
+               <% var time = new Date(question.create_at);
                    time = time.getFullYear() + '年'+ time.getMonth() + '月' + time.getDay() + '日';
                %>
               <div class="question__panel">

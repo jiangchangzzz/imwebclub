@@ -1,3 +1,4 @@
+'use strict';
 var models       = require('../models');
 var eventproxy   = require('eventproxy');
 var Message      = models.Message;
@@ -55,7 +56,7 @@ exports.sendColumnMessage=function(master_ids, column_id, callback){
     message.master_id=master_id;
     message.save(ep.done('message_saved'));
   });
-  
+
   ep.after('message_saved',master_ids.length,function (msg) {
     callback(null, msg);
   });
