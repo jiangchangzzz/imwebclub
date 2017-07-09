@@ -7,9 +7,7 @@
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
           <div id='content'>
-          <div class='panel'>
             <h3 class="user-title">个人设置</h3>
-            <div class='inner'>
               <% if(typeof(error) !== 'undefined' && error){ %>
               <div class="alert alert-error">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -45,7 +43,7 @@
                         <span class="tip"></span>
                         <div class="alert-error"></div>
                     </div>
-                  </div>  
+                  </div>
                </div>
 
                 <div class='control-group'>
@@ -107,20 +105,13 @@
                   <input type='submit' class='span-primary submit_btn ui-button' data-loading-text="保存中.." value='保存设置'/>
                 </div>
               </form>
-            </div>
           </div>
-
-          </div>           
         </div>
 
 
         <div class='breadcrumb--content__section section--show'>
           <div id='content'>
-            <div class='panel'>
-            <div class='header'>
-              <span class='col_fade'>更改密码</span>
-            </div>
-            <div class='inner'>
+            <h3 class="user-title">更改密码</h3>
               <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
                 <div class='control-group'>
                   <label class='control-label' for='old_pass'>当前密码</label>
@@ -143,9 +134,7 @@
                   <input type='submit' class='span-primary submit_btn ui-button' data-loading-text="更改中.." value='更改密码'/>
                 </div>
               </form>
-            </div>
           </div>
-          </div>           
         </div>
 
 
