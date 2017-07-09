@@ -1,21 +1,24 @@
 'use strict';
 
 $(document).ready(function(){
+    //关注专栏
     $('.follow-btn').click(function(e){
         var btn=$(e.target);
         var id=btn.data('id');
-        toggleFollow(id,btn);
+        toggleFollow(id,btn); 
     });
 
+    //取消关注专栏
     $('.cancel-btn').click(function(e){
         var btn=$(e.target);
         var id=btn.data('id');
         toggleFollow(id,btn);
     });
 
+    //改变关注和未关注状态
     function toggleFollow(id,btn){
          $.ajax({
-            url: '/operate/follow',
+            url: '/operate/follow?_csrf=' + imweb._csrf,
             type: 'post',
             data: {
                 object_id: id,
@@ -23,14 +26,24 @@ $(document).ready(function(){
             },
             success: function(data){
                 if(data.ret===0){
-                    btn.siblings('button').removeClass('hide');
+                    btn.siblings('.btn').removeClass('hide');
                     btn.addClass('hide');
+
+                    var numEle=btn.parents('.column-item').find('.follow-num');
+                    var num=parseInt(numEle.text());
+                    if(btn.hasClass('follow-btn')){
+                        num++;
+                    }
+                    else if(btn.hasClass('cancel-btn')){
+                        num--;
+                    }
+                    numEle.text(num);
                 }
                 else if(data.msg){
                     console.log(data.msg);
                 }
             },
-            error: function(data){
+            error: function(xhr,msg){
                 console.log(msg); 
             }
         })

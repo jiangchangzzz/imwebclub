@@ -1,3 +1,4 @@
+'use strict';
 var eventproxy = require('eventproxy');
 var validator  = require('validator');
 var Topic      = require('../../proxy').Topic;
@@ -25,7 +26,7 @@ var create = function (req, res, next) {
     res.status(400);
     return res.send({success: false, error_msg: '不是有效的话题id'});
   }
-  
+
   Topic.getTopic(topic_id, ep.done(function (topic) {
     if (!topic) {
       res.status(404);
@@ -85,7 +86,7 @@ var ups = function (req, res, next) {
     res.status(400);
     return res.send({success: false, error_msg: '不是有效的评论id'});
   }
-  
+
   Reply.getReplyById(replyId, function (err, reply) {
     if (err) {
       return next(err);
@@ -94,7 +95,7 @@ var ups = function (req, res, next) {
       res.status(404);
       return res.send({success: false, error_msg: '评论不存在'});
     }
-    if (reply.author_id.equals(userId) && !config.debug) {
+    if (reply.author_id.equals(userId) && process.env.NODE_ENV === 'production') {
       res.status(403);
       return res.send({success: false, error_msg: '不能帮自己点赞'});
     } else {

@@ -1,17 +1,17 @@
+'use strict';
 var path = require('path');
 var glob = require('glob');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+// var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
-const debug = process.env.NODE_ENV !== 'production';
+var debug = process.env.NODE_ENV !== 'production';
 
-var entries = getEntry('trunk/entry/**/*.js'
-    , 'trunk/entry/');
+var entries = getEntry('trunk/entry/**/*.js', 'trunk/entry/');
 
-var chunks = Object.keys(entries);
+// var chunks = Object.keys(entries);
 var config = {
     entry: entries,
     output: {
@@ -85,9 +85,6 @@ pages.forEach(function (pathname) {
     config.plugins.push(new HtmlWebpackPlugin(conf));
 });
 
-
-module.exports = config;
-
 function getEntry(globPath, pathDir) {
     var files = glob.sync(globPath);
     var entries = {},
@@ -107,3 +104,5 @@ function getEntry(globPath, pathDir) {
     }
     return entries;
 }
+
+module.exports = config;

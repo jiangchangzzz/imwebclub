@@ -1,9 +1,4 @@
-/*!
- * nodeclub - route.js
- * Copyright(c) 2012 fengmk2 <fengmk2@gmail.com>
- * MIT Licensed
- */
-
+'use strict';
 /**
  * Module dependencies.
  */
@@ -20,7 +15,7 @@ var topic = require('./controllers/topic');
 var reply = require('./controllers/reply');
 var activity = require('./controllers/activity');
 var column = require('./controllers/column');
-// var rss = require('./controllers/rss');
+var celebrity=require('./controllers/celebrity');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');
 var limit = require('./middlewares/limit');
@@ -30,7 +25,6 @@ var passport = require('passport');
 var weibo = require('./controllers/weibo');
 var admin = require('./controllers/admin');
 var WeiboStrategy = require('passport-weibo').Strategy;
-var configMiddleware = require('./middlewares/conf');
 var config = require('./config');
 // 新markdown编辑器  发布
 var marktang = require('./controllers/marktang');
@@ -39,10 +33,6 @@ var router = express.Router();
 
 // home page
 router.get('/', site.index);
-// sitemap
-// router.get('/sitemap.xml', site.sitemap);
-// mobile app download
-// router.get('/app/download', site.appDownload);
 
 // sign controller
 if (config.allow_sign_up) {
@@ -87,7 +77,8 @@ router.delete('/user/follow', user.deleteFollowUser); //取消关注
 router.get('/user/followings', auth.userRequired, user.followings); // api:分页获取关注的对象
 
 // message controler
-router.get('/my/messages', auth.userRequired, message.index); // 用户个人的所有消息页
+router.get('/message/me', auth.userRequired, message.index); // 用户个人的所有消息页
+router.get('/message/system', auth.userRequired, message.system); //系统通知的消息页
 
 // 文章
 
@@ -172,6 +163,15 @@ router.post('/admin/activity/save', auth.adminRequired, admin.saveActivity);
 router.get('/activity/edit/:acid', auth.adminRequired, admin.editActivity);
 router.post('/admin/activity/delete', auth.adminRequired, admin.removeActivity); // 删除banner
 
+router.get('/admin/message', auth.adminRequired, admin.message);
+router.post('/admin/message',auth.adminRequired,admin.createMessage);
+router.get('/admin/message/:message/remove',auth.adminRequired, admin.removeMessage);
+
+//名人堂管理
+router.get('/admin/celebrity',auth.adminRequired,admin.celebrity);
+router.post('/admin/celebrity',auth.adminRequired,admin.createCelebrity);
+router.get('/admin/celebrity/:celebrity/remove',auth.adminRequired,admin.removeCelebrity);
+
 // 专栏
 router.get('/column/create', auth.userRequired, column.create); //新增某专栏
 router.post('/column/create', auth.userRequired, column.put);
@@ -182,6 +182,9 @@ router.post('/column/:cid/delete', auth.userRequired, column.delete);  // 删除
 router.get('/column/:cid', column.index);  // 显示专栏详情
 router.post('/column/add_topic', auth.userRequired, column.addTopic);
 router.post('/column/remove_topic', auth.userRequired, column.removeTopic);
+
+//名人堂
+router.get('/celebrity/list', celebrity.list);   //列表页面
 
 // static
 router.get('/about', staticController.about);
@@ -201,9 +204,6 @@ router.get('/marktang/evernote_callback', auth.userRequired, marktang.evernote_c
 router.post('/marktang/evernote_save', auth.userRequired, marktang.evernote_save); // save evernote
 router.get('/marktang/evernote_getnote', auth.userRequired, marktang.evernote_getnote); //
 
-//rss
-// router.get('/rss', rss.index);
-
 // github oauth
 router.get('/auth/github', passport.authenticate('github'));
 router.get('/auth/github/callback',
@@ -213,23 +213,13 @@ router.get('/auth/github/new', github.new);
 router.post('/auth/github/create', limit.peripperday('create_user_per_ip', config.create_user_per_ip, {showJson: false}), github.create);
 
 // weibo oauth
-// Use the WeiboStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Weibo
-//   profile), and invoke a callback with a user object.
 passport.use(new WeiboStrategy({
     clientID: config.WEIBO_OAUTH.clientID,
     clientSecret: config.WEIBO_OAUTH.clientSecret,
     callbackURL: config.WEIBO_OAUTH.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
     process.nextTick(function () {
-
-      // To keep the example simple, the user's Weibo profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Weibo account with a user record in your database,
-      // and return that user instead.
       return done(null, profile);
     });
   }
@@ -246,15 +236,7 @@ router.post('/auth/weibo/create', limit.peripperday('create_user_per_ip', config
 
 router.post('/search', search.index);
 router.get('/search/:key', search.index);
-// router.get('/search', search.index);
 
 router.get('/topics/latestTopics/sort/:sort', site.latestTopics);
-
-if (!config.debug) { // 这个兼容破坏了不少测试
-	router.get('/:name', function (req, res) {
-	  res.redirect('/user/' + req.params.name)
-	})
-}
-
 
 module.exports = router;

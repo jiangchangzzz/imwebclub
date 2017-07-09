@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <% if (typeof(topic) !== 'undefined') { %>
+    <title>
+      <%= topic.title %> -
+        <%= config.name %>
+    </title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+      <title>
+        <%= pageTitle %> -
+          <%= config.name %>
+      </title>
+      <% } else { %>
+        <title>
+          <%= config.description %>
+        </title>
+        <% } %>
+          <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+          <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+          <meta name="author" content="imwebteam@tencent">
+          <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+          <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+          <script>
+            window.imweb = window.imweb || {};
+            imweb._csrf = '<%- csrf %>';
+            <% if (current_user) { %>
+            imweb.user = {
+              id: '<%= current_user._id %>',
+              loginname: '<%= current_user.loginname %>',
+              is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+            };
+            <% } else { %>
+            imweb.user = null;
+            <% } %>
+
+          </script>
+          <link rel="shortcut icon" href="/public/icon.png">
+          <link href="/public/stylesheets/column\index.css?b02eda7c0c30cdfa5b3e" rel="stylesheet">
+</head>
+
+<body>
+  <%- partial('common/navhead.html') %>
+
+    <div id="wrap">
+      <div>
+        <% if(code===404){ %>
+        <img src="../../images/404.png" alt="404" />
+        <% }else{ %>
+        <h1 class="error-title"><%= code %></h1>
+        <% } %>
+      </div>
+      <div id="text" class="clear-fix">
+          <% if(code===404){ %>
+			      <div class="info-img"></div>
+          <% }else{ %>
+            <div class="info">
+              <p class="info-en">Internal server error</p>
+              <p class="info-ch">抱歉，服务器内部错误</p>
+            </div>
+          <% } %>
+			      <a href="/">返回首页</a>
+			      <a href="javascript:history.back()">返回上一页</a>
+      </div>
+    </div>
+
+    <div class="animate below"></div>
+    <div class="animate above"></div>
+
+    <%- partial('common/loginpop.html') %>
+</body>

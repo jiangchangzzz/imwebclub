@@ -1,21 +1,22 @@
 {
-  "name": "nodeclub",
-  "version": "2.1.1",
+  "name": "imwebclub",
+  "version": "1.0.0",
   "private": true,
   "main": "app.js",
-  "description": "A Node.js bbs using MongoDB",
-  "repository": "https://github.com/cnodejs/nodeclub",
+  "description": "Tencent IMWeb Team Bolg",
   "dependencies": {
     "EventEmitter": "^1.0.0",
     "async": "1.5.2",
     "babel-runtime": "^6.23.0",
+    "bluebird": "^3.5.0",
     "body-parser": "1.15.0",
+    "bootstrap": "^3.3.7",
     "bytes": "^2.2.0",
     "cache-manager": "0.18.0",
     "cheerio": "*",
-    "colors": "^1.1.2",
     "compression": "1.6.1",
     "connect-busboy": "0.0.2",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "*",
     "connect-redis": "3.0.2",
     "cookie-parser": "1.4.1",
@@ -81,6 +82,7 @@
     "html-webpack-plugin": "^2.9.0",
     "image-webpack-loader": "^3.2.0",
     "jquery": "^1.12.0",
+    "jshint": "^2.9.5",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
     "loader-connect": "1.0.1",
@@ -94,6 +96,7 @@
     "build": "rm -rf views/* && NODE_ENV=production webpack --progress --hide-modules",
     "watch": "webpack --progress --hide-modules --colors --watch",
     "dev": "sudo NODE_ENV=test node app.js",
-    "start": "NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name imweb --max-memory-restart 400M"
+    "start": "NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name imweb --max-memory-restart 400M",
+    "restart": "NODE_ENV=production ./node_modules/.bin/pm2 restart imweb"
   }
 }

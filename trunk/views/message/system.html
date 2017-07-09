@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <% if (typeof(topic) !== 'undefined') { %>
+    <title>
+      <%= topic.title %> -
+        <%= config.name %>
+    </title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+      <title>
+        <%= pageTitle %> -
+          <%= config.name %>
+      </title>
+      <% } else { %>
+        <title>
+          <%= config.description %>
+        </title>
+        <% } %>
+          <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+          <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,nodejs, node, express, connect, socket.io, lego.imweb.io">
+          <meta name="author" content="imwebteam@tencent">
+          <!--<link rel="icon" href="../images/icon.png" type="image/x-icon">-->
+          <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+          <script>
+            window.imweb = window.imweb || {};
+            imweb._csrf = '<%- csrf %>';
+            <% if (current_user) { %>
+            imweb.user = {
+              id: '<%= current_user._id %>',
+              loginname: '<%= current_user.loginname %>',
+              is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+            };
+            <% } else { %>
+            imweb.user = null;
+            <% } %>
+
+          </script>
+</head>
+
+<body>
+  <%- partial('common/navhead.html') %>
+    <div id="main" class="clearfix">
+      <%- partial('common/sidebar.html') %>
+        <div id="content">
+          <div class="message-container">
+            <nav class="message-nav">
+              <a href="/message/me">用户消息</a>
+              <a href="/message/system" class="active">系统消息</a>
+            </nav>
+
+            <!-- 新消息 -->
+            <div class="block">
+              <div class="block-header">
+                <h3 class="block-title">新消息</h3>
+              </div>
+              <div class="block-content">
+                <% if(noReadSystemMessages.length){ %>
+                  <ul>
+                    <% noReadSystemMessages.forEach(function(message){ %>
+                      <li class="item">
+                        <h3 class="item-title">
+                          <%= message.title %>
+                            <span class="item-time"><%= message.create_at_ago() %></span>
+                        </h3>
+                        <p class="item-body">
+                          <%= message.content %>
+                        </p>
+                      </li>
+                      <% }) %>
+                  </ul>
+                  <% }else{ %>
+                    <p class="no-message">没有新消息</p>
+                    <% } %>
+              </div>
+            </div>
+
+            <!-- 已读消息 -->
+            <div class="block">
+              <div class="block-header">
+                <h3 class="block-title">已读消息</h3>
+              </div>
+              <div class="block-content">
+                <% if(readSystemMessages.length){ %>
+                  <ul>
+                    <% readSystemMessages.forEach(function(message){ %>
+                      <li class="item">
+                        <h3 class="item-title">
+                          <%= message.title %>
+                            <span class="item-time"><%= message.create_at_ago() %></span>
+                        </h3>
+                        <p class="item-body">
+                          <%= message.content %>
+                        </p>
+                      </li>
+                      <% }) %>
+                  </ul>
+                  <% }else{ %>
+                    <p class="no-message">没有已读消息</p>
+                    <% } %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+    </div>
+</body>
+
+</html>

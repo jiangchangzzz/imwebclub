@@ -1,99 +1,30 @@
-<div id="header">
-    <div class="inner">
-        <div class="fl">
-            <a href="/">
-                <img src="../../images/logo.png">
-            </a>
-        </div>
-        <div class="fr">
-            <div class="middle">
-                <form class="search" name="searchForm" action="/search" method="post">
-                    <input name="search" type="text" value="" placeholder="输入关键字搜索文章/问题" autocomplete="on">
-                    <span class="search-btn" onclick="document.searchForm.submit.click();"></span>
-                     <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
-                    <button type="submit" name="submit"></button>
-                </form>
-                <% if (current_user) {console.log(current_user)%>
-                  <div class="menu-btn">
-                    <a id="nav-post-menu" href="javascript:void(0);" class="ico fa fa-plus"></a>
-                    <ol id="nav-post-menu-layer" class="ui-dropdown-layer">
-                        <li>
-                            <a href="/marktang/index?autoOpenInfo=true">发布文章</a>
-                        </li>
-                        <li>
-                            <a href="/question/create">发布问题</a>
-                        </li>
-                        <% if(current_user.is_admin){%>
-                          <li>
-                              <a href="/activity/create">发布活动</a>
-                          </li>
-                        <%}%>
-                    </ol>
-                  </div>
-                  <!--<div class="menu-btn">
-                    <a id="nav-message-menu" href="javascript:void(0);" class="ico fa fa-envelope"></a>
-                  </div>-->
-                  <div class="menu-btn">
-                    <a id="nav-user-menu" href="javascript:void(0);" class="ico fa fa-user" title="<%= current_user.loginname %>"></a>
-                    <ol id="nav-user-menu-layer" class="ui-dropdown-layer">
-                        <li>
-                            <a href="/user/<%= current_user.loginname %>/index">我的主页</a>
-                        </li>
-                        <% if (current_user.is_admin) { %>
-                        <li>
-                            <a href="/admin/topic/all">后台管理</a>
-                        </li>
-                        <% } %>
-                        <li>
-                            <a href="/signout">退出登录</a>
-                        </li>
-                    </ol>
-                  </div>
-                <% } else { %>
-                  <div class="menu-btn">
-                    <a class="nav-login" href="javascript:void(0);">登录</a>
-                  </div>
-                  <div class="menu-btn">
-                    <a class="nav-sign" href="javascript:void(0);">注册</a>
-                  </div>
-                <% } %>
-            </div>
-        </div>
-        <div class="center">
-            <ul class="menu-list">
-                <li class="<%= typeof(active) !== 'undefined' && active === 'topic' ? 'active' : '' %>">
-                  <a href="/topic/tab/all">文章</a>
-                </li>
-                <li class="<%= typeof(active) !== 'undefined' && active === 'question' ? 'active' : '' %>">
-                  <a href="/question/tab/all">问答</a></li>
-                <li class="<%= typeof(active) !== 'undefined' && active === 'column' ? 'active' : '' %>">
-                  <a href="/column/list">专栏</a>
-                </li>
-                <li class="<%= typeof(active) !== 'undefined' && active === 'activity' ? 'active' : '' %>">
-                  <a href="/activity/tab/imweb">活动</a>
-                </li>
-                <!--<li class="<%= typeof(active) !== 'undefined' && active === 'celebrity' ? 'active' : '' %>">
-                  <a href="javascript:void(0);">名人堂</a>
-                </li>-->
-                <li>
-                    <a target=="_blank" href="//iconfont.imweb.io/">iconfont</a>
-                </li>
-                <li class="<%= typeof(active) !== 'undefined' && active === 'team' ? 'active' : '' %>">
-                  <a id="nav-team-menu" href="javascript:void(0);">IMWeb团队</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<ol id="nav-team-menu-layer" class="ui-dropdown-layer">
-    <li>
-        <a target="_blank" href="//github.com/imweb">开源组件</a>
-    </li>
-    <li>
-        <a target="_blank" href="http://imweb.github.io/hire">招聘</a>
-    </li>
-    <li>
-        <a target="_blank" href="http://imweb.github.io">关于我们</a>
-    </li>
-</ol>
+<!--网站测速-->
+    <script type="text/javascript">var _speedMark = new Date();</script>
+    <!--网站测速-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <% if (typeof(topic) !== 'undefined') { %>
+    <title><%= topic.title %> - <%= config.name %></title>
+    <% } else if (typeof(pageTitle) !== 'undefined') { %>
+    <title><%= pageTitle %> - <%= config.name %></title>
+    <% } else { %>
+    <title><%= config.description %></title>
+    <% } %>
+    <meta name="description" content="Web前端 腾讯IMWeb 团队社区">
+    <meta name="keywords" content="前端交流,前端社区,前端,iconfont,javascript,html,css,webfront,front-end,nodejs,react,vue,pwa,react-native,node,express,connect,socket.io,lego.imweb.io">
+    <meta name="author" content="imwebteam@tencent">
+    <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+    window.imweb = window.imweb || {};
+    imweb._csrf = '<%- csrf %>';
+    <% if (current_user) { %>
+        imweb.user = {
+            id: '<%= current_user._id %>',
+            loginname: '<%= current_user.loginname %>',
+            is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+        };
+    <% } else { %>
+        imweb.user = null;
+    <% } %>
+    </script>

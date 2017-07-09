@@ -27,6 +27,8 @@ require('./question_answer');
 require('./banner');
 require('./column');
 require('./topic_column');
+require('./system_message');
+require('./celebrity');
 
 exports.User            = mongoose.model('User');
 exports.Topic           = mongoose.model('Topic');
@@ -43,3 +45,5 @@ exports.QuestionAnswer  = mongoose.model('QuestionAnswer');
 exports.Banner          = mongoose.model('Banner');
 exports.Column          = mongoose.model('Column');
 exports.TopicColumn     = mongoose.model('TopicColumn');
+exports.SystemMessage   = mongoose.model('SystemMessage');
+exports.Celebrity       = mongoose.model('Celebrity');

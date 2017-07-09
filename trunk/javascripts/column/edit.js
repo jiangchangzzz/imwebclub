@@ -36,6 +36,7 @@ $(document).ready(function(){
         uploadImage();
     });
 
+    //上传图片
     function uploadImage(){
         var image=$('#file')[0].files[0];
         var type=image.type;
@@ -52,7 +53,7 @@ $(document).ready(function(){
 
         $.ajax({
             type: 'POST',
-            url: '/upload',
+            url: '/upload?_csrf=' + imweb._csrf,
             data: data,
             cache: false,
             contentType: false,
@@ -67,9 +68,8 @@ $(document).ready(function(){
                     $('#file-info').text('图片上传失败,请重试');
                 }
             },
-            error: function(msg){
+            error: function(xhr,msg){
                 $('#file-info').text('网络错误，请检查');
-                console.log(msg); 
             }
         })
     }
@@ -88,7 +88,7 @@ $(document).ready(function(){
 
     //封面表单验证
     function validateCover(){
-        var cover=$('#cover').val();
+        var cover=$('#cover').val().trim();
         if(!cover){
             $('#file-group').addClass('has-error');
             return false;
@@ -101,7 +101,7 @@ $(document).ready(function(){
 
     //描述表单验证
     function validateDescription(){
-        var description=$('#description').val();
+        var description=$('#description').val().trim();
         if(!description){
             $('#description-group').addClass('has-error');
             return false;

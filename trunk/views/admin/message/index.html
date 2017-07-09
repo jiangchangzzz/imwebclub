@@ -1,0 +1,62 @@
+<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<script>
+  window.imweb = window.imweb || {};
+  imweb._csrf = '<%- csrf %>';
+  <% if (typeof(current_user) !== 'undefined') { %>
+  imweb.user = {
+    id: '<%= current_user._id %>',
+    loginname: '<%= current_user.loginname %>',
+    is_admin: <%= typeof(current_user.is_admin) !== 'undefined' && current_user.is_admin %>
+  };
+  <% } else { %>
+  imweb.user = null;
+  <% } %>
+
+</script>
+
+<div class="container-fluid admin-container">
+  <div class="row-fluid">
+    <%- partial('../sidebar') %>
+      <div class="span10">
+        <div class="page-header clearfix">
+          <h1 class="header-title">系统消息</h1>
+          <button type="button" class="btn btn-primary header-btn" data-toggle="modal" data-target="#myModal">发布消息</button>
+        </div>
+        <% if(messages.length){ %>
+        <table class="table table-striped table-bordered table-condensed" style="table-layout:fixed;word-break:break-all;" width="100%">
+          <thead>
+            <tr>
+              <th class="th-10">标题</th>
+              <th class="th-50">内容</th>
+              <th class="th-10">创建者</th>
+              <th class="th-10">创建时间</th>
+              <th class="th-10">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% messages.forEach(function(message){ %>
+            <tr>
+              <td><%= message.title %></td>
+              <td><%= message.content %></td>
+              <td><%= message.owner_id.loginname %></td>
+              <td><%= message.create_at_ago() %></td>
+              <td><a class="btn btn-default delete-message" href="/admin/message/<%= message._id %>/remove">删除</a></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <%- partial('../../common/page') %>
+        <% }else{ %>
+        <p class="no-message">系统消息列表空空如也，快添加你的系统消息吧^_^</p>
+        <% } %>
+        <%- partial('../info') %>
+      </div>
+      <%- partial('modal') %>
+  </div>
+</div>
+
+<script src="/libs/bootstrap/js/bootstrap.min.js"></script>

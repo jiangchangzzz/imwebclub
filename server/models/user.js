@@ -51,6 +51,8 @@ var UserSchema = new Schema({
 
   following: [], // 关注的人
   follower: [],  // 粉丝
+  
+  last_message_time: { type: Date, default: Date.now },   //最后阅读系统消息的时间
 
     accessToken: {type: String},
     evernoteAccessToken: {type: String}, //新增evernote支持 for marktang

@@ -21,6 +21,11 @@ var ObjectDict = {
     'question': Question.getQuestionById
 };
 
+var sendMessage={
+    'topic': message.sendReplyMessage,
+    'question': message.sendQuestionMessage
+};
+
 exports.query = function (req, res, next){
   var parent_id = req.params.parent_id;
   var sortby = req.query.sortby;
@@ -133,14 +138,14 @@ exports.add = function (req, res, next) {
         if (parent.author_id.toString() !== user._id.toString()) {
             if (!pReply) {
                 // 一级评论给文章作者
-                message.sendReplyMessage(
-                    parent.author_id, user._id, parent._id, reply._id
+                sendMessage[kind](
+                    parent.author_id, user._id, parent._id
                 );
                 mail.sendReplyMail(parent, parent.author, reply, user);
             } else {
                 // 二级评论给文章作者
-                message.sendReplyMessage(
-                    parent.author_id, user._id, parent._id, reply._id
+                sendMessage[kind](
+                    parent.author_id, user._id, parent._id
                 );
                 mail.sendSubReplyMail(
                     parent, parent.author, pReply, pReply.author, reply, user
@@ -155,24 +160,24 @@ exports.add = function (req, res, next) {
             && pReply.author._id.toString() !== user._id.toString()
             && pReply.author._id.toString() !== parent.author_id.toString()
         ) {
-            message.sendReplyMessage(
-               pReply.author._id, user._id, topic._id, reply._id
+            sendMessage[kind](
+               pReply.author._id, user._id, parent._id
             );
             mail.sendSubReplyForParentReplyMail(
-               topic, topic.author, pReply, pReply.author, reply, user
+               parent, parent.author, pReply, pReply.author, reply, user
             );
         }
     });
 
     ep.all(
         'parent', 'user', 'reply_saved', 'parent_updated', 'user_updated',
-        function(topic, user, reply) {
+        function(parent, user, reply) {
             reply.author = user;
             res.send({
                 ret: 0,
                 data: {
                     reply: dataAdapter.outReply(reply),
-                    reply_count: topic.reply_count,
+                    reply_count: parent.reply_count,
                     user: {
                         score: user.score,
                         reply_count: user.reply_count

@@ -5,6 +5,7 @@ var ObjectId = Schema.ObjectId;
 var config = require('../config');
 var _ = require('lodash');
 
+//专栏数据模型
 var ColumnSchema = new Schema({
   title: { type: String },//标题
   cover: { type: String },//封面图
