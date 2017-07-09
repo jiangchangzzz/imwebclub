@@ -1,3 +1,4 @@
+'use strict';
 var Promise=require('bluebird');
 
 var Message = require('../proxy').Message;
@@ -8,7 +9,7 @@ function messageCount(req, res, next) {
   if (!req.session.user) {
     return next();
   }
-  
+
   var getMessagesCount=Promise.promisify(Message.getMessagesCount);
   var userId = req.session.user._id;
 

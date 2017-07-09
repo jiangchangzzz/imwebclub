@@ -1,3 +1,4 @@
+'use strict';
 var qn     = require('qn');
 var config = require('../config');
 

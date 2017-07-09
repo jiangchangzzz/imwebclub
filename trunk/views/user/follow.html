@@ -5,10 +5,37 @@
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
           <div id='content'>
-            <%- partial('./user', { users: follower, follow: false }) %>
+            <ul class="tabs" id="tabs">
+              <li><a href="javascript:void(0)" class="current">tab切换一</a></li>
+              <li><a href="javascript:void(0)" >tab切换二</a></li>
+            </ul>
+
+            <div class="container" id="container">
+              <div class="con">
+                <%- partial('./user', { users: follower, follow: false }) %>
+                </div>
+              <div class="con">
+                <%- partial('./user', { users: following, follow: false }) %>
+              </div>
+            </div> 
           </div>           
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(function(){
+    tabs($("#tabs a"), $('#container .con'));  
+  })
+  var tabs = function(tab, con){
+    tab.click(function(){
+        var indx = tab.index(this);
+        tab.removeClass('current');
+        $(this).addClass('current');
+        con.hide();
+        con.eq(indx).show();
+    })    
+  }
+</script>

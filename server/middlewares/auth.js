@@ -1,3 +1,4 @@
+'use strict';
 var mongoose   = require('mongoose');
 var UserModel  = mongoose.model('User');
 var Message    = require('../proxy').Message;
@@ -79,7 +80,7 @@ exports.authUser = function (req, res, next) {
   // Ensure current_user always has defined.
   res.locals.current_user = null;
 
-  if (config.debug && req.cookies['mock_user']) {
+  if (process.env.NODE_ENV !== 'production' && req.cookies['mock_user']) {
     var mockUser = JSON.parse(req.cookies['mock_user']);
     req.session.user = new UserModel(mockUser);
     if (mockUser.is_admin) {

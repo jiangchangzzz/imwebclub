@@ -18,16 +18,6 @@ ui.attachDropdownLayer($('#nav-team-menu'), {
     top: 80,
     width: $('#nav-team-menu').width()
 });
-// if($('#nav-post-menu').length > 0){
-//   ui.attachDropdownLayer($('#nav-post-menu'), {
-//       layer: '#nav-post-menu-layer'
-//   });
-// }
-// if($('#nav-user-menu').length > 0){
-//   ui.attachDropdownLayer($('#nav-user-menu'), {
-//       layer: '#nav-user-menu-layer'
-//   });
-// }
 //展示和隐藏登录框
 $(document).on('click', '.nav-login', function() {
     $('.to-login').show();
@@ -46,19 +36,6 @@ $(document).on('click', '.modal-close', function() {
 $(document).ready(function(){
   //注册、登录
   sign.init();
-  //修改rich meta
-  // var rich_name = $('meta[itemprop = "name"]');
-  // var rich_description = $('meta[itemprop = "description"]');
-  // var rich_image = $('meta[itemprop = "image"]');
-  // rich_name.attr("content","imweb前端社区文章：" + RICH_META.name);
-  // rich_description.attr("content",RICH_META.author +":" +RICH_META.name);
-  // rich_image.attr("content",RICH_META.img);
-  
-//   $('#sidebar .weixin').hover(function(){
-//       $('#sidebar .q_code').removeClass('hidden');
-//   },function(){
-//       $('#sidebar .q_code').addClass('hidden');
-//   });
 });
 
 // ajax common
@@ -121,7 +98,7 @@ $(document).ready(function(){
                 }
             },
             error: function(data){
-                console.log(msg); 
+                console.log(msg);
             }
         })
     });
