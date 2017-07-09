@@ -8,41 +8,40 @@ body {
   background-color: #67ace4;
 }
 
-::selection {
-  background: none;
-}
+.clear-fix{
+  &:before,
+  &:after{
+    display: table;
+    content: '';
+  }
 
-::-moz-selection {
-  background: none;
+  &:after{
+    clear: both;
+  }
 }
 
 #wrap {
   margin: 200px auto 0;
-  width: 399px;
+  width: 420px;
 }
 
 #text {
   text-align: center;
-  padding-top: 20px;
+  margin-top: 20px;
 }
 
-#text strong {
-  display: inline-block;
-  font-size: 14px;
-  font-weight: normal;
-}
-
-#text strong > * {
+#text > * {
   float: left;
 }
 
-#text span {
+#text .info-img {
   width: 128px;
   height: 29px;
   background: url(../images/info.png) no-repeat;
 }
 
 #text a {
+  display: block;
   line-height: 14px;
   color: #fff;
   text-decoration: none;
