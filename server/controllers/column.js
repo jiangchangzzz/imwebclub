@@ -33,8 +33,6 @@ var message = require('../common/message');
 exports.index = function (req, res, next) {
   var column_id = req.params.cid;
   var currentUser = req.session.user;
-  var isLogin = !!currentUser;
-  var isAdmin = currentUser ? currentUser.is_admin : false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
 
@@ -54,8 +52,7 @@ exports.index = function (req, res, next) {
         current_page: page,
         pages: pages,
         is_follow: !!is_follow,
-        isAdmin: isAdmin,
-        isLogin: isLogin,
+        base: 'column/index',
         _layoutFile: false
       });
     });
@@ -129,8 +126,6 @@ exports.index = function (req, res, next) {
  */
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
-  var isLogin = !!currentUser;
-  var isAdmin = currentUser ? currentUser.is_admin : false;
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var sortMap = {
@@ -200,8 +195,7 @@ exports.list = function (req, res, next) {
       pages: pages,
       pageTitle: '专栏列表',
       sort: req.query.sort,
-      isAdmin: isAdmin,
-      isLogin: isLogin,
+      base: 'column/list',
       _layoutFile: false
     });
   });

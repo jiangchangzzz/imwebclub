@@ -515,6 +515,9 @@ $(function() {
         return false;
     });
     $('#mask').on('click', _.bind(exports.closeMask, exports));
+    $('#alert-error').click(function(){
+        exports.closeMask();
+    });
     window.sidebarAction = exports;
 });
 

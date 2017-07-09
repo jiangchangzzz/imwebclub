@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @file 数据适配
  * @author fishineyuan(382184760@qq.com)
@@ -144,7 +145,7 @@ exports.outTopic = function(item, options) {
     return out;
 };
 
-exports.outColumn = function(item){ 
+exports.outColumn = function(item){
     var out = {
         id: item._id.toString(),
         title: item.title,
@@ -163,7 +164,7 @@ exports.outColumn = function(item){
 }
 
 //topic类型过滤器
-exports.topicFormat = function (topics) {   
+exports.topicFormat = function (topics) {
   var arr = [];
   for (var i = 0, len = topics.length; i < len; i++) {
     if (topics[i] && topics[i].type == 1) {

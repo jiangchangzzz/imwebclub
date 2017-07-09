@@ -267,9 +267,14 @@
     }
 }
 
+.ui-dropdown{
+    padding: 10px 0;
+}
+
 .ui-dropdown-layer {
-    width: 100px;
     position: absolute;
+    left: -44px;
+    top: 38px;
     z-index: 1;
     display: none;
     border: 1px solid @ui-gray;
@@ -277,12 +282,13 @@
     color: @ui-black-light;
     background: @ui-white;
 
-    & > li {
-        height: 18px;
-        padding: 5px;
-        text-align: center;
+    a{
+        display: block;
+        width: 100px;
+        height: 28px;
         font-size: 13px;
-        line-height: 18px;
+        line-height: 28px;
+        text-align: center;
 
         &.active,
         &:hover {
@@ -290,6 +296,14 @@
             background-color: @ui-blue;
         }
     }
+
+    &:hover{
+        display: block;
+    }
+}
+
+.ui-dropdown:hover + .ui-dropdown-layer{
+    display: block;
 }
 
 .ui-tag {

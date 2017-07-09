@@ -42,7 +42,7 @@
 </head>
 
 <body>
-  <%- partial('common/header.html') %>
+  <%- partial('common/navhead.html') %>
     <div id="main" class="clearfix">
       <%- partial('common/sidebar.html') %>
         <div id="content">
@@ -51,7 +51,7 @@
               <a href="?sort=hot" class="<%= sort==='hot'?'active':'' %>">热门</a> |
               <a href="?sort=latest" class="<%= sort==='latest'?'active':'' %>">最新</a>
             </div>
-            <% if(isAdmin){ %>
+            <% if(current_user && current_user.is_admin){ %>
             <div class="list-right">
               <a href="/column/create">创建专栏</a>
             </div>
@@ -63,8 +63,8 @@
             <li class="column-item clearfix">
               <div class="list-img">
                 <div class="follow">
-                  <button type="button" class="btn btn-default <%= column.is_follow?'':'hide' %> <%= isLogin?'cancel-btn':'nav-login' %>" data-id=<%= column.id %>>取消关注</button>
-                  <button type="button" class="btn <%= column.is_follow?'hide':'' %> <%= isLogin?'follow-btn':'nav-login' %>" data-id=<%= column.id %>>关注</button>
+                  <button type="button" class="btn btn-default <%= column.is_follow?'':'hide' %> <%= current_user?'cancel-btn':'nav-login' %>" data-id=<%= column.id %>>取消关注</button>
+                  <button type="button" class="btn <%= column.is_follow?'hide':'' %> <%= current_user?'follow-btn':'nav-login' %>" data-id=<%= column.id %>>关注</button>
                 </div>
                 <div class="thumbnail" style="background-image: url(<%= column.cover %>)"></div>
               </div>
@@ -81,51 +81,12 @@
             </li>
             <% }) %>
           </ul>
-          <div class="pagination" current_page="<%= current_page %>">
-      <ul>
-        <% var base='/column/list' %>
-        <% var base_url = base + (base.indexOf("?") < 0 ? "?" : "&") + "page="; %>
-        <% if (current_page == 1) { %>
-        <li class="disabled btn-step"><i class="fa fa-backward"></i></li>
-        <% } else { %>
-        <li class="btn-step" title="首页"><a href="<%= base_url %>1"><i class="fa fa-step-backward"></i></a></li>
-        <li class="btn-step" title="前一页"><a href="<%= base_url %><%= (current_page-1) %>"><i class="fa fa-backward"></i></a></li>
-        <% } %>
-
-        <%
-        var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
-        var page_end = page_start + 4 >= pages ? pages : page_start + 4;
-        %>
-
-        <% if (page_start > 1) { %>
-        <li><a>...</a></li>
-        <% } %>
-
-        <% for(var i = page_start; i <= page_end; i++) { %>
-        <% if (i === current_page) { %>
-        <li class="disabled"><a><%= i %></a></li>
-        <% } else { %>
-        <li title="<%= i %>"><a href="<%= base_url + i %>"><%= i %></a></li>
-        <% } %>
-        <% } %>
-
-        <% if (page_end < pages ) { %>
-        <li><a>...</a></li>
-        <% } %>
-
-        <% if (current_page == pages) { %>
-        <li class="disabled btn-step"><i class="fa fa-forward"></i></li>
-        <% } else { %>
-        <li class="btn-step" title="下一页"><a href="<%= base_url + (current_page+1) %>"><i class="fa fa-forward"></i></a></li>
-        <li class="btn-step" title="尾页"><a href="<%= base_url + pages %>"><i class="fa fa-step-forward"></i></a></li>
-        <% } %>
-      </ul>
-    </div>
+          <%- partial('../common/page') %>
     <% }else{ %>
       <p class="no-item">专栏列表空空如也，请联系管理员速速添加吧^_^</p>
     <% } %>
         </div>
-        
+
     </div>
     <%- partial('common/loginpop.html') %>
     <%- partial('common/footer.html') %>

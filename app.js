@@ -1,14 +1,17 @@
+/**
+ * Module dependencies.
+ */
+'use strict';
 var config = require('./server/config');
 
-require('colors');
+require('./server/middlewares/mongoose_log'); // 打印 mongodb 查询日志
+require('./server/models');
 var path = require('path');
 var Loader = require('loader');
 var LoaderConnect = require('loader-connect')
 var express = require('express');
 var session = require('express-session');
 var passport = require('passport');
-require('./server/middlewares/mongoose_log'); // 打印 mongodb 查询日志
-require('./server/models');
 var GitHubStrategy = require('passport-github').Strategy;
 var githubStrategyMiddleware = require('./server/middlewares/github_strategy');
 var webRouter = require('./server/web_router');
@@ -30,28 +33,16 @@ var logger = require('./server/common/logger');
 var helmet = require('helmet');
 var bytes = require('bytes');
 
-var mongoose=require('mongoose');
-var bluebird=require('bluebird');
-var flash=require('connect-flash');
+var mongoose = require('mongoose');
+var bluebird = require('bluebird');
+var flash = require('connect-flash');
 
-var messageCount=require('./server/middlewares/message_count');
+var messageCount = require('./server/middlewares/message_count');
 
 // 静态文件目录
 var staticDir = path.join(__dirname, 'public');
 // lib文件目录 非模块化插件
 var libsDir = path.join(__dirname, 'libs');
-
-// assets
-var assets = {};
-
-if (config.mini_assets) {
-  try {
-    assets = require('./server/assets.json');
-  } catch (e) {
-    logger.error('You must execute `make build` before start app when mini_assets is true.');
-    throw e;
-  }
-}
 
 var urlinfo = require('url').parse(config.host);
 config.hostname = urlinfo.hostname || config.host;
@@ -68,27 +59,25 @@ app.enable('trust proxy');
 // Request logger。请求时间
 app.use(requestLog);
 
-if (config.debug) {
+if (process.env.NODE_ENV !== 'production') {
   // 渲染时间
   app.use(renderMiddleware.render);
-}
-
-// 静态资源
-if (config.debug) {
   app.use(LoaderConnect.less(__dirname)); // 测试环境用，编译 .less on the fly
 }
+
+// 静态文件服务器
 app.use('/public', express.static(staticDir, {
-   maxAge: 864000  // one day
+  maxAge: 864000  // one day
 }));
 app.use('/libs', express.static(libsDir, {
-   maxAge: 864000  // one day
+  maxAge: 864000  // one day
 }));
 app.use('/agent', proxyMiddleware.proxy);
 
 // 通用的中间件
 app.use(require('response-time')());
 app.use(helmet.frameguard('sameorigin'));
-app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.json({ limit: '1mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
 app.use(require('method-override')());
 app.use(require('cookie-parser')(config.session_secret));
@@ -124,27 +113,23 @@ app.use(auth.blockUser());
 //消息数量中间件
 app.use(messageCount);
 
-if (!config.debug) {
+//csrf校验
+if (process.env.NODE_ENV === 'production') {
   app.use(function (req, res, next) {
-    if (req.path === '/api' || req.path.indexOf('/api') === -1) {
+    // if (req.path === '/api' || req.path.indexOf('/api') === -1) {
       csurf()(req, res, next);
       return;
-    }
-    next();
+    // }
+    // next();
   });
   app.set('view cache', true);
 }
-
-// for debug
-// app.get('/err', function (req, res, next) {
-//   next(new Error('haha'))
-// });
 
 // set static, dynamic helpers
 _.extend(app.locals, {
   config: config,
   Loader: Loader,
-  assets: assets
+  // assets: assets
 });
 
 app.use(errorPageMiddleware.errorPage);
@@ -161,13 +146,13 @@ app.use(busboy({
 }));
 
 //mongoose使用bluebird提供的扩展Promise
-mongoose.Promise=bluebird;
+mongoose.Promise = bluebird;
 
 //使用flash中间件显示成功和错误信息
 app.use(flash());
-app.use(function(req,res,next){
-  res.locals.success=req.flash('success').toString();
-  res.locals.error=req.flash('error').toString();
+app.use(function (req, res, next) {
+  res.locals.success = req.flash('success').toString();
+  res.locals.error = req.flash('error').toString();
   next();
 });
 
@@ -175,21 +160,26 @@ app.use(function(req,res,next){
 app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
 
+// for debug
+// app.get('/err', function (req, res, next) {
+//   next(new Error('haha'))
+// });
+
 // error handler
 if (process.env.NODE_ENV !== 'production') {
   app.use(errorhandler());
 } else {
   //没有找到则跳转到404页面
-  app.use(function(req,res){
-    if(!res.headersSent){
-      return res.status(404).render('error/index',{ _layoutFile: false, code: 404 });
+  app.use(function (req, res) {
+    if (!res.headersSent) {
+      return res.status(404).render('error/index', { _layoutFile: false, code: 404 });
     }
   });
 
   //服务器错误跳转到5xx页面
   app.use(function (err, req, res, next) {
     logger.error(err);
-    return res.status(500).render('error/index',{ _layoutFile: false, code: 500 });
+    return res.status(500).render('error/index', { _layoutFile: false, code: 500 });
   });
 }
 

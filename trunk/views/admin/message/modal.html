@@ -3,7 +3,7 @@
     <button type="button" class="close" data-dismiss="modal">x</button>
     <h3 id="myModalLabel">发布消息</h3>
   </div>
-  <form class="form form-horizontal" method="post" id="messageForm">
+  <form class="form form-horizontal" method="post" id="messageForm" action="/admin/message?_csrf=<%= csrf %>">
     <div class="modal-body">
       <div class="form-group" id="title-group">
         <label class="control-label col-md-2" for="title">消息标题</label>

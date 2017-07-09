@@ -1,3 +1,4 @@
+'use strict';
 var mailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var util = require('util');
@@ -90,7 +91,7 @@ exports.sendInviteMail = function(who, token, senderName, phrase) {
     var subject = senderName + '邀请您加入' + config.name + '社区';
     var html = ['<p>您好：</p>',
         '<p>' + senderName + '邀请您加入' + config.name + '社区，请点击以下链接完善信息加入社区：</p>',
-        '<p>' + phrase + '</p>', 
+        '<p>' + phrase + '</p>',
         '<a href="' + SITE_ROOT_URL + '/invite/accept?key=' + token + '">加入社区链接</a>',
         '<p>' + config.name + '社区 谨上。</p>'
     ].join('');
@@ -218,7 +219,7 @@ exports.sendNewTopicToTeamMembers = function (data) {
             users.push(item);
         }
     });
-    var subjectTpl = '<%= user.name || user.loginname %>' 
+    var subjectTpl = '<%= user.name || user.loginname %>'
         + '发布了新文章<%=topic.title%>';
     var htmlTpl = [
         '<p><%= me.name || me.loginname %> 您好:</p>',
@@ -256,7 +257,7 @@ exports.sendColumnTopicToFollowers = function (data) {
             users.push(item);
         }
     });
-    var subjectTpl = '[<%= column.title %>]专栏' 
+    var subjectTpl = '[<%= column.title %>]专栏'
         + '发布了新文章';
     var htmlTpl = [
         '<p><%= me.name || me.loginname %> 您好:</p>',

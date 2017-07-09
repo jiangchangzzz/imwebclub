@@ -1,3 +1,4 @@
+'use strict';
 var EventProxy = require('eventproxy');
 var models = require('../models');
 var Column = models.Column;

@@ -1,3 +1,4 @@
+'use strict';
 /*!
  * nodeclub - topic mention user controller.
  * Copyright(c) 2012 fengmk2 <fengmk2@gmail.com>
@@ -23,7 +24,7 @@ var fetchUsers = function (text) {
   if (!text) {
     return [];
   }
-  
+
   var ignoreRegexs = [
     /```.+?```/g, // 去除单行的 ```
     /^```[\s\S]+?^```/gm, // ``` 里面的是 pre 标签内容

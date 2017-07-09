@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     info.text('数据正在光速传输中...');
     $.ajax({
-      url: '/column/add_topic',
+      url: '/column/add_topic?_csrf=' + imweb._csrf,
       type: 'post',
       data: {
         cid: columnid,

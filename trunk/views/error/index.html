@@ -44,7 +44,7 @@
 </head>
 
 <body>
-  <%- partial('common/header.html') %>
+  <%- partial('common/navhead.html') %>
 
     <div id="wrap">
       <div>
@@ -54,10 +54,9 @@
         <h1 class="error-title"><%= code %></h1>
         <% } %>
       </div>
-      <div id="text">
-        <strong>
+      <div id="text" class="clear-fix">
           <% if(code===404){ %>
-			      <span></span>
+			      <div class="info-img"></div>
           <% }else{ %>
             <div class="info">
               <p class="info-en">Internal server error</p>
@@ -66,12 +65,11 @@
           <% } %>
 			      <a href="/">返回首页</a>
 			      <a href="javascript:history.back()">返回上一页</a>
-		      </strong>
       </div>
     </div>
 
     <div class="animate below"></div>
     <div class="animate above"></div>
-    
+
     <%- partial('common/loginpop.html') %>
 </body>

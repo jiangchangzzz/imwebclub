@@ -26,7 +26,6 @@
                   <input class='input-xlarge' id='pass' name='pass' size='30' type='password'/>
                 </div>
               </div>
-              <input type='hidden' name='_csrf' value='<%= csrf %>'/>
 
               <div class='form-actions'>
                   <button type='submit' class='ui-button'>登录</button>
@@ -34,7 +33,6 @@
                     通过 GitHub 登录
                   </a>
                   <input type='hidden' id='_csrf' name='_csrf' value='<%= csrf %>'>
-
                     <a id="forgot_password" href='/search_pass'>忘记密码了?</a>
               </div>
             </form>
