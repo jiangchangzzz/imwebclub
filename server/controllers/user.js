@@ -1,3 +1,4 @@
+'use strict';
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var Reply = require('../proxy').Reply;
@@ -33,6 +34,22 @@ var AdapterDict = {
   'column': dataAdapter.outColumn
 };
 
+var quickSort = function(arr) {
+  if (arr.length <= 1) { return arr; }
+　　var pivotIndex = Math.floor(arr.length / 2);
+　　var pivot = arr.splice(pivotIndex, 1)[0];
+　　var left = [];
+　　var right = [];
+　　for (var i = 0; i < arr.length; i++){
+　　　　if (Date.parse(arr[i].create_at) > Date.parse(pivot.create_at)) {
+　　　　　　left.push(arr[i]);
+　　　　} else {
+　　　　　　right.push(arr[i]);
+　　　　}
+　　}
+　　return quickSort(left).concat([pivot], quickSort(right));
+}
+
 exports.index = function (req, res, next) {
   var user_name = req.params.name;
   User.getUserByLoginName(user_name, function (err, user) {
@@ -44,7 +61,7 @@ exports.index = function (req, res, next) {
       return;
     }
 
-    var render = function (recent_topics, recent_replies) {
+    var render = function (recent_topics, recent_questions, recent_replies) {
       user.url = (function () {
         if (user.url && user.url.indexOf('http') !== 0) {
           return 'http://' + user.url;
@@ -56,29 +73,32 @@ exports.index = function (req, res, next) {
       if (!user.active && req.session.user && req.session.user.is_admin) {
         token = utility.md5(user.email + user.pass + config.session_secret);
       }
+      var arr = recent_topics.concat(recent_questions, recent_replies);
+      arr = quickSort(arr);
       res.render('user/index', {
         user: user,
         currentUser: req.session.user,
         recent_topics: recent_topics,
         recent_replies: recent_replies,
+        recent_question: recent_questions,
         token: token,
+        activities: arr,
         pageTitle: util.format('@%s 的个人主页', user.loginname),
         tab: 'index'
       });
     };
 
     var proxy = new EventProxy();
-    proxy.assign('recent_topics', 'recent_replies', render);
+    proxy.assign('recent_topics', 'recent_questions', 'recent_replies', render);
     proxy.fail(next);
 
-    var query = {
-      author_id: user._id
-    };
-    var opt = {
-      limit: 5,
-      sort: '-create_at'
-    };
+    var query = {author_id: user._id};
+
+    var opt = {limit: 5, sort: '-create_at'};
+
     Topic.getTopicsByQuery(query, opt, proxy.done('recent_topics'));
+
+    Question.getQuestionsByQuery(query, opt, proxy.done('recent_questions'));
 
     Reply.getRepliesByAuthorId(user._id, 'topic', {
         limit: 20,
@@ -206,6 +226,8 @@ exports.followings = function (req, res, next) {
 
 exports.showFollowing = function (req, res, next) {
   var user_name = req.params.name;
+  var page = Number(req.query.page) || 1;
+  var limit = 5;
   User.getUserByLoginName(user_name, function (err, user) {
     // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
@@ -216,37 +238,50 @@ exports.showFollowing = function (req, res, next) {
     }
     user.error = null;
     var ep = new EventProxy();
-    ep.all('following', function (followUser) {
-      return res.render('user/follow', {
+    ep.all('following', function(followUser) {
+      return res.render('user/followings', {
         user: user,
-        followUser: followUser,
+        following: followUser,
         currentUser: req.session.user,
-        tab: 'follwing'
+        tab: 'following',
+        current_page: page,
+        base: '/user/' + user_name + '/following',
+        pages: Math.ceil(user.following_count / limit)
       });
     })
-    User.getFollowUser(user.following, ep.done('following'));
+    const eachFollowing = user.following.slice(limit*(page-1),limit*page);
+    User.getFollowUser(eachFollowing , ep.done('following'));
   });
 };
 
 exports.showFollower = function (req, res, next) {
   var user_name = req.params.name;
+  var page = Number(req.query.page) || 1;
+  var limit = 5;
   User.getUserByLoginName(user_name, function (err, user) {
     // User.getUserById(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);
     }
-
+    if (req.query.save === 'success') {
+      user.success = '保存成功。';
+    }
     user.error = null;
     var ep = new EventProxy();
-    ep.all('follower', function (follower) {
-      return res.render('user/follow', {
+    ep.all('following', function(followUser) {
+      return res.render('user/followers', {
         user: user,
-        follower: follower,
+        follower: followUser,
         currentUser: req.session.user,
-        tab: 'follower'
+        tab: 'following',
+        current_page: page,
+        base: '/user/' + user_name + '/follower',
+        pages: Math.ceil(user.follower_count / limit)
       });
     })
-    User.getFollowUser(user.follower, ep.done('follower'));
+    const eachFollower = user.follower.slice(limit*(page-1),limit*page);
+    User.getFollowUser(eachFollower , ep.done('following'));
+
   });
 };
 
@@ -599,15 +634,13 @@ exports.listReplies = function (req, res, next) {
     proxy.assign('recent_replies', 'pages', render);
     proxy.fail(next);
 
-    var opt = {
-      skip: (page - 1) * limit,
-      limit: limit,
-      sort: '-create_at'
-    };
+
+    var opt = {skip: (page - 1) * limit, limit: limit, sort: '-create_at'};
+
     Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
       // 获取所有有评论的主题
       var topic_ids = replies.map(function (reply) {
-        return reply.topic_id.toString();
+        return reply.topic_id.id;
       });
       topic_ids = _.uniq(topic_ids);
 
