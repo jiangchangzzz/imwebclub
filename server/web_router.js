@@ -1,9 +1,4 @@
-/*!
- * nodeclub - route.js
- * Copyright(c) 2012 fengmk2 <fengmk2@gmail.com>
- * MIT Licensed
- */
-
+'use strict';
 /**
  * Module dependencies.
  */
@@ -21,7 +16,6 @@ var reply = require('./controllers/reply');
 var activity = require('./controllers/activity');
 var column = require('./controllers/column');
 var celebrity=require('./controllers/celebrity');
-// var rss = require('./controllers/rss');
 var staticController = require('./controllers/static');
 var auth = require('./middlewares/auth');
 var limit = require('./middlewares/limit');
@@ -31,7 +25,6 @@ var passport = require('passport');
 var weibo = require('./controllers/weibo');
 var admin = require('./controllers/admin');
 var WeiboStrategy = require('passport-weibo').Strategy;
-var configMiddleware = require('./middlewares/conf');
 var config = require('./config');
 // 新markdown编辑器  发布
 var marktang = require('./controllers/marktang');
@@ -40,10 +33,6 @@ var router = express.Router();
 
 // home page
 router.get('/', site.index);
-// sitemap
-// router.get('/sitemap.xml', site.sitemap);
-// mobile app download
-// router.get('/app/download', site.appDownload);
 
 // sign controller
 if (config.allow_sign_up) {
@@ -70,7 +59,7 @@ router.get('/user/:name/index', user.index); // 用户个人主页
 router.get('/user/:name/setting', auth.userRequired, user.showSetting); // 用户个人设置页
 router.get('/user/:name/following', user.showFollowing); // 用户个人关注
 router.get('/user/:name/follower', user.showFollower); // 用户粉丝
-router.get('/user/:name/question', user.listQuestions); // 用户的we
+router.get('/user/:name/questions', user.listQuestions); // 用户的we
 router.get('/user/:name/collections', user.listCollectedTopics);  // 用户收藏的所有话题页
 router.get('/user/:name/topics', user.listTopics);  // 用户发布的所有话题页
 router.get('/user/:name/replies', user.listReplies);  // 用户参与的所有回复页
@@ -215,9 +204,6 @@ router.get('/marktang/evernote_callback', auth.userRequired, marktang.evernote_c
 router.post('/marktang/evernote_save', auth.userRequired, marktang.evernote_save); // save evernote
 router.get('/marktang/evernote_getnote', auth.userRequired, marktang.evernote_getnote); //
 
-//rss
-// router.get('/rss', rss.index);
-
 // github oauth
 router.get('/auth/github', passport.authenticate('github'));
 router.get('/auth/github/callback',
@@ -227,23 +213,13 @@ router.get('/auth/github/new', github.new);
 router.post('/auth/github/create', limit.peripperday('create_user_per_ip', config.create_user_per_ip, {showJson: false}), github.create);
 
 // weibo oauth
-// Use the WeiboStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Weibo
-//   profile), and invoke a callback with a user object.
 passport.use(new WeiboStrategy({
     clientID: config.WEIBO_OAUTH.clientID,
     clientSecret: config.WEIBO_OAUTH.clientSecret,
     callbackURL: config.WEIBO_OAUTH.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
     process.nextTick(function () {
-
-      // To keep the example simple, the user's Weibo profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Weibo account with a user record in your database,
-      // and return that user instead.
       return done(null, profile);
     });
   }
@@ -260,15 +236,7 @@ router.post('/auth/weibo/create', limit.peripperday('create_user_per_ip', config
 
 router.post('/search', search.index);
 router.get('/search/:key', search.index);
-// router.get('/search', search.index);
 
 router.get('/topics/latestTopics/sort/:sort', site.latestTopics);
-
-// if (!config.debug) { // 这个兼容破坏了不少测试
-// 	router.get('/:name', function (req, res) {
-// 	  res.redirect('/user/' + req.params.name)
-// 	})
-// }
-
 
 module.exports = router;

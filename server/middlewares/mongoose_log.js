@@ -1,8 +1,9 @@
+'use strict';
 var mongoose = require('mongoose');
 var logger   = require('../common/logger');
 var config = require('../config');
 
-if (config.debug) {
+if (process.env.NODE_ENV !== 'production') {
   var traceMQuery = function (method, info, query) {
     return function (err, result, millis) {
       if (err) {
