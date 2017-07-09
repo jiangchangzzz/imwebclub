@@ -640,7 +640,7 @@ exports.listReplies = function (req, res, next) {
     Reply.getRepliesByAuthorId(user._id, 'topic', opt, proxy.done(function (replies) {
       // 获取所有有评论的主题
       var topic_ids = replies.map(function (reply) {
-        return reply.topic_id.id;
+        return reply.topic_id;
       });
       topic_ids = _.uniq(topic_ids);
 
