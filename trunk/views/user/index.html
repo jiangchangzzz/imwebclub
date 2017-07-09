@@ -50,15 +50,15 @@
         <div class='breadcrumb--content'>
           <div class='breadcrumb--content__section section--show'>
             <!--<%- partial('./userInfo') %>-->
-            <div class="user-title">个人动态</div>      
+            <div class="user-title">个人动态</div>
               <%if(activities && activities.length >0 ) {%>
                 <% activities.forEach(function(activity) { %>
-                  <% let time = activity.create_at;
-                     let month = parseInt(time.getMonth())+1;
+                  <% var time = activity.create_at;
+                     var month = parseInt(time.getMonth())+1;
                     time = time.getFullYear() + '年'+ month + '月' + time.getDate() + '日';%>
-                  <%  let status;
-                      let prefix;
-                      let reply;
+                  <%  var status;
+                      var prefix;
+                      var reply;
                      if(activity.cover) {
                       status = "我发表了文章";
                       prefix = "topic";
@@ -87,12 +87,12 @@
                       <%= reply %><%= activity.reply_count %>
                     </div>
                   </div>
-                </div>  
+                </div>
                 <% }) %>
                 <%} else {%>
                  <p>暂无活动</p>
               <%}%>
-     
+
           </div>
         </div>
     </div>
