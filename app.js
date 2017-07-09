@@ -116,12 +116,11 @@ app.use(messageCount);
 //csrf校验
 if (process.env.NODE_ENV === 'production') {
   app.use(function (req, res, next) {
-    console.log(req.path);
-    if (req.path === '/api' || req.path.indexOf('/api') === -1) {
+    // if (req.path === '/api' || req.path.indexOf('/api') === -1) {
       csurf()(req, res, next);
       return;
-    }
-    next();
+    // }
+    // next();
   });
   app.set('view cache', true);
 }
