@@ -66,7 +66,11 @@
                   </div>
                   <% if(celebrity.userId){ %>
                   <div class="header-btn" data-id=<%= celebrity.userId._id %>>
-                    <% var isFollow=(current_user.following.indexOf(celebrity.userId._id.toString())>=0) %>
+                  <% if(current_user){
+                    var isFollow=(current_user.following.indexOf(celebrity.userId._id.toString())>=0);
+                  }else{
+                    var isFollow=false;
+                  } %>
                     <button type="button" class="btn <%= isFollow?'hide':'' %> <%= current_user?'follow-btn':'nav-login' %>">关 注</button>
                     <button type="button" class="btn btn-default <%= isFollow?'':'hide' %> <%= current_user?'cancel-btn':'nav-login' %>">取消关注</button>
                   </div>
