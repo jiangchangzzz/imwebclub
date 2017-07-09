@@ -15,8 +15,8 @@
                 </form>
                 <% if (current_user) {console.log(current_user)%>
                   <div class="menu-btn">
-                    <a id="nav-post-menu" href="javascript:void(0);" class="ico fa fa-plus"></a>
-                    <ol id="nav-post-menu-layer" class="ui-dropdown-layer">
+                    <a href="javascript:void(0);" class="ico fa fa-plus ui-dropdown"></a>
+                    <ol class="ui-dropdown-layer">
                         <li>
                             <a href="/marktang/index?autoOpenInfo=true">发布文章</a>
                         </li>
@@ -39,8 +39,8 @@
                     <a id="nav-message-menu" href="/message/me" class="ico fa fa-envelope"></a>
                   </div>
                   <div class="menu-btn">
-                    <a id="nav-user-menu" href="javascript:void(0);" class="ico fa fa-user" title="<%= current_user.loginname %>"></a>
-                    <ol id="nav-user-menu-layer" class="ui-dropdown-layer">
+                    <a href="javascript:void(0);" class="ico fa fa-user ui-dropdown" title="<%= current_user.loginname %>"></a>
+                    <ol class="ui-dropdown-layer">
                         <li>
                             <a href="/user/<%= current_user.loginname %>/index">我的主页</a>
                         </li>

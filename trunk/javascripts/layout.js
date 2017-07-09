@@ -18,16 +18,16 @@ ui.attachDropdownLayer($('#nav-team-menu'), {
     top: 80,
     width: $('#nav-team-menu').width()
 });
-if($('#nav-post-menu').length > 0){
-  ui.attachDropdownLayer($('#nav-post-menu'), {
-      layer: '#nav-post-menu-layer'
-  });
-}
-if($('#nav-user-menu').length > 0){
-  ui.attachDropdownLayer($('#nav-user-menu'), {
-      layer: '#nav-user-menu-layer'
-  });
-}
+// if($('#nav-post-menu').length > 0){
+//   ui.attachDropdownLayer($('#nav-post-menu'), {
+//       layer: '#nav-post-menu-layer'
+//   });
+// }
+// if($('#nav-user-menu').length > 0){
+//   ui.attachDropdownLayer($('#nav-user-menu'), {
+//       layer: '#nav-user-menu-layer'
+//   });
+// }
 //展示和隐藏登录框
 $(document).on('click', '.nav-login', function() {
     $('.to-login').show();

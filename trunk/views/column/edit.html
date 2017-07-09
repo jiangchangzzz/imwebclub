@@ -52,7 +52,7 @@
             </nav>
             <div class='block'>
               <h2 class="block-title"><%= isEdit?'修改':'添加' %>专栏</h2>
-              <form class="form" id="columnForm" action="<%= isEdit?'/column/'+column_id+'/edit':'/column/create' %>"
+              <form class="form" id="columnForm" action="<%= isEdit?'/column/'+column_id+'/edit':'/column/create' %>?_csrf=<%= csrf %>"
                 method="post">
                 <div class="form-group" id="titleGroup">
                   <label for="title" class="control-label">专栏标题：</label>

@@ -18,7 +18,7 @@ $(document).ready(function(){
         var uid=btn.parent('.header-btn').data('id');
 
         $.ajax({
-            url: '/user/follow',
+            url: '/user/follow?_csrf=' + imweb._csrf,
             type: type,
             data: {
                 followUser_id: uid

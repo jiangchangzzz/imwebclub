@@ -37,7 +37,7 @@ $(document).ready(function(){
 
         $.ajax({
             type: 'POST',
-            url: '/upload',
+            url: '/upload?_csrf=' + imweb._csrf,
             data: data,
             cache: false,
             contentType: false,

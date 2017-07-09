@@ -8,7 +8,7 @@ var domain = 'test.imweb.io';
 
 var config = {
   // debug 为 true 时，用于本地调试
-  debug: false,
+  debug: true,
 
   name: '腾讯Web前端 IMWeb 团队社区 | blog | 团队博客', // 社区名字
   description: 'Web前端 腾讯IMWeb 团队社区', // 社区的描述
@@ -68,6 +68,9 @@ var config = {
 
   // 已读消息列表显示消息数量
   list_message_count: 15,
+
+  //专栏列表显示专栏数量
+  list_column_count: 15,
 
   //系统消息数量
   list_system_message_count: 15,
