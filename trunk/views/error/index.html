@@ -27,7 +27,7 @@
           <script src="//7.url.cn/edu/jslib/jquery/1.9.1/jquery.min.js"></script>
           <script>
             window.imweb = window.imweb || {};
-            imweb._csrf = '<%- csrf %>';
+            // imweb._csrf = '<%- csrf %>';
             <% if (current_user) { %>
             imweb.user = {
               id: '<%= current_user._id %>',

@@ -1,3 +1,4 @@
+'use strict';
 var validator      = require('validator');
 var eventproxy     = require('eventproxy');
 var config         = require('../config');
@@ -10,7 +11,7 @@ var uuid           = require('uuid');
 
 //sign up
 exports.showSignup = function (req, res) {
-  res.render('sign/signup'); 
+  res.render('sign/signup');
 };
 
 exports.signup = function(req, res, next) {
@@ -142,7 +143,7 @@ var notJump = [
          });
      }
 
-     var getUser; 
+     var getUser;
      if (loginname.indexOf('@') !== -1) {
          getUser = User.getUserByMail;
      } else {
