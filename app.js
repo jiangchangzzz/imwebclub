@@ -161,6 +161,11 @@ app.use(function (req, res, next) {
 app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
 
+// for debug
+// app.get('/err', function (req, res, next) {
+//   next(new Error('haha'))
+// });
+
 // error handler
 if (process.env.NODE_ENV !== 'production') {
   app.use(errorhandler());
