@@ -80,7 +80,7 @@ $(document).ready(function(){
         var cid=link.data('cid');
 
         $.ajax({
-            url: '/operate/follow',
+            url: '/operate/follow?_csrf=' + imweb._csrf,
             type: 'post',
             data: {
                 object_id: cid,

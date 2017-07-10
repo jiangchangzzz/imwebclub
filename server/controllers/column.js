@@ -52,7 +52,7 @@ exports.index = function (req, res, next) {
         current_page: page,
         pages: pages,
         is_follow: !!is_follow,
-        base: 'column/index',
+        base: '/column/'+column_id,
         _layoutFile: false
       });
     });
@@ -195,7 +195,7 @@ exports.list = function (req, res, next) {
       pages: pages,
       pageTitle: '专栏列表',
       sort: req.query.sort,
-      base: 'column/list',
+      base: '/column/list',
       _layoutFile: false
     });
   });

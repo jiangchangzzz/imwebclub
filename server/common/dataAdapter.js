@@ -134,6 +134,8 @@ exports.outTopic = function(item, options) {
         tab: item.tab,
         cover: item.cover,
         reply_count: item.reply_count,
+        visit_count: item.visit_count,
+        collect_count: item.collect_count,
         author: !item.author ? {} : exports.outUser(item.author),
     };
     if (options.content) {

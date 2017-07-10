@@ -72,8 +72,8 @@ router.post('/user/set_star', auth.adminRequired, user.toggleStar); // 把某用
 router.post('/user/cancel_star', auth.adminRequired, user.toggleStar);  // 取消某用户的达人身份
 router.post('/user/:name/block', auth.adminRequired, user.block);  // 禁言某用户
 router.post('/user/:name/delete_all', auth.adminRequired, user.deleteAll);  // 删除某用户所有发言
-router.post('/user/follow', user.addFollowUser); //添加关注
-router.delete('/user/follow', user.deleteFollowUser); //取消关注
+router.post('/user/follow', auth.userRequired, user.addFollowUser); //添加关注
+router.delete('/user/follow', auth.userRequired, user.deleteFollowUser); //取消关注
 router.get('/user/followings', auth.userRequired, user.followings); // api:分页获取关注的对象
 
 // message controler
