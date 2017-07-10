@@ -71,7 +71,7 @@ exports.getCountByQuery = function (query, callback) {
  * @param {Object} opt 搜索选项
  * @param {Function} callback 回调函数
  */
-exports.getTopicsByQuery = function (query, opt, callback) {
+exports.getTopicsByQuery = function (query, opt, callback) { 
   query.deleted = {$in:[null,false]};
   Topic.find(query, {}, opt, function (err, topics) {
     if (err) {

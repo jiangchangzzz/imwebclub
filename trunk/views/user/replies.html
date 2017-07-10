@@ -4,17 +4,18 @@
       <%- partial('./nav') %>
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
-        <div class='panel'>
-          <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>   
+          <h3 class="user-title">我的评论</h3>
+          <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>
+          <ul class="reply-list">
           <% recent_replies.map(function(reply){ %>
-            <div>评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a></div>
+            <li>评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a></li>
           <%  }) %>
+          </ul>
           <% } else { %>
           <div class='inner'>
             <p>没有评论</p>
           </div>
           <% } %>
-        </div>  
         </div>
       </div>
     </div>

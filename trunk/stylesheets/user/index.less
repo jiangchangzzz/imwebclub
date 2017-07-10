@@ -153,6 +153,9 @@
   	.section{
   		&--show {
   			display: block;
+        #setting_form, #change_pass_form {
+          padding: 20px 0px;
+        }
   		}
   		&--hide {
   			display: none;
@@ -326,7 +329,9 @@
 }
 
 .user-title {
-	font-size: 24px;
+	font-size: 18px;
+	font-weight: normal;
+	border-bottom: 1px solid #ddd;
 }
 
 .breadcrumb--content__status {
@@ -354,6 +359,25 @@
   .follow-item {
   	flex-grow: 2;
   }
+}
+
+.panel{
+	padding: 10px 20px;
+}
+
+.reply-list{
+	li{
+		padding: 8px 0;
+		border-bottom: 1px solid #ddd;
+	}
+}
+
+.cell{
+	border-bottom: 1px solid #ddd;
+}
+
+.cell .cell-r .cell-wrap{
+	border-bottom: none;
 }
 
 
