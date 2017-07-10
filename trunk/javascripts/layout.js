@@ -84,7 +84,8 @@ $(document).ready(function(){
             type: 'post',
             data: {
                 object_id: cid,
-                kind: 'column'
+                kind: 'column',
+                _csrf: imweb._csrf
             },
             success: function(data){
                 if(data.ret===0){
