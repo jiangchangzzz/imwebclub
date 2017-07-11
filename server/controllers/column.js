@@ -133,7 +133,7 @@ exports.list = function (req, res, next) {
     'latest': '-create_at'
   };
   if (!sortMap[req.query.sort]) {
-    req.query.sort = 'hot';
+    sort = 'hot';
   }
   var proxy = new EventProxy();
   proxy.fail(next);
@@ -142,7 +142,7 @@ exports.list = function (req, res, next) {
   var options = {
     skip: (page - 1) * limit,
     limit: limit,
-    sort: sortMap[req.query.sort]
+    sort: sortMap[sort]
   };
 
   // 取分页数据
@@ -194,8 +194,8 @@ exports.list = function (req, res, next) {
       current_page: page,
       pages: pages,
       pageTitle: '专栏列表',
-      sort: req.query.sort,
-      base: '/column/list',
+      sort: sort,
+      base: '/column/list'+(req.query.sort ? '?sort='+req.query.sort : ''),
       _layoutFile: false
     });
   });

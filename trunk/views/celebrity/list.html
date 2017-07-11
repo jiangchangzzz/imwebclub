@@ -19,7 +19,13 @@
             <% celebrities.forEach(function(celebrity){ %>
             <li class="item">
               <div class="item-img">
-                <img src="<%= celebrity.userId?celebrity.userId.avatar:celebrity.avatar %>" alt=<%= celebrity.name %>>
+                <% if(celebrity.userId){ %>
+                  <a href="/user/<%= celebrity.userId.loginname %>/index">
+                  <img src="<%= celebrity.userId.avatar %>" alt=<%= celebrity.name %>>
+                </a>
+                <% }else{ %>
+                  <img src="<%= celebrity.avatar %>" alt=<%= celebrity.name %>>
+                <% } %>
               </div>
               <div class="item-content">
                 <div class="item-header clearfix">

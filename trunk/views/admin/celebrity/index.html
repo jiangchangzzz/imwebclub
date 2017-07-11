@@ -37,6 +37,7 @@
                   <th width="10%">个人主页</th>
                   <th width="20%">简介</th>
                   <th width="10%">关联用户</th>
+                  <th width="10%">是否IMWeb</th>
                   <th width="10%">创建时间</th>
                   <th width="10%">删除</th>
                 </tr>
@@ -50,6 +51,7 @@
                     <td><%= celebrity.home || '无' %></td>
                     <td><%= celebrity.description || '无' %></td>
                     <td><%= typeof(celebrity.userId)==='undefined'?'无':celebrity.userId.loginname %></td>
+                    <td><%= celebrity.isImweb || false %></td>
                     <td><%= celebrity.create_at_ago() %></td>
                     <td><a class="btn btn-default delete-celebrity" href="/admin/celebrity/<%= celebrity._id %>/remove">删除</a></td>
                   </tr>

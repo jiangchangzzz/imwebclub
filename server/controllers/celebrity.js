@@ -17,6 +17,7 @@ exports.list = function (req, res, next) {
       Celebrity.getCountByType(false)
     ]).spread(function (celebrities, count) {
       var pages = Math.ceil(count / pageSize);
+      console.log(celebrities);
       res.render('celebrity/list', {
         _layoutFile: false,
         celebrities: celebrities,

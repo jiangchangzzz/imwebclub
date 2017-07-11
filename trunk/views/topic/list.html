@@ -56,48 +56,14 @@
             <% } %>
         </div>
     <%}%>
+    <% if(topics.length){ %>
     <ul class="topic-list">
         <%- partial("../topic/abstract", {collection:topics, as:"topic"})%>
     </ul>
-</div>
-<div class="pagination" current_page="<%= current_page %>">
-  <ul>
-    <% var base_url = base + (base.indexOf("?") < 0 ? "?" : "&") + "page="; %>
-    <% if (current_page == 1) { %>
-    <li class="disabled btn-step"><i class="fa fa-backward"></i></li>
-    <% } else { %>
-    <li class="btn-step" title="首页"><a href="<%= base_url %>1"><i class="fa fa-step-backward"></i></a></li>
-    <li class="btn-step" title="前一页"><a href="<%= base_url %><%= (current_page-1) %>"><i class="fa fa-backward"></i></a></li>
+    <%- partial('common/page.html') %>
+    <% }else{ %>
+        <p class="no-search">没有找到您搜索的内容，可以去<a href="/topic/tab/all">文章页</a>逛逛，说不定有您想要的内容</p>
     <% } %>
-
-    <%
-    var page_start = current_page - 2 > 0 ? current_page - 2 : 1;
-    var page_end = page_start + 4 >= pages ? pages : page_start + 4;
-    %>
-
-    <% if (page_start > 1) { %>
-    <li><a>...</a></li>
-    <% } %>
-
-    <% for(var i = page_start; i <= page_end; i++) { %>
-    <% if (i === current_page) { %>
-    <li class="disabled"><a><%= i %></a></li>
-    <% } else { %>
-    <li title="<%= i %>"><a href="<%= base_url + i %>"><%= i %></a></li>
-    <% } %>
-    <% } %>
-
-    <% if (page_end < pages ) { %>
-    <li><a>...</a></li>
-    <% } %>
-
-    <% if (current_page == pages) { %>
-    <li class="disabled btn-step"><i class="fa fa-forward"></i></li>
-    <% } else { %>
-    <li class="btn-step" title="下一页"><a href="<%= base_url + (current_page+1) %>"><i class="fa fa-forward"></i></a></li>
-    <li class="btn-step" title="尾页"><a href="<%= base_url + pages %>"><i class="fa fa-step-forward"></i></a></li>
-    <% } %>
-  </ul>
 </div>
 </div>
     <%- partial('common/loginpop.html') %>
