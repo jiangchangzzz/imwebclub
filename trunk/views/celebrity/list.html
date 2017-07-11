@@ -11,7 +11,8 @@
       <%- partial('common/sidebar.html') %>
         <div id="content">
           <nav class="celebrity-nav">
-            <a class="active" href="/celebrity/list">名人堂</a>
+            <a class=<%= base==='/celebrity/list' && 'active' %> href="/celebrity/list">名人堂</a>
+            <a class=<%= base==='/celebrity/imweb' && 'active' %> href="/celebrity/imweb">IMWeb</a>
           </nav>
           <% if(celebrities.length){ %>
           <ul>
@@ -24,9 +25,11 @@
                 <div class="item-header clearfix">
                   <div class="header-title">
                     <h3><%= celebrity.name %></h3>
+                    <% if(celebrity.userId){ %>
                     <p class="title-info">
-                      关注 <span class="follow-num"><%= celebrity.userId?celebrity.userId.follower.length:0 %></span> | 文章 <%= celebrity.userId?celebrity.userId.topic_count:0 %>
+                      关注 <span class="follow-num"><%= celebrity.userId.follower.length %></span> | 文章 <%= celebrity.userId.topic_count %>
                     </p>
+                    <% } %>
                   </div>
                   <% if(celebrity.userId){ %>
                   <div class="header-btn" data-id=<%= celebrity.userId._id %>>

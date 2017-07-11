@@ -265,6 +265,7 @@ exports.user = function (req, res, next) {
       user_list[i]['friendly_create_at'] = tools.formatDate(user_list[i].create_at, false);
       user_list[i]['friendly_update_at'] = tools.formatDate(user_list[i].update_at, false);
     }
+    console.log(user_list);
     res.render('admin/user/index', {
       "layout": false,
       "users": user_list
@@ -637,6 +638,7 @@ exports.celebrity = function (req, res, next) {
 exports.createCelebrity = function (req, res, next) {
   var getUserByLoginName = Promise.promisify(User.getUserByLoginName);
   var celebrity = req.body.celebrity;
+  celebrity.isImweb=!!celebrity.isImweb;
 
   //数据校验
   if (!celebrity.name.length) {

@@ -1,3 +1,5 @@
+@import '../variables.less';
+
 .clearfix{
     clear: none;
 
@@ -57,6 +59,11 @@
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center center;
+
+    @media(max-width: @screen-xs){
+        width: 100px;
+        height: 60px;
+    }
 }
 
 .list-head{

@@ -4,21 +4,30 @@
   <div class='message-item' message_id='<%= message._id %>'>
     <% } %>
 		<p>
-    <% if(message.type == 'reply'){ %>
-		
+    <% if(message.type == 'reply'){ 
+			if(message.topic.author_id.toString() === current_user._id.toString()){ %>
+
 			<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
 			回复了你的文章
 			<a href="/topic/<%- message.topic._id + (message.reply ? '#' + message.reply._id : '') %>" target='_blank'><%=
         message.topic.title %></a>
-		
-    <% } %>
+
+			<% }else{ %>
+
+			<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
+			在文章
+			<a href="/topic/<%- message.topic._id + (message.reply ? '#' + message.reply._id : '') %>" target='_blank'><%=
+        message.topic.title %></a>
+			中回复了你的评论
+
+    <% }} %>
     <% if(message.type == 'reply2'){ %>
 		
 			<a href="/user/<%= message.author.loginname %>/index" target='_blank'><%= message.author.loginname %></a>
 			在文章
 			<a href="/topic/<%= message.topic._id + (message.reply ? '#' + message.reply._id : '') %>" target='_blank'><%=
         message.topic.title %></a>
-			中回复了你的回复
+			中回复了你的评论
 		
     <% } %>
     <% if(message.type == 'follow'){ %>

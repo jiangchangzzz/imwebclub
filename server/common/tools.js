@@ -13,7 +13,13 @@ exports.formatDate = function (date, friendly) {
   date = moment(date);
 
   if (friendly) {
-    return date.fromNow();
+    var now=moment();
+    if(now.diff(date,'months')>0){
+        return date.format('YYYY-MM-DD HH:mm');
+    }
+    else{
+        return date.fromNow();
+    }
   } else {
     return date.format('YYYY-MM-DD HH:mm');
   }

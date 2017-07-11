@@ -44,7 +44,6 @@
 
     .list-content{
         width: auto;
-        margin-right: 200px;
         padding-right: 20px;
 
         h3{
@@ -69,12 +68,20 @@
             height: 120px;
             overflow: hidden;
             text-overflow: ellipsis; 
+
+            @media(max-width: @screen-xs){
+                height: 60px;
+            }
         }
     }
 
     .list-img{
         float: right;
         width:200px;
+
+        @media(max-width: @screen-xs){
+            width: 100px;
+        }
 
         .follow{
             margin-top: 4px;

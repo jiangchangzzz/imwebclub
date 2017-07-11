@@ -13,8 +13,8 @@ exports.list = function (req, res, next) {
   var userId=req.session.user?req.session.user._id:null;
 
   Promise.all([
-      getCelebrities(pageSize, page), 
-      Celebrity.getCount()
+      getCelebrities(pageSize, page, false), 
+      Celebrity.getCountByType(false)
     ]).spread(function (celebrities, count) {
       var pages = Math.ceil(count / pageSize);
       res.render('celebrity/list', {
@@ -29,12 +29,35 @@ exports.list = function (req, res, next) {
     .catch(next);
 };
 
+exports.imweb = function (req, res, next) {
+  var page = parseInt(req.query.page) || 1;
+  var page = page > 0 ? page : 1;
+  var pageSize = config.list_celebrity_count;
+  var userId=req.session.user?req.session.user._id:null;
+
+  Promise.all([
+      getCelebrities(pageSize, page, true), 
+      Celebrity.getCountByType(true)
+    ]).spread(function (celebrities, count) {
+      var pages = Math.ceil(count / pageSize);
+      res.render('celebrity/list', {
+        _layoutFile: false,
+        celebrities: celebrities,
+        pages: pages,
+        current_page: page,
+        base: '/celebrity/imweb',
+        active: 'celebrity'
+      });
+    })
+    .catch(next);
+};
+
 /**
  * 分页获取名人数据，文章数目
  */
-function getCelebrities(pageSize, page) {
+function getCelebrities(pageSize, page, isImweb) {
   //获取名人分页数据
-  return Celebrity.getCelebrityPage(pageSize, page)
+  return Celebrity.getCelebrityPageByType(pageSize, page, isImweb)
     .then(function (celebrities) {
 
       //若关联用户存在，则获取其文章数目

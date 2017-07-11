@@ -99,10 +99,9 @@ exports.authUser = function (req, res, next) {
       user.is_admin = true;
     }
 
-    Message.getMessagesCount(user._id, ep.done(function (count) {
-      user.messages_count = count;
-      next();
-    }));
+    //统计用户最后登录时间
+    UserProxy.updateLastLoginTime(user._id);
+    next();
   });
 
     var auth_token = req.signedCookies[config.auth_cookie_name];

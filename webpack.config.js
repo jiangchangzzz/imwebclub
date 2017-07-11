@@ -61,14 +61,7 @@ var config = {
                 warnings: false
             },
             except: ['$super', '$', 'exports', 'require'] //排除关键字
-        }),
-
-        //最小化生成的包
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
+        })
     ]
 };
 

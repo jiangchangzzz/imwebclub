@@ -3,6 +3,7 @@ var BaseModel = require("./base_model");
 var renderHelper = require('../common/render_helper');
 var Schema    = mongoose.Schema;
 var utility   = require('utility');
+var tools=require('../common/tools');
 var _ = require('lodash');
 
 var UserSchema = new Schema({

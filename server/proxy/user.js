@@ -1,9 +1,9 @@
-var models  = require('../models');
-var User    = models.User;
+var models = require('../models');
+var User = models.User;
 var utility = require('utility');
-var uuid    = require('uuid');
-var EventProxy   = require('eventproxy');
-var _       = require('lodash');
+var uuid = require('uuid');
+var EventProxy = require('eventproxy');
+var _ = require('lodash');
 /**
  * 根据用户名列表查找用户列表
  * Callback:
@@ -16,7 +16,11 @@ exports.getUsersByNames = function (names, callback) {
   if (names.length === 0) {
     return callback(null, []);
   }
-  User.find({ loginname: { $in: names } }, callback);
+  User.find({
+    loginname: {
+      $in: names
+    }
+  }, callback);
 };
 
 /**
@@ -28,7 +32,9 @@ exports.getUsersByNames = function (names, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getUserByLoginName = function (loginName, callback) {
-  User.findOne({'loginname': new RegExp('^'+loginName+'$', "i")}, callback);
+  User.findOne({
+    'loginname': new RegExp('^' + loginName + '$', "i")
+  }, callback);
 };
 
 /**
@@ -43,7 +49,9 @@ exports.getUserById = function (id, callback) {
   if (!id) {
     return callback();
   }
-  User.findOne({_id: id}, callback);
+  User.findOne({
+    _id: id
+  }, callback);
 };
 
 /**
@@ -55,7 +63,9 @@ exports.getUserById = function (id, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getUserByMail = function (email, callback) {
-  User.findOne({email: email}, callback);
+  User.findOne({
+    email: email
+  }, callback);
 };
 
 /**
@@ -67,7 +77,11 @@ exports.getUserByMail = function (email, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getUsersByIds = function (ids, callback) {
-  User.find({'_id': {'$in': ids}}, callback);
+  User.find({
+    '_id': {
+      '$in': ids
+    }
+  }, callback);
 };
 
 /**
@@ -93,7 +107,10 @@ exports.getUsersByQuery = function (query, opt, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getUserByNameAndKey = function (loginname, key, callback) {
-  User.findOne({loginname: loginname, retrieve_key: key}, callback);
+  User.findOne({
+    loginname: loginname,
+    retrieve_key: key
+  }, callback);
 };
 
 exports.newAndSave = function (name, loginname, pass, email, comp, comp_mail, avatar, active, callback) {
@@ -130,7 +147,7 @@ exports.newAndSaveWithAll = function (userInfo, callback) {
   user.avatar = userInfo.avatar;
   user.active = userInfo.active || false;
   user.accessToken = uuid.v4();
-  user.save(function(err) {
+  user.save(function (err) {
     callback(err, user);
   });
 };
@@ -145,19 +162,24 @@ exports.getGravatar = function (user) {
 };
 
 exports.getTeamMember = function (company, team, callback) {
-    User.find({company: company, team: team}, callback);
+  User.find({
+    company: company,
+    team: team
+  }, callback);
 };
 
-exports.getFollowUser = function(followUser, callback) {
+exports.getFollowUser = function (followUser, callback) {
   followUser = followUser || [];
   var ep = new EventProxy();
-  ep.after('follow', followUser.length, function(users) {
+  ep.after('follow', followUser.length, function (users) {
     callback(null, users);
   });
   ep.fail(callback);
 
   _.forEach(followUser, id => {
-    User.findOne({_id: id}, ep.done(function(user) {
+    User.findOne({
+      _id: id
+    }, ep.done(function (user) {
       if (!user) {
         return callback(new Error('该用户不存在'));;
       }
@@ -181,28 +203,46 @@ exports.getFollowUser = function(followUser, callback) {
  * - users, 用户列表
  * @param {Function} callback 回调函数
  */
-exports.getAllUsers = function(callback) {
-    User.find({}, function(err, results){
-        callback && callback(results);
-    });
+exports.getAllUsers = function (callback) {
+  User.find({}, function (err, results) {
+    callback && callback(results);
+  });
 };
 
 
-exports.listOrderByTeam = function(start, limit, callback) {
-    start = start || 0;
-    limit = limit || 0xfffffff;
-    return User.find()
-        .sort({ company: 1, team: 1 })
-        .skip(start)
-        .limit(limit)
-        .exec(callback);
+exports.listOrderByTeam = function (start, limit, callback) {
+  start = start || 0;
+  limit = limit || 0xfffffff;
+  return User.find()
+    .sort({
+      company: 1,
+      team: 1
+    })
+    .skip(start)
+    .limit(limit)
+    .exec(callback);
 };
 
 /**
  * 更新用户最后阅读系统消息时间
  */
-exports.updateLastMessageTime=function(user_id){
-  return User.where({_id: user_id})
-    .update({last_message_time: Date.now()})
+exports.updateLastMessageTime = function (user_id) {
+  return User.findByIdAndUpdate({
+      _id: user_id
+    }, {
+      last_message_time: Date.now()
+    })
     .exec();
 };
+
+/**
+ * 更新用户最后登录时间
+ */
+exports.updateLastLoginTime = function (user_id) {
+  return User.findByIdAndUpdate({
+      _id: user_id
+    }, {
+      update_at: Date.now()
+    })
+    .exec();
+}

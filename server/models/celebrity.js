@@ -11,6 +11,7 @@ var CelebritySchema=new Schema({
     home: { type: String },//个人主页
     description: { type: String },//简介
     avatar: { type: String },//头像url
+    isImweb: { type: Boolean, default: false },//是否为团队成员
     userId: { type: ObjectId, ref: 'User' },//用户外键
     create_at: { type: Date, default: Date.now }//创建时间
 });

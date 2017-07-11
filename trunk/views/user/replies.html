@@ -8,7 +8,10 @@
           <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>
           <ul class="reply-list">
           <% recent_replies.map(function(reply){ %>
-            <li>评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a></li>
+            <li>
+              评论了文章  <a href='/topic/<%= reply._id %>' class="ex-link" target="_blank"><%- reply.title %></a>
+              <span class="item-time"><%= reply.create_at_ago() %></span>
+            </li>
           <%  }) %>
           </ul>
           <% } else { %>

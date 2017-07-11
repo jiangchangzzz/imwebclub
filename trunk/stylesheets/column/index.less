@@ -7,17 +7,25 @@
 
     .header-img{
         float: left;
-        width: 100%;
-        max-width: 120px;
+        width: 120px;
         height: 80px;
         background-repeat: no-repeat;
         background-size: contain;
         background-position: center center;
+
+        @media(max-width: @screen-xs){
+            display: none;
+        }
     }
 
     .header-text{
         float: left;
         margin-left: 10px;
+
+        @media(max-width: @screen-xs){
+            float: none;
+            margin-left: 0;
+        }
 
         h2{
             width: 600px;
@@ -58,6 +66,11 @@
         position: absolute;
         bottom: 10px;
         right: 0;
+
+        @media(max-width: @screen-xs){
+            position: static;
+            margin-top: 10px;
+        }
     }
 }
 
@@ -79,6 +92,10 @@
 
     .article-content{
         padding-left: 72px;
+
+        @media(max-width: @screen-xs){
+            padding-left: 0;
+        }
 
         .article-title{
             float: left;
@@ -112,6 +129,8 @@
             height: 120px;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 14px;
+            line-height: 25px;
         }
     }
 }
