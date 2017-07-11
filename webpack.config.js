@@ -9,6 +9,8 @@ var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 var debug = process.env.NODE_ENV !== 'production';
 
+debug=false;
+
 var entries = getEntry('trunk/entry/**/*.js', 'trunk/entry/');
 
 // var chunks = Object.keys(entries);
