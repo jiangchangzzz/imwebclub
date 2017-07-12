@@ -28,7 +28,8 @@ var TopicSchema = new Schema({
   reprint: { type: String, default: '' },
   lock: {type: Boolean, default: false}, // 被锁定主题
   deleted: {type: Boolean, default: false},
-  draft: { type: ObjectId, ref: 'Draft' } // 更新时的草稿保存
+  draft: { type: ObjectId, ref: 'Draft' }, // 更新时的草稿保存
+  notebook: { type: ObjectId, ref: 'Notebook' },//文件所属文集
 });
 
 TopicSchema.plugin(BaseModel);

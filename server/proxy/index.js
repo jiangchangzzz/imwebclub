@@ -15,3 +15,4 @@ exports.Banner = require('./banner');
 exports.TopicColumn = require('./topic_column');
 exports.SystemMessage = require('./system_message');
 exports.Celebrity = require('./celebrity');
+exports.Notebook=require('./notebook');

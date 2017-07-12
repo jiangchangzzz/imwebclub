@@ -112,7 +112,8 @@ var notJump = [
   '/reset_pass',     //reset password page, avoid to reset twice
   '/signup',         //regist page
   '/search_pass',    //serch pass page
-  '/signin'
+  '/signin',
+  '/search'
 ];
 
 /**

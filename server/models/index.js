@@ -29,6 +29,7 @@ require('./column');
 require('./topic_column');
 require('./system_message');
 require('./celebrity');
+require('./notebook');
 
 exports.User            = mongoose.model('User');
 exports.Topic           = mongoose.model('Topic');
@@ -47,3 +48,4 @@ exports.Column          = mongoose.model('Column');
 exports.TopicColumn     = mongoose.model('TopicColumn');
 exports.SystemMessage   = mongoose.model('SystemMessage');
 exports.Celebrity       = mongoose.model('Celebrity');
+exports.Notebook        = mongoose.model('Notebook');
