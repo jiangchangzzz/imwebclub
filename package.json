@@ -97,6 +97,6 @@
     "watch": "webpack --progress --hide-modules --colors --watch",
     "dev": "sudo NODE_ENV=test node app.js",
     "start": "NODE_ENV=production ./node_modules/.bin/pm2 start app.js -i 0 --name imweb --max-memory-restart 400M",
-    "restart": "NODE_ENV=production ./node_modules/.bin/pm2 restart imweb"
+    "restart": "NODE_ENV=production pm2 restart imweb"
   }
 }
