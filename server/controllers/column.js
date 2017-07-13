@@ -127,12 +127,13 @@ exports.index = function (req, res, next) {
 exports.list = function (req, res, next) {
   var currentUser = req.session.user;
   var page = parseInt(req.query.page, 10) || 1;
+  var sort=req.query.sort;
   page = page > 0 ? page : 1;
   var sortMap = {
     'hot': '-follower_count -create_at',
     'latest': '-create_at'
   };
-  if (!sortMap[req.query.sort]) {
+  if (!sortMap[sort]) {
     sort = 'hot';
   }
   var proxy = new EventProxy();

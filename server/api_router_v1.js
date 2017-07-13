@@ -5,6 +5,7 @@ var userController    = require('./api/v1/user');
 var toolsController   = require('./api/v1/tools');
 var replyController   = require('./api/v1/reply');
 var messageController = require('./api/v1/message');
+var notebookController=require('./api/v1/notebook');
 var middleware        = require('./api/v1/middleware');
 var limit             = require('./middlewares/limit');
 var config            = require('./config');
@@ -43,5 +44,10 @@ router.post('/reply/:reply_id/ups', middleware.auth, replyController.ups);
 router.get('/messages', middleware.auth, messageController.index);
 router.get('/message/count', middleware.auth, messageController.count);
 router.post('/message/mark_all', middleware.auth, messageController.markAll);
+
+router.get('/notebook',notebookController.getNotebook);
+router.post('/notebook',notebookController.postNotebook);
+router.put('/notebook/:id',notebookController.putNotebook);
+router.delete('/notebook/:id',notebookController.deleteNotebook);
 
 module.exports = router;

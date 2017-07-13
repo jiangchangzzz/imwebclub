@@ -14,8 +14,9 @@ var NotebookSchema=new Schema({
 NotebookSchema.plugin(BaseModel);
 
 //保存前更新修改时间
-NotebookSchema.pre('save',function(){
+NotebookSchema.pre('save',function(next){
     this.update_at=Date.now();
+    next();
 });
 
 var Notebook=mongoose.model('Notebook', NotebookSchema);

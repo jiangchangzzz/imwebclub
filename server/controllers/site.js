@@ -60,10 +60,6 @@ exports.index = function (req, res, next) {
   // END 取排行榜上的用户
 
   //取文章
-  cache.get('topics', proxy.done(function (topics) {
-    if (topics) {
-      proxy.emit('topics', topics);
-    } else {
       Topic.getTopicsByQuery({
         'create_at': {
           $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 14 * 1000).toISOString()
@@ -72,11 +68,8 @@ exports.index = function (req, res, next) {
         var result = topics.map(function (item) {
           return dataAdapter.outTopic(item);
         });
-        cache.set('topics', result, 60 * 1);
         return result;
       }));
-    }
-  }));
 
   //取问答
   cache.get('questions', proxy.done(function (questions) {

@@ -273,3 +273,11 @@ exports.getTopicCount=function(authorId){
     author_id: authorId
   }).exec();
 };
+
+/**
+ * 更新文章数据
+ */
+exports.removeTopicFromNotebook=function(notebookId){
+  return Topic.update({notebook: notebookId},{notebook: null})
+    .exec();
+}
