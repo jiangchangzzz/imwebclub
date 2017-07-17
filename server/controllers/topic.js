@@ -382,20 +382,20 @@ function saveTopic(req, next, callback) {
     //})
     //);
     //}
-    if (type == 0) {
-      User.listOrderByTeam(0, 1000, function (err, members) {
-        if (err) {
-          return;
-        }
-        mail.sendNewTopicToTeamMembers({
-          members: members,
-          user: user,
-          topic: topic
-        });
-      });
-      //发送at消息
-      at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
-    }
+    // if (type == 0) {
+    //   User.listOrderByTeam(0, 1000, function (err, members) {
+    //     if (err) {
+    //       return;
+    //     }
+    //     mail.sendNewTopicToTeamMembers({ 
+    //       members: members,
+    //       user: user,
+    //       topic: topic
+    //     });
+    //   });
+    //   //发送at消息
+    //   at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
+    // }
   });
 
   ep.all('topic', 'score_saved', function (topic, user) {

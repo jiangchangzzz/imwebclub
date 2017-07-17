@@ -13,13 +13,15 @@ var config            = require('./config');
 var router            = express.Router();
 
 
+
 // 主题
 router.get('/topics', topicController.index);
-router.get('/topic/:id', middleware.tryAuth, topicController.show);
+router.get('/topic/:id', topicController.show);
 router.post('/topics', middleware.auth, limit.peruserperday('create_topic', config.create_post_per_day, {showJson: true}), topicController.create);
 router.post('/topics/update', middleware.auth, topicController.update);
 // 获取我的文章
 router.get('/topic/:id/get', middleware.auth, topicController.get);
+router.get('/topic',topicController.getTopicsByNotebook);
 
 
 // 主题收藏

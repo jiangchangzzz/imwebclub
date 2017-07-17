@@ -1,6 +1,12 @@
 var Notebook = require('../models').Notebook;
 var Topic = require('./topic');
 
+//根据id查找文集
+exports.getNotebookById=function(id){
+  return Notebook.findById(id)
+    .exec();
+}
+
 /**
  * 获取用户所有文集
  */

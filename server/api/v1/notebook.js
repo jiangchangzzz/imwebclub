@@ -10,7 +10,7 @@ exports.getNotebook = function (req, res, next) {
   var userId = req.query.userid;
 
   //参数校验
-  if (!validator.isMongoId(userId)) {
+  if (userId && !validator.isMongoId(userId)) {
     res.status(400);
     return res.send({
       success: false,
@@ -90,12 +90,16 @@ exports.putNotebook = function (req, res, next) {
 
   //操作数据库
   Notebook.updateNotebook(id, name)
-    .then(function (result) {
+    .then(function () {
+      return Notebook.getNotebookById(id);
+    })
+    .then(function(result){
       return res.send({
         success: true,
         data: result
       });
-    }).catch(next);
+    })
+    .catch(next);
 };
 
 //删除文集

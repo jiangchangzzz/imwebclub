@@ -281,3 +281,14 @@ exports.removeTopicFromNotebook=function(notebookId){
   return Topic.update({notebook: notebookId},{notebook: null})
     .exec();
 }
+
+/**
+ * 获取文集中的文章
+ */
+exports.getTopicByNotebookId=function(notebookId){
+  return Topic.find({
+    notebook: notebookId,
+    deleted: false
+  })
+  .exec();
+}

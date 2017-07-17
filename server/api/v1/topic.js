@@ -289,3 +289,25 @@ var get = function (req, res, next) {
   });
 }
 exports.get = get;
+
+exports.getTopicsByNotebook=function(req,res,next){
+  var notebookId=req.query.notebookid;
+
+  //参数校验
+  if(notebookId && !validator.isMongoId(notebookId)){
+    res.status(400);
+    return res.send({
+      success: false,
+      error_msg: '不是有效的文集id'
+    });
+  }
+
+  //操作数据库
+  TopicProxy.getTopicByNotebookId(notebookId)
+    .then(function(result){
+      return res.send({
+        success: true,
+        data: result
+      })
+    }).catch(next);
+}
