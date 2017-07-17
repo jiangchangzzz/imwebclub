@@ -6,6 +6,7 @@ var _ = require('lodash');
 var async = require('async');
 var config = require('../config');
 var transport = mailer.createTransport(smtpTransport(config.mail_opts));
+var User=require('../proxy').User;
 // var transport = mailer.createTransport('SMTP', config.mail_opts);
 var SITE_ROOT_URL = 'http://' + config.host;
 var MAIL_FOOT = '<p>' + config.name + '社区 谨上。</p>';
@@ -108,6 +109,10 @@ exports.sendInviteMail = function(who, token, senderName, phrase) {
  * 发送一级回复给文章作者
  */
 exports.sendReplyMail = function(topic, topicAuthor, reply, replyAuthor) {
+    if(!topicAuthor.receive_reply_mail){
+        return;
+    }
+
     var to = topicAuthor.email;
     var data = {
         authorName: topicAuthor.name || topicAuthor.loginname,
@@ -143,6 +148,10 @@ exports.sendReplyMail = function(topic, topicAuthor, reply, replyAuthor) {
 exports.sendSubReplyMail = function(
     topic, topicAuthor, pReply, pAuthor, reply, replyAuthor
 ) {
+    if(!topicAuthor.receive_reply_mail){
+        return;
+    }
+
     var to = topicAuthor.email;
     var data = {
         authorName: topicAuthor.name || topicAuthor.loginname,
@@ -178,6 +187,10 @@ exports.sendSubReplyMail = function(
 exports.sendSubReplyForParentReplyMail = function(
     topic, topicAuthor, pReply, pAuthor, reply, replyAuthor
 ) {
+    if(!pAuthor.receive_reply_mail){
+        return;
+    }
+
     var to = pAuthor.email;
     var data = {
         pAuthorName: pAuthor.name || pAuthor.loginname,
@@ -215,7 +228,7 @@ exports.sendSubReplyForParentReplyMail = function(
 exports.sendNewTopicToTeamMembers = function (data) {
     var users = [];
     _.each(data.members, function(item) {
-        if (item._id !==  data.user._id && item.email) {
+        if (item._id !==  data.user._id && item.email && item.receive_reply_mail) {
             users.push(item);
         }
     });
@@ -243,9 +256,44 @@ exports.sendNewTopicToTeamMembers = function (data) {
             to: user.email,
             subject: subject,
             html: html
-        }, callback);
+        });
     });
 };
+
+/**
+ * 给文章管理员发送新文章提醒邮件
+ */
+exports.sendNewTopicToAdmin=function(data){
+    var subjectTpl = '<%= user.name || user.loginname %>'
+        + '发布了新文章<%=topic.title%>';
+    var htmlTpl = [
+        '<p><%= me.name || me.loginname %> 您好:</p>',
+        '<p>',
+            '<%= user.name || user.loginname %> 发布了新文章：',
+            '<a href="<%=siteUrl%>/topic/<%=topic._id%>"><%=topic.title%></a>',
+        '</p>',
+        '<p>快去围观吧~~</p>',
+        MAIL_FOOT
+    ].join('');
+    
+    var topicAdmins=config.topicAdmins;
+    User.getUsersByNames(topicAdmins,function(error,admins){
+        admins.forEach(function(admin){
+            var tplData = _.extend({}, data || {}, {
+                siteUrl: SITE_ROOT_URL,
+                me: admin
+            });
+            var subject = _.template(subjectTpl)(tplData);
+            var html = _.template(htmlTpl)(tplData);
+            exports.sendMail({
+                from: MAIL_FROM,
+                to: admin.email,
+                subject: subject,
+                html: html
+            });
+        })
+    });
+}
 
 /**
  * 专栏添加了新文章，邮件通知关注该专栏的小伙伴
@@ -253,7 +301,7 @@ exports.sendNewTopicToTeamMembers = function (data) {
 exports.sendColumnTopicToFollowers = function (data) {
     var users = [];
     _.each(data.followers, function(item) {
-        if (item.email) {
+        if (item.email && item.receive_reply_mail) {
             users.push(item);
         }
     });
@@ -288,6 +336,10 @@ exports.sendColumnTopicToFollowers = function (data) {
  * 每日推送
  */
 exports.sendDailyPush = function (data) {
+    if(!data.user.receive_reply_mail){
+        return;
+    }
+
     data = _.extend({}, data || {}, {
         siteUrl: SITE_ROOT_URL
     });

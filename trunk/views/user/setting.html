@@ -19,7 +19,7 @@
                 <strong><%= success %></strong>
               </div>
               <% } %>
-              <form id='setting_form' class='form-horizontal' action='/setting' method='post'>
+              <form id='setting_form' class='form-horizontal' action='/user/<%= user.loginname %>/setting' method='post'>
                 <div class='control-group'>
                   <label class='control-label' for='name'>用户名</label>
 
@@ -98,6 +98,14 @@
                   </div>
                 </div>
 
+                <div class="control-group">
+                  <label class="control-label" for="receive_reply_mail">提醒邮件</label>
+                  <div class="controls">
+                    <label><input type="radio" id="receive_reply_mail" name="receive_reply_mail" value="1" <%= user.receive_reply_mail ? 'checked' : '' %>>接收<label>
+                    <label><input type="radio" name="receive_reply_mail" value="0" <%= user.receive_reply_mail ? '' : 'checked' %>>不接收</label>
+                  </div>
+                </div>
+
                 <input type='hidden' id='action' name='action' value='change_setting'/>
                 <input type='hidden' name='_csrf' value='<%= csrf %>'/>
 
@@ -112,7 +120,7 @@
         <div class='breadcrumb--content__section section--show'>
           <div id='content'>
             <h3 class="user-title">更改密码</h3>
-              <form id='change_pass_form' class='form-horizontal' action='/setting' method='post'>
+              <form id='change_pass_form' class='form-horizontal' action='/user/<%= user.loginname %>/setting' method='post'>
                 <div class='control-group'>
                   <label class='control-label' for='old_pass'>当前密码</label>
 

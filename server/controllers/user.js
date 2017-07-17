@@ -322,6 +322,7 @@ exports.setting = function (req, res, next) {
     var weibo = validator.trim(req.body.weibo);
     var signature = validator.trim(req.body.signature);
     var avatar = validator.trim(req.body.avatar);
+    var receive_reply_mail=req.body.receive_reply_mail=='1';
 
     User.getUserById(req.session.user._id, ep.done(function (user) {
       user.url = url;
@@ -329,6 +330,7 @@ exports.setting = function (req, res, next) {
       user.signature = signature;
       user.weibo = weibo;
       user.avatar = avatar;
+      user.receive_reply_mail=receive_reply_mail;
       user.save(function (err) {
         if (err) {
           return next(err);

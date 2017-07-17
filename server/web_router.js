@@ -64,7 +64,7 @@ router.get('/user/:name/collections', auth.userRequired, user.listCollectedTopic
 router.get('/user/:name/topics', auth.userRequired, user.listTopics);  // 用户发布的所有话题页
 router.get('/user/:name/replies', auth.userRequired, user.listReplies);  // 用户参与的所有回复页
 router.get('/user/:name/password', auth.userRequired, user.showPassword);  // 用户密码更改
-router.post('/setting', auth.userRequired, user.setting); // 提交个人信息设置
+router.post('/user/:name/setting', auth.userRequired, user.setting); // 提交个人信息设置
 
 router.get('/stars', user.listStars); // 显示所有达人列表页
 router.get('/users/top100', user.top100);  // 显示积分前一百用户页

@@ -87,7 +87,7 @@ var config = {
     max_rss_items: 50
   },
 
-  // 邮箱配置
+  //邮箱配置
   mail_opts: {
     host: 'smtp.126.com',
     port: 25,
@@ -114,6 +114,12 @@ var config = {
     "blue": true,
     "test": true,
   },
+
+  //文章管理员，有新文章会接收推送邮件
+  topicAdmins: [
+    "jaychen",
+    "blue"
+  ],
 
   // github 登陆的配置
   GITHUB_OAUTH: {

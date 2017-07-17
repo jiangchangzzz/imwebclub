@@ -396,6 +396,10 @@ function saveTopic(req, next, callback) {
     //   //发送at消息
     //   at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
     // }
+    mail.sendNewTopicToAdmin({
+      user: user,
+      topic: topic
+    });
   });
 
   ep.all('topic', 'score_saved', function (topic, user) {
