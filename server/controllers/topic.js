@@ -163,10 +163,12 @@ exports.list = function (req, res, next) {
   proxy.fail(next);
   // 取主题
   var query = {};
-  if (tab && tab !== 'all') {
+  if (tab) {
     if (tab === 'good') {
       query.good = true;
-    } else {
+    } else if(tab==='all'){
+      query.tab= { '$ne': 'special' };
+    } else{
       query.tab = tab;
     }
   }
