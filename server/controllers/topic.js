@@ -150,23 +150,21 @@ exports.list = function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 1;
   page = page > 0 ? page : 1;
   var tab = req.params.tab || 'all';
-  var sort = req.query.sort;  // 根据不同的参数决定文章排序方式
+  var sort = req.query.sort || 'latest';  // 根据不同的参数决定文章排序方式
   var sortMap = {
-    'default': '-create_at',
     'hot': '-visit_count',
     'latest': '-create_at',
     'reply': '-reply_count'
   };
-  var sortType = sortMap[sort] || sortMap['default'];
+  var sortType = sortMap[sort] || sortMap['latest'];
+  sortType='-top '+sortType;   //将置顶的文章放在顶部
 
   var proxy = new EventProxy();
   proxy.fail(next);
   // 取主题
   var query = {};
   if (tab) {
-    if (tab === 'good') {
-      query.good = true;
-    } else if(tab==='all'){
+    if(tab==='all'){
       query.tab= { '$ne': 'special' };
     } else{
       query.tab = tab;
@@ -177,6 +175,9 @@ exports.list = function (req, res, next) {
     query['create_at'] =  {
       $gte: new Date(new Date().getTime() - 60*60*24*90*1000).toISOString()
     }
+  }
+  else if(sort==='good'){
+    query['good']=true;
   }
 
   var limit = config.list_topic_count;

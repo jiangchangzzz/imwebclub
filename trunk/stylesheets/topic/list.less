@@ -15,6 +15,11 @@
   a{
     display: inline-block;
     padding: 3px;
+
+		&:hover{
+			color: @ui-blue;
+		}
+
     &.publish-btn{
         @media screen and (max-width: 425px) {
           display: none;
@@ -22,7 +27,6 @@
     }
     &.current-query{
         color: @ui-blue;
-        border-bottom: 3px solid @ui-blue;
     }
     &.fr{
         color: @ui-blue;
@@ -91,10 +95,18 @@ ul.topic-list {
 				font-size:20px;
 				font-weight: normal;
 				}
-        .put_top {
-          display: inline-block;
+
+				.put_top,.put_good{
+					display: inline-block;
+					padding: 2px 5px;
+					background-color: #80bd01;
+					color: #fff;
+					font-size: 12px;
+					line-height: 20px;
           vertical-align: middle;
-        }
+					border-radius: 4px;
+				}
+
         .ex-link {
           display: inline-block;
           vertical-align: middle;
@@ -184,7 +196,7 @@ ul.topic-list {
 				margin-left: 5px;
 				width: auto;
 				font-weight: normal;
-				padding: 3px;
+				padding: 4px 8px;
 			}
 		}
 	  }

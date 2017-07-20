@@ -49,8 +49,9 @@
 <div id="content">
     <%if(sort !== null) {%>
         <div class="query-list">
+            <a href="?sort=latest" class="question-query <%= sort==='latest' ? 'current-query' : '' %>">最新</a>&nbsp;|&nbsp;
             <a href="?sort=hot" class="question-query <%= sort==='hot' ? 'current-query' : '' %>">热门</a>&nbsp;|&nbsp;
-            <a href="?sort=latest" class="question-query <%= sort==='latest' ? 'current-query' : '' %>">最新</a>
+            <a href="?sort=good" class="question-query <%= sort==='good' ? 'current-query' : '' %>">精华</a>
             <% if(current_user){ %>
                 <a class="fr active publish-btn" href="/marktang/index?autoOpenInfo=true">发布文章</a>
             <% } %>
@@ -61,6 +62,10 @@
         <%- partial("../topic/abstract", {collection:topics, as:"topic"})%>
     </ul>
     <%- partial('common/page.html') %>
+    <% }else if(sort==='hot'){ %>
+        <p class="no-search">当前分类还没有热门文章，可以去<a href="?sort=latest">最新文章</a>逛逛，说不定有您想要的内容</p>
+    <% }else if(sort==='good'){ %>
+        <p class="no-search">当前分类还没有精华文章，可以去<a href="?sort=latest">最新文章</a>逛逛，说不定有您想要的内容</p>
     <% }else{ %>
         <p class="no-search">没有找到您搜索的内容，可以去<a href="/topic/tab/all">文章页</a>逛逛，说不定有您想要的内容</p>
     <% } %>
