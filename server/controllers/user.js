@@ -73,7 +73,21 @@ exports.index = function (req, res, next) {
       if (!user.active && req.session.user && req.session.user.is_admin) {
         token = utility.md5(user.email + user.pass + config.session_secret);
       }
-      var arr = recent_topics.concat(recent_questions, recent_replies);
+
+      //添加class属性，方便区分类别
+      recent_topics.forEach(function(recent_topic){
+        recent_topic.class='topic';
+      });
+
+      recent_questions.forEach(function(recent_question){
+        recent_question.class='question';
+      });
+
+      recent_replies.forEach(function(recent_reply){
+        recent_reply.class='reply';
+      });
+
+      var arr = recent_topics.concat(recent_questions, recent_replies); 
       arr = quickSort(arr);
       res.render('user/index', {
         user: user,
@@ -117,9 +131,20 @@ exports.index = function (req, res, next) {
         };
         var opt = {};
         Topic.getTopicsByQuery(query, opt, proxy.done('recent_replies', function (recent_replies) {
-          recent_replies = _.sortBy(recent_replies, function (topic) {
-            return topic_ids.indexOf(topic._id.toString())
-          })
+
+          //为评论文章添加评论创建时间
+          recent_replies.forEach(function(recent_reply){
+            var create_at=recent_reply.create_at;
+            replies.every(function(reply){
+              if(reply.topic_id.toString()===recent_reply._id.toString()){
+                create_at=reply.create_at;
+                return false;
+              }
+              return true;
+            });
+            recent_reply.create_at=create_at;
+          });
+
           return recent_replies;
         }));
       }));

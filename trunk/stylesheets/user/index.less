@@ -201,7 +201,7 @@
 @ui-gray9: #999;
 
 .cell{
-	padding: 30px 30px 0 30px;
+	margin-top: 20px;
 	background: @ui-white;
 	color: @ui-black;
 	position: relative;
@@ -350,7 +350,6 @@
 .user-status-panel {
 	padding: 10px 0;
 	border-bottom: 1px solid #dfdfdf;
-	border-top:1px solid #dfdfdf;
 }
 
 .user-title {
@@ -359,8 +358,15 @@
 	border-bottom: 1px solid #ddd;
 }
 
+.breadcrumb--content{
+	margin-bottom: 20px;
+}
+
 .breadcrumb--content__status {
-	color: #c2c2c2;
+	.status-time{
+		float: right;
+		color: #c2c2c2;
+	}
 }
 
 .breadcrumb--content__title {
@@ -378,11 +384,10 @@
 
 .breadcrumb--content__follow {
   display: flex;
-  width: 10%;
   padding-top: 10px;
   color: #c2c2c2;
   .follow-item {
-  	flex-grow: 2;
+  	margin-right: 14px;
   }
 }
 

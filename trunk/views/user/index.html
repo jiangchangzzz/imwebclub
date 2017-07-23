@@ -1,53 +1,6 @@
 <div class='user-panel'>
   <!-- 个人主页头部 -->
-  <div class="user-panel__header">
-    <div class="user-panel__header__content">
-      <div class="left">
-        <div class="user-icon user_big_avatar">
-          <img src="<%= user.avatar.replace('?size=48', '') %>?d=retro" alt="<%= user.name || user.loginname %>">
-        </div>
-        <div class="user-info">
-          <span class="username">
-            <%= user.name || user.loginname %>
-          </span>
-          <span class="register-time">注册时间: <%=user.create_at_ago() %></span>
-          <span class="score">声望: <%=user.score%></span>
-          <div class="achieve">
-            <span class="achieve-type">
-              <i class="icon-achieve icon-articles fa fa-file-text-o"></i>
-              <span><%=user.topic_count%></span>
-            </span>
-            <span class="achieve-type">
-              <i class="icon-achieve icon-answers fa fa-question-circle-o"></i>
-              <span><%=user.question_count%></span>
-            </span>
-            <span class="achieve-type">
-              <i class="icon-achieve icon-fans fa fa-star-o"></i>
-              <span><%=user.follower_count%></span>
-            </span>
-          </div>
-          <div class="social">
-            <% if (user.githubUsername) { %>
-              <a class="social-icon github"></a>
-              <%}%>
-                <% if (user.weibo) { %>
-                  <a class="social-icon weibo"></a>
-                  <% } %>
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <% var isCurrentUser =  user && user.loginname && currentUser && currentUser.loginname === user.loginname; %>
-        <% if(!isCurrentUser){ %>
-        <div class="btn-group clearfix">
-            <% var isFollow=(current_user && current_user.following && current_user.following.indexOf(user._id) !== -1) %>
-            <button type="button" class="btn btn-default <%= isFollow?'':'hide' %>" id="cancel-btn">取消关注</button>
-            <button type="button" class="btn <%= isFollow?'hide':'' %>" id="follow-btn">关 注</button>
-        </div>
-        <% } %>
-      </div>
-    </div>
-  </div>
+  <%- partial('./header') %>
     <!-- 个人主页头部end -->
   <div class='user-panel__content'>
     <div class='user-panel__content__detail'>
@@ -56,31 +9,35 @@
           <div class='breadcrumb--content__section section--show'>
             <!--<%- partial('./userInfo') %>-->
             <div class="user-title">个人动态</div>
-              <%if(activities && activities.length >0 ) {%>
-                <% activities.forEach(function(activity) { %>
-                  <% var time = activity.create_at;
-                     var month = parseInt(time.getMonth())+1;
-                    time = time.getFullYear() + '年'+ month + '月' + time.getDate() + '日';%>
-                  <%  var status;
-                      var prefix;
-                      var reply;
-                     if(activity.cover) {
-                      status = "我发表了文章";
-                      prefix = "topic";
-                      reply = '回复';
-                    } else if(activity.summary) {
-                      status = "我评论了文章";
-                      prefix = "topic";
-                      reply = '回答';
-                    } else {
-                      status = "我提出了问题";
-                      prefix = "question";
-                      reply = '回答';
-                    }
+              <% if(activities && activities.length >0 ) {
+                 activities.forEach(function(activity) { 
+                      var time = activity.create_at_ago();
+                      var status='';
+                      var prefix='';
+                      var reply='';
+                      switch(activity.class){
+                        case 'topic':
+                          status = "我发表了文章";
+                          prefix = "topic";
+                          reply = '评论';
+                          break;
+                        case 'reply':
+                          status = "我评论了文章";
+                          prefix = "topic";
+                          reply = '评论';
+                          break;
+                        case 'question':
+                          status = "我提出了问题";
+                          prefix = "question";
+                          reply = '回答';
+                          break;
+                        default:
+                          break;
+                      }
                   %>
                 <div class="user-status-panel">
                   <div class="breadcrumb--content__status">
-                    <%= status %> <%= time %>
+                    <%= status %> <span class="status-time"><%= time %></span>
                   </div>
                   <div class="breadcrumb--content__title">
                     <a href='/<%= prefix %>/<%= activity._id %>'><%=  activity.title %></a>
@@ -90,10 +47,10 @@
                   </div>
                   <div class="breadcrumb--content__follow">
                     <div class="follow-item">
-                      关注<%= activity.collect_count %>
+                      关注 <%= activity.collect_count %>
                     </div>
                     <div class="follow-item">
-                      <%= reply %><%= activity.reply_count %>
+                      <%= reply %> <%= activity.reply_count %>
                     </div>
                   </div>
                 </div>
@@ -149,66 +106,68 @@
         })
       });
 
-      $('#set_star_btn').click(function () {
-        var $me = $(this);
-        var action = $me.attr('action');
-        var params = {
-          user_id: '<%= user._id %>',
-          _csrf: '<%- csrf %>'
-        };
-        $.post('/user/' + action, params, function (data) {
-          if (data.status === 'success') {
-            if (action === 'set_star') {
-              $me.html('取消达人');
-              $me.attr('action', 'cancel_star');
-            } else {
-              $me.html('设为达人');
-              $me.attr('action', 'set_star');
-            }
-          }
-        }, 'json');
-      });
-
-
-
-      $('#set_block_btn').click(function () {
-        var $me = $(this);
-        var action = $me.attr('action');
-        var params = {
-          _csrf: '<%- csrf %>',
-          action: action
-        };
-        if (action === 'set_block' && !confirm('确定要屏蔽该用户吗？')) {
-          return;
-        }
-        $.post('/user/<%- user.loginname %>/block', params, function (data) {
-          if (data.status === 'success') {
-            if (action === 'set_block') {
-              $me.html('取消屏蔽用户');
-              $me.attr('action', 'cancel_block');
-            } else if (action === 'cancel_block') {
-              $me.html('屏蔽用户');
-              $me.attr('action', 'set_block');
-            }
-          }
-        }, 'json');
-      })
-
-      $('#delete_all').click(function () {
-        var $me = $(this);
-        var params = {
-          _csrf: '<%- csrf %>',
-        };
-        if (!confirm('确定要删除吗？（不会永久删除，只做标记位）')) {
-          return;
-        }
-        $.post('/user/<%- user.loginname %>/delete_all', params, function (data) {
-          if (data.status === 'success') {
-            alert('操作成功');
-          }
-        }, 'json');
-      })
     });
+
+    //   $('#set_star_btn').click(function () {
+    //     var $me = $(this);
+    //     var action = $me.attr('action');
+    //     var params = {
+    //       user_id: '<%= user._id %>',
+    //       _csrf: '<%- csrf %>'
+    //     };
+    //     $.post('/user/' + action, params, function (data) {
+    //       if (data.status === 'success') {
+    //         if (action === 'set_star') {
+    //           $me.html('取消达人');
+    //           $me.attr('action', 'cancel_star');
+    //         } else {
+    //           $me.html('设为达人');
+    //           $me.attr('action', 'set_star');
+    //         }
+    //       }
+    //     }, 'json');
+    //   });
+
+
+
+    //   $('#set_block_btn').click(function () {
+    //     var $me = $(this);
+    //     var action = $me.attr('action');
+    //     var params = {
+    //       _csrf: '<%- csrf %>',
+    //       action: action
+    //     };
+    //     if (action === 'set_block' && !confirm('确定要屏蔽该用户吗？')) {
+    //       return;
+    //     }
+    //     $.post('/user/<%- user.loginname %>/block', params, function (data) {
+    //       if (data.status === 'success') {
+    //         if (action === 'set_block') {
+    //           $me.html('取消屏蔽用户');
+    //           $me.attr('action', 'cancel_block');
+    //         } else if (action === 'cancel_block') {
+    //           $me.html('屏蔽用户');
+    //           $me.attr('action', 'set_block');
+    //         }
+    //       }
+    //     }, 'json');
+    //   })
+
+    //   $('#delete_all').click(function () {
+    //     var $me = $(this);
+    //     var params = {
+    //       _csrf: '<%- csrf %>',
+    //     };
+    //     if (!confirm('确定要删除吗？（不会永久删除，只做标记位）')) {
+    //       return;
+    //     }
+    //     $.post('/user/<%- user.loginname %>/delete_all', params, function (data) {
+    //       if (data.status === 'success') {
+    //         alert('操作成功');
+    //       }
+    //     }, 'json');
+    //   })
+    // });
 
   </script>
   <% } %>

@@ -1,0 +1,48 @@
+ <div class="user-panel__header">
+    <div class="user-panel__header__content">
+      <div class="left">
+        <div class="user-icon user_big_avatar">
+          <img src="<%= user.avatar.replace('?size=48', '') %>?d=retro" alt="<%= user.name || user.loginname %>">
+        </div>
+        <div class="user-info">
+          <span class="username">
+            <%= user.name || user.loginname %>
+          </span>
+          <span class="register-time">注册时间: <%=user.create_at_ago() %></span>
+          <span class="score">声望: <%=user.score%></span>
+          <div class="achieve">
+            <span class="achieve-type">
+              <i class="icon-achieve icon-articles fa fa-file-text-o"></i>
+              <span><%=user.topic_count%></span>
+            </span>
+            <span class="achieve-type">
+              <i class="icon-achieve icon-answers fa fa-question-circle-o"></i>
+              <span><%=user.question_count%></span>
+            </span>
+            <span class="achieve-type">
+              <i class="icon-achieve icon-fans fa fa-star-o"></i>
+              <span><%=user.follower_count%></span>
+            </span>
+          </div>
+          <div class="social">
+            <% if (user.githubUsername) { %>
+              <a class="social-icon github"></a>
+              <%}%>
+                <% if (user.weibo) { %>
+                  <a class="social-icon weibo"></a>
+                  <% } %>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <% var isCurrentUser =  user && user.loginname && currentUser && currentUser.loginname === user.loginname; %>
+        <% if(!isCurrentUser){ %>
+        <div class="btn-group clearfix">
+            <% var isFollow=(current_user && current_user.following && current_user.following.indexOf(user._id) !== -1) %>
+            <button type="button" class="btn btn-default <%= isFollow?'':'hide' %>" id="cancel-btn">取消关注</button>
+            <button type="button" class="btn <%= isFollow?'hide':'' %>" id="follow-btn">关 注</button>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
