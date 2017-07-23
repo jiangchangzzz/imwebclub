@@ -11,13 +11,7 @@ import '../stylesheets/sidebar.less';
 
 var sign = require('../javascripts/common/sign.js');
 require('../javascripts/common/ui.js');
-//二级菜单
-ui.attachDropdownLayer($('#nav-team-menu'), {
-    layer: '#nav-team-menu-layer',
-    left: 0,
-    top: 80,
-    width: $('#nav-team-menu').width()
-});
+
 //展示和隐藏登录框
 $(document).on('click', '.nav-login', function() {
     $('.to-login').show();
@@ -75,6 +69,7 @@ $.extend(imweb.ajax, {
 //二维码
 
 $(document).ready(function(){
+
     $('#column-list').delegate('.column-follow','click',function(){
         var link=$(this);
         var cid=link.data('cid');
@@ -102,6 +97,10 @@ $(document).ready(function(){
                 console.log(msg);
             }
         })
+    });
+
+    $('.menu-toggle').click(function(){
+        $('.center').toggleClass('active');
     });
 });
 

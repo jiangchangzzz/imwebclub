@@ -399,6 +399,11 @@ function saveTopic(req, next, callback) {
     //   //发送at消息
     //   at.sendMessageToMentionUsers(content, topic._id, req.session.user._id);
     // }
+    mail.sendNewTopicToFollowers({
+      user: user,
+      topic: topic
+    })
+
     mail.sendNewTopicToAdmin({
       user: user,
       topic: topic

@@ -17,9 +17,7 @@
 			margin: 0 auto;
 			position: relative;
 			height: 100%;
-			display: flex;
 			.left {
-				// flex: 1;
 				padding-top: 28px;
 				.user-icon {
 					float: left;
@@ -101,13 +99,40 @@
 				}
 			}
 			.right {
-				// flex: 1.4;
+				position: absolute;
+				bottom: 20px;
+				right: 20px;
 			}
 		}
 	}
 	#sidebar {
 		width: 250px;
 	}
+}
+
+.btn{
+    padding: 7px 14px;
+    border: none;
+    outline: none;
+    background-color: #2FA0F0;
+    color: #fff;
+    border: 1px solid #2FA0F0;
+    border-radius: 4px;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.btn-default{
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.65);
+    border: 1px solid #ddd;
+
+    &:hover{
+        color: #2FA0F0;
+        border-color: #2FA0F0;
+    }
 }
 
 .breadcrumb {

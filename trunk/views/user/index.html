@@ -37,9 +37,14 @@
         </div>
       </div>
       <div class="right">
-        <div class="info-detail">
-
+        <% var isCurrentUser =  user && user.loginname && currentUser && currentUser.loginname === user.loginname; %>
+        <% if(!isCurrentUser){ %>
+        <div class="btn-group clearfix">
+            <% var isFollow=(current_user && current_user.following && current_user.following.indexOf(user._id) !== -1) %>
+            <button type="button" class="btn btn-default <%= isFollow?'':'hide' %>" id="cancel-btn">取消关注</button>
+            <button type="button" class="btn <%= isFollow?'hide':'' %>" id="follow-btn">关 注</button>
         </div>
+        <% } %>
       </div>
     </div>
   </div>
@@ -106,6 +111,44 @@
 <% if (current_user) { %>
   <script>
     $(document).ready(function () {
+
+      //关注作者
+      $('#follow-btn').click(function(){
+        var btn=$(this);
+        var params={
+          followUser_id: '<%- user._id %>',
+          _csrf: '<%- csrf %>'
+        };
+        $.post('/user/follow',params,function(data){
+          if(data.status==='success'){
+            btn.addClass('hide');
+            btn.siblings().removeClass('hide');
+          }
+        },'json')
+      });
+
+      //取消关注作者
+      $('#cancel-btn').click(function(){
+        var btn=$(this);
+        var params={
+          followUser_id: '<%- user._id %>',
+          _csrf: '<%- csrf %>'
+        };
+      
+        $.ajax({
+          url: '/user/follow',
+          type: 'DELETE',
+          data: params,
+          dataType: 'json',
+          success: function(data){
+            if(data.status==='success'){
+              btn.addClass('hide');
+              btn.siblings().removeClass('hide');
+            }
+          }
+        })
+      });
+
       $('#set_star_btn').click(function () {
         var $me = $(this);
         var action = $me.attr('action');
@@ -125,6 +168,8 @@
           }
         }, 'json');
       });
+
+
 
       $('#set_block_btn').click(function () {
         var $me = $(this);
