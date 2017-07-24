@@ -156,8 +156,7 @@ exports.list = function (req, res, next) {
     'latest': '-create_at',
     'reply': '-reply_count'
   };
-  var sortType = sortMap[sort] || sortMap['latest'];
-  sortType='-top '+sortType;   //将置顶的文章放在顶部
+  var sortType = sortMap[sort] || sortMap['latest']; 
 
   var proxy = new EventProxy();
   proxy.fail(next);
@@ -175,9 +174,11 @@ exports.list = function (req, res, next) {
     query['create_at'] =  {
       $gte: new Date(new Date().getTime() - 60*60*24*90*1000).toISOString()
     }
+    sortType='-top '+sortType;
   }
   else if(sort==='good'){
     query['good']=true;
+    sortType='-top '+sortType;
   }
 
   var limit = config.list_topic_count;

@@ -1,4 +1,4 @@
-
+<% var isCurrentUser =  user && user.loginname && currentUser && currentUser.loginname === user.loginname; %>
 <div class='user-panel'>
   <%- partial('./header') %>
   <div class='user-panel__content'>
@@ -8,8 +8,8 @@
         <div class='breadcrumb--content__section section--show'>
           <div id='content'>
             <ul class="tabs" id="tabs">
-              <li class="tabs__title tabs__title--left"><a href='/user/<%= user.name %>/following' >我关注的</a></li>
-              <li class="tabs__title"><a href='/user/<%= user.name %>/follower' class="current">关注我的</a></li>
+              <li class="tabs__title tabs__title--left"><a href='/user/<%= user.name %>/following' ><%= isCurrentUser?'我':'他' %>关注的</a></li>
+              <li class="tabs__title"><a href='/user/<%= user.name %>/follower' class="current">关注<%= isCurrentUser?'我':'他' %>的</a></li>
             </ul>
 
             <div class="container" id="container">

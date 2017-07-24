@@ -1,3 +1,4 @@
+<% var isCurrentUser =  user && user.loginname && currentUser && currentUser.loginname === user.loginname; %>
 <div class='user-panel'>
   <%- partial('./header') %>
   <div class='user-panel__content'> 
@@ -5,7 +6,7 @@
       <%- partial('./nav') %>
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
-          <div class="user-title">我的文章</div>
+          <div class="user-title"><%= isCurrentUser?'我':'他' %>的文章</div>
           <% if(recent_topics && recent_topics.length > 0) { %>
             <%- partial('../topic/abstract', { collection: recent_topics, as: 'topic' }) %> 
             <%- partial('../common/page') %>

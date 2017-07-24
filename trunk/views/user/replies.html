@@ -1,3 +1,4 @@
+<% var isCurrentUser =  user && user.loginname && currentUser && currentUser.loginname === user.loginname; %>
 <div class='user-panel'>
   <%- partial('./header') %>
   <div class='user-panel__content'>
@@ -5,7 +6,7 @@
       <%- partial('./nav') %>
       <div class='breadcrumb--content'>
         <div class='breadcrumb--content__section section--show'>
-          <h3 class="user-title">我的评论</h3>
+          <h3 class="user-title"><%= isCurrentUser?'我':'他' %>的评论</h3>
           <% if (typeof(recent_replies) !== 'undefined' && recent_replies.length > 0) { %>
           <ul class="reply-list">
           <% recent_replies.map(function(reply){ %>
