@@ -29,6 +29,8 @@ var config = require('./config');
 // 新markdown编辑器  发布
 var marktang = require('./controllers/marktang');
 
+var conf=require('./controllers/conf');
+
 var router = express.Router();
 
 // home page
@@ -239,5 +241,7 @@ router.post('/search', search.index);
 router.get('/search/:key', search.index);
 
 router.get('/topics/latestTopics/sort/:sort', site.latestTopics);
+
+router.get('/wx/signature',conf.signature);
 
 module.exports = router;
