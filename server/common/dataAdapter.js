@@ -122,7 +122,7 @@ exports.outUserAll = function(user) {
 };
 
 exports.outTopic = function(item, options) {
-    options = options || {};
+    options = options || {}; 
     var out = {
         id: item._id.toString(),
         title: item.title,
@@ -169,6 +169,9 @@ exports.outColumn = function(item){
 exports.topicFormat = function (topics) {
   var arr = [];
   for (var i = 0, len = topics.length; i < len; i++) {
+    //屏蔽图片地址和一些标签
+    topics[i].summary=topics[i].summary.replace(/<br>/g, ' ').replace(/\[http:\/\/.*\]/g,' ');
+
     if (topics[i] && topics[i].type == 1) {
       var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
       if (proArr.length >= 3) {

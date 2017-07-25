@@ -53,7 +53,8 @@
               <div id="activity_create_warn"></div>
               <div class="control-group">
                 <label class="control-label">活动标题：</label>
-                <input type="text" name="title" value="<%= typeof(title) !== 'undefined' && title || '' %>">
+                <input type="text" id="title" name="title" value="<%= typeof(title) !== 'undefined' && title || '' %>">
+                <span class="form-info" id="title-info"></span>
               </div>
               <div class="control-group">
                   <label class="control-label" for="tab-value">选择版块：</label>
@@ -65,6 +66,7 @@
                         &nbsp;&nbsp;&nbsp;
                     <% }) %>
                   </select>
+                  <span class="form-info" id="tab-info"></span>
               </div>
               <div class="control-group">
                 <label class="control-label">活动外链：</label>
@@ -90,6 +92,7 @@
                           <textarea class='editor' id='t_content' name='content' rows='20' placeholder='文章支持 Markdown 语法, 请注意标记代码'><%= typeof(content) !== 'undefined' && content || '' %></textarea>
                       </div>
                   </div>
+                  <span class="form-info" id="content-info"></span>
               </div>
               <input name="cover" class="hide" value="<%= typeof(cover) !== 'undefined' && cover || '' %>">
               <div class="form-actions">
