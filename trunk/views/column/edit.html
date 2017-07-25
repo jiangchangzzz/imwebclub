@@ -16,7 +16,7 @@
             </nav>
             <div class='block'>
               <h2 class="block-title"><%= isEdit?'修改':'添加' %>专栏</h2>
-              <form class="form" id="columnForm" action="<%= isEdit?'/column/'+column_id+'/edit':'/column/create' %>?_csrf=<%= csrf %>"
+              <form class="form" id="columnForm" action="<%= isEdit?'/column/'+column_id+'/edit':'/column/create' %>"
                 method="post">
                 <div class="form-group" id="titleGroup">
                   <label for="title" class="control-label">专栏标题：</label>
@@ -36,6 +36,7 @@
                   <p><span class="alert">专栏简介是必须的</span></p>
                 </div>
                 <div class="btn-group">
+                  <input type="hidden" name="_csrf" value=<%= csrf %>>
                   <button type="submit" class="form-submit">提 交</button>
                   <button type="reset" class="form-reset">重 置</button>
                 </div>

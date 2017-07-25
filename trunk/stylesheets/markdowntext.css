@@ -12,7 +12,7 @@
 }
 .markdown-text p {
   margin: 10px 0 0 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 .markdown-text a {
   color: #258fb8;
@@ -89,7 +89,7 @@
   font-size: 1.3rem;
 }
 .markdown-text h3 {
-  font-size: 1.1rem;
+  font-size: 16px;
   margin-top: 25px;
 }
 .markdown-text h4 {

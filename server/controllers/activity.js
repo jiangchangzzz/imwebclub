@@ -89,7 +89,7 @@ exports.create = function (req, res, next) {
 
 exports.put = function (req, res, next) {
   if (!req.body.title || !req.body.content || !req.body.tab) {
-    res.render('/activity/edit', req.body);
+    res.render('activity/edit', req.body);
     return;
   }
   var title = escapeHtml(validator.trim(req.body.title));
@@ -108,7 +108,7 @@ exports.put = function (req, res, next) {
 
   Activity.newAndSave(title, tab, content, begin_time, begin_str, end_time, end_str, location_str, external_link, cover, user._id, function(err,activity){
     if(err || !activity){
-      res.render('/activity/edit', req.body);
+      res.render('activity/edit', req.body);
       return;
     }
     res.redirect('/activity/'+activity._id);
