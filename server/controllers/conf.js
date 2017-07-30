@@ -67,10 +67,6 @@ function getToken() {
             reject(err);
           }
 
-          if (res.body.errcode!==0) {
-            reject(res.body);
-          }
-
           token.access_token = res.body.access_token;
           token.expires_in = res.body.expires_in;
           token.time = new Date();
@@ -98,10 +94,6 @@ function getTicket(access_token) {
         .end(function (err, res) {
           if (err) {
             reject(err);
-          }
-
-          if (res.body.errcode !== 0) {
-            reject(res.body);
           }
 
           ticket.ticket = res.body.ticket;

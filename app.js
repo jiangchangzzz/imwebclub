@@ -117,11 +117,10 @@ app.use(messageCount);
 if (process.env.NODE_ENV === 'production') {
   app.use(function (req, res, next) {
     if(req.path!=='/wx/signature'){
-    // if (req.path === '/api' || req.path.indexOf('/api') === -1) {
       csurf()(req, res, next);
       return;
-    // }
-    // next();
+    }else{
+      next(); 
     }
   });
   app.set('view cache', true);
