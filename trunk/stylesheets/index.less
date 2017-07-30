@@ -32,11 +32,8 @@
     }
 }
 #welcome{
-  width: 100%;
   margin-bottom: 20px;
-  min-height: 150px;
   padding: 10px 0;
-  overflow: hidden;
   background-image: url("../images/welcomeBG.png");
   background-repeat: no-repeat;
   background-position: center center;
@@ -45,49 +42,56 @@
   opacity: 0.9;
   color: white;
   text-align: center;
+  overflow: hidden;
   @media screen and (max-width: 320px) {
       padding-bottom: 20px;
     }
-  b{
+
+  h3{
     font-size: 24px;
+    margin: 10px 0;
     @media screen and (max-width: 320px) {
       padding: 0 10px;
-      display: inline-block;
     }
   }
-  table{
-    text-align: left;
-    margin: 10px auto;
-    td{
-      min-width: 300px;
+
+  .welcome-text{
+    float: left;
+    width: 80%;
+
+    @media (max-width: 768px){
+        float: none;
+        width: 100%;
     }
   }
-  .button{
-    padding: 5px 10px;
-    border-radius: 15px;
-    border: solid 1px white;
-    &:hover{
-      font-weight: bolder;
-      border-width: 2px;
+
+  .welcome-qr{
+    float: left;
+    width: 20%;
+    padding: 0 20px;
+    box-sizing: border-box;
+
+    @media (max-width: 768px){
+        float: none;
+        width: 100%;
+        margin-top: 10px;
+
+        img{
+            width: 50%;
+        }
     }
   }
 }
 
 .intro {
-    width: 70%;
-    margin: 0 auto;
-    display: flex;
-    @media screen and (max-width: 768px) {
-      width: 80%;
-    }
-    @media screen and (max-width: 414px) {
-      display: block;
-    }
+    margin: 0 40px;
 
     .intro-item {
+        float: left;
         width: 50%;
         text-align: left;
-        @media screen and (max-width: 414px) {
+
+        @media screen and (max-width: 768px) {
             width: 100%;
             text-align: center;
         }

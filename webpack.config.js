@@ -8,7 +8,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 var debug = process.env.NODE_ENV !== 'production';
-debug=false;
+debug=true;
 
 var entries = getEntry('trunk/entry/**/*.js', 'trunk/entry/');
 
