@@ -30,6 +30,8 @@ var config = require('./config');
 var marktang = require('./controllers/marktang');
 
 var conf=require('./controllers/conf');
+var wechatBind=require('./controllers/wechatBind');
+var wecharCenter=require('./controllers/wechatCenter');
 
 var router = express.Router();
 
@@ -243,5 +245,12 @@ router.get('/search/:key', search.index);
 router.get('/topics/latestTopics/sort/:sort', site.latestTopics);
 
 router.get('/wx/signature',conf.signature);
+
+//wechatBind
+router.get('/wechatBind', wechatBind.bind);
+
+router.get('/wechat',wecharCenter.handle);
+
+
 
 module.exports = router;

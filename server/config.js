@@ -219,6 +219,17 @@ var config = {
   create_reply_per_day: 1000, // 每个用户一天可以发的评论数
   create_user_per_ip: 1000,
   visit_per_day: 1000, // 每个 ip 每天能访问的次数
+
+  wechat_test: {
+    token: 'wechatimwebio',
+    appid: 'wxed0fe3365f8aeba1',
+    appsecret: '490dd9797d26df2c05f2fab09e48173a'
+  },
+  wechat_validate: {
+    token: 'wechat2imwebio',
+    appid: 'wxd5841c34c4a7470a',
+    encodingAESKey: '0cf188cd14316fa0666d709ba3465c4b'
+  }
 };
 
 if (process.env.NODE_ENV === 'test') {

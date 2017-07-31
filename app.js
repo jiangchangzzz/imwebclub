@@ -38,6 +38,8 @@ var bluebird = require('bluebird');
 var flash = require('connect-flash');
 
 var messageCount = require('./server/middlewares/message_count');
+var wechat=require('wechat');
+var wechatCenter=require('./server/controllers/wechatCenter');
 
 // 静态文件目录
 var staticDir = path.join(__dirname, 'public');
@@ -115,8 +117,9 @@ app.use(messageCount);
 
 //csrf校验
 if (process.env.NODE_ENV === 'production') {
+  var whiteList=['/wx/signature','/wechat','/wechat2'];
   app.use(function (req, res, next) {
-    if(req.path!=='/wx/signature'){
+    if(whiteList.indexOf(req.path)===-1){
       csurf()(req, res, next);
       return;
     }else{
@@ -160,6 +163,11 @@ app.use(function (req, res, next) {
 // routes
 app.use('/api/v1', cors(), apiRouterV1);
 app.use('/', webRouter);
+
+// wechat development
+//app.use('/wechat', wechat(config.wechat_validate.token, wechatCenter.all));
+// wechat2 imweb订阅号
+//app.use('/wechat2', wechat(config.wechat2_validate.token, wechatCenter.all));
 
 // for debug
 // app.get('/err', function (req, res, next) {
