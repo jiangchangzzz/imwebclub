@@ -12,28 +12,18 @@ var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
 var renderHelper = require('../common/render_helper');
 var cache = require('../common/cache');
+var sha1=require('sha1');
+
 var wechatValidate = config.wechat_validate;
-var api = new WechatAPI(wechatValidate.appid, wechatValidate.encodingAESKey);
+var api = new WechatAPI(wechatValidate.appid, wechatValidate.appsecret);
 
 exports.all = function(req, res, next) {
-    // 路径为/wechat则为imweb服务号，使用wechat_validate配置
-    // 路径为/wechat2则为imweb订阅号，使用wechat2_validate配置
-    var reqPath = url.parse(req.originalUrl).pathname;
-    var pushNum = 3;
-    if (reqPath.indexOf('/wechat2') >= 0) {
-        wechatValidate = config.wechat2_validate;
-        pushNum = 1;
-    } else {
-        wechatValidate = config.wechat_validate;
-    }
-    api = new WechatAPI(wechatValidate.appid, wechatValidate.encodingAESKey);
-
     // 微信输入信息都在req.weixin上
     var message = req.weixin;
     var ep = new EventProxy();
     var recommendNum = 30;
     var pushOpt = {
-        num: pushNum,
+        num: 1,
         defaultPicurl: 'http://imweb.io/public/images/sign-banner.png',
         scene: 'massSend',
         sort: '-top -last_reply_at'
@@ -106,6 +96,8 @@ exports.all = function(req, res, next) {
                 }
             });
         });
+
+    //预览
     } else if (message.MsgType === 'text' && message.Content === 'preview') {
         res.reply('preview:' + reqPath);
 
@@ -169,6 +161,8 @@ exports.all = function(req, res, next) {
                 }
             });
         });
+
+    //创建菜单
     } else if (message.MsgType === 'text' && message.Content === 'createMenu') {
         res.reply('createMenu');
         var menu = {
@@ -204,6 +198,8 @@ exports.all = function(req, res, next) {
                 console.log(err);
             }
         });
+
+    //用户
     } else if (message.MsgType === 'text' && message.Content === 'custom') {
         res.reply('custom');
         customOpt.num = parseInt(Math.random() * recommendNum);
@@ -223,6 +219,8 @@ exports.all = function(req, res, next) {
                 });
             });
         });
+        
+    //订阅事件
     } else if ((message.MsgType == 'event') && (message.Event == 'subscribe')) {
         //新用户关注
         res.reply([{
@@ -252,6 +250,7 @@ exports.handle=function(req,res,next){
     keys.forEach(function(key){
         sign+=input[key];
     });
+    sign=sha1(sign);
 
     if(sign===req.query.signature){
         res.send(req.query.echostr);

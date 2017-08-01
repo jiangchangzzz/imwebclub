@@ -228,7 +228,7 @@ var config = {
   wechat_validate: {
     token: 'wechat2imwebio',
     appid: 'wxd5841c34c4a7470a',
-    encodingAESKey: '0cf188cd14316fa0666d709ba3465c4b'
+    appsecret: '0cf188cd14316fa0666d709ba3465c4b'
   }
 };
 

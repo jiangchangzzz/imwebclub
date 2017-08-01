@@ -249,8 +249,6 @@ router.get('/wx/signature',conf.signature);
 //wechatBind
 router.get('/wechatBind', wechatBind.bind);
 
-router.get('/wechat',wecharCenter.handle);
-
 
 
 module.exports = router;

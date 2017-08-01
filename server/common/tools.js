@@ -143,3 +143,19 @@ exports.createJsonEventProxy = function(res, next) {
     });
     return ep;
 };
+
+/**
+ * 文章图片
+ * @param {String} markdownText 
+ * @return {Array} imgArr
+ */
+exports.genTopicPic = function(markdownText){
+    var html = render_helper.markdownRender(markdownText || '');
+    var $ = cheerio.load(html);
+    var $img = $("img");
+    var imgArr = [];
+    for (var i=0,len=$img.length;i<len;i++){
+        imgArr.push($img[i].attribs.src);
+    }
+    return imgArr;
+}
