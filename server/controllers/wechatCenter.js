@@ -36,134 +36,134 @@ exports.all = function(req, res, next) {
     };
 
     //回复消息
-    if (message.MsgType === 'text' && message.Content === 'massSend') {
-        res.reply('massSend');
+    // if (message.MsgType === 'text' && message.Content === 'massSend') {
+    //     res.reply('massSend');
 
-        var mediaDownloadArr = [];
-        var mediaUploadArr = [];
-        for (var n = 0; n < pushOpt.num; n++) {
-            mediaDownloadArr.push('mediaDownload' + n);
-            mediaUploadArr.push('mediaUpload' + n);
-        }
+    //     var mediaDownloadArr = [];
+    //     var mediaUploadArr = [];
+    //     for (var n = 0; n < pushOpt.num; n++) {
+    //         mediaDownloadArr.push('mediaDownload' + n);
+    //         mediaUploadArr.push('mediaUpload' + n);
+    //     }
 
-        getArticle(pushOpt, function(result) {
-            result.forEach(function(item, i) {
-                var picurl = item.thumb_media_id;
-                var tempPath = './public/images/wechatTemp' + i + '.png';
-                request(picurl, function(error, response, body) {
-                    if (!error) {
-                        item.thumb_media_id = tempPath;
-                        ep.emit('mediaDownload' + i, item);
-                    } else {
-                        console.log(error);
-                    }
-                }).pipe(fs.createWriteStream(tempPath));
-            });
+    //     getArticle(pushOpt, function(result) {
+    //         result.forEach(function(item, i) {
+    //             var picurl = item.thumb_media_id;
+    //             var tempPath = './public/images/wechatTemp' + i + '.png';
+    //             request(picurl, function(error, response, body) {
+    //                 if (!error) {
+    //                     item.thumb_media_id = tempPath;
+    //                     ep.emit('mediaDownload' + i, item);
+    //                 } else {
+    //                     console.log(error);
+    //                 }
+    //             }).pipe(fs.createWriteStream(tempPath));
+    //         });
 
-            ep.all(mediaDownloadArr, function(item0, item1, item2) {
-                var topicList = [item0, item1, item2].slice(0, pushOpt.num);
-                topicList.forEach(function(item, i) {
-                    mediaUpload({
-                        filepath: item.thumb_media_id,
-                        type: 'image'
-                    }, function(err, result) {
-                        if (!err) {
-                            item.thumb_media_id = result.media_id;
-                            ep.emit('mediaUpload' + i, item);
-                        } else {
-                            console.log(err);
-                        }
-                    });
-                });
-            });
-        });
+    //         ep.all(mediaDownloadArr, function(item0, item1, item2) {
+    //             var topicList = [item0, item1, item2].slice(0, pushOpt.num);
+    //             topicList.forEach(function(item, i) {
+    //                 mediaUpload({
+    //                     filepath: item.thumb_media_id,
+    //                     type: 'image'
+    //                 }, function(err, result) {
+    //                     if (!err) {
+    //                         item.thumb_media_id = result.media_id;
+    //                         ep.emit('mediaUpload' + i, item);
+    //                     } else {
+    //                         console.log(err);
+    //                     }
+    //                 });
+    //             });
+    //         });
+    //     });
 
-        ep.all(mediaUploadArr, function(image0, image1, image2) {
-            var news = [image0, image1, image2].slice(0, pushOpt.num);
-            upload_news({
-                "articles": news
-            }, function(err, result) {
-                if (!err) {
-                    sendAllNews(result, function(err, result) {
-                        if (!err) {
+    //     ep.all(mediaUploadArr, function(image0, image1, image2) {
+    //         var news = [image0, image1, image2].slice(0, pushOpt.num);
+    //         upload_news({
+    //             "articles": news
+    //         }, function(err, result) {
+    //             if (!err) {
+    //                 sendAllNews(result, function(err, result) {
+    //                     if (!err) {
 
-                        } else {
-                            console.log(err);
-                        }
-                    });
-                } else {
-                    console.log(err);
-                }
-            });
-        });
+    //                     } else {
+    //                         console.log(err);
+    //                     }
+    //                 });
+    //             } else {
+    //                 console.log(err);
+    //             }
+    //         });
+    //     });
 
-    //预览
-    } else if (message.MsgType === 'text' && message.Content === 'preview') {
-        res.reply('preview:' + reqPath);
+    // //预览
+    // } else if (message.MsgType === 'text' && message.Content === 'preview') {
+    //     res.reply('preview:' + reqPath);
 
-        var mediaDownloadArr1 = [];
-        var mediaUploadArr1 = [];
-        for (var n1 = 0; n1 < pushOpt.num; n1++) {
-            mediaDownloadArr1.push('mediaDownload' + n1);
-            mediaUploadArr1.push('mediaUpload' + n1);
-        }
+    //     var mediaDownloadArr1 = [];
+    //     var mediaUploadArr1 = [];
+    //     for (var n1 = 0; n1 < pushOpt.num; n1++) {
+    //         mediaDownloadArr1.push('mediaDownload' + n1);
+    //         mediaUploadArr1.push('mediaUpload' + n1);
+    //     }
 
-        getArticle(pushOpt, function(result) {
-            result.forEach(function(item, i) {
-                var picurl = item.thumb_media_id;
-                var tempPath = './public/images/wechatTemp' + i + '.png';
-                request(picurl, function(error, response, body) {
-                    if (!error) {
-                        item.thumb_media_id = tempPath;
-                        ep.emit('mediaDownload' + i, item);
-                    } else {
-                        console.log(error);
-                    }
-                }).pipe(fs.createWriteStream(tempPath));
-            });
+    //     getArticle(pushOpt, function(result) {
+    //         result.forEach(function(item, i) {
+    //             var picurl = item.thumb_media_id;
+    //             var tempPath = './public/images/wechatTemp' + i + '.png';
+    //             request(picurl, function(error, response, body) {
+    //                 if (!error) {
+    //                     item.thumb_media_id = tempPath;
+    //                     ep.emit('mediaDownload' + i, item);
+    //                 } else {
+    //                     console.log(error);
+    //                 }
+    //             }).pipe(fs.createWriteStream(tempPath));
+    //         });
 
-            //所有图片都下载完成
-            ep.all(mediaDownloadArr1, function(item0, item1, item2) {
-                var topicList = [item0, item1, item2].slice(0, pushOpt.num);
-                topicList.forEach(function(item, i) {
-                    mediaUpload({
-                        filepath: item.thumb_media_id,
-                        type: 'image'
-                    }, function(err, result) {
-                        if (!err) {
-                            item.thumb_media_id = result.media_id;
-                            ep.emit('mediaUpload' + i, item);
-                        } else {
-                            console.log(err);
-                        }
-                    });
-                });
-            });
-        });
+    //         //所有图片都下载完成
+    //         ep.all(mediaDownloadArr1, function(item0, item1, item2) {
+    //             var topicList = [item0, item1, item2].slice(0, pushOpt.num);
+    //             topicList.forEach(function(item, i) {
+    //                 mediaUpload({
+    //                     filepath: item.thumb_media_id,
+    //                     type: 'image'
+    //                 }, function(err, result) {
+    //                     if (!err) {
+    //                         item.thumb_media_id = result.media_id;
+    //                         ep.emit('mediaUpload' + i, item);
+    //                     } else {
+    //                         console.log(err);
+    //                     }
+    //                 });
+    //             });
+    //         });
+    //     });
 
-        //所有媒体上传完成
-        ep.all(mediaUploadArr1, function(image0, image1, image2) {
-            var news = [image0, image1, image2].slice(0, pushOpt.num);
-            upload_news({
-                "articles": news
-            }, function(err, result) {
-                if (!err) {
-                    result.openId = message.FromUserName;
-                    massPreview(result, function(err, result) {
-                        if (!err) {
+    //     //所有媒体上传完成
+    //     ep.all(mediaUploadArr1, function(image0, image1, image2) {
+    //         var news = [image0, image1, image2].slice(0, pushOpt.num);
+    //         upload_news({
+    //             "articles": news
+    //         }, function(err, result) {
+    //             if (!err) {
+    //                 result.openId = message.FromUserName;
+    //                 massPreview(result, function(err, result) {
+    //                     if (!err) {
 
-                        } else {
-                            console.log(err);
-                        }
-                    });
-                } else {
-                    console.log(err);
-                }
-            });
-        });
+    //                     } else {
+    //                         console.log(err);
+    //                     }
+    //                 });
+    //             } else {
+    //                 console.log(err);
+    //             }
+    //         });
+    //     });
 
     //创建菜单
-    } else if (message.MsgType === 'text' && message.Content === 'createMenu') {
+    if (message.MsgType === 'text' && message.Content === 'createMenu') {
         res.reply('createMenu');
         var menu = {
             "button": [{
@@ -200,41 +200,42 @@ exports.all = function(req, res, next) {
         });
 
     //用户
-    } else if (message.MsgType === 'text' && message.Content === 'custom') {
-        res.reply('custom');
-        customOpt.num = parseInt(Math.random() * recommendNum);
-        getArticle(customOpt, function(result) {
-            ["oWBY7wPLFxVPIwXApCrIFXTRk2GM", "oWBY7wLUXRX_OJtT0sjFN_01L7Iw"].forEach(function(id) {
-                var opt = {
-                    openId: id,
-                    articles: result
-                };
+    // } else if (message.MsgType === 'text' && message.Content === 'custom') {
+    //     res.reply('custom');
+    //     customOpt.num = parseInt(Math.random() * recommendNum);
+    //     getArticle(customOpt, function(result) {
+    //         ["oWBY7wPLFxVPIwXApCrIFXTRk2GM", "oWBY7wLUXRX_OJtT0sjFN_01L7Iw"].forEach(function(id) {
+    //             var opt = {
+    //                 openId: id,
+    //                 articles: result
+    //             };
 
-                customSend(opt, function(err, result) {
-                    if (!err) {
+    //             customSend(opt, function(err, result) {
+    //                 if (!err) {
 
-                    } else {
-                        console.log(err);
-                    }
-                });
-            });
-        });
+    //                 } else {
+    //                     console.log(err);
+    //                 }
+    //             });
+    //         });
+    //     });
         
     //订阅事件
-    } else if ((message.MsgType == 'event') && (message.Event == 'subscribe')) {
-        //新用户关注
-        res.reply([{
-            title: 'welcome to imweb!',
-            description: 'imweb前端团队，前端可以更有意思，点击前往团队社区imweb.io。',
-            picurl: 'http://imweb.io/public/images/logo-cover.png',
-            url: 'http://imweb.io/'
-        }]);
+    // } else if ((message.MsgType == 'event') && (message.Event == 'subscribe')) {
+    //     //新用户关注
+    //     res.reply([{
+    //         title: 'welcome to imweb!',
+    //         description: 'imweb前端团队，前端可以更有意思，点击前往团队社区imweb.io。',
+    //         picurl: 'http://imweb.io/public/images/logo-cover.png',
+    //         url: 'http://imweb.io/'
+    //     }]);
     } else {
         //默认回复
-        customOpt.num = parseInt(Math.random() * recommendNum);
-        getArticle(customOpt, function(result) {
-            res.reply(result);
-        });
+        // customOpt.num = parseInt(Math.random() * recommendNum);
+        // getArticle(customOpt, function(result) {
+        //     res.reply(result);
+        // });
+        res.reply('');
     }
 };
 
