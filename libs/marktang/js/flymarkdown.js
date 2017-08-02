@@ -351,9 +351,9 @@ $(function() {
             }break;
             case 'save_pdf':{
                 alert('保存PDF, 打印目标设为"另存为PDF"即可');
-                document.body.innerHTML = $('#out').html();
+                //document.body.innerHTML = $('#out').html();
                 window.print();
-                window.location.reload();
+                //window.location.reload();
             }break;
             case 'save_imweb': {
                 postMarktang("http://test.imweb.io/topic/create",info);
