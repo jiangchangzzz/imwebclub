@@ -19,8 +19,13 @@ exports.getNotebook = function (req, res, next) {
   }
 
   //操作数据库
+  var notebook={
+    _id: 0,
+    name: '未分类'
+  };
   Notebook.getNotebooksByUserId(userId)
     .then(function (notebooks) {
+      notebooks.push(notebook);
       return res.send({
         success: true,
         data: notebooks

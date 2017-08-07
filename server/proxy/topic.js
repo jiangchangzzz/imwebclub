@@ -285,10 +285,23 @@ exports.removeTopicFromNotebook=function(notebookId){
 /**
  * 获取文集中的文章
  */
-exports.getTopicByNotebookId=function(notebookId){
+exports.getTopicByNotebookId=function(userId,notebookId){
   return Topic.find({
+    author_id: userId,
     notebook: notebookId,
     deleted: false
   })
+  .exec();
+}
+
+/**
+ * 获取未分类的文章
+ */
+exports.getUnSortedTopic=function(userId){
+  return Topic.find({ 
+    author_id: userId,
+    deleted: false
+  })
+  .where('notebook').in([undefined,null])
   .exec();
 }

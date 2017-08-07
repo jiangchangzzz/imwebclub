@@ -174,8 +174,8 @@ exports.all = function(req, res, next) {
                     "url": "http://imweb.io/"
                 }, {
                     "type": "view",
-                    "name": "Lego",
-                    "url": "http://lego.imweb.io/"
+                    "name": "IMWebConf",
+                    "url": "http://2017.imweb.io/"
                 }, {
                     "type": "view",
                     "name": "GitHub",

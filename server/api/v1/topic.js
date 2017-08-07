@@ -292,6 +292,27 @@ exports.get = get;
 
 exports.getTopicsByNotebook=function(req,res,next){
   var notebookId=req.query.notebookid;
+  var userId=req.query.userid;
+
+  //参数校验
+  if(userId && !validator.isMongoId(userId)){
+    res.status(400);
+    return res.send({
+      success: false,
+      error_msg: '不是有效的用户id'
+    });
+  }
+
+  //操作数据库
+  if(notebookId === '0'){
+    return TopicProxy.getUnSortedTopic(userId)
+      .then(function(result){
+        return res.send({
+          success: true,
+          data: result
+        })
+      }).catch(next);
+  }
 
   //参数校验
   if(notebookId && !validator.isMongoId(notebookId)){

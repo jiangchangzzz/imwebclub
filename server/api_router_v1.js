@@ -47,6 +47,7 @@ router.get('/messages', middleware.auth, messageController.index);
 router.get('/message/count', middleware.auth, messageController.count);
 router.post('/message/mark_all', middleware.auth, messageController.markAll);
 
+//文集
 router.get('/notebook',notebookController.getNotebook);
 router.post('/notebook',notebookController.postNotebook);
 router.put('/notebook/:id',notebookController.putNotebook);
