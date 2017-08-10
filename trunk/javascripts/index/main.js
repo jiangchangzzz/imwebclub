@@ -5,7 +5,8 @@ $(document).ready(function(){
       var fllower_num = parseInt($this.parents('li').find('.flowers_num').html(), 10);
       imweb.ajax.post('/user/follow', {
         data: {
-          followUser_id
+          followUser_id,
+          _csrf: imweb._csrf
         }
       }).done(function(){
         $this.removeClass('focus-add, link').html('<a href="javascript:void(0);">已关注</a>');

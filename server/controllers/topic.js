@@ -214,7 +214,7 @@ exports.list = function (req, res, next) {
     } else {
       User.getUsersByQuery(
         { is_block: false },
-        { limit: 10, sort: '-score' },
+        { limit: 10, sort: '-topic_count' },
         proxy.done('tops', function (tops) {
           cache.set('tops', tops, 60 * 1);
           return tops;
