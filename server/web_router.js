@@ -36,7 +36,8 @@ var wecharCenter=require('./controllers/wechatCenter');
 var router = express.Router();
 
 // home page
-router.get('/', site.index);
+//router.get('/', site.index);
+router.get('/',topic.list);
 
 // sign controller
 if (config.allow_sign_up) {
