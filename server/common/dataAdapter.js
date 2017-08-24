@@ -172,6 +172,10 @@ exports.topicFormat = function (topics) {
     //屏蔽图片地址和一些标签
     topics[i].summary=topics[i].summary.replace(/<br>/g, ' ').replace(/\[http:\/\/.*\]/g,' ');
 
+    if(topics[i]._id.toString()==='599be573a93e7629030448a4'){
+        topics[i].summary='上周小编推送了关于腾讯IMWebConf 2017前端大会的消息 各位前端er们是不是很心动 ~~~ 如果你满心欢喜的点开链接 ^_^ 看到票价的时候却觉得囊中羞涩 ...... 不要担心，小编特别为你带来 三大优惠参与方式！ 下方有惊喜哦 活动一 微博转发 参与方式： 关注@IMWeb团队 后转发下面的这条微博并 @ 3名好友 ，即可参与抽奖活动， 9月7日 我们会随机抽取5张线下票+10张线上票！[太开心] 活动时间： 8.10-9.7';
+    }
+
     if (topics[i] && topics[i].type == 1) {
       var proArr = topics[i].title.replace("https://", "").replace("http://", "").split("/");
       if (proArr.length >= 3) {

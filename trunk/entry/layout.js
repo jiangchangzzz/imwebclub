@@ -80,9 +80,3 @@ $.extend(imweb.ajax, {
   }
 });
 //二维码
-
-$(document).ready(function () {
-  $('.menu-toggle').click(function () {
-    $('.center').toggleClass('active');
-  });
-})
